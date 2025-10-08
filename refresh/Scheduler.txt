@@ -1,0 +1,47 @@
+In a XAMPP environment, you won't find /usr/bin/php as you would on a Unix-based system. Instead, you'll use the PHP executable provided by XAMPP. Here's how you can set up a cron job to run the PHP script in a Windows environment:
+
+Open Task Scheduler: You can open Task Scheduler by searching for it in the Start menu or by pressing Win + R, typing taskschd.msc, and pressing Enter.
+
+Create a New Task:
+
+Click on "Create Basic Task" in the right-hand menu.
+Give your task a name and description.
+Click "Next".
+Set Task Trigger:
+
+Choose how often you want the task to run (e.g., daily).
+Click "Next".
+Set Start Time:
+
+Choose the time you want the task to start (e.g., midnight).
+Click "Next".
+Choose Action:
+
+Select "Start a program".
+Click "Next".
+Configure Program:
+
+In the "Program/script" field, provide the path to the PHP executable in your XAMPP installation. It's typically located in the xampp\php directory. The path might look something like C:\xampp\php\php.exe.
+In the "Add arguments" field, provide the path to your PHP script (status_change.php). For example, if your script is located in C:\xampp\htdocs\Methadone, you would put C:\xampp\htdocs\Methadone\status_change.php.
+Click "Next".
+Review and Finish:
+
+Review your settings and click "Finish".
+Once you've set up the task, it will run automatically according to the schedule you've defined, executing your PHP script and performing the necessary status updates for your patients in the XAMPP environment.
+
+
+To edit a task in Task Scheduler on Windows:
+
+Open Task Scheduler: Search for "Task Scheduler" in the Start menu and open it.
+
+Find Your Task: In the Task Scheduler Library, navigate to the folder where you created your task.
+
+Select Your Task: Click on your task to select it.
+
+Open Task Properties: Right-click on the task and choose "Properties" from the context menu, or click on "Properties" in the right-hand menu.
+
+Make Changes: You can make changes to various aspects of the task, such as the name, trigger, actions, conditions, and settings.
+
+Save Changes: Once you've made the desired changes, click "OK" or "Apply" to save your modifications.
+
+Close Task Scheduler: You can now close Task Scheduler. Your changes will be saved and applied to the task.

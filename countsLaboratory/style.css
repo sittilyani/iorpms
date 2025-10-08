@@ -1,0 +1,71 @@
+<style type="text/css">
+            html { font-family:Calibri, Arial, Helvetica, sans-serif; font-size:11pt; background-color:white }
+            a.comment-indicator:hover + div.comment { background:#ffd; position:absolute; display:block; border:1px solid black; padding:0.5em }
+            a.comment-indicator { background:red; display:inline-block; border:1px solid black; width:0.5em; height:0.5em }
+            div.comment { display:none }
+            table { border-collapse:collapse; page-break-after:always }
+            .gridlines td { border:1px dotted black }
+            .gridlines th { border:1px dotted black }
+            .b { text-align:center }
+            .e { text-align:center }
+            .f { text-align:right }
+            .inlineStr { text-align:left }
+            .n { text-align:right }
+            .s { text-align:left }
+            td.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style0 { vertical-align:bottom; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style1 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            th.style1 { vertical-align:middle; border-bottom:none #000000; border-top:none #000000; border-left:none #000000; border-right:none #000000; color:#000000; font-family:'Calibri'; font-size:11pt; background-color:white }
+            td.style2 { vertical-align:middle; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; color:#000000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style2 { vertical-align:middle; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; color:#000000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            td.style3 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style3 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            td.style4 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style4 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:none #000000; border-right:none #000000; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            td.style5 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style5 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:none #000000; border-right:1px solid #000000 !important; font-weight:bold; color:#FF0000; font-family:'Calibri'; font-size:12pt; background-color:white }
+            td.style6 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:14pt; background-color:white }
+            th.style6 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:14pt; background-color:white }
+            td.style7 { vertical-align:middle; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style7 { vertical-align:middle; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:12pt; background-color:white }
+            td.style8 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:12pt; background-color:white }
+            th.style8 { vertical-align:middle; text-align:center; border-bottom:1px solid #000000 !important; border-top:1px solid #000000 !important; border-left:1px solid #000000 !important; border-right:1px solid #000000 !important; font-weight:bold; color:#002060; font-family:'Calibri'; font-size:12pt; background-color:white }
+            table.sheet0 col.col0 { width:216.8888864pt }
+            table.sheet0 col.col1 { width:58.96666599pt }
+            table.sheet0 col.col2 { width:58.96666599pt }
+            table.sheet0 col.col3 { width:58.96666599pt }
+            table.sheet0 col.col4 { width:58.96666599pt }
+            table.sheet0 col.col5 { width:58.96666599pt }
+            table.sheet0 col.col6 { width:58.96666599pt }
+            table.sheet0 col.col7 { width:58.96666599pt }
+            table.sheet0 col.col8 { width:58.96666599pt }
+            table.sheet0 tr { height:15pt }
+            table.sheet0 tr.row1 { height:27.75pt }
+            table.sheet0 tr.row2 { height:25.5pt }
+            table.sheet0 tr.row3 { height:25.5pt }
+            table.sheet0 tr.row4 { height:25.5pt }
+            table.sheet0 tr.row5 { height:25.5pt }
+            table.sheet0 tr.row6 { height:25.5pt }
+            table.sheet0 tr.row7 { height:25.5pt }
+            table.sheet0 tr.row8 { height:25.5pt }
+            table.sheet0 tr.row9 { height:25.5pt }
+            table.sheet0 tr.row10 { height:25.5pt }
+            table.sheet0 tr.row11 { height:25.5pt }
+            table.sheet0 tr.row12 { height:25.5pt }
+            table.sheet0 tr.row13 { height:25.5pt }
+            table.sheet0 tr.row14 { height:25.5pt }
+            table.sheet0 tr.row15 { height:25.5pt }
+            table.sheet0 tr.row16 { height:25.5pt }
+            table.sheet0 tr.row17 { height:25.5pt }
+            table.sheet0 tr.row18 { height:25.5pt }
+            table.sheet0 tr.row19 { height:25.5pt }
+            table.sheet0 tr.row20 { height:25.5pt }
+            table.sheet0 tr.row21 { height:25.5pt }
+            table.sheet0 tr.row22 { height:25.5pt }
+            table.sheet0 tr.row23 { height:25.5pt }
+            table.sheet0 tr.row24 { height:25.5pt }
+            table.sheet0 tr.row25 { height:25.5pt }
+            table.sheet0 tr.row26 { height:25.5pt }
+            table.sheet0 tr.row27 { height:25.5pt }
+            
+        </style>

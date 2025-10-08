@@ -1,0 +1,38 @@
+Admin User: admin2@gmail.com
+Password: 123456789
+
+
+Clinician User: clinician@gmail.com
+Password: 123456
+
+Pharmacist User: pharmacist@gmail.com
+Password: 123456
+
+Receptionist User: receptionist@gmail.com
+Password: 123456
+
+SESSION START
+
+session_start();
+
+if (!isset($_SESSION['user_id']) && !in_array(basename($_SERVER['PHP_SELF']), ['login.php', 'index.php'])) {
+    header("Location: login.php"); // Redirect to login page
+    exit();
+}
+
+Convert Excel to SQL INSERT
+
+https://products.aspose.app/cells/conversion/excel-to-sql
+
+cteated new table facilities and facility_settings
+updated the collate to general_ci
+
+# October 2025
+ALTER TABLE medical_history ADD COLUMN appointment_status ENUM('scheduled', 'done') DEFAULT 'scheduled';
+ALTER TABLE laboratory ADD COLUMN appointment_status ENUM('scheduled', 'done') DEFAULT 'scheduled';
+ALTER TABLE psychodar ADD COLUMN appointment_status ENUM('scheduled', 'done') DEFAULT 'scheduled';
+create table nursing_history like medical_history;
+ALTER TABLE nursing_history ADD COLUMN appointment_status ENUM('scheduled', 'done') DEFAULT 'scheduled';
+ALTER TABLE psychodar ADD COLUMN therapists_notes text after therapists_initials;
+create table psychiatric (import)
+

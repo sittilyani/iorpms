@@ -1,0 +1,662 @@
+/* dashboard.css - Fully Responsive Dashboard */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    gap: 30px;
+    padding: 20px;
+    max-width: 90%;
+    margin: 20px auto;
+}
+ h4{
+    color: #722182;
+ }
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: #5a67d8;
+    transform: scale(1.1);
+}
+
+.mobile-menu-toggle.active {
+    background: #e53e3e;
+}
+
+/* Cards Grid */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    grid-column: 1 / 2;
+}
+
+/* Card Styles */
+.card {
+    background: linear-gradient(to right, #d8e35b, #f2be3e, #ff9640, #ff6c56, #f94373);
+    border-radius: 15px;
+    padding: 25px;
+    /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);*/
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.card.purple::before {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.card.orange::before {
+    background: linear-gradient(90deg, #ff7b7b, #ff416c);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2d3748;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.card-icon {
+    font-size: 40px;
+    color: white;
+
+}
+
+.card.orange .card-icon {
+    color: white;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.1);
+}
+
+.more-info {
+    margin-top: 15px;
+    color: #718096;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease;
+}
+
+.more-info:hover {
+    color: #667eea;
+    text-decoration: none;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    /*transition: all 0.3s ease;*/
+}
+
+.sidebar-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Table Styles */
+.balances-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.balances-table thead th {
+    background: #f7fafc;
+    color: #4a5568;
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.balances-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    /*transition: background-color 0.2s ease; */
+}
+
+.balances-table tbody tr:hover {
+    background: #f7fafc;
+}
+
+.balances-table tbody td {
+    padding: 10px 8px;
+    color: #4a5568;
+}
+
+.balances-table tbody td:last-child {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Birthday/Consumption List Styles */
+.birthdays-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.birthday-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f7fafc;
+    border-radius: 8px;
+    /*transition: all 0.2s ease;*/
+}
+
+.birthday-item:hover {
+    background: #edf2f7;
+}
+
+.birthday-item span:first-child {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.birthday-date {
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.count-retro a {
+    background: #722182;
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+/* Blinking animation */
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .blink-animation {
+            animation: blink 1s infinite;
+        }
+
+        /* Optional: Style for the table */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .birthday-date2 a {
+            text-decoration: none;
+            color: white;
+        }
+
+/* Tablet Styles (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        grid-column: 1 / 2;
+    }
+
+    .card {
+        min-height: 130px;
+        padding: 20px;
+    }
+
+    .card-content h3 {
+        font-size: 16px;
+    }
+
+    .card-icon {
+        font-size: 30px;
+    }
+
+    .sidebar {
+        grid-column: 1 / 2;
+        grid-row: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .sidebar-card {
+        padding: 15px;
+    }
+
+    .balances-table {
+        font-size: 13px;
+    }
+
+    .balances-table thead th,
+    .balances-table tbody td {
+        padding: 8px 6px;
+    }
+}
+
+/* Mobile Styles (768px and below) */
+@media screen and (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
+        padding-top: 80px; /* Space for mobile menu button */
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .card {
+        min-height: 120px;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .card-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .card-content h3 {
+        font-size: 15px;
+        text-align: left;
+    }
+
+    .card-icon {
+        font-size: 25px;
+        align-self: flex-end;
+    }
+
+    .more-info {
+        margin-top: 10px;
+        font-size: 12px;
+    }
+
+    .sidebar {
+        display: block;
+        gap: 15px;
+    }
+
+    .sidebar-card {
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .sidebar-card h4 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .balances-table {
+        font-size: 12px;
+    }
+
+    .balances-table thead th,
+    .balances-table tbody td {
+        padding: 6px 4px;
+    }
+
+    .birthday-item {
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .birthday-date {
+        align-self: flex-end;
+    }
+    .circle-oblong {
+        background-color: red;
+        border-radius: 50em; /* Creates an oblong shape */
+        padding: 0.2em 0.6em; /* Adjusts the padding to control the size */
+        color: white; /* Sets the text color to white */
+        font-weight: bold;
+        display: inline-block; /* Allows padding and alignment */
+    }
+
+    /* Corrects the link color inside the span */
+    .circle-oblong a {
+        color: white;
+        text-decoration: none;
+    }
+
+}
+
+/* Small Mobile (480px and below) */
+@media screen and (max-width: 480px) {
+    .dashboard-container {
+        padding: 8px;
+        gap: 12px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .card {
+        min-height: 100px;
+        padding: 12px;
+    }
+
+    .card-content h3 {
+        font-size: 14px;
+    }
+
+    .card-icon {
+        font-size: 22px;
+    }
+
+    .sidebar-card {
+        padding: 12px;
+    }
+
+    .sidebar-card h4 {
+        font-size: 15px;
+    }
+
+    .balances-table {
+        font-size: 11px;
+    }
+
+    .balances-table thead th,
+    .balances-table tbody td {
+        padding: 5px 3px;
+    }
+
+    .birthday-item {
+        padding: 8px;
+    }
+
+    .birthday-date {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+}
+
+/* Extra Small Mobile (360px and below) */
+@media screen and (max-width: 360px) {
+    .dashboard-container {
+        padding: 5px;
+    }
+
+    .card {
+        min-height: 90px;
+        padding: 10px;
+    }
+
+    .card-content h3 {
+        font-size: 13px;
+        line-height: 1.2;
+    }
+
+    .card-icon {
+        font-size: 20px;
+    }
+
+    .more-info {
+        font-size: 11px;
+    }
+
+    .sidebar-card {
+        padding: 10px;
+    }
+
+    .sidebar-card h4 {
+        font-size: 14px;
+    }
+}
+
+/* Hamburger Menu Animation */
+.mobile-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: currentColor;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Sidebar Toggle */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 80px 20px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .sidebar .sidebar-card {
+        background: white;
+        margin-bottom: 15px;
+        animation: slideIn 0.4s ease;
+    }
+
+    .sidebar .sidebar-card:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    .sidebar .sidebar-card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Landscape Mobile Optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .dashboard-container {
+        padding-top: 60px;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .card {
+        min-height: 80px;
+        padding: 10px;
+    }
+
+    .card-content h3 {
+        font-size: 12px;
+    }
+
+    .card-icon {
+        font-size: 18px;
+    }
+}
+
+/* Loading Animation */
+.card {
+    /*animation: fadeInUp 0.6s ease forwards;*/
+}
+
+/*.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+.card:nth-child(7) { animation-delay: 0.7s; }
+.card:nth-child(8) { animation-delay: 0.8s; }
+.card:nth-child(9) { animation-delay: 0.9s; }*/
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus and Accessibility */
+.card:focus,
+.mobile-menu-toggle:focus {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .mobile-menu-toggle,
+    .more-info {
+        display: none;
+    }
+
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+}

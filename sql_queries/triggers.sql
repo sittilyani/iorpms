@@ -1,0 +1,52 @@
+<?php
+
+CREATE EVENT update_patient_status_event
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+    UPDATE patients
+    SET current_status = CASE
+        WHEN DATEDIFF(CURDATE(), (SELECT MAX(visitDate) FROM pharmacy WHERE pharmacy.mat_id = patients.mat_id)) BETWEEN 6 AND 29 THEN 'Defaulted'
+        WHEN DATEDIFF(CURDATE(), (SELECT MAX(visitDate) FROM pharmacy WHERE pharmacy.mat_id = patients.mat_id)) >= 30 THEN 'ltfu'
+        WHEN current_status IN ('Weaned', 'dead', 'Transfer Out', 'Stopped') THEN current_status
+        ELSE 'Active'
+    END;
+   -- This SQL creates an event named update_patient_status_event that is scheduled to run every day (EVERY 1 DAY) starting from the current timestamp (STARTS CURRENT_TIMESTAMP). The event executes an UPDATE statement on the patients table to update the current_status column based on the specified conditions.
+   -- Make sure your MySQL server is configured to allow events, and you have the necessary privileges to create events. Additionally, you may need to enable the event scheduler if it's not already enabled:
+
+sql
+
+SET GLOBAL event_scheduler = ON;
+
+DELIMITER //
+CREATE TRIGGER update_patient_status AFTER INSERT ON pharmacy
+FOR EACH ROW
+BEGIN
+    UPDATE patients
+    SET current_status = CASE
+        WHEN NEW.visitDate IS NOT NULL AND DATEDIFF(CURDATE(), NEW.visitDate) BETWEEN 6 AND 29 THEN 'Defaulted'
+        WHEN NEW.visitDate IS NOT NULL AND DATEDIFF(CURDATE(), NEW.visitDate) >= 30 THEN 'ltfu'
+        WHEN current_status IN ('Weaned', 'dead', 'Transfer Out', 'Stopped') THEN current_status
+        ELSE 'Active'
+    END
+    WHERE mat_id = NEW.mat_id;
+END;
+//
+DELIMITER ;
+
+?>
+
+-- delimiter for deleting from table pharmacy
+
+DELIMITER //
+
+CREATE TRIGGER backup_on_delete
+BEFORE DELETE ON pharmacy
+FOR EACH ROW
+BEGIN
+    INSERT INTO pharmacy_deleted (disp_id, visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, current_status, pharm_officer_name, deleted_on)
+    VALUES (OLD.disp_id, OLD.visitDate, OLD.mat_id, OLD.mat_number, OLD.clientName, OLD.nickName, OLD.age, OLD.sex, OLD.p_address, OLD.cso, OLD.drugname, OLD.dosage, OLD.current_status, OLD.pharm_officer_name,  NOW());
+END;
+//
+
+DELIMITER ;

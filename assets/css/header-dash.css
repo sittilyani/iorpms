@@ -1,0 +1,161 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header {
+            background-color: #EDE2E2;
+            color: #000000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            min-height: 120px;
+
+
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 56px;
+            width: auto;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .system-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-left: 15px;
+            padding-left: 15px;
+            color: #FFFFFF;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            
+        }
+
+        .user-details {
+            text-align: right;
+            display: block;
+            color: #000000;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .user-id, .user-role {
+            font-size: 18px;
+            opacity: 0.9;
+            display: block;
+        }
+
+        .current-time {
+            background: #722182;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: right;
+            gap: 8px;
+            color: #FFFFFF;
+        }
+
+        .logout-btn {
+            background: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .user-menu {
+            display: none; /* Hide the dropdown for now */
+        }
+
+        .timeout-warning {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #CCFF33;
+            color: #FF0000;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .logo-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .system-name {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .user-details {
+                text-align: center;
+            }
+        }

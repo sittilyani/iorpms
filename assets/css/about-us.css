@@ -1,0 +1,92 @@
+/* CSS for a nice, modern look */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background-color: #CCCCCC;
+            color: #000000;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            margin-left: 50px;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .header p {
+            font-size: 1.2em;
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #intro {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #projects {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #projects ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #projects li {
+            background-color: #e9ecef;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #projects li:hover {
+            background-color: #d4e0f0;
+        }
+        #projects strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        footer {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+
+            }
+            main {
+                padding: 10px;
+            }
+        }

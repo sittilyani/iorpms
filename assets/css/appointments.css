@@ -1,0 +1,88 @@
+body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a6bb3, #0d4d8c);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        #print-pdf, #export-excel {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+        }
+
+        #print-pdf { background-color: grey; }
+        #export-excel { background-color: green; }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .container-one{
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .table th {
+            background-color: #f1f7fd;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .status-badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            border-radius: 0.25rem;
+        }
+        .status-scheduled {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-done {
+            background-color: #33FF33;
+            color: #000000;
+        }
+        .action-buttons .btn {
+            margin-right: 5px;
+        }
+        .export-btn {
+            background-color: #198754;
+            border-color: none;
+            color: #ffffff;
+        }
+        .export-btn:hover {
+            background-color: #157347;
+            border-color: #146c43;
+        }
+        .appointment-count {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0d6efd;
+        }

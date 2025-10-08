@@ -1,0 +1,7 @@
+UPDATE medical_history
+SET hiv_status = 'positive',
+    art_regimen ='AF2E - TDF + 3TC + DTG',
+    regimen_type ='First Line',
+    next_appointment ='2025-03-24'
+WHERE mat_id IN ('17911MAT1254', '17911MAT1002');
+
