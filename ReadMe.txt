@@ -33,10 +33,12 @@ username and email = unique
 ; integration_status
 ; referral_linkage_services
 ; psychosocial_outcomes
+; nursing_services
 
 Edit patients table
 Add column:
 ALTER TABLE patients
+remove status_change_notes before import
 ADD COLUMN psycho_social_tca DATE DEFAULT NULL,
 ADD COLUMN psychiatric_tca DATE DEFAULT NULL,
 ADD COLUMN nursing_tca DATE DEFAULT NULL,
