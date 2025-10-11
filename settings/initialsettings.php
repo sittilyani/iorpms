@@ -1,215 +1,102 @@
 <?php
-ob_start();
+// Start the session and include your database connection
 session_start();
+include('../includes/config.php'); // adjust path as needed
 
-if (!isset($_SESSION['user_id'])) {
-    header("location: index.php");
-    exit;
-}
-
-include('../includes/config.php'); // Ensure this connects to your database
-
-
+// Initialize messages
 $success_message = '';
 $error_message = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $selected_facility_id = $_POST['facility_id'];
-    $facilityincharge = $_POST['facilityincharge'];
-    $facilityphone = $_POST['facilityphone'];
-    $email = $_POST['email'];
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Collect and sanitize inputs
+    $facility_id = $_POST['facility_id'] ?? '';
+    $mflcode = $_POST['mflcode'] ?? '';
+    $countyname = $_POST['countyname'] ?? '';
+    $subcountyname = $_POST['subcountyname'] ?? '';
+    $owner = $_POST['owner'] ?? '';
+    $sdp = $_POST['sdp'] ?? '';
+    $agency = $_POST['agency'] ?? '';
+    $emr = $_POST['emr'] ?? '';
+    $emrstatus = $_POST['emrstatus'] ?? '';
+    $infrastructuretype = $_POST['infrastructuretype'] ?? '';
+    $latitude = $_POST['latitude'] ?? '';
+    $longitude = $_POST['longitude'] ?? '';
+    $facilityincharge = $_POST['facilityincharge'] ?? '';
+    $facilityphone = $_POST['facilityphone'] ?? '';
+    $email = $_POST['email'] ?? '';
 
-    $conn->begin_transaction();
-
-    try {
-        // Step 1: Get ALL necessary facility details from the 'facilities' table
-        // This now includes facilityname, countyname, and subcountyname
-        $get_facility_details_sql = "SELECT facilityname, countyname, subcountyname, mflcode, owner, sdp, agency, emr, emrstatus, infrastructuretype, latitude, longitude
-                                     FROM facilities WHERE id = ?";
-        $stmt_get_details = $conn->prepare($get_facility_details_sql);
-        if (!$stmt_get_details) {
-            throw new Exception("Error preparing statement for facility details: " . $conn->error);
-        }
-        $stmt_get_details->bind_param("i", $selected_facility_id);
-        $stmt_get_details->execute();
-        $result_get_details = $stmt_get_details->get_result();
-        $facility_data = $result_get_details->fetch_assoc();
-        $stmt_get_details->close();
-
-        if (!$facility_data) {
-            throw new Exception("Selected facility not found in the database.");
-        }
-
-        // Extract the values needed for insertion into facility_settings
-        $facilityname_to_insert = $facility_data['facilityname'] ?? 'N/A';
-        $countyname_to_insert = $facility_data['countyname'] ?? 'N/A';
-        $subcountyname_to_insert = $facility_data['subcountyname'] ?? 'N/A';
-
-        // Delete all existing records in facility_settings
-        $delete_sql = "DELETE FROM facility_settings";
-        if (!$conn->query($delete_sql)) {
-            throw new Exception("Error deleting existing facility settings: " . $conn->error);
-        }
-
-        // Step 2: Insert the new facility settings, including the new fields
-        $insert_sql = "INSERT INTO facility_settings (facility_id, facilityname, countyname, subcountyname, facilityincharge, facilityphone, email)
-                       VALUES (?, ?, ?, ?, ?, ?, ?)"; // Added facilityname, countyname, subcountyname placeholders
-        $stmt_insert = $conn->prepare($insert_sql);
-        if (!$stmt_insert) {
-            throw new Exception("Error preparing insert statement: " . $conn->error);
-        }
-        // Step 3: Update bind_param to include the new fields
-        // 'issssss' -> i for facility_id (int), s for facilityname (string), s for countyname (string), s for subcountyname (string), s for facilityincharge (string), s for facilityphone (string), s for email (string)
-        $stmt_insert->bind_param("issssss",
-            $selected_facility_id,
-            $facilityname_to_insert,
-            $countyname_to_insert,
-            $subcountyname_to_insert,
-            $facilityincharge,
-            $facilityphone,
-            $email
-        );
-
-        if (!$stmt_insert->execute()) {
-            throw new Exception("Error inserting new facility settings: " . $stmt_insert->error);
-        }
-        $stmt_insert->close();
-
-        // Commit the transaction
-        $conn->commit();
-        $success_message = "The Facility Details added successfully. Previous settings (if any) were replaced.";
-
-        // Step 4: Store all relevant facility details in session variables
-        $_SESSION['current_facility_id'] = $selected_facility_id;
-        $_SESSION['current_facility_name'] = $facility_data['facilityname'];
-        $_SESSION['current_mflcode'] = $facility_data['mflcode'];
-        $_SESSION['current_county'] = $facility_data['countyname'];
-        $_SESSION['current_subcounty'] = $facility_data['subcountyname'];
-        $_SESSION['current_owner'] = $facility_data['owner'];
-        $_SESSION['current_sdp'] = $facility_data['sdp'];
-        $_SESSION['current_agency'] = $facility_data['agency'];
-        $_SESSION['current_emr'] = $facility_data['emr'];
-        $_SESSION['current_emrstatus'] = $facility_data['emrstatus'];
-        $_SESSION['current_infrastructuretype'] = $facility_data['infrastructuretype'];
-        $_SESSION['current_latitude'] = $facility_data['latitude'];
-        $_SESSION['current_longitude'] = $facility_data['longitude'];
-
-        // Also store the incharge, phone, email if they are needed globally
-        $_SESSION['current_facility_incharge'] = $facilityincharge;
-        $_SESSION['current_facility_phone'] = $facilityphone;
-        $_SESSION['current_facility_email'] = $email;
-
-
-        echo "<div class='message success'>";
-        echo $success_message;
-        echo "</div>";
-
-        echo "<script>
-                setTimeout(function() {
-                    window.location.href = '../dashboard/admin_dashboard.php';
-                }, 4000);
-            </script>";
-        exit();
-
-    } catch (Exception $e) {
-        $conn->rollback();
-        $error_message = "Setup failed. Please try again. Error: " . $e->getMessage();
-        echo "<div class='message error'>";
-        echo $error_message;
-        echo "</div>";
-    }
-}
-// For initial load, if a facility is already set up, retrieve it
-// This part is for pre-populating the form if facility settings already exist.
-$current_setup_facility_id = null;
-$current_setup_facility_name_display = 'Not Set'; // Default display
-$current_setup_incharge = '';
-$current_setup_phone = '';
-$current_setup_email = '';
-$current_mfl_code = '';
-$current_county = '';
-$current_subcounty = '';
-$current_owner = '';
-$current_sdp = '';
-$current_agency = '';
-$current_emr = '';
-$current_emr_status = '';
-$current_infrastructure_type = '';
-$current_latitude = '';
-$current_longitude = '';
-
-
-if (isset($conn) && $conn instanceof mysqli) {
-    // Modified SELECT query to get the new fields from facility_settings directly
-    $sql_get_current_settings = "SELECT fs.*, f.mflcode, f.owner, f.sdp, f.agency, f.emr, f.emrstatus, f.infrastructuretype, f.latitude, f.longitude
-                                 FROM facility_settings fs
-                                 LEFT JOIN facilities f ON fs.facility_id = f.id
-                                 LIMIT 1"; // Assuming only one record in facility_settings
-    $result_current_settings = $conn->query($sql_get_current_settings);
-
-    if ($result_current_settings && $result_current_settings->num_rows > 0) {
-        $current_settings = $result_current_settings->fetch_assoc();
-        $current_setup_facility_id = $current_settings['facility_id'];
-        // Retrieve directly from facility_settings if available, otherwise fallback to JOIN result
-        $current_setup_facility_name_display = $current_settings['facilityname'] ?? 'Not Set';
-        $current_county = $current_settings['countyname'] ?? '';
-        $current_subcounty = $current_settings['subcountyname'] ?? '';
-
-        $current_setup_incharge = $current_settings['facilityincharge'];
-        $current_setup_phone = $current_settings['facilityphone'];
-        $current_setup_email = $current_settings['email'];
-        $current_mfl_code = $current_settings['mflcode'];
-        // $current_county and $current_subcounty are already populated from facility_settings
-        $current_owner = $current_settings['owner'];
-        $current_sdp = $current_settings['sdp'];
-        $current_agency = $current_settings['agency'];
-        $current_emr = $current_settings['emr'];
-        $current_emr_status = $current_settings['emrstatus'];
-        $current_infrastructure_type = $current_settings['infrastructuretype'];
-        $current_latitude = $current_settings['latitude'];
-        $current_longitude = $current_settings['longitude'];
-
-        // Also update all relevant session variables if not already set or different
-        $_SESSION['current_facility_id'] = $current_setup_facility_id;
-        $_SESSION['current_facility_name'] = $current_setup_facility_name_display;
-        $_SESSION['current_mflcode'] = $current_mfl_code;
-        $_SESSION['current_county'] = $current_county;
-        $_SESSION['current_subcounty'] = $current_subcounty;
-        $_SESSION['current_owner'] = $current_owner;
-        $_SESSION['current_sdp'] = $current_sdp;
-        $_SESSION['current_agency'] = $current_agency;
-        $_SESSION['current_emr'] = $current_emr;
-        $_SESSION['current_emrstatus'] = $current_emr_status;
-        $_SESSION['current_infrastructuretype'] = $current_infrastructure_type;
-        $_SESSION['current_latitude'] = $current_latitude;
-        $_SESSION['current_longitude'] = $current_longitude;
-
-        $_SESSION['current_facility_incharge'] = $current_setup_incharge;
-        $_SESSION['current_facility_phone'] = $current_setup_phone;
-        $_SESSION['current_facility_email'] = $current_setup_email;
-
+    // Basic validation
+    if (empty($facility_id) || empty($facilityincharge) || empty($facilityphone) || empty($email)) {
+        $error_message = "Please fill all required fields.";
     } else {
-        // No facility is currently set up, clear all relevant session variables
-        unset($_SESSION['current_facility_name']);
-        unset($_SESSION['current_facility_id']);
-        unset($_SESSION['current_mflcode']);
-        unset($_SESSION['current_county']);
-        unset($_SESSION['current_subcounty']);
-        unset($_SESSION['current_owner']);
-        unset($_SESSION['current_sdp']);
-        unset($_SESSION['current_agency']);
-        unset($_SESSION['current_emr']);
-        unset($_SESSION['current_emrstatus']);
-        unset($_SESSION['current_infrastructuretype']);
-        unset($_SESSION['current_latitude']);
-        unset($_SESSION['current_longitude']);
-        unset($_SESSION['current_facility_incharge']);
-        unset($_SESSION['current_facility_phone']);
-        unset($_SESSION['current_facility_email']);
+        // Optional: Delete any existing setup for this facility
+        $delete_sql = "DELETE FROM facility_settings WHERE facility_id = ?";
+        $stmt = $conn->prepare($delete_sql);
+        $stmt->bind_param("i", $facility_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // Insert the new setup record
+        $insert_sql = "INSERT INTO facility_settings (
+            facility_id, mflcode, countyname, subcountyname, owner, sdp, agency, emr, emrstatus,
+            infrastructuretype, latitude, longitude, facilityincharge, facilityphone, email, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
+        $stmt = $conn->prepare($insert_sql);
+        if ($stmt === false) {
+            $error_message = "Database error: " . htmlspecialchars($conn->error);
+        } else {
+            $stmt->bind_param(
+                "issssssssssssss",
+                $facility_id,
+                $mflcode,
+                $countyname,
+                $subcountyname,
+                $owner,
+                $sdp,
+                $agency,
+                $emr,
+                $emrstatus,
+                $infrastructuretype,
+                $latitude,
+                $longitude,
+                $facilityincharge,
+                $facilityphone,
+                $email
+            );
+
+            if ($stmt->execute()) {
+                $success_message = "Facility setup has been saved successfully.";
+            } else {
+                $error_message = "Failed to save setup: " . htmlspecialchars($stmt->error);
+            }
+            $stmt->close();
+        }
     }
 }
-ob_end_flush();
+
+// Re-fetch facility details for the dropdown list and pre-fill (optional)
+$current_setup_facility_id = $facility_id ?? '';
+$current_mflcode = $mflcode ?? '';
+$current_county = $countyname ?? '';
+$current_subcounty = $subcountyname ?? '';
+$current_owner = $owner ?? '';
+$current_sdp = $sdp ?? '';
+$current_agency = $agency ?? '';
+$current_emr = $emr ?? '';
+$current_emr_status = $emrstatus ?? '';
+$current_infrastructure_type = $infrastructuretype ?? '';
+$current_latitude = $latitude ?? '';
+$current_longitude = $longitude ?? '';
+$current_setup_incharge = $facilityincharge ?? '';
+$current_setup_phone = $facilityphone ?? '';
+$current_setup_email = $email ?? '';
+
+// Include your HTML form
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -219,127 +106,22 @@ ob_end_flush();
     <title>Facility Setup</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .form-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 960px; /* Increased max-width for three columns */
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-            gap: 20px 30px; /* Row and column gap */
-        }
-
-        .form-group {
-            margin-bottom: 0; /* No margin-bottom here, gap handles spacing */
-        }
-
-        label {
-            font-weight: bold;
-            color: #333;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            box-sizing: border-box; /* Include padding in element's total width */
-            font-size: 1rem;
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        select:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        button[type="submit"] {
-            grid-column: 1 / -1; /* Make the button span across all columns */
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            height: 45px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        .message {
-            width: 100%;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-bottom: 20px; /* Space below messages */
-            box-sizing: border-box;
-        }
-
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .note-message {
-            grid-column: 1 / -1; /* Span across all columns */
-            text-align: center;
-            margin-top: 15px;
-            font-style: italic;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 992px) { /* Adjust breakpoint for 2 columns */
-            .form-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) { /* Adjust breakpoint for 1 column */
-            .form-grid {
-                grid-template-columns: 1fr; /* Stack columns on smaller screens */
-            }
-            button[type="submit"], .note-message {
-                grid-column: auto; /* Reset grid-column for smaller screens */
-            }
-        }
+        body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;}
+        .form-container {background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); width: 100%; max-width: 960px;}
+        .form-grid {display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 30px;}
+        .form-group {margin-bottom: 0;}
+        label {font-weight: bold; color: #333; display: block; margin-bottom: 5px;}
+        input[type="text"], input[type="email"], input[type="tel"], select {width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;}
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);}
+        input[readonly] {background-color: #e9ecef; cursor: not-allowed;}
+        button[type="submit"] {grid-column: 1 / -1; background-color: #007bff; color: white; border: none; border-radius: 5px; height: 45px; font-size: 1.1rem; cursor: pointer; transition: background-color 0.3s ease; margin-top: 20px;}
+        button[type="submit"]:hover {background-color: #0056b3;}
+        .message {width: 100%; padding: 15px; text-align: center; font-weight: bold; border-radius: 5px; margin-bottom: 20px; box-sizing: border-box;}
+        .success {background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .error {background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+        .note-message {grid-column: 1 / -1; text-align: center; margin-top: 15px; font-style: italic; color: #666; font-size: 0.9em;}
+        @media (max-width: 992px) {.form-grid {grid-template-columns: repeat(2, 1fr);}}
+        @media (max-width: 768px) {.form-grid {grid-template-columns: 1fr;} button[type="submit"], .note-message {grid-column: auto;}}
     </style>
 </head>
 <body>
@@ -365,11 +147,7 @@ ob_end_flush();
                                     $selected = ($current_setup_facility_id == $row['id']) ? 'selected' : '';
                                     echo "<option value='{$row['id']}' {$selected}>{$row['facilityname']}</option>";
                                 }
-                            } else {
-                                echo "<option value=''>Error loading facilities</option>";
                             }
-                        } else {
-                            echo "<option value=''>Database connection error</option>";
                         }
                         ?>
                     </select>
@@ -377,7 +155,7 @@ ob_end_flush();
 
                 <div class="form-group">
                     <label for="mflcode">MFL Code:</label>
-                    <input type="text" name="mflcode" id="mflcode" readonly value="<?php echo htmlspecialchars($current_mfl_code); ?>">
+                    <input type="text" name="mflcode" id="mflcode" value="<?php echo htmlspecialchars($current_mflcode); ?>">
                 </div>
 
                 <div class="form-group">
@@ -446,7 +224,7 @@ ob_end_flush();
                 </div>
 
                 <div class="form-group note-message">
-                    <p>Please be sure because this will replace any existing facility setup and cannot be easily changed after submission.</p>
+                    <p>Please be sure because this will replace any existing facility setup.</p>
                 </div>
 
                 <button type="submit">Save and Submit</button>
@@ -457,28 +235,19 @@ ob_end_flush();
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const facilitySelect = document.getElementById('facility_id');
-            const fieldsToPopulate = [
-                'mflcode', 'countyname', 'subcountyname', 'owner', 'sdp',
-                'agency', 'emr', 'emrstatus', 'infrastructuretype', 'latitude', 'longitude'
-            ];
-
-            function populateFields(data) {
-                fieldsToPopulate.forEach(field => {
-                    const inputElement = document.getElementById(field);
-                    if (inputElement) {
-                        inputElement.value = data[field] || '';
-                    }
-                });
-            }
-
-            function clearFields() {
-                fieldsToPopulate.forEach(field => {
-                    const inputElement = document.getElementById(field);
-                    if (inputElement) {
-                        inputElement.value = '';
-                    }
-                });
-            }
+            const fieldsToPopulate = {
+                'mflcode': 'mflcode',
+                'countyname': 'countyname',
+                'subcountyname': 'subcountyname',
+                'owner': 'owner',
+                'sdp': 'sdp',
+                'agency': 'agency',
+                'emr': 'emr',
+                'emrstatus': 'emrstatus',
+                'infrastructuretype': 'infrastructuretype',
+                'latitude': 'latitude',
+                'longitude': 'longitude'
+            };
 
             facilitySelect.addEventListener('change', function() {
                 var facilityId = this.value;
@@ -488,80 +257,31 @@ ob_end_flush();
                         .then(data => {
                             if (data.error) {
                                 alert(data.error);
-                                clearFields();
+                                // Clear all fields
+                                Object.keys(fieldsToPopulate).forEach(field => {
+                                    document.getElementById(field).value = '';
+                                });
                             } else {
-                                populateFields(data);
+                                // Populate all readonly fields
+                                Object.keys(fieldsToPopulate).forEach(field => {
+                                    const element = document.getElementById(field);
+                                    if (element) {
+                                        element.value = data[fieldsToPopulate[field]] || '';
+                                    }
+                                });
                             }
                         })
                         .catch(error => {
                             console.error('Error fetching facility details:', error);
                             alert('An error occurred while fetching facility details.');
-                            clearFields();
                         });
                 } else {
-                    clearFields();
+                    // Clear all fields if no facility selected
+                    Object.keys(fieldsToPopulate).forEach(field => {
+                        document.getElementById(field).value = '';
+                    });
                 }
             });
-            // Removed the duplicate JavaScript block.
-        });
-    </script>
-
-    <script>
-        document.getElementById('facility_id').addEventListener('change', function() {
-            var facilityId = this.value;
-            if (facilityId) {
-                // Make an AJAX request to fetch facility details
-                fetch('fetch_facility_details.php?id=' + facilityId)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            // Clear all fields if error
-                            document.getElementById('mflcode').value = '';
-                            document.getElementById('countyname').value = '';
-                            document.getElementById('subcountyname').value = '';
-                            document.getElementById('owner').value = '';
-                            document.getElementById('sdp').value = '';
-                            document.getElementById('agency').value = '';
-                            document.getElementById('emr').value = '';
-                            document.getElementById('emrstatus').value = '';
-                            document.getElementById('infrastructuretype').value = '';
-                            document.getElementById('latitude').value = '';
-                            document.getElementById('longitude').value = '';
-                        } else {
-                            // Populate the readonly fields
-                            document.getElementById('mflcode').value = data.mflcode || '';
-                            document.getElementById('countyname').value = data.countyname || '';
-                            document.getElementById('subcountyname').value = data.subcountyname || '';
-                            document.getElementById('owner').value = data.owner || '';
-                            document.getElementById('sdp').value = data.sdp || '';
-                            document.getElementById('agency').value = data.agency || '';
-                            document.getElementById('emr').value = data.emr || '';
-                            document.getElementById('emrstatus').value = data.emrstatus || '';
-                            document.getElementById('infrastructuretype').value = data.infrastructuretype || '';
-                            document.getElementById('latitude').value = data.latitude || '';
-                            document.getElementById('longitude').value = data.longitude || '';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching facility details:', error);
-                        alert('An error occurred while fetching facility details.');
-                    });
-            } else {
-                // Clear all fields if no facility is selected
-                document.getElementById('mflcode').value = '';
-                document.getElementById('countyname').value = '';
-                document.getElementById('subcountyname').value = '';
-                document.getElementById('owner').value = '';
-                document.getElementById('sdp').value = '';
-                document.getElementById('agency').value = '';
-                document.getElementById('emr').value = '';
-                document.getElementById('emrstatus').value = '';
-                document.getElementById('infrastructuretype').value = '';
-                document.getElementById('latitude').value = '';
-                document.getElementById('longitude').value = '';
-            }
-
         });
     </script>
 </body>

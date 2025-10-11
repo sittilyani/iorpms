@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-include('../includes/config.php'); // Ensure this connects to your database
+include('../includes/config.php');
 
 $success_message = '';
 $error_message = '';
@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Step 1: Get ALL necessary facility details from the 'facilities' table
-        // This now includes facilityname, countyname, and subcountyname
         $get_facility_details_sql = "SELECT facilityname, countyname, subcountyname, mflcode, owner, sdp, agency, emr, emrstatus, infrastructuretype, latitude, longitude
                                      FROM facilities WHERE id = ?";
         $stmt_get_details = $conn->prepare($get_facility_details_sql);
@@ -41,27 +40,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Extract the values needed for insertion into facility_settings
         $facilityname_to_insert = $facility_data['facilityname'] ?? 'N/A';
+        $mflcode_to_insert = !empty($facility_data['mflcode']) ? $facility_data['mflcode'] : 'N/A';
         $countyname_to_insert = $facility_data['countyname'] ?? 'N/A';
         $subcountyname_to_insert = $facility_data['subcountyname'] ?? 'N/A';
 
-        // Delete all existing records in facility_settings
+        // Step 2: Delete all existing records in facility_settings (table can only hold one row)
         $delete_sql = "DELETE FROM facility_settings";
         if (!$conn->query($delete_sql)) {
             throw new Exception("Error deleting existing facility settings: " . $conn->error);
         }
 
-        // Step 2: Insert the new facility settings, including the new fields
-        $insert_sql = "INSERT INTO facility_settings (facility_id, facilityname, countyname, subcountyname, facilityincharge, facilityphone, email)
-                       VALUES (?, ?, ?, ?, ?, ?, ?)"; // Added facilityname, countyname, subcountyname placeholders
+        // Step 3: Insert the new facility settings
+        $insert_sql = "INSERT INTO facility_settings (facility_id, facilityname, mflcode, countyname, subcountyname, facilityincharge, facilityphone, email)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt_insert = $conn->prepare($insert_sql);
         if (!$stmt_insert) {
             throw new Exception("Error preparing insert statement: " . $conn->error);
         }
-        // Step 3: Update bind_param to include the new fields
-        // 'issssss' -> i for facility_id (int), s for facilityname (string), s for countyname (string), s for subcountyname (string), s for facilityincharge (string), s for facilityphone (string), s for email (string)
-        $stmt_insert->bind_param("issssss",
+
+        $stmt_insert->bind_param("isssssss",
             $selected_facility_id,
             $facilityname_to_insert,
+            $mflcode_to_insert,
             $countyname_to_insert,
             $subcountyname_to_insert,
             $facilityincharge,
@@ -76,9 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Commit the transaction
         $conn->commit();
-        $success_message = "The Facility Details added successfully. Previous settings (if any) were replaced.";
+        $success_message = "The Facility Details added successfully. Previous settings were replaced.";
 
-        // Step 4: Store all relevant facility details in session variables
+        // Step 4: Update all relevant session variables with new data
         $_SESSION['current_facility_id'] = $selected_facility_id;
         $_SESSION['current_facility_name'] = $facility_data['facilityname'];
         $_SESSION['current_mflcode'] = $facility_data['mflcode'];
@@ -92,22 +92,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['current_infrastructuretype'] = $facility_data['infrastructuretype'];
         $_SESSION['current_latitude'] = $facility_data['latitude'];
         $_SESSION['current_longitude'] = $facility_data['longitude'];
-
-        // Also store the incharge, phone, email if they are needed globally
         $_SESSION['current_facility_incharge'] = $facilityincharge;
         $_SESSION['current_facility_phone'] = $facilityphone;
         $_SESSION['current_facility_email'] = $email;
-
 
         echo "<div class='message success'>";
         echo $success_message;
         echo "</div>";
 
         echo "<script>
-                setTimeout(function() {
-                    window.location.href = '../dashboard/admin_dashboard.php';
-                }, 4000);
-            </script>";
+                  setTimeout(function() {
+                      window.location.href = '../dashboard/dashboard.php';
+                  }, 4000);
+              </script>";
         exit();
 
     } catch (Exception $e) {
@@ -118,14 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "</div>";
     }
 }
-// For initial load, if a facility is already set up, retrieve it
-// This part is for pre-populating the form if facility settings already exist.
+
+// For initial load - Load existing facility settings if available
 $current_setup_facility_id = null;
-$current_setup_facility_name_display = 'Not Set'; // Default display
+$current_setup_facility_name_display = 'Not Set';
 $current_setup_incharge = '';
 $current_setup_phone = '';
 $current_setup_email = '';
-$current_mfl_code = '';
+$current_mflcode = '';
 $current_county = '';
 $current_subcounty = '';
 $current_owner = '';
@@ -137,28 +134,25 @@ $current_infrastructure_type = '';
 $current_latitude = '';
 $current_longitude = '';
 
-
 if (isset($conn) && $conn instanceof mysqli) {
-    // Modified SELECT query to get the new fields from facility_settings directly
-    $sql_get_current_settings = "SELECT fs.*, f.mflcode, f.owner, f.sdp, f.agency, f.emr, f.emrstatus, f.infrastructuretype, f.latitude, f.longitude
+    $sql_get_current_settings = "SELECT fs.*, f.owner, f.sdp, f.agency, f.emr, f.emrstatus, f.infrastructuretype, f.latitude, f.longitude
                                  FROM facility_settings fs
                                  LEFT JOIN facilities f ON fs.facility_id = f.id
-                                 LIMIT 1"; // Assuming only one record in facility_settings
+                                 LIMIT 1";
     $result_current_settings = $conn->query($sql_get_current_settings);
 
     if ($result_current_settings && $result_current_settings->num_rows > 0) {
         $current_settings = $result_current_settings->fetch_assoc();
+
+        // Populate all variables from database
         $current_setup_facility_id = $current_settings['facility_id'];
-        // Retrieve directly from facility_settings if available, otherwise fallback to JOIN result
         $current_setup_facility_name_display = $current_settings['facilityname'] ?? 'Not Set';
         $current_county = $current_settings['countyname'] ?? '';
         $current_subcounty = $current_settings['subcountyname'] ?? '';
-
         $current_setup_incharge = $current_settings['facilityincharge'];
         $current_setup_phone = $current_settings['facilityphone'];
         $current_setup_email = $current_settings['email'];
-        $current_mfl_code = $current_settings['mflcode'];
-        // $current_county and $current_subcounty are already populated from facility_settings
+        $current_mflcode = $current_settings['mflcode'];
         $current_owner = $current_settings['owner'];
         $current_sdp = $current_settings['sdp'];
         $current_agency = $current_settings['agency'];
@@ -168,10 +162,10 @@ if (isset($conn) && $conn instanceof mysqli) {
         $current_latitude = $current_settings['latitude'];
         $current_longitude = $current_settings['longitude'];
 
-        // Also update all relevant session variables if not already set or different
+        // Update session variables with current data
         $_SESSION['current_facility_id'] = $current_setup_facility_id;
         $_SESSION['current_facility_name'] = $current_setup_facility_name_display;
-        $_SESSION['current_mflcode'] = $current_mfl_code;
+        $_SESSION['current_mflcode'] = $current_mflcode;
         $_SESSION['current_county'] = $current_county;
         $_SESSION['current_subcounty'] = $current_subcounty;
         $_SESSION['current_owner'] = $current_owner;
@@ -182,29 +176,27 @@ if (isset($conn) && $conn instanceof mysqli) {
         $_SESSION['current_infrastructuretype'] = $current_infrastructure_type;
         $_SESSION['current_latitude'] = $current_latitude;
         $_SESSION['current_longitude'] = $current_longitude;
-
         $_SESSION['current_facility_incharge'] = $current_setup_incharge;
         $_SESSION['current_facility_phone'] = $current_setup_phone;
         $_SESSION['current_facility_email'] = $current_setup_email;
-
     } else {
-        // No facility is currently set up, clear all relevant session variables
-        unset($_SESSION['current_facility_name']);
-        unset($_SESSION['current_facility_id']);
-        unset($_SESSION['current_mflcode']);
-        unset($_SESSION['current_county']);
-        unset($_SESSION['current_subcounty']);
-        unset($_SESSION['current_owner']);
-        unset($_SESSION['current_sdp']);
-        unset($_SESSION['current_agency']);
-        unset($_SESSION['current_emr']);
-        unset($_SESSION['current_emrstatus']);
-        unset($_SESSION['current_infrastructuretype']);
-        unset($_SESSION['current_latitude']);
-        unset($_SESSION['current_longitude']);
-        unset($_SESSION['current_facility_incharge']);
-        unset($_SESSION['current_facility_phone']);
-        unset($_SESSION['current_facility_email']);
+        // No facility set up - Set default/empty values in session
+        $_SESSION['current_facility_id'] = null;
+        $_SESSION['current_facility_name'] = 'Not Set';
+        $_SESSION['current_mflcode'] = '';
+        $_SESSION['current_county'] = '';
+        $_SESSION['current_subcounty'] = '';
+        $_SESSION['current_owner'] = '';
+        $_SESSION['current_sdp'] = '';
+        $_SESSION['current_agency'] = '';
+        $_SESSION['current_emr'] = '';
+        $_SESSION['current_emrstatus'] = '';
+        $_SESSION['current_infrastructuretype'] = '';
+        $_SESSION['current_latitude'] = '';
+        $_SESSION['current_longitude'] = '';
+        $_SESSION['current_facility_incharge'] = '';
+        $_SESSION['current_facility_phone'] = '';
+        $_SESSION['current_facility_email'] = '';
     }
 }
 ob_end_flush();
@@ -303,16 +295,18 @@ ob_end_flush();
             box-sizing: border-box;
         }
 
-        .message.success {
+        .success_messages {
             background-color: #d4edda;
-            color: #155724;
+            color: #FFFFFF;
             border: 1px solid #c3e6cb;
+            text-align: center;
         }
 
-        .message.error {
+        .error_message {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+            text-align: center;
         }
 
         .note-message {
@@ -376,7 +370,7 @@ ob_end_flush();
 
                 <div class="form-group">
                     <label for="mflcode">MFL Code:</label>
-                    <input type="text" name="mflcode" id="mflcode" readonly value="<?php echo htmlspecialchars($current_mfl_code); ?>">
+                    <input type="int" name="mflcode" id="mflcode" readonly value="<?php echo htmlspecialchars($current_mflcode); ?>">
                 </div>
 
                 <div class="form-group">

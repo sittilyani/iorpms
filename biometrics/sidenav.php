@@ -78,6 +78,7 @@ $user_id = $_SESSION['user_id'] ?? '';
 
     <a href="../fingerprints/fingerprints_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-lock"></i>Search Client Finger Prints</a>
+    
 
 
 </div>

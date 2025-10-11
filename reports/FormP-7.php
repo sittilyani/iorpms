@@ -6,16 +6,18 @@ require_once '../includes/config.php'; // Include your database connection
 // Fetch facility settings
 $facilityName = "N/A";
 $countyName = "N/A";
+$scountyName = "N/A";
 $facilityIncharge = "N/A";
 $facilityPhone = "N/A";
 
-$queryFacilitySettings = "SELECT facilityname, countyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1"; // Assuming one row for settings
+$queryFacilitySettings = "SELECT facilityname, countyname, scountyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1"; // Assuming one row for settings
 $resultFacilitySettings = $conn->query($queryFacilitySettings);
 
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
     $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
     $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
+    $scountyName = htmlspecialchars($rowFacilitySettings['scountyname']);
     $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
     $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
 }
@@ -53,7 +55,7 @@ $loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspeci
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        
+
         <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="stylep7.css" type="text/css">
         <title>Form P 7</title>

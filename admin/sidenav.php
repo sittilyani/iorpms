@@ -76,7 +76,7 @@ $user_id = $_SESSION['user_id'] ?? '';
 
     <a href="../public/userslist.php" target="contentFrame" class="nav-link">
         <i class="fa fa-users"></i> View users</a>
-    <a href="../admin/initialsettings.php" target="contentFrame" class="nav-link">
+    <a href="../admin/initialsettings.php" class="nav-link">
         <i class="fa fa-wrench"></i> Facility Setup</a>
     <a href="../admin/add_facility.php" target="contentFrame" class="nav-link">
         <i class="fa fa-plus-circle"></i> Add New Facility</a>

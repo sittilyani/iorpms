@@ -72,20 +72,24 @@ $user_id = $_SESSION['user_id'] ?? '';
 
     <a href="../backup/updatecurrent_status.php" class="nav-link">
         <i class="fa fa-user-plus"></i>Update patients current status </a>
+    <a href="../clinician/clinician_follow_up_form.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-stethoscope"></i>Clinical Follow Up Form</a>
+    <a href="../clinician/clinical_encounter_search.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-stethoscope"></i>Clinical Initial Encounter Form</a>
+    <a href="../clinician/transfer_form_search.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-stethoscope"></i>Transfer Form</a>
     <a href="../clinician/prescribe.php" target="contentFrame" class="nav-link">
             <i class="fa fa-clone"></i>Update controlled drugs dosage</a>
     <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
         <i class="fa fa-file"></i>Prescribe other drugs</a>
-    <a href="../patients/view_all_patients.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-users"></i>View All patients</a>
-    <a href="../clinician/treatment.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-stethoscope"></i>CCC Clinical consultations</a>
     <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
             <i class="fa fa-stethoscope"></i>View referrals</a>
     <a href="../patients/view_hiv_positive.php" target="contentFrame"  class="nav-link">
         <i class="fa fa-microchip"></i>HIV Viral Load</a>
     <a href="../laboratory/toxicology_results.php" target="contentFrame"  class="nav-link">
         <i class="fa fa-binoculars"></i>Toxicology Results</a>
+    <a href="../patients/view_all_patients.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-users"></i>View All patients</a>
 
 </div>
 

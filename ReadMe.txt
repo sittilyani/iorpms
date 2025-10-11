@@ -34,6 +34,12 @@ username and email = unique
 ; referral_linkage_services
 ; psychosocial_outcomes
 ; nursing_services
+; consents
+;csos
+
+ALTER TABLE tblusers ADD COLUMN full_name VARCHAR(200) GENERATED ALWAYS AS (CONCAT(first_name, ' ', last_name)) STORED;
+
+<input type="text" name="visitDate" class="readonly-input" readonly value="<?php echo date('Y-m-d'); ?>">
 
 Edit patients table
 Add column:
@@ -48,6 +54,9 @@ ADD COLUMN records_tca DATE DEFAULT NULL,
 ADD COLUMN peer_tca DATE DEFAULT NULL,
 ADD COLUMN admin_tca DATE DEFAULT NULL;
 
+
+add column mflcode to facility_settings
+
 -- update the columns
 UPDATE patients
 SET psycho_social_tca = next_appointment,
@@ -59,6 +68,12 @@ SET psycho_social_tca = next_appointment,
     peer_tca = next_appointment,
     admin_tca = next_appointment
 WHERE next_appointment IS NOT NULL;
+
+UPDATE consents
+INNER JOIN patients ON patients.mat_id = consents.mat_id
+SET consents.date_of_consent = patients.reg_date
+WHERE consents.date_of_consent IS NULL;
+
 
 # All names:
 $service_provider

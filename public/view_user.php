@@ -107,6 +107,7 @@ ob_end_flush(); // End output buffering and send output to the browser
                 <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
                 <p><strong>First Name:</strong> <?php echo htmlspecialchars($user['first_name']); ?></p>
                 <p><strong>Last Name:</strong> <?php echo htmlspecialchars($user['last_name']); ?></p>
+                <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
                 <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
                 <p><strong>Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
                 <p><strong>Mobile:</strong> <?php echo htmlspecialchars($user['mobile']); ?></p>

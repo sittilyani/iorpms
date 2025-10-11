@@ -84,6 +84,8 @@ $user_id = $_SESSION['user_id'] ?? '';
                     <i class="fa fa-universal-access"></i>Form P 9</a>
                 <a href="../pharmacy/drugs_dispensed_range.php" target="contentFrame"  class="nav-link">
                     <i class="fa fa-comment"></i>Drugs Dispensed</a>
+                <a href="../reports/moh_731-plus-6.php" target="contentFrame"  class="nav-link">
+                    <i class="fa fa-comment"></i>MOH 731 Plus-6</a>
 <?php endif; ?>
 </div>
 
