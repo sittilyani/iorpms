@@ -27,11 +27,6 @@ $pharmicName = $userFullName['fullName'] ?? '';
 $pharmicMobile = $userFullName['mobile'] ?? '';
 $pharmicSign = $userInitials['initials'] ?? '';
 $pharmicDate = date('Y-m-d'); // Current date in Y-m-d format
-?>
-<?php
-ob_start();
-
-require_once '../includes/config.php'; // Include your database connection
 
 // Fetch facility settings
 $facilityName = "N/A";
@@ -62,11 +57,10 @@ $loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspeci
 <html>
     <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-            <meta name="generator" content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet">
-
             <title>FormP8</title>
+            <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
             <link rel="stylesheet" href="stylep8.css" type="text/css">
-           <script src="../assets/js/bootstrap.min.js"></script> 
+           <script src="../assets/js/bootstrap.min.js"></script>
     </head>
 
     <body>
