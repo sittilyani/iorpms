@@ -313,7 +313,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
         </div>
 
         <div class="form-group">
-            <label for="mat_status">Have you ever received MAT services elsewhere? <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+            <label for="mat_status">Client MAT status at enrolment? <span style='color: red; font-weight: bold;'>&#10033;</span></label>
             <select id="mat_status" name="mat_status" required>
                 <option value="">Select enrolment status</option>
                 <?php
@@ -385,7 +385,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             </select>
         </div>
         <div class="form-group">
-            <label for="reffering_fac_client_number">Referring Facility Clients Registration Number</label>
+            <label for="reffering_fac_client_number">Referring Facility MAT ID</label>
             <input type="text" id="reffering_fac_client_number" name="reffering_fac_client_number">
         </div>
 

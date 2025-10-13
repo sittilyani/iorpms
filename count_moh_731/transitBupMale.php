@@ -14,7 +14,7 @@ $sql = "SELECT COUNT(*) as transitCount
             AND sex = 'male'
             AND reg_date >= ?
             AND reg_date <= ?
-            AND drugname = LIKE '%Buprenorphine%'";
+            AND drugname IN ('Buprenorphine 2mg','Buprenorphine 4mg','Buprenorphine 8mg')";
 
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {

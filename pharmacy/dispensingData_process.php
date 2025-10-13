@@ -30,8 +30,8 @@ function displayMessagesAndRedirect($conn, $successes, $errors, $mat_id) {
         echo "<div style='background-color: #EDFEB0; color: red; padding: 10px; margin-bottom: 10px; border-radius: 5px; font-weight: bold;'>$error</div>";
     }
 
-    // Redirect back to the dispensing page for the client
-    echo "<script>setTimeout(function(){ window.location.href = 'dispensingData.php?mat_id=" . urlencode($mat_id) . "'; }, 5000);</script>";
+    // Redirect back to the clinician follow up page for the clients
+    echo "<script>setTimeout(function(){ window.location.href = 'dispensingData.php?mat_id=" . urlencode($mat_id) . "'; }, 2000);</script>";
     echo "</body></html>";
     exit();
 }

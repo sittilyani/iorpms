@@ -535,7 +535,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label for="results">VL Results</label>
-                    <input type="text" name="results" class="form-control" value="<?php echo htmlspecialchars($medicalHistoryData['results']); ?>">
+                    <input type="text" name="results" class="form-control" value="<?php echo htmlspecialchars($medicalHistoryData['results'] ?? 'None', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
 
                 <!-- Next Appointment -->

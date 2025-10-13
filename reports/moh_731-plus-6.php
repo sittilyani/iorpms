@@ -180,18 +180,18 @@ $stmt->close();
 
         <tr class="section-header"><td colspan="4">1.2 Currently on MAT Methadone</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Number Currently on Methadone 15 - 19 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Methadone 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Methadone 25 - 29 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Methadone 30+ Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td><?php include '../count_moh_731/transitBupMale.php'; ?></td><td><?php include '../count_moh_731/transitBupFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitBupAll.php'; ?></td></tr>
+        <tr><td>Number Currently on Methadone 15 - 19 Years</td><td><?php include '../count_moh_731/currentMetMale_1519.php'; ?></td><td><?php include '../count_moh_731/currentMetFemale_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentMetAll_1519.php'; ?></td></tr>
+        <tr><td>Number Currently on Methadone 20 - 24 Years</td><td><?php include '../count_moh_731/currentMetMale_2024.php'; ?></td><td><?php include '../count_moh_731/currentMetFemale_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentMetAll_2024.php'; ?></td></tr>
+        <tr><td>Number Currently on Methadone 25 - 29 Years</td><td><?php include '../count_moh_731/currentMetMale_2529.php'; ?></td><td><?php include '../count_moh_731/currentMetFemale_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentMetAll_2529.php'; ?></td></tr>
+        <tr><td>Number Currently on Methadone 30+ Years</td><td><?php include '../count_moh_731/currentMetMale_30plus.php'; ?></td><td><?php include '../count_moh_731/currentMetFemale_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentMetAll_30plus.php'; ?></td></tr>
+        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td><?php include '../count_moh_731/transitMetMale.php'; ?></td><td><?php include '../count_moh_731/transitMetFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitMetAll.php'; ?></td></tr>
 
         <tr class="section-header"><td colspan="4">1.3 Currently on MAT(Buprenorphine)</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Number Currently on Buprenorphine 15 - 19 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Buprenorphine 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Buprenorphine 25 - 29 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Currently on Buprenorphine 30+ Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Number Currently on Buprenorphine 15 - 19 Years</td><td><?php include '../count_moh_731/currentBupMale_1519.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_1519.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 20 - 24 Years</td><td><?php include '../count_moh_731/currentBupMale_2024.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_2024.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 25 - 29 Years</td><td><?php include '../count_moh_731/currentBupMale_2529.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_2529.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 30+ Years</td><td><?php include '../count_moh_731/currentBupMale_30plus.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_30plus.php'; ?></td></tr>
         <tr><td>Total Number of clients on transit who received Buprenorphine in the Reporting Month</td><td><?php include '../count_moh_731/transitBupMale.php'; ?></td><td><?php include '../count_moh_731/transitBupFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitBupAll.php'; ?></td></tr>
 
 

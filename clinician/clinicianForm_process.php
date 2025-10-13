@@ -157,7 +157,7 @@ try {
           </div>";
 
     // Redirect back to treatment page after 3 seconds
-    header("Refresh: 3; url=treatment.php");
+    header("Refresh: 3; url=clinician_follow_up_form.php");
 
 } catch (Exception $e) {
     // Rollback transaction on error
