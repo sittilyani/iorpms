@@ -172,9 +172,9 @@ $stmt->close();
         <tr class="section-header"><td colspan="4">1.1 MAT INDUCTION WITHIN THE REPORTING PERIOD</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Newly inducted on MAT in the Reporting Period 15 - 19 Years</td><td><?php include '../count_moh_731/monthlyinductedMetMale_1519.php'; ?></td><td><?php include '../count_moh_731/monthlyinductedMetFemale_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/monthlyinductedMetAll_1519.php'; ?></td></tr>
-        <tr><td>Number Newly inducted on MAT in the Reporting Period 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Newly inducted on MAT in the Reporting Period 25 - 29 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Newly inducted on MAT in the Reporting Period 30+ Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Number Newly inducted on MAT in the Reporting Period 20 - 24 Years</td><td><?php include '../count_moh_731/monthlyinductedMetMale_2024.php'; ?></td><td><?php include '../count_moh_731/monthlyinductedMetFemale_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/monthlyinductedMetAll_2024.php'; ?></td></tr>
+        <tr><td>Number Newly inducted on MAT in the Reporting Period 25 - 29 Years</td><td><?php include '../count_moh_731/monthlyinductedMetMale_2529.php'; ?></td><td><?php include '../count_moh_731/monthlyinductedMetFemale_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/monthlyinductedMetAll_2529.php'; ?></td></tr>
+        <tr><td>Number Newly inducted on MAT in the Reporting Period 30+ Years</td><td><?php include '../count_moh_731/monthlyinductedMetMale_30plus.php'; ?></td><td><?php include '../count_moh_731/monthlyinductedMetFemale_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/monthlyinductedMetAll_30plus.php'; ?></td></tr>
 
         <!-- Continue for other age groups -->
 
@@ -184,7 +184,7 @@ $stmt->close();
         <tr><td>Number Currently on Methadone 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently on Methadone 25 - 29 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently on Methadone 30+ Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td><?php include '../count_moh_731/transitBupMale.php'; ?></td><td><?php include '../count_moh_731/transitBupFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitBupAll.php'; ?></td></tr>
 
         <tr class="section-header"><td colspan="4">1.3 Currently on MAT(Buprenorphine)</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
@@ -192,7 +192,7 @@ $stmt->close();
         <tr><td>Number Currently on Buprenorphine 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently on Buprenorphine 25 - 29 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently on Buprenorphine 30+ Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Total Number of clients on transit who received Buprenorphine in the Reporting Month</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Total Number of clients on transit who received Buprenorphine in the Reporting Month</td><td><?php include '../count_moh_731/transitBupMale.php'; ?></td><td><?php include '../count_moh_731/transitBupFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitBupAll.php'; ?></td></tr>
 
 
         <tr class="section-header"><td colspan="4">1.4 WEANING OFF</td></tr>
