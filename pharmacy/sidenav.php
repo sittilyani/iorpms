@@ -76,7 +76,9 @@ $user_id = $_SESSION['user_id'] ?? '';
                 <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-adjust"></i>General Prescriptions</a>
                 <a href="../pharmacy/prisons_module.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-anchor"></i>Prisons Dispense</a>
+                    <i class="fa fa-anchor"></i>Prisons Dispensing</a>
+                <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
+                    <i class="fa fa-anchor"></i>Retro Dispensing</a>
                 <a href="../clinician/prescribe.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-clone"></i>Update controlled drugs dosage</a>
                 <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">

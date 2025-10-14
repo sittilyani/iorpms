@@ -276,7 +276,8 @@ if ($statusResult->num_rows > 0) {
     <meta charset="UTF-8">
     <title>Pharmacy DAR</title>
     <script src="../assets/js/bootstrap.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="../assets/css/bootstrap.css" type="text/css">
     <style>
         /* ... (Your existing CSS styles) ... */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }

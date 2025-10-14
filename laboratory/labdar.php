@@ -606,7 +606,71 @@ $stmt->close();
                             <option value="not_done">Not Done</option>
                         </select>
                     </div>
-
+                    
+                    <div class="form-group">
+                        <label for="nicotine">Nicotine:</label>
+                        <select name="nicotine">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Other Tricyclic Antidepressants">Tricyclic antidepressants (TCA):</label>
+                        <select name="other_tca">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tramadol">Tramadol</label>
+                        <select name="tramadol">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Ketamine">Ketamine:</label>
+                        <select name="ketamine">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fentanyl">Fentanyl:</label>
+                        <select name="fentanyl">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="oxycodone">Oxycodone:</label>
+                        <select name="oxycodone">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propoxyphene">Propoxyphene:</label>
+                        <select name="buprenorphine">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ecstacy">Ecstacy (MDMA):</label>
+                        <select name="ecstacy">
+                            <option value="no">Negative</option>
+                            <option value="yes">Positive</option>
+                            <option value="not_done">Not Done</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="other_drugs">Other Drugs:</label>
                         <select name="other_drugs">

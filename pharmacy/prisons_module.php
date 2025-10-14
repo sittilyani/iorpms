@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                     foreach ($dateRange as $date) {
                         echo '<td>';
                         echo '<input type="number" class="dosage-input" name="patients[' . $inmate['mat_id'] . '][' . $date . ']"
-                              value="' . $inmate['dosage'] . '" min="0" step="1">';
+                              value="' . $inmate['dosage'] . '" min="0" step="0.5">';
                         echo '</td>';
                     }
 

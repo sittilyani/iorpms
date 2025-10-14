@@ -43,8 +43,10 @@ ALTER TABLE tblusers ADD COLUMN full_name VARCHAR(200) GENERATED ALWAYS AS (CONC
 
 Edit patients table
 Add column:
+
+
 ALTER TABLE patients
-remove status_change_notes before import
+ADD COLUMN status_change_notes after current_status DEFAULT NULL,
 ADD COLUMN psycho_social_tca DATE DEFAULT NULL,
 ADD COLUMN psychiatric_tca DATE DEFAULT NULL,
 ADD COLUMN nursing_tca DATE DEFAULT NULL,
@@ -52,10 +54,11 @@ ADD COLUMN nutrition_tca DATE DEFAULT NULL,
 ADD COLUMN laboratory_tca DATE DEFAULT NULL,
 ADD COLUMN records_tca DATE DEFAULT NULL,
 ADD COLUMN peer_tca DATE DEFAULT NULL,
-ADD COLUMN admin_tca DATE DEFAULT NULL;
+ADD COLUMN admin_tca DATE DEFAULT NULL,
+ADD COLUMN religion varchar (50) DEFAULT NULL,
+ADD COLUMN occupation varchar (50) DEFAULT NULL;
 
-
-add column mflcode to facility_settings
+--- add column mflcode to facility_settings
 
 -- update the columns
 UPDATE patients
