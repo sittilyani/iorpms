@@ -163,96 +163,111 @@ $stmt->close();
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Ever inducted on MAT</td><td><?php include "../count_moh_731/ever_inducted_male.php"; ?></td><td><?php include "../count_moh_731/ever_inducted_female.php"; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/ever_inducted_all.php'; ?></td></tr>
         <tr><td>Total Number of MAT Clients Ever Weaned off MAT</td><td><?php include "../count_moh_731/ever_weaned_male.php"; ?></td><td><?php include "../count_moh_731/ever_weaned_female.php"; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/ever_weaned_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.1 MAT INDUCTION WITHIN THE REPORTING PERIOD</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Newly inducted on MAT in the Reporting Period 15 - 19 Years</td><td><?php include '../count_moh_731/newly_inducted_male_1519.php'; ?></td><td><?php include '../count_moh_731/newly_inducted_female_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/newly_inducted_all_1519.php'; ?></td></tr>
         <tr><td>Number Newly inducted on MAT in the Reporting Period 20 - 24 Years</td><td><?php include '../count_moh_731/newly_inducted_male_2024.php'; ?></td><td><?php include '../count_moh_731/newly_inducted_female_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/newly_inducted_all_2024.php'; ?></td></tr>
         <tr><td>Number Newly inducted on MAT in the Reporting Period 25 - 29 Years</td><td><?php include '../count_moh_731/newly_inducted_male_2529.php'; ?></td><td><?php include '../count_moh_731/newly_inducted_female_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/newly_inducted_all_2529.php'; ?></td></tr>
         <tr><td>Number Newly inducted on MAT in the Reporting Period 30+ Years</td><td><?php include '../count_moh_731/newly_inducted_male_30plus.php'; ?></td><td><?php include '../count_moh_731/newly_inducted_female_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/newly_inducted_all_30plus.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.2 Currently on MAT Methadone</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Currently on Methadone 15 - 19 Years</td><td><?php include '../count_moh_731/currently_on_methadone_male_1519.php'; ?></td><td><?php include '../count_moh_731/currently_on_methadone_female_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_methadone_all_1519.php'; ?></td></tr>
         <tr><td>Number Currently on Methadone 20 - 24 Years</td><td><?php include '../count_moh_731/currently_on_methadone_male_2024.php'; ?></td><td><?php include '../count_moh_731/currently_on_methadone_female_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_methadone_all_2024.php'; ?></td></tr>
         <tr><td>Number Currently on Methadone 25 - 29 Years</td><td><?php include '../count_moh_731/currently_on_methadone_male_2529.php'; ?></td><td><?php include '../count_moh_731/currently_on_methadone_female_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_methadone_all_2529.php'; ?></td></tr>
         <tr><td>Number Currently on Methadone 30+ Years</td><td><?php include '../count_moh_731/currently_on_methadone_male_30plus.php'; ?></td><td><?php include '../count_moh_731/currently_on_methadone_female_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_methadone_all_30plus.php'; ?></td></tr>
-        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td><?php include '../count_moh_731/transitMetMale.php'; ?></td><td><?php include '../count_moh_731/transitMetFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitMetAll.php'; ?></td></tr>
+        <tr><td>Total Number of clients on Transit who received Methadone in the Reporting Month</td><td><?php include '../count_moh_731/transit_on_methadone_male.php'; ?></td><td><?php include '../count_moh_731/transit_on_methadone_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transit_on_methadone_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.3 Currently on MAT(Buprenorphine)</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Number Currently on Buprenorphine 15 - 19 Years</td><td><?php include '../count_moh_731/currentBupMale_1519.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_1519.php'; ?></td></tr>
-        <tr><td>Number Currently on Buprenorphine 20 - 24 Years</td><td><?php include '../count_moh_731/currentBupMale_2024.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_2024.php'; ?></td></tr>
-        <tr><td>Number Currently on Buprenorphine 25 - 29 Years</td><td><?php include '../count_moh_731/currentBupMale_2529.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_2529.php'; ?></td></tr>
-        <tr><td>Number Currently on Buprenorphine 30+ Years</td><td><?php include '../count_moh_731/currentBupMale_30plus.php'; ?></td><td><?php include '../count_moh_731/currentBupFemale_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currentBupAll_30plus.php'; ?></td></tr>
-        <tr><td>Total Number of clients on transit who received Buprenorphine in the Reporting Month</td><td><?php include '../count_moh_731/transitBupMale.php'; ?></td><td><?php include '../count_moh_731/transitBupFemale.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transitBupAll.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 15 - 19 Years</td><td><?php include '../count_moh_731/currently_on_bup_male_1519.php'; ?></td><td><?php include '../count_moh_731/currently_on_bup_female_1519.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_bup_all_1519.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 20 - 24 Years</td><td><?php include '../count_moh_731/currently_on_bup_male_2024.php'; ?></td><td><?php include '../count_moh_731/currently_on_bup_female_2024.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_bup_all_2024.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 25 - 29 Years</td><td><?php include '../count_moh_731/currently_on_bup_male_2529.php'; ?></td><td><?php include '../count_moh_731/currently_on_bup_female_2529.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_bup_all_2529.php'; ?></td></tr>
+        <tr><td>Number Currently on Buprenorphine 30+ Years</td><td><?php include '../count_moh_731/currently_on_bup_male_30plus.php'; ?></td><td><?php include '../count_moh_731/currently_on_bup_female_30plus.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/currently_on_bup_all_30plus.php'; ?></td></tr>
+        <tr><td>Total Number of clients on transit who received Buprenorphine in the Reporting Month</td><td><?php include '../count_moh_731/transit_on_bup_male.php'; ?></td><td><?php include '../count_moh_731/transit_on_bup_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/transit_on_bup_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.4 WEANING OFF</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Number of Clients Weaned off Buprenorphine</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number of Clients Weaned off Methadone</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Number of Clients Weaned off Buprenorphine</td><td><?php include '../count_moh_731/weaned_off_bup_male.php'; ?></td><td><?php include '../count_moh_731/weaned_off_bup_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/weaned_off_bup_all.php'; ?></td></tr>
+        <tr><td>Number of Clients Weaned off Methadone</td><td><?php include '../count_moh_731/weaned_off_methadone_male.php'; ?></td><td><?php include '../count_moh_731/weaned_off_methadone_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/weaned_off_methadone_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.5 MAT INTERUPTIONS</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Number Newly inducted on MAT in the Reporting Period 15 - 19 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number Newly inducted on MAT in the Reporting Period 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number of clients missing more than 5 consecutive doses in the Reporting Month </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Number of clients LTFU in the Reporting Month </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Number of clients missing more than 5 consecutive doses in the Reporting Month </td><td><?php include '../count_moh_731/missed_more_5_male.php'; ?></td><td><?php include '../count_moh_731/missed_more_5_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/missed_more_5_all.php'; ?></td></tr>
+        <tr><td>Number of clients LTFU in the Reporting Month </td><td><?php include '../count_moh_731/current_ltfu_male.php'; ?></td><td><?php include '../count_moh_731/current_ltfu_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/current_ltfu_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">1.6 HIV TESTING</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number of MAT Clients tested for HIV in the reporting Period 15 - 19 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients tested for HIV in the reporting Period 20 - 24 Years</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients tested for HIV in the reporting Period 25 - 29 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients tested for HIV in the reporting Period 30+ Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">1.7 MAT Clients New-HIV Positive</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number of MAT Clients HIV Positive in the reporting Period 20 - 24 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients HIV Positive in the reporting Period 20 - 24 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients HIV Positive in the reporting Period 25 - 29 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of MAT Clients HIV Positive in the reporting Period 30+ Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">1.8 Number of MAT Clients Started on ART both offsite & Onsite</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>MAT Clients Started on ART 15 - 19 Year</td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Started on ART 20 - 24 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Started on ART 25 - 29 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Started on ART 30+ Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">1.9 Number of MAT clients with Known HIV Positive Status</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Total Number of Active MAT clients HIV Positive as at the reporting Period 15 - 19 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number of Active MAT clients HIV Positive as at the reporting Period 20 - 24 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number of Active MAT clients HIV Positive as at the reporting Period 25 - 29 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number of Active MAT clients HIV Positive as at the reporting Period 30+ Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.0 Total Number of MAT Clients Currently on ART both offsite and onsite</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>MAT Clients Currently on ART 15 - 19 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Currently on ART 20 - 24 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Currently on ART 25 - 29 Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>MAT Clients Currently on ART 30+ Years </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.1 Viral load tracking MAT Clients</td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
-        <tr><td>Viral load result in the last 12 months </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Suppressed-&lt; 200 copies </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
-        <tr><td>Suppressed-&lt; 50 copies </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+        <tr><td>Viral load result in the last 12 months </td><td><?php include '../count_moh_731/viral_load_last12mo_male.php'; ?></td><td><?php include '../count_moh_731/viral_load_last12mo_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/viral_load_last12mo_all.php'; ?></td></tr>
+        <tr><td>Suppressed-&lt; 200 copies </td><td><?php include '../count_moh_731/viral_load_suppressed_200_male.php'; ?></td><td><?php include '../count_moh_731/viral_load_suppressed_200_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/viral_load_suppressed_200_all.php'; ?></td></tr>
+        <tr><td>Suppressed-&lt; 50 copies </td><td><?php include '../count_moh_731/viral_load_suppressed_50_male.php'; ?></td><td><?php include '../count_moh_731/viral_load_suppressed_50_female.php'; ?></td><td style="color: blue; font-weight: bold;"><?php include '../count_moh_731/viral_load_suppressed_50_all.php'; ?></td></tr>
+
         <tr class="section-header"><td colspan="4">2.2 Overdose MAT Clients </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Experienced overdose </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Received naloxone </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Deaths due to overdose </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.3 Psychosocial Interventions </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Received Psychosocial Interventions </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Supported with Community Reintegration </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.4 Violence prevention and Support </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Total Number who Experienced Violence Emotional/Psychological </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number who Experienced Physical Violence </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number who Experienced Sexual Violence </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total Number who Received violence support </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.5 Mental Health </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Screened_MH </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Diagnosed_MH </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Treated within the Facility_MH </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.6 STI MAT </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Screened _STI </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Diagnosed with STI </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Treated_STI </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.7 HCV (Hepatitis C) MAT </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Screened_HCV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
@@ -261,6 +276,7 @@ $stmt->close();
         <tr><td>Number Positive_HCV (Confirmatory PCR test) </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Treated_HCV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently on HCV Treatment </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.8 HBV (Hepatitis B) MAT </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Screened_HBV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
@@ -270,6 +286,7 @@ $stmt->close();
         <tr><td>Number Positive_HBV (Confirmatory PCR Test) </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Managed_HBV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Currently under Management_HBV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">2.9 TB MAT </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Screened_TB </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
@@ -278,6 +295,7 @@ $stmt->close();
         <tr><td>Number Issued_TPT </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number of TB clients HIV positive </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Total number of TB Clients on HAART </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">3.0 PrEP MAT </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Initiated_PrEP </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
@@ -287,6 +305,7 @@ $stmt->close();
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number Exposed to HIV </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
         <tr><td>Number Receive PEP <72hrs </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>
+
         <tr class="section-header"><td colspan="4">4.0 Nutrition support </td></tr>
         <tr style='font-weight: bold;'><td>Data Element</td><td>Male</td><td>Female</td><td>Total</td></tr>
         <tr><td>Number of MAT Clients SAM </td><td>0</td><td>0</td><td style="color: blue; font-weight: bold;">0</td></tr>

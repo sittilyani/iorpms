@@ -81,7 +81,7 @@ if (isset($_GET['message'])) {
                 FROM viral_load
                 GROUP BY mat_id
             ) t2 ON t1.mat_id = t2.mat_id AND t1.vl_id = t2.max_vl_id
-            WHERE t1.hiv_status = 'Positive'
+            WHERE t1.hiv_status = 'positive'
             AND (t1.vl_id LIKE ? OR t1.mat_id LIKE ? OR t1.clientName LIKE ? OR
                  t1.dob LIKE ? OR t1.sex LIKE ? OR t1.hiv_status LIKE ? OR t1.regimen_type LIKE ? OR t1.results LIKE ?)";
 

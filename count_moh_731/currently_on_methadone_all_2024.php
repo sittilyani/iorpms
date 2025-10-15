@@ -10,8 +10,14 @@ $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-t', strtotim
 $startDate = date('Y-m-d', strtotime($startDate));
 $endDate = date('Y-m-d', strtotime($endDate));
 
-// Fetch the count of patients ever inducted on MAT within the date range
-$sql = "SELECT COUNT(*) as everinductedallCount FROM patients WHERE current_status IN ('active', 'defaulted') AND sex IN ('male', 'female') AND age BETWEEN 20 AND 24 AND drugname = 'methadone' AND reg_date BETWEEN ? AND ?";
+// Fetch the count of UNIQUE patients ever inducted on MAT within the date range
+$sql = "SELECT COUNT(DISTINCT mat_id) as current_on_methadoneCount
+        FROM pharmacy
+        WHERE current_status IN ('active', 'defaulted')
+        AND sex IN ('male', 'female')
+        AND age BETWEEN 20 AND 24
+        AND drugname = 'methadone'
+        AND visitDate BETWEEN ? AND ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('ss', $startDate, $endDate);
 $stmt->execute();
@@ -19,10 +25,10 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
 // Get the numeric count value
-$everinductedallCount = $row['everinductedallCount'];
+$current_on_methadoneCount = $row['current_on_methadoneCount'];
 
 // Output the count as plain text
-echo $everinductedallCount;
+echo $current_on_methadoneCount;
 
 $stmt->close();
 ?>
