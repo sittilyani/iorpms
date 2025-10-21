@@ -2,6 +2,9 @@
 // Include the header (which handles session and config)
 include '../includes/header.php';
 
+// Use centralized session management to ensure session is active
+// include '../includes/session_manager.php';
+// updateSessionActivity();  aleady declared in session_manager.php
 
 // Define role-based permissions for cards and sidebars
 $rolePermissions = [

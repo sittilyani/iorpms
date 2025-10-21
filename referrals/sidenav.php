@@ -1,27 +1,11 @@
 <?php
-session_start();
+// Use centralized session management
+include "../includes/session_manager.php";
+updateSessionActivity();
+requireLogin(); // This will redirect to login if not logged in
+
+// Include configuration
 include "../includes/config.php";
-
-// Set timeout duration (5 minutes = 300 seconds)
-$timeout_duration = 300;
-
-// Check if timeout condition is met
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
-    // Last request was more than 5 minutes ago
-    session_unset();     // Unset $_SESSION variable
-    session_destroy();   // Destroy session data
-    header("Location: ../public/login.php?timeout=1");
-    exit();
-}
-
-// Update last activity time
-$_SESSION['last_activity'] = time();
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../public/login.php");
-    exit();
-}
 
 // Get user role from session
 $userrole = $_SESSION['userrole'] ?? '';

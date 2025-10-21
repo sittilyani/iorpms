@@ -1,14 +1,28 @@
 <?php
-// Use centralized session management
-include 'session_manager.php';
-updateSessionActivity();
+// Start session and check if user is logged in
+session_start();
 
 // Include configuration
 include 'config.php';
 include '../admin/init_facility_session.php';
 
-// Check if user is logged in using centralized function
-$isLoggedIn = isUserLoggedIn();
+// Set timeout duration (10 minutes = 600 seconds)
+$timeout_duration = 600;
+
+// Check if timeout condition is met
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
+    // Last request was more than 5 minutes ago
+    session_unset();     // Unset $_SESSION variable
+    session_destroy();   // Destroy session data
+    header("Location: ../public/login.php?timeout=1");
+    exit();
+}
+
+// Update last activity time
+$_SESSION['last_activity'] = time();
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['username']);
 $full_name = '';
 $username = '';
 $userrole = '';
@@ -59,6 +73,7 @@ if ($isLoggedIn) {
     <link rel="manifest" href="../assets/favicons/site.webmanifest">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="../assets/css/header-dash.css" type="text/css">
+
 </head>
 <body>
     <div class="header">
@@ -109,8 +124,11 @@ if ($isLoggedIn) {
         <span>You will be logged out due to inactivity in <span id="countdown">60</span> seconds.</span>
     </div>
     <script src="../assets/js/bootstrap.min.js"></script>
-    <script src="../assets/js/bootstrap.min.js"></script>
     <script>
+        // Debugging: Check if elements exist
+        console.log('Current time element:', document.getElementById('current-time'));
+        console.log('User details element:', document.querySelector('.user-details'));
+
         // Update current time
         function updateTime() {
             const now = new Date();
@@ -119,6 +137,8 @@ if ($isLoggedIn) {
 
             if (timeElement) {
                 timeElement.textContent = timeString;
+            } else {
+                console.error('Time element not found');
             }
         }
 
@@ -126,23 +146,32 @@ if ($isLoggedIn) {
         updateTime();
         setInterval(updateTime, 1000);
 
-        // Auto logout after inactivity - SIMPLIFIED VERSION
-        let inactivityTimer;
-        const logoutTime = 600000; // 10 minutes in milliseconds
+        // Auto logout after inactivity
+        let timeout;
+        const warningTime = 60; // Show warning 60 seconds before logout
+        const logoutTime = 600; // Logout after 300 seconds (5 minutes)
 
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(showLogoutWarning, logoutTime - 60000); // Show warning 1 min before
+        function resetTimer() {
+            clearTimeout(timeout);
+
+            // Hide warning if visible
+            const warningElement = document.getElementById('timeout-warning');
+            if (warningElement) {
+                warningElement.style.display = 'none';
+            }
+
+            // Set new timeout
+            timeout = setTimeout(showWarning, (logoutTime - warningTime) * 1000);
         }
 
-        function showLogoutWarning() {
+        function showWarning() {
             // Show warning
             const warningElement = document.getElementById('timeout-warning');
             if (warningElement) {
                 warningElement.style.display = 'block';
 
                 // Start countdown
-                let seconds = 60;
+                let seconds = warningTime;
                 const countdownElement = document.getElementById('countdown');
                 if (countdownElement) {
                     countdownElement.textContent = seconds;
@@ -157,33 +186,22 @@ if ($isLoggedIn) {
                         }
                     }, 1000);
                 }
+
+                // Set final logout timeout
+                timeout = setTimeout(() => {
+                    window.location.href = '../public/login.php?timeout=1';
+                }, warningTime * 1000);
             }
-        }
-
-        function continueSession() {
-            // Hide warning
-            const warningElement = document.getElementById('timeout-warning');
-            if (warningElement) {
-                warningElement.style.display = 'none';
-            }
-
-            // Reset timer
-            resetInactivityTimer();
-
-            // Send a request to keep session alive
-            fetch('../includes/keepalive.php')
-                .then(response => response.text())
-                .then(data => console.log('Session extended'))
-                .catch(error => console.error('Error extending session:', error));
         }
 
         // Reset timer on any user activity
-        ['mousemove', 'keypress', 'click', 'scroll', 'touchstart'].forEach(event => {
-            document.addEventListener(event, resetInactivityTimer);
-        });
+        document.addEventListener('mousemove', resetTimer);
+        document.addEventListener('keypress', resetTimer);
+        document.addEventListener('click', resetTimer);
+        document.addEventListener('scroll', resetTimer);
 
         // Initialize timer
-        resetInactivityTimer();
+        resetTimer();
     </script>
 </body>
 </html>
