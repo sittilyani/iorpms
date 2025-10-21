@@ -14,9 +14,8 @@ if ($patient_id <= 0) {
 // Check if this is a partial save
 $is_partial_save = isset($_POST['partial_save']) && $_POST['partial_save'] === 'true';
 $current_section = $_POST['current_section'] ?? '';
-$encounter_id = $_POST['encounter_id'] ?? 0;
 
-// Prepare data for main table
+// Prepare data for main table - only process fields from completed sections
 $facility_name = mysqli_real_escape_string($conn, $_POST['facility_name'] ?? '');
 $mfl_code = mysqli_real_escape_string($conn, $_POST['mfl_code'] ?? '');
 $county = mysqli_real_escape_string($conn, $_POST['county'] ?? '');
@@ -24,10 +23,7 @@ $sub_county = mysqli_real_escape_string($conn, $_POST['sub_county'] ?? '');
 $enrolment_date = !empty($_POST['enrolment_date']) ? date('Y-m-d', strtotime(str_replace('/', '-', $_POST['enrolment_date']))) : null;
 $enrolment_time = $_POST['enrolment_time'] ?? null;
 $visit_type = isset($_POST['visit_type']) ? implode(',', $_POST['visit_type']) : '';
-$client_name = mysqli_real_escape_string($conn, $_POST['client_name'] ?? '');
 $nickname = mysqli_real_escape_string($conn, $_POST['nickname'] ?? '');
-$mat_id = mysqli_real_escape_string($conn, $_POST['mat_id'] ?? '');
-$sex = mysqli_real_escape_string($conn, $_POST['sex'] ?? '');
 $presenting_complaints = mysqli_real_escape_string($conn, $_POST['presenting_complaints'] ?? '');
 $injecting_history = $_POST['injecting_history'] ?? null;
 $reasons_injecting = isset($_POST['reasons_injecting']) ? implode(',', $_POST['reasons_injecting']) : '';
@@ -156,17 +152,7 @@ $patient_consent = isset($_POST['patient_consent']) ? 'yes' : 'no';
 
 // Check if encounter already exists for partial save
 $existing_encounter_id = 0;
-if ($is_partial_save && $encounter_id > 0) {
-    $check_sql = "SELECT id FROM clinical_encounters WHERE id = ? AND patient_id = ?";
-    $check_stmt = $conn->prepare($check_sql);
-    $check_stmt->bind_param('ii', $encounter_id, $patient_id);
-    $check_stmt->execute();
-    $check_result = $check_stmt->get_result();
-    if ($check_result->num_rows > 0) {
-        $existing_encounter_id = $encounter_id;
-    }
-    $check_stmt->close();
-} elseif ($is_partial_save) {
+if ($is_partial_save) {
     $check_sql = "SELECT id FROM clinical_encounters WHERE patient_id = ? ORDER BY id DESC LIMIT 1";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param('i', $patient_id);
@@ -183,7 +169,7 @@ if ($existing_encounter_id > 0) {
     // Update existing encounter for partial save
     $sql = "UPDATE clinical_encounters SET
         facility_name = ?, mfl_code = ?, county = ?, sub_county = ?, enrolment_date = ?, enrolment_time = ?,
-        visit_type = ?, client_name = ?, nickname = ?, mat_id = ?, sex = ?, presenting_complaints = ?, injecting_history = ?, reasons_injecting = ?,
+        visit_type = ?, nickname = ?, presenting_complaints = ?, injecting_history = ?, reasons_injecting = ?,
         reasons_injecting_other = ?, flash_blood = ?, shared_needles = ?, injecting_complications = ?,
         drug_overdose = ?, pulse = ?, oxygen_saturation = ?, blood_pressure = ?, temperature = ?,
         respiratory_rate = ?, height = ?, weight = ?, bmi = ?, bmi_interpretation = ?, cows_provider = ?,
@@ -204,11 +190,10 @@ if ($existing_encounter_id > 0) {
         WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
-    // Count: 85 parameters + 1 for WHERE clause = 86 total
     $stmt->bind_param(
-        'sssssssssssssssssssiiisdiiddssssssssssssssssssissssssssssssssssssssssssssssssssssssssssssi',
+        'ssssssssssssssssiiisdiiddssssssssssssssssssisssssssssssssssssssssssssssssssssssssssssi',
         $facility_name, $mfl_code, $county, $sub_county, $enrolment_date, $enrolment_time, $visit_type,
-        $client_name, $nickname, $mat_id, $sex, $presenting_complaints, $injecting_history, $reasons_injecting, $reasons_injecting_other,
+        $nickname, $presenting_complaints, $injecting_history, $reasons_injecting, $reasons_injecting_other,
         $flash_blood, $shared_needles, $injecting_complications, $drug_overdose, $pulse, $oxygen_saturation,
         $blood_pressure, $temperature, $respiratory_rate, $height, $weight, $bmi, $bmi_interpretation,
         $cows_provider, $cows_date, $cows_scores_json, $cows_totals_json, $cows_interpretations_json,
@@ -230,7 +215,7 @@ if ($existing_encounter_id > 0) {
     // Insert new encounter
     $sql = "INSERT INTO clinical_encounters (
         patient_id, facility_name, mfl_code, county, sub_county, enrolment_date, enrolment_time, visit_type,
-        client_name, nickname, mat_id, sex, presenting_complaints, injecting_history, reasons_injecting, reasons_injecting_other,
+        nickname, presenting_complaints, injecting_history, reasons_injecting, reasons_injecting_other,
         flash_blood, shared_needles, injecting_complications, drug_overdose, pulse, oxygen_saturation,
         blood_pressure, temperature, respiratory_rate, height, weight, bmi, bmi_interpretation, cows_provider,
         cows_date, cows_scores, cows_totals, cows_interpretations, medical_history, medical_medication,
@@ -247,21 +232,23 @@ if ($existing_encounter_id > 0) {
         clinician_signature, patient_consent
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?
     )";
 
     $stmt = $conn->prepare($sql);
-    // Count: 85 parameters total
     $stmt->bind_param(
-        'issssssssssssssssssiiisdiiddssssssssssssssssssissssssssssssssssssssssssssssssssssssssssss',
+        'isssssssssssssssiiisdiiddssssssssssssssssssisssssssssssssssssssssssssssssssssssssssss',
         $patient_id, $facility_name, $mfl_code, $county, $sub_county, $enrolment_date, $enrolment_time,
-        $visit_type, $client_name, $nickname, $mat_id, $sex, $presenting_complaints, $injecting_history, $reasons_injecting,
+        $visit_type, $nickname, $presenting_complaints, $injecting_history, $reasons_injecting,
         $reasons_injecting_other, $flash_blood, $shared_needles, $injecting_complications, $drug_overdose,
         $pulse, $oxygen_saturation, $blood_pressure, $temperature, $respiratory_rate, $height, $weight,
         $bmi, $bmi_interpretation, $cows_provider, $cows_date, $cows_scores_json, $cows_totals_json,
@@ -289,8 +276,8 @@ if (!$existing_encounter_id) {
 }
 $stmt->close();
 
-// Only process drug histories for final submission or if we're on the client profile section
-if (!$is_partial_save || $current_section === 'client-profile') {
+// Only process drug histories for final submission or if we're on that section
+if (!$is_partial_save || $current_section === 'drug_history') {
     // Delete existing drug histories for this encounter before inserting new ones
     $delete_sql = "DELETE FROM patient_drug_histories WHERE encounter_id = ?";
     $delete_stmt = $conn->prepare($delete_sql);
@@ -338,13 +325,10 @@ if (!$is_partial_save || $current_section === 'client-profile') {
 
 $conn->close();
 
-// Success response with redirect
+// Success response
 if ($is_partial_save) {
-    // Redirect back to form with success message
-    header("Location: " . $_SERVER['HTTP_REFERER'] . "?save_result=SECTION_SAVED:" . $current_section . ":" . $encounter_id);
+    echo "SECTION_SAVED:" . $current_section . ":" . $encounter_id;
 } else {
-    // Redirect to success page
-    header("Location: ../clinician/clinical_encounter_search.php?success=1&encounter_id=" . $encounter_id);
+    echo "FORM_COMPLETE:" . $encounter_id;
 }
-exit();
 ?>
