@@ -83,54 +83,6 @@ $stmt->close();
         .history-section { background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%); border-left: 5px solid #e67e22; }
         .examination-section { background: linear-gradient(135deg, #ffebee 0%, #f3e5f5 100%); border-left: 5px solid #c0392b; }
         .treatment-section { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-left: 5px solid #43a047; }
-
-        /* Add new styles for section navigation */
-        .section-navigation {  display: flex;  justify-content: space-between;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e1e8ed;
-        }
-
-        .save-proceed-btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #27ae60, #219a52);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .save-proceed-btn:hover {
-            background: linear-gradient(135deg, #219a52, #1e8449);
-            transform: translateY(-2px);
-        }
-
-        .save-proceed-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .section-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .status-saved {
-            color: #27ae60;
-        }
-
-        .status-unsaved {
-            color: #e74c3c;
-        }
-
         @media (max-width: 768px) {
             .form-container { width: 95%; padding: 20px; margin: 10px auto; }
             .form-header { grid-template-columns: 1fr; text-align: center; gap: 15px; }
@@ -147,7 +99,6 @@ $stmt->close();
             .form-header h4 { font-size: 18px; }
             .section-header { font-size: 18px; }
         }
-
     </style>
 </head>
 <body>
@@ -162,18 +113,13 @@ $stmt->close();
         </div>
 
         <form action="submit_form3a.php" method="POST">
-            <!-- Hidden fields for save functionality -->
-            <input type="hidden" name="partial_save" id="partial_save" value="false">
-            <input type="hidden" name="current_section" id="current_section" value="">
-            <input type="hidden" name="encounter_id" id="encounter_id" value="">
-
             <!-- Hidden field for patient ID -->
             <?php if (isset($_GET['p_id'])): ?>
                 <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($_GET['p_id']); ?>">
             <?php endif; ?>
 
             <!-- FACILITY INFORMATION SECTION -->
-            <div class="form-section profile-section" id="section-facility">
+            <div class="form-section profile-section">
                 <h3 class="section-header" style="color: #27ae60;">Facility Information</h3>
 
                 <div class="form-group">
@@ -213,19 +159,10 @@ $stmt->close();
                         <label><input type="checkbox" name="visit_type[]" value="reinduction"> REINDUCTION</label>
                     </div>
                 </div>
-
-                <div class="section-navigation">
-                    <div class="section-status" id="facility-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="button" class="save-proceed-btn" data-section="facility" data-next="client-profile">
-                        Save & Proceed to Client Profile
-                    </button>
-                </div>
             </div>
 
             <!-- PART A: CLIENT PROFILE SECTION -->
-            <div class="form-section profile-section" id="section-client-profile">
+            <div class="form-section profile-section">
                 <h3 class="section-header" style="color: #27ae60;">PART A: CLIENT PROFILE</h3>
 
                 <div class="form-group">
@@ -247,8 +184,8 @@ $stmt->close();
 
                 <div class="form-group">
                     <label for="sex" class="required-field">Sex:</label>
-                    <input type="text" id="sex" name="sex" class="readonly-input" readonly
-                           value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>" required>
+                    <input type="text" id="mat_id" name="mat_id" class="readonly-input" readonly
+    value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -371,19 +308,10 @@ $stmt->close();
                         <label><input type="radio" name="drug_overdose" value="no"> No</label>
                     </div>
                 </div>
-
-                <div class="section-navigation">
-                    <div class="section-status" id="client-profile-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="button" class="save-proceed-btn" data-section="client-profile" data-next="vital-signs">
-                        Save & Proceed to Vital Signs
-                    </button>
-                </div>
             </div>
 
             <!-- VITAL SIGNS SECTION -->
-            <div class="form-section clinical-section" id="section-vital-signs">
+            <div class="form-section clinical-section">
                 <h3 class="section-header" style="color: #9b59b6;">VITAL SIGNS</h3>
 
                 <div class="form-group">
@@ -432,19 +360,10 @@ $stmt->close();
                         <option value="obesity">Obesity (>30)</option>
                     </select>
                 </div>
-
-                <div class="section-navigation">
-                    <div class="section-status" id="vital-signs-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="button" class="save-proceed-btn" data-section="vital-signs" data-next="cows">
-                        Save & Proceed to COWS
-                    </button>
-                </div>
             </div>
 
             <!-- CLINICAL OPIATE WITHDRAWAL SCALE (COWS) -->
-            <div class="form-section clinical-section" id="section-cows">
+            <div class="form-section clinical-section">
                 <h3 class="section-header" style="color: #9b59b6;">CLINICAL OPIATE WITHDRAWAL SCALE (COWS)</h3>
 
                 <table class="cows-table">
@@ -575,15 +494,6 @@ $stmt->close();
                 <div class="form-group">
                     <label for="cows_date">Date:</label>
                     <input type="date" name="cows_date" value="<?php echo date('Y-m-d'); ?>">
-                </div>
-
-            <div class="section-navigation">
-                    <div class="section-status" id="cows-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="button" class="save-proceed-btn" data-section="cows" data-next="clinical-assessment">
-                        Save & Proceed to Clinical Assessment
-                    </button>
                 </div>
             </div>
 
@@ -820,15 +730,6 @@ $stmt->close();
                         ?>
                     </div>
                 </div>
-
-                <div class="section-navigation">
-                        <div class="section-status" id="clinical-assessment-status">
-                            Status: <span class="status-unsaved">Unsaved</span>
-                        </div>
-                        <button type="button" class="save-proceed-btn" data-section="clinical-assessment" data-next="physical-examination">
-                            Save & Proceed to Physical Examination
-                        </button>
-                </div>
             </div>
 
             <!-- PHYSICAL EXAMINATION SECTION -->
@@ -909,15 +810,6 @@ $stmt->close();
                     <label for="musculoskeletal_examination">o. Musculoskeletal:</label>
                     <textarea name="musculoskeletal_examination" rows="3"></textarea>
                 </div>
-
-            <div class="section-navigation">
-                    <div class="section-status" id="physical-examination-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="button" class="save-proceed-btn" data-section="physical-examination" data-next="treatment-plan">
-                        Save & Proceed to Treatment Plan
-                    </button>
-                </div>
             </div>
 
             <!-- DIAGNOSIS AND TREATMENT PLAN -->
@@ -987,28 +879,17 @@ $stmt->close();
                         <label><input type="checkbox" name="patient_consent" value="yes" required> I have read and understood the information provided and consent to treatment</label>
                     </div>
                 </div>
+            </div>
 
             <button type="submit" class="submit-button">
                 Submit Initial Clinical Encounter Form
             </button>
-
-            <div class="section-navigation">
-                    <div class="section-status" id="treatment-plan-status">
-                        Status: <span class="status-unsaved">Unsaved</span>
-                    </div>
-                    <button type="submit" class="submit-button" id="final-submit">
-                        Submit Initial Clinical Encounter Form
-                    </button>
-                </div>
-            </div>
         </form>
     </div>
 
-    <script src="../assets/js/bootstrap.bundle.js"></script>
-
     <script>
+        // Set minimum date for appointment to today
         document.addEventListener('DOMContentLoaded', function() {
-            // Set minimum date for appointment to today
             const today = new Date().toISOString().split('T')[0];
             const appointmentField = document.querySelector('input[name="next_appointment"]');
 
@@ -1056,107 +937,6 @@ $stmt->close();
                     }
                 }
             });
-
-            // Section Save and Proceed functionality
-            const saveButtons = document.querySelectorAll('.save-proceed-btn');
-            const form = document.getElementById('clinicalForm');
-            const partialSaveField = document.getElementById('partial_save');
-            const currentSectionField = document.getElementById('current_section');
-            const encounterIdField = document.getElementById('encounter_id');
-
-            saveButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const section = this.dataset.section;
-                    const nextSection = this.dataset.next;
-
-                    // Set hidden fields for partial save
-                    partialSaveField.value = 'true';
-                    currentSectionField.value = section;
-
-                    // Submit form for partial save
-                    form.submit();
-                });
-            });
-
-            // Final submission
-            const finalSubmit = document.getElementById('final-submit');
-            if (finalSubmit) {
-                finalSubmit.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    partialSaveField.value = 'false';
-                    currentSectionField.value = 'complete';
-                    form.submit();
-                });
-            }
-
-            // Check if there's a saved encounter ID in sessionStorage
-            const savedEncounterId = sessionStorage.getItem('encounter_id');
-            if (savedEncounterId) {
-                encounterIdField.value = savedEncounterId;
-            }
-
-            // Auto-save form data to sessionStorage
-            const formFields = form.querySelectorAll('input, select, textarea');
-            formFields.forEach(field => {
-                field.addEventListener('change', function() {
-                    const formData = new FormData(form);
-                    const data = {};
-                    for (let [key, value] of formData.entries()) {
-                        data[key] = value;
-                    }
-                    sessionStorage.setItem('form_autosave', JSON.stringify(data));
-                });
-            });
-
-            // Load auto-saved data
-            const savedData = sessionStorage.getItem('form_autosave');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                formFields.forEach(field => {
-                    if (data[field.name] !== undefined) {
-                        if (field.type === 'checkbox' || field.type === 'radio') {
-                            field.checked = (data[field.name] === field.value);
-                        } else {
-                            field.value = data[field.name];
-                        }
-                    }
-                });
-            }
-        });
-
-        // Handle response from server
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const saveResult = urlParams.get('save_result');
-
-            if (saveResult) {
-                const [action, section, encounterId] = saveResult.split(':');
-
-                if (action === 'SECTION_SAVED' && encounterId) {
-                    // Update encounter ID
-                    document.getElementById('encounter_id').value = encounterId;
-                    sessionStorage.setItem('encounter_id', encounterId);
-
-                    // Update section status
-                    const statusElement = document.getElementById(`${section}-status`);
-                    if (statusElement) {
-                        const statusSpan = statusElement.querySelector('span');
-                        statusSpan.textContent = 'Saved';
-                        statusSpan.className = 'status-saved';
-                    }
-
-                    // Scroll to next section if available
-                    const nextSection = document.querySelector(`[data-section="${section}"]`).dataset.next;
-                    if (nextSection) {
-                        document.getElementById(`section-${nextSection}`).scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-
-                    // Clear URL parameters
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-            }
         });
     </script>
 </body>
