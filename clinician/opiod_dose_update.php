@@ -80,13 +80,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
         $stmt = $conn->prepare($query);
         $stmt->bind_param('sssssssssssi', $mat_id, $mat_number, $clientName, $sname, $dob, $sex, $p_address, $drugname, $dosage, $reasons, $current_status, $userId);
         if ($stmt->execute()) {
-            $successMessages[] = "Patient dosage updated successfully";
+            $conn->commit();
+
+            // Redirect to dispensing.php with success message
+            $successMessage = urlencode("Patient dosage updated successfully, please search to confirm changes!");
+            header("Location: ../pharmacy/dispensing.php?message=" . $successMessage);
+            exit();
         } else {
             $errorMessages[] = "Error updating patient information";
         }
         $stmt->close();
 
-        $conn->commit();
     } catch (Exception $e) {
         $conn->rollback();
         $errorMessages[] = 'Error: ' . $e->getMessage();

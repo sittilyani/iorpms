@@ -48,12 +48,20 @@ $user_id = $_SESSION['user_id'] ?? '';
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
-    
+
                 <a href="../psycho-social/view_all_patients.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Daily Activity Register</a>
 
                 <a href="../psycho-social/all_patients_psychosocial.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-user-circle"></i>Psychosocial Intake Form</a>
+                    <i class="fa fa-user-circle"></i>Psychosocial Intake Form 1A</a>
+                <a href="../psycho-social/" target="contentFrame" class="nav-link">
+                    <i class="fa fa-user-circle"></i>Patient Health Questionnaire PHQ-9</a>
+                <a href="../psycho-social/" target="contentFrame" class="nav-link">
+                    <i class="fa fa-user-circle"></i>Generalized Anxiety Disorder Screening (GAD)</a>
+                <a href="../psycho-social/" target="contentFrame" class="nav-link">
+                    <i class="fa fa-user-circle"></i>Community Screening Tool</a>
+                <a href="../psycho-social/" target="contentFrame" class="nav-link">
+                    <i class="fa fa-user-circle"></i>Psychosocial RX Plan Form 2B</a>
                 <a href="../psycho-social/psychiatric_encounter_form.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Pyschiatric Encounter Form</a>
                 <a href="../psycho-social/pychosocial_rx_plan.php" target="contentFrame" class="nav-link">

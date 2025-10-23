@@ -103,7 +103,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="../assets/css/forms.css" type="text/css">
-    <style>
+    <style>.
+        .main-content{
+            height: 40%;
+        }
+
         form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -111,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             padding: 0 1rem;
             margin: 2rem auto;
             width: 90%;
+
         }
 
     </style>
@@ -191,8 +196,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                     <input type="text" name="p_address" value="<?php echo htmlspecialchars($currentSettings['p_address'] ?? ''); ?>">
                 </div>
                 <div class="form-group">
-                    <label for="drugname">Drug Name</label>
-                    <input type="text" name="drugname" value="<?php echo htmlspecialchars($currentSettings['drugname'] ?? ''); ?>" class="readonly-input" readonly>
+
+                    <label for="drugname">Drug <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+                        <select id="drugname" name="drugname" required>
+                            <?php
+                            if (isset($conn)) {
+                                $sql = "SELECT drugName FROM drug where drugname IN ('methadone', 'Buprenorphine 2mg', 'Buprenorphine 4mg', 'Buprenorphine 8mg')";
+                                $result = $conn->query($sql);
+
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . htmlspecialchars($row['drugName'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['drugName'], ENT_QUOTES, 'UTF-8') . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>No drugs available</option>";
+                                }
+                            }
+                            ?>
+                        </select>
                 </div>
                 <div class="form-group">
                     <label for="dosage">New Dosage</label>
