@@ -48,7 +48,7 @@ $user_id = $_SESSION['user_id'] ?? '';
         <i class="fa fa-home"></i>Home
     </a>
 
-    <?php if (in_array($userrole, ['Super Admin','Admin', 'Pharmacist'])) : ?>
+    <?php if (in_array($userrole, ['Super Admin','Admin', 'HRIO', 'Pharmacist'])) : ?>
 
                 <a href="../reports/formp-5.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-circle"></i>Form P 5</a>

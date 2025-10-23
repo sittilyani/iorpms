@@ -20,8 +20,8 @@ if (isset($_GET['mat_id'])) {
     // Get and normalize the patient's current status
     $current_status = strtolower(trim($row_patient['current_status']));
 
-    // Fetch the last visitDate for the patient from the pharmacy table
-    $query_last_visit = "SELECT MAX(visitDate) AS last_comp_date FROM pharmacy WHERE mat_id = ?";
+    // Fetch the last visitDate/ dispensing date (dispDate) for the patient from the pharmacy table
+    $query_last_visit = "SELECT MAX(dispDate) AS last_comp_date FROM pharmacy WHERE mat_id = ?";
     $stmt_last_visit = $conn->prepare($query_last_visit);
     $stmt_last_visit->bind_param("s", $mat_id);
     $stmt_last_visit->execute();
@@ -31,7 +31,7 @@ if (isset($_GET['mat_id'])) {
     // Check and handle the last_comp_date value
     if ($row_last_visit && !empty($row_last_visit['last_comp_date'])) {
         $last_comp_date = $row_last_visit['last_comp_date'];
-        echo "<p style='margin-left: 20px; background-color: yellow; padding: 10px; width: 400px; color: red;'><strong>Last Visit Date was on " . htmlspecialchars($last_comp_date, ENT_QUOTES, 'UTF-8') . "</strong></p>";
+        echo "<p style='margin-left: 20px; background-color: yellow; padding: 10px; width: 40%; color: red;'><strong>Last visit/dispensed date was on " . htmlspecialchars($last_comp_date, ENT_QUOTES, 'UTF-8') . "</strong></p>";
     } else {
         $last_comp_date = "No dispensing record in pharmacy";
         echo "<p style='margin-left: 20px; background-color: yellow; padding: 10px; width: 400px; color: red;'><strong>" . htmlspecialchars($last_comp_date, ENT_QUOTES, 'UTF-8') . "</strong></p>";
@@ -150,7 +150,7 @@ function displayMissingDates($conn, $mat_id) {
         $total_days = count($all_dates);
         $adherence_rate = $total_days > 0 ? round((($total_days - $missed_count) / $total_days) * 100, 1) : 0;
 
-        echo "<p style='margin-left: 20px;'><strong>Adherence Rate:</strong> $adherence_rate% ($total_days total days, $missed_count missed)</p>";
+        echo "<p style='margin-left: 20px;'><strong>Adherence Rate:</strong> <span style='color: red; font-size: 20px; font-weight: bold;'> $adherence_rate% </span> ($total_days total days, $missed_count missed)</p>";
     }
 }
 ?>

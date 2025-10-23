@@ -369,7 +369,8 @@ if ($statusResult->num_rows > 0) {
                 <span class="stat-label">Days Dispensed</span>
             </div>
             <div class="stat-item stat-missed">
-                <span class="stat-value"><?php echo $new_num_rows; ?></span>
+
+                <a href='../pharmacy/view-missed.php?mat_id=<?php echo htmlspecialchars($currentSettings['mat_id'] ?? $userId); ?>'><span class="stat-value"><?php echo $new_num_rows; ?></span></a>
                 <span class="stat-label">Days Missed</span>
             </div>
 
@@ -401,7 +402,7 @@ if ($statusResult->num_rows > 0) {
             <!--*******************************************
             End of diplay of other prescriptions here
             *******************************************-->
-            
+
             <div class="stat-item stat-visit">
                 <span class="stat-value"><?php echo htmlspecialchars($lastvisitDate); ?></span>
                 <span class="stat-label">Last disp Date</span>

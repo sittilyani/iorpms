@@ -1,28 +1,11 @@
 <?php
-session_start();
+// Use centralized session management
+include "../includes/session_manager.php";
+updateSessionActivity();
+requireLogin(); // This will redirect to login if not logged in
+
+// Include configuration
 include "../includes/config.php";
-
-
-// Set timeout duration (5 minutes = 300 seconds)
-$timeout_duration = 300;
-
-// Check if timeout condition is met
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
-    // Last request was more than 5 minutes ago
-    session_unset();     // Unset $_SESSION variable
-    session_destroy();   // Destroy session data
-    header("Location: ../public/login.php?timeout=1");
-    exit();
-}
-
-// Update last activity time
-$_SESSION['last_activity'] = time();
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../public/login.php");
-    exit();
-}
 
 // Get user role from session
 $userrole = $_SESSION['userrole'] ?? '';
@@ -66,12 +49,13 @@ $user_id = $_SESSION['user_id'] ?? '';
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
+    <a href="../clinician/treatment-old.php" target="contentFrame" class="nav-link"  style="background: yellow; color: #000000;">
+        <i class="fa fa-stethoscope"></i>CCC Follow Up - OLD</a>
     <a href="../clinician/clinician_follow_up_form.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i>CCC Clinical Follow Up Form</a>
     <a href="../clinician/clinical_encounter_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i>Clinical Initial Encounter Form</a>
-    <!--<a href="../clinician/treatment.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-stethoscope"></i>CCC Clinical consultations</a>-->
+
     <a href="../clinician/transfer_form_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i>Transfer Form</a>
     <a href="../clinician/prescribe.php" target="contentFrame" class="nav-link">
