@@ -48,26 +48,16 @@ $user_id = $_SESSION['user_id'] ?? '';
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
-
-    <a href="../backup/backup.php" class="nav-link">
-        <i class="fa fa-database"></i>Backup System</a>
-
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
-        <i class="fa fa-user-plus"></i>Update patients current status </a>
+    
                 <a href="../psycho-social/view_all_patients.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Daily Activity Register</a>
-                <a href="../psycho-social/client_search_consent.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-lock"></i>Consent Form 3 E ver 2020</a>
+
                 <a href="../psycho-social/all_patients_psychosocial.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Psychosocial Intake Form</a>
                 <a href="../psycho-social/psychiatric_encounter_form.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Pyschiatric Encounter Form</a>
                 <a href="../psycho-social/pychosocial_rx_plan.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-user-circle"></i>Pyschiatric Treatment Plan</a>
-                <a href="search_patients_involuntary.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-user-circle"></i>Involuntary Discontinuation</a>
-                <a href="search_patients_voluntary.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-user-circle"></i>Voluntary Discontinuation</a>
                 <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-random"></i>Other Prescriptions</a>
                 <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">

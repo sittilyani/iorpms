@@ -65,7 +65,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
     $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
     $subcountyName = htmlspecialchars($rowFacilitySettings['subcountyname']);
-    $mflCode = htmlspecialchars($rowFacilitySettings['mflcode']);
+    $mflCode = $rowFacilitySettings['mflcode'];
     $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
     $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
 }

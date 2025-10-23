@@ -48,28 +48,22 @@ $user_id = $_SESSION['user_id'] ?? '';
         <i class="fa fa-home"></i>Home
     </a>
 
-    <a href="../backup/backup.php" class="nav-link">
-        <i class="fa fa-database"></i>Backup System</a>
-
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
-        <i class="fa fa-user-plus"></i>Update patients current status </a>
-
     <?php if (in_array($userrole, ['Super Admin','Admin', 'Pharmacist'])) : ?>
 
                 <a href="../reports/formp-5.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-circle"></i>Form P 5</a>
-                <a href="../reports/formp-5c.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-minus-square"></i>Form P 5c</a>
                 <a href="../reports/formp-7.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-plus-square"></i>Form P 7</a>
                 <a href="../reports/formp-8.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-angle-double-down"></i>Form P 8</a>
-                <a href="../reports/formp-9.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-universal-access"></i>Form P 9</a>
                 <a href="../pharmacy/drugs_dispensed_range.php" target="contentFrame"  class="nav-link">
                     <i class="fa fa-comment"></i>Drugs Dispensed</a>
                 <a href="../reports/moh_731-plus-6.php" target="contentFrame"  class="nav-link">
                     <i class="fa fa-comment"></i>MOH 731 Plus-6</a>
+                <a href="../laboratory/toxicology_results.php" target="contentFrame" class="nav-link">
+                    <i class="fa fa-binoculars"></i>Toxicology Results</a>
+                <a href="psycho_socio_report.php" target="contentFrame" class="nav-link">
+                    <i class="fa fa-file"></i>Pyschosocial Report</a>
 <?php endif; ?>
 </div>
 

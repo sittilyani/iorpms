@@ -59,6 +59,149 @@ if ($isLoggedIn) {
     <link rel="manifest" href="../assets/favicons/site.webmanifest">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="../assets/css/header-dash.css" type="text/css">
+
+    <style>
+        /* Reset only for header elements to prevent conflicts */
+        .header {
+            background-color: #000099;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            min-height: 120px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo img {
+            height: 56px;
+            width: auto;
+        }
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .system-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-left: 15px;
+            padding-left: 15px;
+            color: #FFFFFF;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-details {
+            text-align: right;
+            display: block;
+            color: #FFFFFF;
+        }
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+            display: block;
+        }
+        .user-id, .user-role {
+            font-size: 18px;
+            opacity: 0.9;
+            display: block;
+        }
+        .current-time {
+            background: #722182;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: right;
+            gap: 8px;
+            color: #FFFFFF;
+        }
+        .logout-btn {
+            background: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .user-menu {
+            display: none;
+        }
+        .timeout-warning {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #CCFF33;
+            color: #FF0000;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            .logo-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .system-name {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                text-align: center;
+            }
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            .user-details {
+                text-align: center;
+            }
+        }
+
+        /* Ensure header doesn't affect dashboard layout */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -91,6 +234,13 @@ if ($isLoggedIn) {
                     <span id="current-time"><?php echo date('H:i:s'); ?></span>
                 </div>
 
+                <!-- Add this hidden div to store backup times for autobackup -->
+                <div id="backup-config"
+                    data-backup-times='["08:30", "11:30"]'
+                    data-last-backup-check="<?php echo time(); ?>"
+                    style="display: none;">
+                </div>
+
                 <a href="../public/login.php" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
@@ -108,7 +258,7 @@ if ($isLoggedIn) {
         <i class="fas fa-exclamation-triangle"></i>
         <span>You will be logged out due to inactivity in <span id="countdown">60</span> seconds.</span>
     </div>
-    <script src="../assets/js/bootstrap.min.js"></script>
+
     <script src="../assets/js/bootstrap.min.js"></script>
     <script>
         // Update current time
@@ -185,5 +335,24 @@ if ($isLoggedIn) {
         // Initialize timer
         resetInactivityTimer();
     </script>
+
+    <?php if (isset($_SESSION['show_backup_notification'])): ?>
+    <div id="backup-notification" style="position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 15px; border-radius: 5px; z-index: 10000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        <i class="fa fa-database"></i> <?php echo $_SESSION['show_backup_notification']; ?>
+    </div>
+
+    <script>
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            const notification = document.getElementById('backup-notification');
+            if (notification) notification.style.display = 'none';
+        }, 5000);
+    </script>
+
+    <?php
+        unset($_SESSION['show_backup_notification']);
+    endif;
+    ?>
+
 </body>
 </html>

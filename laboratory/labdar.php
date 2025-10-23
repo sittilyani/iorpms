@@ -311,7 +311,8 @@ $stmt->close();
             <p>FORM 3Fb VER. Ver April. 2023</p>
         </div>
 
-        <form action="submit_form3h.php" method="POST">
+        <!--<form action="submit_form3h.php" method="POST">-->
+        <form action="labdar_process.php" method="POST">
             <!-- Hidden field for patient ID -->
             <?php if (isset($_GET['p_id'])): ?>
                 <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($_GET['p_id']); ?>">
@@ -322,8 +323,8 @@ $stmt->close();
                 <h3 class="section-header" style="color: #27ae60;">Client Information</h3>
 
                 <div class="form-group">
-                    <label for="visitDate" class="required-field">Date (dd/mm/yyyy):</label>
-                    <input type="text" name="visitDate" class="readonly-input" readonly value="<?php echo date('d/m/Y'); ?>">
+                    <label for="visitDate" class="required-field">Date (yyyy-mm-dd):</label>
+                    <input type="date" name="visitDate" value="<?php echo date('Y/m/d'); ?>">
                 </div>
 
                 <div class="form-group">
@@ -606,7 +607,7 @@ $stmt->close();
                             <option value="not_done">Not Done</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="nicotine">Nicotine:</label>
                         <select name="nicotine">
@@ -657,7 +658,7 @@ $stmt->close();
                     </div>
                     <div class="form-group">
                         <label for="propoxyphene">Propoxyphene:</label>
-                        <select name="buprenorphine">
+                        <select name="propoxyphene">
                             <option value="no">Negative</option>
                             <option value="yes">Positive</option>
                             <option value="not_done">Not Done</option>

@@ -27,6 +27,20 @@ $codeine = $_POST['codeine'] ?? 'Not Done';
 $benzodiazepines = $_POST['benzodiazepines'] ?? 'Not Done';
 $marijuana = $_POST['marijuana'] ?? 'Not Done';
 $amitriptyline = $_POST['amitriptyline'] ?? 'Not Done';
+$amitriptyline = $_POST['amitriptyline'] ?? 'Not Done';
+$opiates = $_POST['opiates'] ?? 'Not Done';
+$phencyclidine = $_POST['phencyclidine'] ?? 'Not Done';
+$methadone = $_POST['methadone'] ?? 'Not Done';
+$buprenorphine = $_POST['buprenorphine'] ?? 'Not Done';
+$nicotine = $_POST['nicotine'] ?? 'Not Done';
+$other_tca = $_POST['other_tca'] ?? 'Not Done';
+$tramadol = $_POST['tramadol'] ?? 'Not Done';
+$ketamine = $_POST['ketamine'] ?? 'Not Done';
+$fentanyl = $_POST['fentanyl'] ?? 'Not Done';
+$oxycodone = $_POST['oxycodone'] ?? 'Not Done';
+$propoxyphene = $_POST['propoxyphene'] ?? 'Not Done';
+$ecstacy = $_POST['ecstacy'] ?? 'Not Done';
+$other_drugs = $_POST['other_drugs'] ?? 'Not Done';
 
 $lab_notes = $_POST['lab_notes'];
 $date_of_test = $_POST['date_of_test'];
@@ -62,16 +76,16 @@ try {
 
     // Insert into `toxicologyresults`
     $tox_query = "INSERT INTO toxicology_results
-        (visitDate, mat_id, clientName, mode_drug_use, amphetamine, metamphetamine, morphine, barbiturates, cocaine, codeine, benzodiazepines, marijuana, amitriptyline, lab_notes, date_of_test, next_appointment, lab_officer_name)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (visitDate, mat_id, clientName, mode_drug_use, amphetamine, metamphetamine, morphine, barbiturates, cocaine, codeine, benzodiazepines, marijuana, amitriptyline, opiates, phencyclidine, methadone, buprenorphine, nicotine, other_tca, tramadol, ketamine,  fentanyl, oxycodone, propoxyphene, ecstacy, other_drugs, lab_notes, date_of_test, next_appointment, lab_officer_name)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $tox_stmt = $conn->prepare($tox_query);
 
     if ($tox_stmt) {
         $tox_stmt->bind_param(
-            'sssssssssssssssss',
+            'ssssssssssssssssssssssssssssss',
             $visitDate, $mat_id, $clientName, $mode_drug_use, $amphetamine, $metamphetamine, $morphine,
-            $barbiturates, $cocaine, $codeine, $benzodiazepines, $marijuana, $amitriptyline, $lab_notes,
+            $barbiturates, $cocaine, $codeine, $benzodiazepines, $marijuana, $amitriptyline, $opiates, $phencyclidine, $methadone, $buprenorphine, $nicotine, $other_tca, $tramadol, $ketamine,  $fentanyl, $oxycodone, $propoxyphene, $ecstacy, $other_drugs, $lab_notes,
             $date_of_test, $next_appointment, $lab_officer_name
         );
 
@@ -85,7 +99,7 @@ try {
 
     // Success message and redirection
     echo "<span style='background-color: #74f7c7; color: darkgreen; font-style: italic; font-size: 16px; height: 40px; line-height: 40px; padding: 5px 10px; margin-bottom: 10px;'>Patient Clinical Information and Toxicology Data Updated Successfully</span>";
-    header("Refresh: 3; url=../laboratory/labdar.php");
+    header("Refresh: 2; url=labdar.php");
     exit;
 } catch (Exception $e) {
     // Rollback on error

@@ -10,14 +10,14 @@ $scountyName = "N/A";
 $facilityIncharge = "N/A";
 $facilityPhone = "N/A";
 
-$queryFacilitySettings = "SELECT facilityname, countyname, scountyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1"; // Assuming one row for settings
+$queryFacilitySettings = "SELECT facilityname, countyname, subcountyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1"; // Assuming one row for settings
 $resultFacilitySettings = $conn->query($queryFacilitySettings);
 
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
     $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
     $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
-    $scountyName = htmlspecialchars($rowFacilitySettings['scountyname']);
+    $scountyName = htmlspecialchars($rowFacilitySettings['subcountyname']);
     $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
     $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
 }

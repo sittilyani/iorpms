@@ -50,12 +50,6 @@ $user_id = $_SESSION['user_id'] ?? '';
         <i class="fa fa-home"></i>Home
     </a>
 
-    <a href="../backup/backup.php" class="nav-link">
-        <i class="fa fa-database"></i>Backup System</a>
-
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
-        <i class="fa fa-user-plus"></i>Update patients current status </a>
-
     <a href="../public/reset_password.php" target="contentFrame" class="nav-link">
         <i class="fa fa-key"></i>Change Password</a>
         

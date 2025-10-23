@@ -53,7 +53,20 @@ function getPositiveResults($record) {
         'codeine' => 'Codeine',
         'benzodiazepines' => 'Benzodiazepines',
         'marijuana' => 'Marijuana',
-        'amitriptyline' => 'Amitriptyline'
+        'amitriptyline' => 'Amitriptyline',
+        'opiates' => 'opiates',
+        'phencyclidine' => 'phencyclidine',
+        'methadone' => 'methadone',
+        'buprenorphine' => 'buprenorphine',
+        'nicotine' => 'nicotine',
+        'other_tca' => 'other_tca',
+        'tramadol' => 'tramadol',
+        'ketamine' => 'ketamine',
+        'fentanyl' => 'fentanyl',
+        'oxycodone' => 'oxycodone',
+        'propoxyphene' => 'propoxyphene',
+        'ecstacy' => 'ecstacy',
+        'other_drugs' => 'other_drugs'
     ];
 
     $positives = [];
@@ -77,7 +90,20 @@ function getToxiStatus($record) {
         'codeine',
         'benzodiazepines',
         'marijuana',
-        'amitriptyline'
+        'amitriptyline',
+        'opiates',
+        'phencyclidine',
+        'methadone',
+        'buprenorphine',
+        'nicotine',
+        'other_tca',
+        'tramadol',
+        'ketamine',
+        'fentanyl',
+        'oxycodone',
+        'propoxyphene',
+        'ecstacy',
+        'other_drugs'
     ];
 
     foreach ($drugs as $field) {

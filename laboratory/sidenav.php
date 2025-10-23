@@ -49,31 +49,13 @@ $user_id = $_SESSION['user_id'] ?? '';
                 <a href="../dashboard/dashboard.php" class="nav-link home-link">
                     <i class="fa fa-home"></i>Home
                 </a>
-
-                <a href="../backup/backup.php" class="nav-link">
-                    <i class="fa fa-database"></i>Backup System</a>
-
-                <a href="../backup/updatecurrent_status.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-user-plus"></i>Update patients current status </a>
                 <a href="../laboratory/view_all_patients.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-users"></i>Perform a test?</a>
                 <a href="../laboratory/toxicology_results.php" target="contentFrame"  class="nav-link">
                     <i class="fa fa-binoculars"></i>Toxicology Results</a>
                 <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-stethoscope"></i>View referrals</a>
-                <a href="../pharmacy/add_stocks.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-shopping-cart"></i>Add stocks</a>
-                <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-plus-circle"></i>Add new drug or item</a>
-                <a href="../pharmacy/view_other_drugs.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-list"></i>View items/drugs list</a>
 
-                <a href="../pharmacy/viewstocks_sum.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-eye"></i>View Inventory</a>
-                <a href="../pharmacy/stock_taking.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-calculator"></i>Stock taking</a>
-                <a href="../pharmacy/view_transactions.php" target="contentFrame"  class="nav-link">
-                    <i class="fa fa-cubes"></i>Stock Cards</a>
 
 </div>
 

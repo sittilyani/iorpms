@@ -45,15 +45,8 @@ $user_id = $_SESSION['user_id'] ?? '';
     </h2>
 
     <!-- Home link - will navigate away from this page -->
-    <a href="../dashboard/dashboard.php" class="home-link">
-        <i class="fa fa-home"></i>Home
-    </a>
-
-    <a href="../backup/backup.php" class="nav-link">
-        <i class="fa fa-database"></i>Backup System</a>
-
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
-        <i class="fa fa-user-plus"></i>Update patients current status </a>
+                <a href="../dashboard/dashboard.php" class="home-link">
+                    <i class="fa fa-home"></i>Home </a>
                 <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-ban"></i>Controlled Drugs Dispensing</a>
                 <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
@@ -62,12 +55,6 @@ $user_id = $_SESSION['user_id'] ?? '';
                     <i class="fa fa-anchor"></i>Prisons Dispensing</a>
                 <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-anchor"></i>Retro Dispensing</a>
-                <a href="../clinician/prescribe.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-clone"></i>Update controlled drugs dosage</a>
-                <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-file"></i>Prescribe other drugs</a>
-                <a href="../clinician/treatment.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-stethoscope"></i>CCC Clinical consultations</a>
                 <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-balance-scale"></i>Add stocks</a>
                 <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
@@ -82,18 +69,13 @@ $user_id = $_SESSION['user_id'] ?? '';
                     <i class="fa fa-calculator"></i>Stock taking</a>
                 <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-cc"></i>Stock Cards</a>
-                <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-cart-plus"></i>Prescribe other drugs</a>
                 <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-stethoscope"></i>View referrals</a>
                 <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-check-circle"></i>View Prescriptions</a>
                 <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-check-square-o"></i>View Closed Prescriptions</a>
-                <a href="../laboratory/toxicology_results.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-binoculars"></i>Toxicology Results</a>
-
-</div>
+        </div>
 
 <div class="main">
     <div class="content-header">

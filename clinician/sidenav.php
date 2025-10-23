@@ -66,22 +66,24 @@ $user_id = $_SESSION['user_id'] ?? '';
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
-
-    <a href="../backup/backup.php" class="nav-link">
-        <i class="fa fa-database"></i>Backup System</a>
-
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
-        <i class="fa fa-user-plus"></i>Update patients current status </a>
     <a href="../clinician/clinician_follow_up_form.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-stethoscope"></i>Clinical Follow Up Form</a>
+        <i class="fa fa-stethoscope"></i>CCC Clinical Follow Up Form</a>
     <a href="../clinician/clinical_encounter_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i>Clinical Initial Encounter Form</a>
+    <!--<a href="../clinician/treatment.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-stethoscope"></i>CCC Clinical consultations</a>-->
     <a href="../clinician/transfer_form_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i>Transfer Form</a>
     <a href="../clinician/prescribe.php" target="contentFrame" class="nav-link">
             <i class="fa fa-clone"></i>Update controlled drugs dosage</a>
     <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
         <i class="fa fa-file"></i>Prescribe other drugs</a>
+    <a href="../clinician/client_search_consent.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-lock"></i>Consent Form 3 E ver 2020</a>
+    <a href="../clinician/search_patients_involuntary.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-user-circle"></i>Involuntary Discontinuation</a>
+    <a href="../clinician/search_patients_voluntary.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-user-circle"></i>Voluntary Discontinuation</a>
     <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
             <i class="fa fa-stethoscope"></i>View referrals</a>
     <a href="../patients/view_hiv_positive.php" target="contentFrame"  class="nav-link">

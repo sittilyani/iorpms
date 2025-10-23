@@ -119,7 +119,7 @@ if ($result->num_rows > 0) {
                 <td>" . htmlspecialchars($row['age'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['sex'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['p_address'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['drugname'] ?? 'N/A') . "</td>
+                <td>" . $row['drugname'] . "</td>
                 <td>" . htmlspecialchars($row['dosage'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['lastVisitDate'] ?? 'N/A') . "</td>
             </tr>";

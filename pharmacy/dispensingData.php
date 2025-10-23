@@ -136,7 +136,7 @@ if ($photo && !empty($photo['image'])) {
 }
 
 // Fetch the last visit date for the specific mat_id
-$lastVisitQuery = "SELECT visitDate FROM pharmacy WHERE mat_id = ? ORDER BY visitDate DESC LIMIT 1";
+$lastVisitQuery = "SELECT dispDate FROM pharmacy WHERE mat_id = ? ORDER BY dispDate DESC LIMIT 1";
 $lastVisitStmt = $conn->prepare($lastVisitQuery);
 $lastVisitStmt->bind_param('s', $userId);
 $lastVisitStmt->execute();
@@ -144,7 +144,7 @@ $lastVisitResult = $lastVisitStmt->get_result();
 
 if ($lastVisitResult->num_rows > 0) {
     $lastVisitRow = $lastVisitResult->fetch_assoc();
-    $lastvisitDate = $lastVisitRow['visitDate'];
+    $lastvisitDate = $lastVisitRow['dispDate'];
 }
 $lastVisitStmt->close();
 
@@ -404,7 +404,7 @@ if ($statusResult->num_rows > 0) {
             
             <div class="stat-item stat-visit">
                 <span class="stat-value"><?php echo htmlspecialchars($lastvisitDate); ?></span>
-                <span class="stat-label">Last Visit Date</span>
+                <span class="stat-label">Last disp Date</span>
             </div>
             <div class="stat-item stat-days-next">
                 <span class="stat-value"><?php echo $daysToAppointmentDisplay; ?></span>
