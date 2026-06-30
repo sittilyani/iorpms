@@ -6,6 +6,9 @@ requireLogin();
 // Include configuration
 include "../includes/config.php";
 
+// Load multilingual support (sets $text, $lang, t())
+include "../includes/languages.php";
+
 // Get user info from session manager functions
 $userrole = getUserRole();
 $user_id = getUserId();
@@ -23,7 +26,7 @@ $full_name = getUserFullName();
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
 <link rel="manifest" href="../assets/favicons/site.webmanifest">
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
-<!--<link rel="stylesheet" href="../assets/css/sidenav.css" type="text/css">-->
+<?php include "../includes/i18n_script.php"; ?>
 <style>
        * {
         margin: 0;
@@ -257,55 +260,74 @@ $full_name = getUserFullName();
 <div class="sidenav">
     <h2>
         <i class="fa fa-pills"></i><br>
-        Pharmacy processes
+        <span data-i18n="dispensing_pharm">Pharmacy processes</span>
     </h2>
 
+    <!-- Compact language switcher inside sidenav -->
+    <?php
+    $current_lang = $_SESSION['lang'] ?? 'en';
+    $lang_opts = ['en' => '🇬🇧 EN', 'fr' => '🇫🇷 FR', 'pt' => '🇵🇹 PT'];
+    ?>
+    <div style="display:flex;justify-content:center;gap:4px;padding:0 10px 12px;flex-wrap:wrap;">
+        <?php foreach ($lang_opts as $lc => $lbl):
+            $lurl   = '?' . http_build_query(['lang' => $lc]);
+            $active = ($current_lang === $lc)
+                ? 'background:white;color:#1a2a6c;font-weight:700;'
+                : 'background:rgba(255,255,255,0.15);color:white;';
+        ?>
+        <a href="<?php echo htmlspecialchars($lurl); ?>"
+           style="<?php echo $active ?>border:1px solid rgba(255,255,255,0.4);padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;text-decoration:none;">
+            <?php echo $lbl; ?>
+        </a>
+        <?php endforeach; ?>
+    </div>
+
     <!-- Home link - will navigate away from this page -->
-                <a href="../dashboard/dashboard.php" class="home-link">
-                    <i class="fa fa-home"></i>Home </a>
-                <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-pump-medical"></i>Dashboard</a>
-                <a href="../clinician/update_dose.php" target="contentFrame" class="nav-link" style="background: #ffd700; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-clone"></i>Update Dosage</a>
-                <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-pump-medical"></i>Dispense with Pump</a>
-                <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-hourglass-half"></i>Pump reservoir</a>
-                <a href="../pharmacy/calibration.php" target="contentFrame" class="nav-link" style="background: #2C3162; color: #ffffff; margin-top: 10px;">
-                    <i class="fa fa-cog"></i>Calibrate Pump</a>
-                <a href="../pharmacy/calibration_table.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-bar-chart"></i>Calibration History</a>
-                <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-adjust"></i>Prescribe other drugs</a>
-                <a href="../pharmacy/prisons_module.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-anchor"></i>Prisons Dispensing</a>
-                <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-anchor"></i>Retro Dispensing</a>
-                <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link" style="background: #66ccff; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-ban"></i>Dispense without pump</a>
-                <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link" style="background: #ccccff; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-anchor"></i>Delete dispensed doses</a>
-                <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link" style="background: #b1f0c2; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-anchor"></i>Daily Stores movements</a>
-                <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-balance-scale"></i>Add stocks</a>
-                <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-bell"></i>Add new drug or item</a>
-                <a href="../pharmacy/view_other_drugs.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-binoculars"></i>View items/drugs list</a>
-                <a href="../pharmacy/dispensed_drugs.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-briefcase"></i>View drugs dispensed</a>
-                <a href="../pharmacy/stock_taking.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-calculator"></i>Stock taking</a>
-                <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-cc"></i>Stock Cards</a>
-                <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-stethoscope"></i>View referrals</a>
-                <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
-                    <i class="fa fa-check-circle"></i>View Prescriptions</a>
-                <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background: #9EFF9E; color: #000000; margin-top: 10px;">
-                    <i class="fa fa-stethoscope"></i>Update Appointments</a>
-        </div>
+    <a href="../dashboard/dashboard.php" class="home-link">
+        <i class="fa fa-home"></i><span data-i18n="dashboard">Home</span></a>
+    <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+        <i class="fa fa-pump-medical"></i><span data-i18n="dashboard">Dashboard</span></a>
+    <a href="../clinician/update_dose.php" target="contentFrame" class="nav-link" style="background: #ffd700; color: #000000; margin-top: 10px;">
+        <i class="fa fa-clone"></i><span data-i18n="dosage">Update Dosage</span></a>
+    <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+        <i class="fa fa-pump-medical"></i><span data-i18n="dispense_with_pump">Dispense with Pump</span></a>
+    <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-hourglass-half"></i><span data-i18n="pump_reservoir">Pump Reservoir</span></a>
+    <a href="../pharmacy/calibration.php" target="contentFrame" class="nav-link" style="background: #2C3162; color: #ffffff; margin-top: 10px;">
+        <i class="fa fa-cog"></i><span data-i18n="calibration_factor">Calibrate Pump</span></a>
+    <a href="../pharmacy/calibration_table.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-bar-chart"></i><span data-i18n="reports">Calibration History</span></a>
+    <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-adjust"></i><span data-i18n="prescriptions">Prescribe Other Drugs</span></a>
+    <a href="../pharmacy/prisons_module.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-anchor"></i><span data-i18n="dispensing">Prisons Dispensing</span></a>
+    <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-anchor"></i><span>Retro Dispensing</span></a>
+    <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link" style="background: #66ccff; color: #000000; margin-top: 10px;">
+        <i class="fa fa-ban"></i><span data-i18n="routine_dispensing">Dispense without Pump</span></a>
+    <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link" style="background: #ccccff; color: #000000; margin-top: 10px;">
+        <i class="fa fa-anchor"></i><span data-i18n="delete">Delete Dispensed Doses</span></a>
+    <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link" style="background: #b1f0c2; color: #000000; margin-top: 10px;">
+        <i class="fa fa-anchor"></i><span data-i18n="stock">Daily Stores Movements</span></a>
+    <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-balance-scale"></i><span data-i18n="stock_in">Add Stocks</span></a>
+    <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-bell"></i><span data-i18n="add_drug">Add New Drug or Item</span></a>
+    <a href="../pharmacy/view_other_drugs.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-binoculars"></i><span data-i18n="drug_list">View Items / Drugs List</span></a>
+    <a href="../pharmacy/dispensed_drugs.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-briefcase"></i><span data-i18n="dispensed_today">View Drugs Dispensed</span></a>
+    <a href="../pharmacy/stock_taking.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-calculator"></i><span data-i18n="stock">Stock Taking</span></a>
+    <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-cc"></i><span data-i18n="stock">Stock Cards</span></a>
+    <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-stethoscope"></i><span data-i18n="view_referrals">View Referrals</span></a>
+    <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-check-circle"></i><span data-i18n="prescriptions">View Prescriptions</span></a>
+    <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background: #9EFF9E; color: #000000; margin-top: 10px;">
+        <i class="fa fa-stethoscope"></i><span data-i18n="appointments">Update Appointments</span></a>
+</div>
 
 <div class="main">
     <div class="content-header">

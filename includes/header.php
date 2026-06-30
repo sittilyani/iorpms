@@ -59,7 +59,7 @@ if ($isLoggedIn) {
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
     <link rel="manifest" href="../assets/favicons/site.webmanifest">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
-
+    <?php include __DIR__ . '/i18n_script.php'; ?>
     <style>
         /* Reset only for header elements to prevent conflicts */
         .header {
@@ -150,25 +150,38 @@ if ($isLoggedIn) {
         .lang-switcher {
             display: flex;
             align-items: center;
+            gap: 4px;
         }
         .lang-btn {
             background: rgba(255,255,255,0.18);
             color: white;
             border: 1px solid rgba(255,255,255,0.4);
-            padding: 6px 12px;
+            padding: 5px 11px;
             border-radius: 20px;
             cursor: pointer;
-            transition: background 0.3s;
-            display: flex;
+            transition: background 0.2s;
+            display: inline-flex;
             align-items: center;
-            font-size: 16px;
+            font-size: 13px;
+            font-weight: 600;
             text-decoration: none;
-            gap: 5px;
+            gap: 4px;
+            letter-spacing: .3px;
         }
         .lang-btn:hover {
             background: rgba(255,255,255,0.35);
             color: white;
             text-decoration: none;
+        }
+        .lang-btn.lang-active {
+            background: white;
+            color: #2C3162;
+            border-color: white;
+            font-weight: 700;
+        }
+        .lang-btn.lang-active:hover {
+            background: #f0f0f0;
+            color: #2C3162;
         }
         .user-menu {
             display: none;
@@ -263,19 +276,26 @@ if ($isLoggedIn) {
                 </div>
                 <a href="../sops/index.php" class="current-time"><span>SOPs</span></a>
 
-                <!-- Language Switcher -->
+                <!-- Language Switcher: EN / FR / PT -->
+                <?php
+                $current_lang = $_SESSION['lang'] ?? 'en';
+                $lang_options = [
+                    'en' => ['flag' => '🇬🇧', 'label' => 'EN'],
+                    'fr' => ['flag' => '🇫🇷', 'label' => 'FR'],
+                    'pt' => ['flag' => '🇵🇹', 'label' => 'PT'],
+                ];
+                ?>
                 <div class="lang-switcher" title="<?php echo $text['select_language']; ?>">
-                    <?php
-                    $current_lang = $_SESSION['lang'] ?? 'en';
-                    $switch_lang  = ($current_lang === 'fr') ? 'en' : 'fr';
-                    $switch_label = ($current_lang === 'fr') ? 'English' : 'Français';
-                    $switch_flag  = ($current_lang === 'fr') ? '../assets/images/en_flag.png' : '../assets/images/fr_flag.png';
-                    $switch_url   = '?' . http_build_query(array_merge($_GET ?? [], ['lang' => $switch_lang]));
+                    <?php foreach ($lang_options as $lc => $lopt):
+                        $lurl    = '?' . http_build_query(array_merge($_GET ?? [], ['lang' => $lc]));
+                        $active  = ($current_lang === $lc) ? ' lang-active' : '';
                     ?>
-                    <a href="<?php echo htmlspecialchars($switch_url); ?>" class="lang-btn" title="<?php echo $switch_label; ?>">
-                        <img src="<?php echo $switch_flag; ?>" width="20" height="14" alt="<?php echo $switch_label; ?>" style="vertical-align:middle; margin-right:4px;">
-                        <span><?php echo $switch_label; ?></span>
+                    <a href="<?php echo htmlspecialchars($lurl); ?>"
+                       class="lang-btn<?php echo $active; ?>"
+                       title="<?php echo htmlspecialchars($lopt['label']); ?>">
+                        <?php echo $lopt['flag']; ?> <?php echo $lopt['label']; ?>
                     </a>
+                    <?php endforeach; ?>
                 </div>
 
                 <a href="../public/login.php" class="logout-btn">
