@@ -167,6 +167,86 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
         $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars($e->getMessage());
     }
 
+    // ===========================================================================
+    // 1.5  CO-MEDICATIONS — ARV / Anti-TB / TPT
+    // Runs only after the main drug was successfully dispensed.
+    // Each co-medication gets its own pharmacy record and stock decrement.
+    // ===========================================================================
+    if ($routineDispenseSuccess && isset($_POST['co_meds']) && is_array($_POST['co_meds'])) {
+        foreach ($_POST['co_meds'] as $ci => $cmed) {
+            // Skip unchecked rows
+            if (empty($cmed['dispense']) || $cmed['dispense'] !== '1') continue;
+
+            $co_drug    = trim($cmed['drugname'] ?? '');
+            $co_dosage  = (float)($cmed['dosage'] ?? 1);
+            $co_reasons = trim($cmed['reasons']  ?? 'Auto-dispensed with MAT drug');
+
+            if (!$co_drug) continue;
+
+            // Skip if already dispensed today for this drug
+            $coDupStmt = $conn->prepare(
+                "SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = CURDATE()"
+            );
+            $coDupStmt->bind_param('ss', $mat_id, $co_drug);
+            $coDupStmt->execute();
+            $coDup = (int)$coDupStmt->get_result()->fetch_assoc()['cnt'];
+            $coDupStmt->close();
+
+            if ($coDup > 0) {
+                $successMessages[] = "ℹ {$co_drug} already recorded for today — skipped.";
+                continue;
+            }
+
+            $conn->begin_transaction();
+            try {
+                // Insert pharmacy record for co-medication
+                $coIns = $conn->prepare(
+                    "INSERT INTO pharmacy
+                         (visitDate, mat_id, mat_number, clientName, nickName, age, sex,
+                          p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
+                     VALUES (CURDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                $coIns->bind_param(
+                    'sssssssssdsss',      // 9s + d + 3s = 13 params
+                    $mat_id, $mat_number, $clientName, $nickName,
+                    $age, $sex, $p_address, $cso,
+                    $co_drug, $co_dosage, $co_reasons, $current_status, $pharm_officer_name
+                );
+                if (!$coIns->execute()) throw new Exception($coIns->error);
+                $coIns->close();
+
+                // Decrement stock only if the drug name exists in stock_movements
+                $coStockChk = $conn->prepare(
+                    "SELECT COUNT(*) AS cnt FROM stock_movements WHERE drugname = ?"
+                );
+                $coStockChk->bind_param('s', $co_drug);
+                $coStockChk->execute();
+                $hasStock = (int)$coStockChk->get_result()->fetch_assoc()['cnt'] > 0;
+                $coStockChk->close();
+
+                if ($hasStock) {
+                    $coUpd = $conn->prepare(
+                        "UPDATE stock_movements SET total_qty = total_qty - ?
+                         WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1"
+                    );
+                    $coUpd->bind_param('ds', $co_dosage, $co_drug);
+                    $coUpd->execute();
+                    $coUpd->close();
+                }
+
+                $conn->commit();
+                $successMessages[] = "✓ {$co_drug} dispensed automatically.";
+
+            } catch (Exception $coEx) {
+                $conn->rollback();
+                $errorMessages[] = "Co-medication error ({$co_drug}): " . htmlspecialchars($coEx->getMessage());
+            }
+        }
+    }
+    // ===========================================================================
+    // END CO-MEDICATIONS
+    // ===========================================================================
+
     // Append routine errors to the main error list
     $errorMessages = array_merge($errorMessages, $routineErrors);
 }

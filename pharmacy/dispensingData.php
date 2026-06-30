@@ -426,6 +426,69 @@ if ($mat_id) {
 // END NEW: Fetch other prescriptions
 // ***************************************************************
 
+// ***************************************************************
+// CO-MEDICATIONS: ARV / Anti-TB / TPT — auto-dispensed with main drug
+// ***************************************************************
+$coMeds = [];
+if ($mat_id) {
+    $mainDrugName = $currentSettings['drugname'] ?? 'MAT drug';
+
+    // ARV (HIV positive patients)
+    if (!empty($vlData['hiv_status']) && strtolower($vlData['hiv_status']) === 'positive'
+        && !empty($vlData['art_regimen'])) {
+        $artDrug = $vlData['art_regimen'];
+        $chkArv  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkArv->bind_param('sss', $mat_id, $artDrug, $today);
+        $chkArv->execute();
+        $arvDone = (int)$chkArv->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkArv->close();
+        $coMeds[] = [
+            'type'     => 'ARV',   'icon' => '💊', 'label' => 'HIV+ ARV',
+            'badge'    => 'danger',
+            'drugname' => $artDrug, 'dosage' => 1,  'done' => $arvDone,
+            'note'     => '',
+            'reasons'  => 'ARV auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+
+    // Anti-TB (active TB treatment)
+    if (!empty($showTB) && !empty($regimenData['tb_regimen'])) {
+        $tbDrug = $regimenData['tb_regimen'];
+        $chkTb  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkTb->bind_param('sss', $mat_id, $tbDrug, $today);
+        $chkTb->execute();
+        $tbDone = (int)$chkTb->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkTb->close();
+        $coMeds[] = [
+            'type'     => 'TB',    'icon' => '🫁', 'label' => 'Anti-TB',
+            'badge'    => 'warning',
+            'drugname' => $tbDrug,  'dosage' => 1,  'done' => $tbDone,
+            'note'     => 'Ends ' . ($regimenData['tb_end_date'] ?? ''),
+            'reasons'  => 'Anti-TB auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+
+    // TPT (active preventive TB therapy)
+    if (!empty($showTPT) && !empty($regimenData['tpt_regimen'])) {
+        $tptDrug = $regimenData['tpt_regimen'];
+        $chkTpt  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkTpt->bind_param('sss', $mat_id, $tptDrug, $today);
+        $chkTpt->execute();
+        $tptDone = (int)$chkTpt->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkTpt->close();
+        $coMeds[] = [
+            'type'     => 'TPT',   'icon' => '💉', 'label' => 'TPT',
+            'badge'    => 'success',
+            'drugname' => $tptDrug, 'dosage' => 1,  'done' => $tptDone,
+            'note'     => 'Ends ' . ($regimenData['tpt_end_date'] ?? ''),
+            'reasons'  => 'TPT auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+}
+// ***************************************************************
+// END CO-MEDICATIONS
+// ***************************************************************
+
 // Fetch the logged-in user's name from tblusers
 $pharm_office_name = 'Unknown';
 if (isset($_SESSION['user_id'])) {
@@ -549,6 +612,19 @@ if (isset($_SESSION['dispensing_successes'])) {
         .prescriptions-table th { background-color: #f2f2f2; font-weight: bold; }
         .prescriptions-table input[type="number"] { width: 80px; padding: 5px; }
         .prescriptions-table input[type="checkbox"] { transform: scale(1.2); }
+        /* Co-medications panel */
+        .co-meds-section { background:#fff; border:2px solid #2C3162; border-radius:8px; padding:14px 18px; margin-bottom:14px; }
+        .co-meds-section h4 { color:#2C3162; margin:0 0 10px; font-size:1rem; }
+        .co-meds-table { width:100%; border-collapse:collapse; }
+        .co-meds-table th { background:#2C3162; color:#fff; padding:8px 10px; font-size:.85rem; text-align:left; }
+        .co-meds-table td { padding:8px 10px; border-bottom:1px solid #e0e0e0; font-size:.88rem; vertical-align:middle; }
+        .co-meds-table tr:last-child td { border-bottom:none; }
+        .co-meds-table input[type=checkbox] { transform:scale(1.3); cursor:pointer; }
+        .co-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:.78rem; font-weight:700; }
+        .co-badge-danger  { background:#ffe0e0; color:#c00; }
+        .co-badge-warning { background:#fff3cd; color:#7a5c00; }
+        .co-badge-success { background:#e8f5e9; color:#2e7d32; }
+        .co-done { color:#388e3c; font-weight:bold; font-size:.82rem; }
         .custom-alert { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: yellow; color: red; border: 2px solid red; padding: 20px; width: 300px; text-align: center; z-index: 1000; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .custom-alert button { margin-top: 10px; padding: 8px 16px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer; }
         .custom-alert button:hover { background-color: darkred; }
@@ -906,6 +982,56 @@ if (isset($_SESSION['dispensing_successes'])) {
                                 </td>
                             </tr>
                             <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+
+                <?php if (!empty($coMeds)): ?>
+                <div class="co-meds-section">
+                    <h4>🔄 Co-medications — auto-dispensed with today's dose</h4>
+                    <table class="co-meds-table">
+                        <thead>
+                            <tr>
+                                <th style="width:60px">Dispense</th>
+                                <th>Type</th>
+                                <th>Drug / Regimen</th>
+                                <th>Daily Dose</th>
+                                <th>Notes</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($coMeds as $ci => $cm): ?>
+                            <tr<?= $cm['done'] ? ' style="opacity:.55"' : '' ?>>
+                                <td style="text-align:center">
+                                    <?php if ($cm['done']): ?>
+                                        <span class="co-done">✓</span>
+                                    <?php else: ?>
+                                        <input type="checkbox" name="co_meds[<?= $ci ?>][dispense]" value="1" checked>
+                                    <?php endif; ?>
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars($cm['drugname']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][dosage]"   value="<?= (int)$cm['dosage'] ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars($cm['reasons']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars($cm['type']) ?>">
+                                </td>
+                                <td>
+                                    <span class="co-badge co-badge-<?= $cm['badge'] ?>">
+                                        <?= $cm['icon'] ?> <?= $cm['label'] ?>
+                                    </span>
+                                </td>
+                                <td><strong><?= htmlspecialchars($cm['drugname']) ?></strong></td>
+                                <td>1 daily dose</td>
+                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars($cm['note'] ?? '') ?></td>
+                                <td>
+                                    <?php if ($cm['done']): ?>
+                                        <span class="co-done">✓ Already dispensed today</span>
+                                    <?php else: ?>
+                                        <span style="color:#2C3162;font-size:.82rem">Will be dispensed</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
