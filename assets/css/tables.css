@@ -1,0 +1,112 @@
+.header {
+            margin: 10px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .search-entry {
+            max-width: 400px;
+            border-radius: 5px;
+            height: 40px;
+            padding: 0 10px;
+        }
+
+        .search-input, .cancel-input, #print-pdf, #export-excel {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+        }
+
+        .search-input { background-color: grey; }
+        .cancel-input { background-color: green; }
+        #print-pdf { background-color: grey; }
+        #export-excel { background-color: green; }
+
+        h2 {
+            margin: 20px 30px;
+            color: #2C3162;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            table-layout: fixed;
+        }
+
+        thead {
+            background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(22, 22, 51, 1) 29%, rgba(9, 9, 121, 1) 78%, rgba(0, 212, 255, 1) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px 10px;
+            text-align: left;
+            /*white-space: nowrap;*/
+            /*overflow: hidden;*/
+            text-overflow: ellipsis;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            /*white-space: nowrap;
+            overflow: hidden;*/
+            text-overflow: ellipsis;
+        }
+
+        th:first-child, td:first-child {
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #2C3162;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination span.active {
+            background-color: #2C3162;
+            color: white;
+            border: 1px solid #2C3162;
+        }
+       
+        /* Adjustments for print view */
+        @media print {
+            body {
+                font-size: 10pt;
+            }
+            .header, .pagination, #export-excel, #print-pdf {
+                display: none;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 0;
+            }
+            td, th {
+                border: 1px solid #000 !important;
+                white-space: normal;
+                padding: 5px;
+            }
+            tr { page-break-inside: avoid; }
+        }

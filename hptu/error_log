@@ -1,0 +1,1 @@
+[15-Dec-2025 12:55:44 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: NO) in /home/thetjbib/public_html/hptu/includes/config.php on line 7

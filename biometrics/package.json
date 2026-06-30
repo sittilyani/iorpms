@@ -1,0 +1,19 @@
+{
+    "name": "zkteco-fingerprint-server",
+    "version": "1.0.0",
+    "description": "ZKTeco Fingerprint Scanner Server",
+    "main": "zkteco_server.js",
+    "scripts": {
+        "start": "node zkteco_server.js",
+        "dev": "nodemon zkteco_server.js",
+        "install-deps": "npm install express cors ffi-napi ref-napi ref-struct-di ref-array-di"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "ffi-napi": "^4.0.3",
+        "ref-napi": "^3.0.3",
+        "ref-struct-di": "^1.1.1",
+        "ref-array-di": "^1.2.2"
+    }
+}

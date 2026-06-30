@@ -1,0 +1,39 @@
+
+
+ h2{
+     font-weight: normal;
+     color: #000080;
+     margin-left: 60px;
+     font-family: inherit;
+ }
+   input, .form-control, select, input[type=text]{
+       width: 200px;
+       height: 30px;
+       margin-top: 5px;
+       margin-bottom: 5px;
+   }
+    form{
+      margin-left: 60px;
+    }
+  input[type=submit], button[type=submit] {
+    background-color: #2C3162;
+    color: white; /* optional: sets text color to white */
+    border: none; /* optional: removes border */
+    padding: 10px 20px; /* optional: adjusts padding */
+    cursor: pointer; /* optional: changes cursor to pointer on hover */
+    height: 40px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    border-radius: 5px;
+}
+
+/* Change border color and add illumination effect on hover */
+input[type=submit]:hover {
+    border-color: #FF3036; /* Change border color to red on hover */
+    box-shadow: 0 0 20px #FF3036; /* Add illumination effect */
+}
+label{
+    margin-bottom: 5px;
+    font-weight: bold;
+}

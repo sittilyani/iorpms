@@ -1,0 +1,14 @@
+-- INSERT DELETED PATIENTS INTO DELETED TABLE
+
+DELIMITER $$
+
+CREATE TRIGGER before_patients_delete
+BEFORE DELETE ON patients
+FOR EACH ROW
+BEGIN
+    INSERT INTO deleted_patients (mat_id, clientName, sex, dob, age, current_status, deleted_at)
+    VALUES (OLD.mat_id, OLD.clientName, OLD.sex, OLD.dob, OLD.age, OLD.current_status, NOW());
+END$$
+
+DELIMITER ;
+
