@@ -301,7 +301,7 @@ if ($isLoggedIn) {
                     <?php endforeach; ?>
                 </div>
 
-                <a href="../public/login.php" class="logout-btn">
+                <a href="../index.php" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span><?php echo $text['logout']; ?></span>
                 </a>
