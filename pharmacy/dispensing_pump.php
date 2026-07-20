@@ -165,6 +165,12 @@ echo "</div>";
 
 <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/fingerprint_listener.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            startFingerprintIdentifyLoop(true);
+        });
+    </script>
 
 <script>
         function cancelSearch() {

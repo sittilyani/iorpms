@@ -12,38 +12,44 @@ app.use(express.json());
 // Use port 3001 to avoid conflicts with other services
 const PORT = 3001;
 
-// DLL Path - UPDATED with correct path from your scanner
-const ZKFP_DLL_PATH = 'C:\\Program Files (x86)\\FPSensor\\ZKFPCap.dll';
-const USB_DLL_PATH = 'C:\\Program Files (x86)\\FPSensor\\USB.dll';
+const fs = require('fs');
+
+const POSSIBLE_ZKFP_PATHS = [
+    'C:\\Program Files (x86)\\FPSensor\\Biokey\\ZKFPCap.dll',
+    'C:\\Program Files (x86)\\ZKTeco\\ZKAccess3.5\\ZKFPCap.dll',
+    'C:\\Program Files (x86)\\ZKTeco\\ZKFPCap.dll',
+    'C:\\Program Files (x86)\\FPSensor\\ZKFPCap.dll',
+    'C:\\Program Files\\FPSensor\\Biokey\\ZKFPCap.dll',
+    'C:\\Program Files\\ZKTeco\\ZKAccess3.5\\ZKFPCap.dll',
+    'C:\\Program Files\\ZKTeco\\ZKFPCap.dll'
+];
+
+const POSSIBLE_USB_PATHS = [
+    'C:\\Program Files (x86)\\FPSensor\\Biokey\\USB.dll',
+    'C:\\Program Files (x86)\\ZKTeco\\ZKAccess3.5\\USB.dll',
+    'C:\\Program Files (x86)\\ZKTeco\\USB.dll',
+    'C:\\Program Files (x86)\\FPSensor\\USB.dll',
+    'C:\\Program Files\\FPSensor\\Biokey\\USB.dll',
+    'C:\\Program Files\\ZKTeco\\ZKAccess3.5\\USB.dll',
+    'C:\\Program Files\\ZKTeco\\USB.dll'
+];
+
+let ZKFP_DLL_PATH = POSSIBLE_ZKFP_PATHS.find(p => fs.existsSync(p)) || null;
+let USB_DLL_PATH = POSSIBLE_USB_PATHS.find(p => fs.existsSync(p)) || null;
 
 console.log('='.repeat(70));
 console.log('ZKTeco Fingerprint Server');
 console.log('='.repeat(70));
 console.log(`Node.js ${process.version}`);
 console.log(`Architecture: ${process.arch}`);
-console.log(`DLL Path: ${ZKFP_DLL_PATH}`);
+console.log(`DLL Path: ${ZKFP_DLL_PATH || 'NOT FOUND'}`);
 console.log(`Server: http://localhost:${PORT}`);
 console.log('='.repeat(70));
 
 // Check if DLL exists
-const fs = require('fs');
-if (!fs.existsSync(ZKFP_DLL_PATH)) {
-    console.error(`\n? ERROR: DLL not found at: ${ZKFP_DLL_PATH}`);
-    console.log('Please check:');
-    console.log('1. ZKTeco SDK is installed');
-    console.log('2. Run as Administrator');
-    console.log('3. DLL path is correct');
-    console.log('\nFiles in C:\\Program Files (x86)\\FPSensor\\:');
-    try {
-        const files = fs.readdirSync('C:\\Program Files (x86)\\FPSensor\\');
-        files.forEach(file => {
-            if (file.toLowerCase().includes('.dll')) {
-                console.log(`  - ${file}`);
-            }
-        });
-    } catch (e) {
-        console.log('  Cannot access directory');
-    }
+if (!ZKFP_DLL_PATH) {
+    console.error(`\nERROR: ZKFPCap.dll not found in any standard path.`);
+    console.log('Checked paths:', POSSIBLE_ZKFP_PATHS);
     process.exit(1);
 }
 
@@ -78,6 +84,15 @@ try {
             ref.refType('int'),  // image size pointer
             'pointer',    // template buffer
             ref.refType('int')   // template size pointer
+        ]],
+
+        // DBMatch
+        'ZKFPM_DBMatch': ['int', [
+            'pointer',    // handle
+            'pointer',    // template 1
+            'int',        // size 1
+            'pointer',    // template 2
+            'int'         // size 2
         ]],
 
         // Get last error
@@ -397,10 +412,109 @@ app.get('/devices', (req, res) => {
         });
 
     } catch (error) {
+        console.error('[DEVICES] Error:', error.message);
+        try { zkfp.ZKFPM_Terminate(); } catch {}
+        res.json({ success: false, message: error.message });
+    }
+});
+
+// Compare two templates
+app.post('/match', (req, res) => {
+    console.log('\n[MATCH] Comparing two templates...');
+    try {
+        const { template1, template2 } = req.body;
+        if (!template1 || !template2) {
+            return res.status(400).json({ success: false, message: 'Missing template1 or template2' });
+        }
+
+        const temp1Buffer = Buffer.from(template1, 'base64');
+        const temp2Buffer = Buffer.from(template2, 'base64');
+
+        const initResult = zkfp.ZKFPM_Init();
+        if (initResult !== 0) {
+            return res.status(500).json({ success: false, message: `SDK Init failed: ${initResult}` });
+        }
+
+        const handle = zkfp.ZKFPM_OpenDevice(0);
+        if (handle.isNull()) {
+            zkfp.ZKFPM_Terminate();
+            return res.status(500).json({ success: false, message: 'Failed to open device' });
+        }
+
+        const score = zkfp.ZKFPM_DBMatch(handle, temp1Buffer, temp1Buffer.length, temp2Buffer, temp2Buffer.length);
+
+        zkfp.ZKFPM_CloseDevice(handle);
+        zkfp.ZKFPM_Terminate();
+
         res.json({
-            success: false,
-            message: error.message
+            success: true,
+            score: score,
+            match: score >= 80
         });
+
+    } catch (error) {
+        console.error('[MATCH] Error:', error.message);
+        try { zkfp.ZKFPM_Terminate(); } catch {}
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Identify a template against candidates
+app.post('/identify', (req, res) => {
+    console.log('\n[IDENTIFY] Identifying template...');
+    try {
+        const { captured_template, candidates } = req.body;
+        if (!captured_template || !candidates) {
+            return res.status(400).json({ success: false, message: 'Missing captured_template or candidates' });
+        }
+
+        const capBuffer = Buffer.from(captured_template, 'base64');
+
+        const initResult = zkfp.ZKFPM_Init();
+        if (initResult !== 0) {
+            return res.status(500).json({ success: false, message: `SDK Init failed: ${initResult}` });
+        }
+
+        const handle = zkfp.ZKFPM_OpenDevice(0);
+        if (handle.isNull()) {
+            zkfp.ZKFPM_Terminate();
+            return res.status(500).json({ success: false, message: 'Failed to open device' });
+        }
+
+        let match_id = null;
+        let max_score = 0;
+        const threshold = 80;
+
+        for (const candidate of candidates) {
+            if (!candidate.template) continue;
+            try {
+                const candBuffer = Buffer.from(candidate.template, 'base64');
+                const score = zkfp.ZKFPM_DBMatch(handle, capBuffer, capBuffer.length, candBuffer, candBuffer.length);
+                if (score > max_score) {
+                    max_score = score;
+                    if (score >= threshold) {
+                        match_id = candidate.id;
+                    }
+                }
+            } catch (ex) {
+                console.error(`[IDENTIFY] Error matching candidate ${candidate.id}:`, ex.message);
+            }
+        }
+
+        zkfp.ZKFPM_CloseDevice(handle);
+        zkfp.ZKFPM_Terminate();
+
+        res.json({
+            success: true,
+            match_id: match_id,
+            score: max_score,
+            matched: match_id !== null
+        });
+
+    } catch (error) {
+        console.error('[IDENTIFY] Error:', error.message);
+        try { zkfp.ZKFPM_Terminate(); } catch {}
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 

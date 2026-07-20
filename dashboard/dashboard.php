@@ -336,17 +336,17 @@ $allCards = [
     <div class="sidebar" id="sidebar">
         <?php if (in_array('Patients Summary', $allowedSidebars)): ?>
         <div class="sidebar-card">
-            <h4 style="color: #0033CC;"><i class="fa fa-users"></i> Patients Summary</h4>
+            <h4 style="color: #0033CC;"><i class="fa fa-users"></i> <?php echo t('patients_summary'); ?></h4>
             <table class="balances-table">
                 <thead>
                     <tr>
-                        <th>Patient Status</th>
-                        <th>Total Number</th>
+                        <th><?php echo t('patient_status'); ?></th>
+                        <th><?php echo t('total_number'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr id="prescription-row">
-                        <td style="color: red;">Pending Prescriptions</td>
+                        <td style="color: red;"><?php echo t('pending_prescriptions'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
@@ -356,7 +356,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Expected to visit today</td>
+                        <td><?php echo t('expected_to_visit_today'); ?></td>
                             <td>
                                 <span class="count-retro">
                                     <a href="../patients/view_appointment_patients.php" target="contentFrame" class="nav-link" style="background: #ffff5c;">
@@ -365,7 +365,7 @@ $allCards = [
                             </td>
                     </tr>
                     <tr>
-                        <td>Cumulative Ever</td>
+                        <td><?php echo t('cumulative_ever'); ?></td>
                         <td>
                         <span class="count-retro">
                                 <a href="../patients/cumulative_ever_patients.php" target="contentFrame" class="nav-link">
@@ -374,7 +374,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Ever Enrolled</td>
+                        <td><?php echo t('ever_enrolled'); ?></td>
                         <td>
                         <span class="count-retro">
                                 <a href="../patients/ever_enrolled_patients.php" target="contentFrame" class="nav-link">
@@ -383,7 +383,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Active</td>
+                        <td><?php echo t('active'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_active_patients.php" target="contentFrame" class="nav-link" style="background: #66ff66; color: #000000;">
@@ -392,7 +392,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Weaned Off</td>
+                        <td><?php echo t('weaned_off'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_weaned_patients.php" target="contentFrame" class="nav-link"  style="background: #66ff66; color: #000000;">
@@ -401,7 +401,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Transfer In</td>
+                        <td><?php echo t('transfer_in'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_transin_patients.php" target="contentFrame" class="nav-link">
@@ -410,7 +410,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Transfer Out</td>
+                        <td><?php echo t('transfer_out'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_transout_patients.php" target="contentFrame" class="nav-link">
@@ -419,7 +419,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Defaulters</td>
+                        <td><?php echo t('defaulters'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_defaulted_patients.php" target="contentFrame" class="nav-link">
@@ -428,7 +428,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Lost to follow up</td>
+                        <td><?php echo t('lost_to_follow_up'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_ltfu_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
@@ -437,7 +437,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td style="color: red;">Discontinued(stopped)</td>
+                        <td style="color: red;"><?php echo t('discontinued_stopped'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_stopped_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
@@ -446,7 +446,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Inmates</td>
+                        <td><?php echo t('inmates'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_inmates_patients.php" target="contentFrame" class="nav-link">
@@ -455,7 +455,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td>Voluntary Discontinuation</td>
+                        <td><?php echo t('voluntary_disc'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_voluntary_patients.php" target="contentFrame" class="nav-link">
@@ -464,7 +464,7 @@ $allCards = [
                         </td>
                     </tr>
                     <tr>
-                        <td style="color: red;">Died</td>
+                        <td style="color: red;"><?php echo t('died'); ?></td>
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_dead_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
@@ -485,14 +485,14 @@ $allCards = [
     <div class="sidebar">
         <?php if (in_array('Stocks Summary', $allowedSidebars)): ?>
         <div class="sidebar-card">
-            <h4 style="color: #0033CC;"><i class="fa fa-calculator"></i> Stocks Summary</h4>
+            <h4 style="color: #0033CC;"><i class="fa fa-calculator"></i> <?php echo t('stocks_summary'); ?></h4>
             <?php include '../includes/sql_functions.php';?>
         </div>
         <?php endif; ?>
 
         <?php if (in_array('Monthly Consumption Summary', $allowedSidebars)): ?>
         <div class="sidebar-card">
-            <h4 style="color: #0033CC;"><i class="fa fa-calendar"></i> Monthly Consumption Summary</h4>
+            <h4 style="color: #0033CC;"><i class="fa fa-calendar"></i> <?php echo t('monthly_consumption_sum'); ?></h4>
             <div class="birthdays-list">
                 <?php include '../includes/sql_functions2.php';?>
             </div>
@@ -500,7 +500,7 @@ $allCards = [
         <?php endif; ?>
         <?php if (in_array('Daily Consumption Summary', $allowedSidebars)): ?>
         <div class="sidebar-card">
-            <h4 style="color: #0033CC;"><i class="fa fa-tasks"></i> Daily Consumption Summary</h4>
+            <h4 style="color: #0033CC;"><i class="fa fa-tasks"></i> <?php echo t('daily_consumption_sum'); ?></h4>
             <p><?php include '../counts/buprenorphine2mg.php'; ?> </p>
             <p><?php include '../counts/buprenorphine4mg.php'; ?> </p>
             <p><?php include '../counts/buprenorphine8mg.php'; ?> </p>

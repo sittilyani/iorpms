@@ -5,6 +5,7 @@ requireLogin();
 
 // Include configuration
 include "../includes/config.php";
+include "../includes/languages.php";
 
 // Get user info from session manager functions
 $userrole = getUserRole();
@@ -24,6 +25,7 @@ $full_name = getUserFullName();
 <link rel="manifest" href="../assets/favicons/site.webmanifest">
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="../assets/css/sidenav.css" type="text/css">
+<?php include "../includes/i18n_script.php"; ?>
 <style>
 
 </style>
@@ -42,6 +44,7 @@ $full_name = getUserFullName();
         <i class="fa fa-gear"></i><br>
         Systems Administration
     </h2>
+    <?php include "../includes/lang_switcher_snippet.php"; ?>
 
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
@@ -67,6 +70,8 @@ $full_name = getUserFullName();
             <i class="fa fa-stethoscope"></i>View referrals</a>
     <a href="../public/reset_user_password.php" target="contentFrame" class="nav-link">
             <i class="fa fa-tools"></i>Default Password Reset</a>
+    <a href="../superadmin/demo_analytics.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-chart-line"></i>Demo Analytics</a>
 </div>
 
 <div class="main">

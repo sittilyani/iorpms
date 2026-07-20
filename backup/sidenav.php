@@ -5,6 +5,7 @@ requireLogin();
 
 // Include configuration
 include "../includes/config.php";
+include "../includes/languages.php";
 
 // Get user info from session manager functions
 $userrole = getUserRole();
@@ -21,6 +22,7 @@ $full_name = getUserFullName();
 <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css" type="text/css">
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="../assets/css/sidenav.css" type="text/css">
+<?php include "../includes/i18n_script.php"; ?>
 <style>
 
 </style>
@@ -39,6 +41,7 @@ $full_name = getUserFullName();
         <i class="fa fa-database"></i><br>
         Backup and Refresh
     </h2>
+    <?php include "../includes/lang_switcher_snippet.php"; ?>
 
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="home-link">
@@ -48,7 +51,7 @@ $full_name = getUserFullName();
     <a href="../backup/backup.php" target="contentFrame" class="nav-link">
         <i class="fas fa-database"></i>Backup System</a>
 
-    <a href="../backup/updatecurrent_status.php" class="nav-link">
+    <a href="../pharmacy/updatecurrent_status.php" class="nav-link">
         <i class="fas fa-user-plus"></i>Update patients current status </a>
 
     <a href="../backup/view_backups.php" target="contentFrame" class="nav-link">
@@ -291,4 +294,4 @@ $full_name = getUserFullName();
     </script>
 
 </body>
-</html>
+</htm

@@ -20,11 +20,11 @@ if ($stmt) {
         $row = $result->fetch_assoc();
         $total_dosage = $row['total_dosage'];
         if ($total_dosage === null || $total_dosage == 0) {
-            echo '<p>No Methadone dispensed on ' . htmlspecialchars($current_display_date) . '.</p>';
+            echo '<p>' . (function_exists('tf') ? tf('tpl_no_dispensed', ['{drug}' => 'Methadone', '{date}' => htmlspecialchars($current_display_date)]) : 'No Methadone dispensed on ' . htmlspecialchars($current_display_date) . '.') . '</p>';
         } else {
             // Calculate mL value (dosage / 5)
             $total_ml = $total_dosage / 5;
-            echo '<p>Methadone dispensed on ' . htmlspecialchars($current_display_date) . ': <span style="font-weight: bold; color: red;">' . htmlspecialchars($total_dosage) . '&nbsp;mg <span style="font-weight: bold; color: red;">(' . htmlspecialchars($total_ml) . ' mL)</span></span></p>';
+            echo '<p>' . (function_exists('tf') ? tf('tpl_dispensed', ['{drug}' => 'Methadone', '{date}' => htmlspecialchars($current_display_date)]) : 'Methadone dispensed on ' . htmlspecialchars($current_display_date) . ':') . ' <span style="font-weight: bold; color: red;">' . htmlspecialchars($total_dosage) . '&nbsp;mg <span style="font-weight: bold; color: red;">(' . htmlspecialchars($total_ml) . ' mL)</span></span></p>';
         }
     } else {
         error_log("Error executing query for Methadone: " . $stmt->error);

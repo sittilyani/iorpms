@@ -5,6 +5,7 @@ requireLogin();
 
 // Include configuration
 include "../includes/config.php";
+include "../includes/languages.php";
 
 // Get user info from session manager functions
 $userrole = getUserRole();
@@ -24,6 +25,7 @@ $full_name = getUserFullName();
 <link rel="manifest" href="../assets/favicons/site.webmanifest">
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="../assets/css/sidenav.css" type="text/css">
+<?php include "../includes/i18n_script.php"; ?>
 <style>
 
 </style>
@@ -38,10 +40,14 @@ $full_name = getUserFullName();
 </div>
 
 <div class="sidenav">
+    <div>
+        <img src="../assets/images/settings.png" alt="" style="height: 150px; width: 150px; margin-left:40px; margin-right: auto;">
+    </div>
     <h2>
-        <i class="fa fa-cog settings-icon"></i><br>
+        <br>
         Systems administration
     </h2>
+    <?php include "../includes/lang_switcher_snippet.php"; ?>
 
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="home-link">
@@ -69,6 +75,8 @@ $full_name = getUserFullName();
             <i class="fa fa-stethoscope"></i>View referrals</a>
     <a href="../public/reset_user_password.php" target="contentFrame" class="nav-link">
             <i class="fa fa-unlock-alt"></i>Default Password Reset</a>
+    <a href="../superadmin/demo_analytics.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-chart-line"></i>Demo Analytics</a>
     <a href="../pharmacy/view_deleted_prescriptions.php" target="contentFrame" class="nav-link">
             <i class="fa fa-calendar-check-o"></i>View Deleted prescriptions</a>
     <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="badgeGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="55%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#67E8F9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon badge -->
+  <g transform="translate(10,10)">
+    <circle cx="120" cy="120" r="112" fill="url(#badgeGrad2)"/>
+
+    <path d="M 183.89 164.74 A 78 78 0 1 1 183.89 75.26"
+          fill="none" stroke="#0B1E3D" stroke-width="27"
+          stroke-linecap="round"/>
+
+    <line x1="183.89" y1="75.26" x2="183.89" y2="164.74"
+          stroke="#0B1E3D" stroke-opacity="0.55" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/>
+
+    <circle cx="183.89" cy="75.26" r="9" fill="#0B1E3D"/>
+    <circle cx="183.89" cy="164.74" r="9" fill="#0B1E3D"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="Arial, 'Segoe UI', Helvetica, sans-serif">
+    <text x="270" y="150" font-size="92" font-weight="700" fill="#FFFFFF" letter-spacing="1">Ciit</text>
+    <text x="272" y="196" font-size="30" font-weight="600" fill="#67E8F9" letter-spacing="6">DIGITAL SOLUTIONS</text>
+  </g>
+</svg>

@@ -27,6 +27,8 @@ while ($row = mysqli_fetch_row($result)) {
 $sqlScript = "-- Database Backup\n";
 $sqlScript .= "-- Database: `$database`\n";
 $sqlScript .= "-- Backup Date: " . date('Y-m-d H:i:s') . "\n\n";
+$sqlScript .= "SET FOREIGN_KEY_CHECKS=0;\n";
+$sqlScript .= "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO';\n\n";
 
 // Include table structure, data, triggers, and events
 foreach ($tables as $table) {
@@ -86,6 +88,9 @@ if ($eventResult && $eventResult->num_rows > 0) {
         $sqlScript .= "\n\n" . $eventCreateRow[3] . ";\n";
     }
 }
+
+// Re-enable foreign key checks at the end of the backup script
+$sqlScript .= "\nSET FOREIGN_KEY_CHECKS=1;\n";
 
 if (!empty($sqlScript)) {
     // Specify the backup directory path relative to the script's location

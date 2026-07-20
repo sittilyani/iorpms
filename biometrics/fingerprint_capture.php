@@ -11,8 +11,16 @@ if (!isset($_SESSION['username'])) {
 $userId = isset($_GET['p_id']) ? intval($_GET['p_id']) : null;
 $fingerprintId = isset($_GET['id']) ? intval($_GET['id']) : null;
 $action = isset($_GET['action']) ? $_GET['action'] : 'capture';
-$scannerType = isset($_GET['scanner']) ? $_GET['scanner'] : 'zkteco';
 $performedBy = $_SESSION['username'];
+
+// Fetch latest scanner type for default persistence
+$defaultScanner = 'zkteco';
+$latestScannerQ = $conn->query("SELECT scanner_type FROM fingerprints ORDER BY capture_date DESC LIMIT 1");
+if ($latestScannerQ && $row = $latestScannerQ->fetch_assoc()) {
+    if (!empty($row['scanner_type'])) {
+        $defaultScanner = $row['scanner_type'];
+    }
+}
 
 // Handle delete action
 if ($action === 'delete' && $fingerprintId) {
@@ -121,6 +129,30 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
 
         $quality_score = isset($data['quality_score']) ? intval($data['quality_score']) : 0;
 
+        // Save raw binary files to disk
+        $fingerprint_path = '';
+        if ($template_data !== null) {
+            $file_dir = dirname(__DIR__) . '/biometrics/fingerprints';
+            if (!is_dir($file_dir)) {
+                @mkdir($file_dir, 0777, true);
+            }
+            $filename = $data['mat_id'] . '_template.dat';
+            $full_path = $file_dir . '/' . $filename;
+            if (file_put_contents($full_path, $template_data) !== false) {
+                $fingerprint_path = 'biometrics/fingerprints/' . $filename;
+            }
+        }
+
+        if ($fingerprint_data !== null) {
+            $file_dir = dirname(__DIR__) . '/biometrics/fingerprints';
+            if (!is_dir($file_dir)) {
+                @mkdir($file_dir, 0777, true);
+            }
+            $img_filename = $data['mat_id'] . '_image.png';
+            $img_full_path = $file_dir . '/' . $img_filename;
+            @file_put_contents($img_full_path, $fingerprint_data);
+        }
+
         if ($action === 'update' && !empty($data['fingerprint_id'])) {
             // Update existing record
             $sql = "UPDATE fingerprints SET
@@ -134,13 +166,12 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
                     quality_score = ?,
                     fingerprint_type = ?,
                     scanner_type = ?,
+                    fingerprint_path = ?,
                     capture_date = NOW()
                     WHERE id = ?";
 
             $stmt = $conn->prepare($sql);
-            $null = null;
-
-            $stmt->bind_param("sssssbbissi",
+            $stmt->bind_param("sssssssssssi",
                 $data['visitDate'],
                 $data['mat_number'],
                 $data['nickName'],
@@ -151,6 +182,7 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
                 $quality_score,
                 $data['fingerprint_type'],
                 $data['scanner_type'],
+                $fingerprint_path,
                 $data['fingerprint_id']
             );
 
@@ -161,13 +193,11 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
             // Insert new record
             $sql = "INSERT INTO fingerprints
                     (visitDate, mat_id, mat_number, clientName, nickName, dob, sex, current_status,
-                     fingerprint_data, template_data, quality_score, fingerprint_type, scanner_type)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     fingerprint_data, template_data, quality_score, fingerprint_type, scanner_type, fingerprint_path)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $conn->prepare($sql);
-            $null = null;
-
-            $stmt->bind_param("ssssssssbbiss",
+            $stmt->bind_param("ssssssssssisss",
                 $data['visitDate'],
                 $data['mat_id'],
                 $data['mat_number'],
@@ -180,7 +210,8 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
                 $template_data,
                 $quality_score,
                 $data['fingerprint_type'],
-                $data['scanner_type']
+                $data['scanner_type'],
+                $fingerprint_path
             );
 
             $message = "Fingerprint registered successfully.";
@@ -268,7 +299,7 @@ function formatFileSize($bytes) {
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: none;
             min-height: 100vh;
             padding: 20px;
         }
@@ -688,7 +719,8 @@ function formatFileSize($bytes) {
                 <div class="scanner-selector">
                     <label>Select Scanner Type:</label>
                     <select id="scanner-type" class="form-control">
-                        <option value="zkteco" selected>ZKTeco Scanner</option>
+                        <option value="zkteco" <?php echo $defaultScanner === 'zkteco' ? 'selected' : ''; ?>>ZKTeco Scanner</option>
+                        <option value="digitalpersona" <?php echo $defaultScanner === 'digitalpersona' ? 'selected' : ''; ?>>Digital Persona Scanner</option>
                     </select>
                 </div>
 
@@ -755,7 +787,7 @@ function formatFileSize($bytes) {
         <input type="hidden" name="sex" value="<?php echo htmlspecialchars($currentSettings['sex'] ?? ''); ?>">
         <input type="hidden" name="current_status" id="form-current-status" value="<?php echo htmlspecialchars($currentSettings['current_status'] ?? 'Active'); ?>">
         <input type="hidden" name="fingerprint_type" id="form-fingerprint-type" value="<?php echo $existingPrint['fingerprint_type'] ?? 'Index'; ?>">
-        <input type="hidden" name="scanner_type" id="form-scanner-type" value="ZKTeco">
+        <input type="hidden" name="scanner_type" id="form-scanner-type" value="<?php echo htmlspecialchars($defaultScanner); ?>">
         <?php if ($existingPrint && $action === 'update'): ?>
         <input type="hidden" name="fingerprint_id" value="<?php echo $existingPrint['id']; ?>">
         <?php endif; ?>
@@ -770,13 +802,38 @@ function formatFileSize($bytes) {
         let fingerprintData = null;
         let templateData = null;
         let qualityScore = 0;
+        let activeZktecoPort = 3001; // default fallback
+        let dpSocket = null;
 
-        // Node.js server configuration
-        const SERVER_PORT = 3001;
-        const TEST_URL = `http://localhost:${SERVER_PORT}/test`;
-        const CAPTURE_URL = `http://localhost:${SERVER_PORT}/capture`;
+        // Auto-detect ZKTeco port (3000 or 3001)
+        async function detectZktecoPort() {
+            const ports = [3000, 3001];
+            for (let port of ports) {
+                try {
+                    const response = await fetch(`http://localhost:${port}/health`, { mode: 'cors' });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success || data.status === 'online' || data.service) {
+                            activeZktecoPort = port;
+                            console.log("Detected ZKTeco server on port " + port);
+                            return true;
+                        }
+                    }
+                } catch(e) {
+                    // Try next port
+                }
+            }
+            return false;
+        }
 
         async function initializeScanner() {
+            const scannerType = document.getElementById('scanner-type').value;
+
+            if (scannerType === 'digitalpersona') {
+                initDigitalPersona();
+                return;
+            }
+
             const btn = document.getElementById('init-scanner');
             const btnText = btn.querySelector('.btn-text');
             const loading = btn.querySelector('.loading');
@@ -786,17 +843,19 @@ function formatFileSize($bytes) {
             btn.disabled = true;
 
             try {
-                updateStatus('Initializing scanner...', 'info');
+                updateStatus('Initializing ZKTeco scanner...', 'info');
 
-                // Test connection to Node.js server
-                const response = await fetch(TEST_URL);
+                // Re-detect active port
+                await detectZktecoPort();
+
+                const response = await fetch(`http://localhost:${activeZktecoPort}/test`, { mode: 'cors' });
 
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
                         isScannerInitialized = true;
                         document.getElementById('capture-fingerprint').disabled = false;
-                        updateStatus(`? Scanner initialized. ${data.message}`, 'success');
+                        updateStatus(`? ZKTeco Scanner initialized. ${data.message}`, 'success');
                     } else {
                         throw new Error(data.message || 'Scanner test failed');
                     }
@@ -806,11 +865,6 @@ function formatFileSize($bytes) {
             } catch (error) {
                 updateStatus(`? Scanner initialization failed: ${error.message}`, 'error');
                 console.error('Scanner init error:', error);
-
-                // Show detailed error message
-                if (error.message.includes('Failed to fetch')) {
-                    updateStatus('? Cannot connect to fingerprint server. Make sure Node.js server is running on port 3001', 'error');
-                }
             } finally {
                 btnText.style.display = 'inline-block';
                 loading.style.display = 'none';
@@ -819,6 +873,12 @@ function formatFileSize($bytes) {
         }
 
         async function captureFingerprint() {
+            const scannerType = document.getElementById('scanner-type').value;
+            if (scannerType === 'digitalpersona') {
+                updateStatus('Place finger on the DigitalPersona scanner to capture...', 'info');
+                return;
+            }
+
             if (!isScannerInitialized) {
                 updateStatus('Please initialize the scanner first', 'error');
                 return;
@@ -829,6 +889,9 @@ function formatFileSize($bytes) {
             updateStatus('Capturing fingerprint... Place finger on scanner', 'info');
 
             try {
+                // Ensure active port is fresh
+                await detectZktecoPort();
+
                 // Show countdown or waiting message
                 let countdown = 10;
                 const interval = setInterval(() => {
@@ -837,7 +900,7 @@ function formatFileSize($bytes) {
                     if (countdown < 0) clearInterval(interval);
                 }, 1000);
 
-                const response = await fetch(CAPTURE_URL);
+                const response = await fetch(`http://localhost:${activeZktecoPort}/capture`, { mode: 'cors' });
 
                 clearInterval(interval);
 
@@ -890,12 +953,65 @@ function formatFileSize($bytes) {
             }
         }
 
+        function initDigitalPersona() {
+            if (dpSocket && dpSocket.readyState === WebSocket.OPEN) {
+                updateStatus('DigitalPersona scanner is already connected', 'success');
+                return;
+            }
+            updateStatus('Connecting to DigitalPersona service...', 'info');
+            dpSocket = new WebSocket('ws://localhost:9001');
+            
+            dpSocket.onopen = function() {
+                isScannerInitialized = true;
+                document.getElementById('capture-fingerprint').disabled = false;
+                updateStatus('DigitalPersona connected! Place finger on scanner to capture.', 'success');
+            };
+            
+            dpSocket.onerror = function() {
+                updateStatus('Cannot connect to DigitalPersona WebSocket. Make sure DigitalPersona Agent is running on port 9001.', 'error');
+            };
+            
+            dpSocket.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'sample' && data.image) {
+                        fingerprintData = data.image; // base64
+                        templateData = data.template; // base64
+                        qualityScore = data.quality || 100;
+                        
+                        document.getElementById('fingerprint-data-base64').value = fingerprintData;
+                        document.getElementById('fingerprint-template').value = templateData;
+                        document.getElementById('quality-score-input').value = qualityScore;
+                        
+                        document.getElementById('fingerprint-image').src = 'data:image/png;base64,' + fingerprintData;
+                        document.getElementById('fingerprint-preview').style.display = 'block';
+                        
+                        document.getElementById('quality-indicator').style.display = 'block';
+                        document.getElementById('quality-score').textContent = qualityScore;
+                        document.getElementById('quality-bar').style.width = qualityScore + '%';
+                        
+                        document.getElementById('btn-submit').disabled = false;
+                        updateStatus('Fingerprint captured successfully from DigitalPersona!', 'success');
+                    }
+                } catch(e) {
+                    console.error('DigitalPersona message parse error:', e);
+                }
+            };
+            
+            dpSocket.onclose = function() {
+                isScannerInitialized = false;
+                document.getElementById('capture-fingerprint').disabled = true;
+                updateStatus('DigitalPersona connection closed.', 'info');
+            };
+        }
+
         function updateFormData() {
             document.getElementById('form-mat-number').value = document.querySelector('input[name="mat_number"]').value;
             document.getElementById('form-nickname').value = document.querySelector('input[name="nickName"]').value;
             document.getElementById('form-dob').value = document.querySelector('input[name="dob"]').value;
             document.getElementById('form-current-status').value = document.querySelector('select[name="current_status"]').value;
             document.getElementById('form-fingerprint-type').value = document.querySelector('select[name="fingerprint_type"]').value;
+            document.getElementById('form-scanner-type').value = document.getElementById('scanner-type').value;
         }
 
         async function submitFingerprint() {
@@ -982,29 +1098,77 @@ function formatFileSize($bytes) {
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
+            // Restore scanner preference from localStorage if available
+            const savedScanner = localStorage.getItem('preferred_scanner');
+            if (savedScanner) {
+                const scannerSelect = document.getElementById('scanner-type');
+                if (scannerSelect) {
+                    scannerSelect.value = savedScanner;
+                }
+            }
+            
+            // Listen for scanner type changes
+            document.getElementById('scanner-type').addEventListener('change', function() {
+                localStorage.setItem('preferred_scanner', this.value);
+                updateScannerUIElements();
+            });
+
+            updateScannerUIElements();
+
             // If editing, enable submit button if we already have data
             if (<?php echo $existingPrint ? 'true' : 'false'; ?> && <?php echo $action === 'update' ? 'true' : 'false'; ?>) {
                 document.getElementById('btn-submit').disabled = false;
                 updateStatus('Ready to update fingerprint', 'info');
             }
-
-            // Check if Node.js server is already running
-            checkServerStatus();
         });
 
+        function updateScannerUIElements() {
+            const scannerType = document.getElementById('scanner-type').value;
+            const title = document.getElementById('scanner-title');
+            const instructions = document.getElementById('scanner-instructions');
+            
+            if (scannerType === 'digitalpersona') {
+                title.textContent = 'Digital Persona Fingerprint Scanner';
+                instructions.textContent = 'Ensure Digital Persona Agent is running. Place finger on scanner.';
+                document.getElementById('init-scanner').querySelector('.btn-text').textContent = 'Connect Scanner';
+                isScannerInitialized = false;
+                document.getElementById('capture-fingerprint').disabled = true;
+                updateStatus('DigitalPersona scanner not connected', 'info');
+            } else {
+                title.textContent = 'ZKTeco Fingerprint Scanner';
+                instructions.textContent = 'Place your finger on the scanner and click "Capture Fingerprint"';
+                document.getElementById('init-scanner').querySelector('.btn-text').textContent = 'Initialize Scanner';
+                isScannerInitialized = false;
+                document.getElementById('capture-fingerprint').disabled = true;
+                updateStatus('ZKTeco scanner not initialized', 'info');
+                checkServerStatus(); // Auto check ZKTeco server status
+            }
+        }
+
         async function checkServerStatus() {
-            try {
-                const response = await fetch(`http://localhost:${SERVER_PORT}/health`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        updateStatus('Fingerprint server is running', 'success');
-                        document.getElementById('init-scanner').disabled = false;
-                    }
+            const scannerType = document.getElementById('scanner-type').value;
+            if (scannerType !== 'zkteco') return;
+
+            const detected = await detectZktecoPort();
+            if (detected) {
+                updateStatus('ZKTeco fingerprint server is running', 'success');
+                document.getElementById('init-scanner').disabled = false;
+            } else {
+                updateStatus('Fingerprint server offline. Attempting to start automatically...', 'info');
+                try {
+                    await fetch('auto_start_server.php');
+                    setTimeout(async () => {
+                        const retried = await detectZktecoPort();
+                        if (retried) {
+                            updateStatus('ZKTeco fingerprint server started automatically', 'success');
+                            document.getElementById('init-scanner').disabled = false;
+                        } else {
+                            updateStatus('ZKTeco server not running. Make sure Python (port 3000) or Node.js (port 3001) is started.', 'info');
+                        }
+                    }, 2500);
+                } catch(e) {
+                    updateStatus('ZKTeco server not running. Make sure Python (port 3000) or Node.js (port 3001) is started.', 'info');
                 }
-            } catch (error) {
-                // Server not running yet, this is normal
-                updateStatus('Fingerprint server not running. Click "Initialize Scanner" to start.', 'info');
             }
         }
     </script>

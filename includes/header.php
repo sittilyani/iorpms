@@ -63,7 +63,7 @@ if ($isLoggedIn) {
     <style>
         /* Reset only for header elements to prevent conflicts */
         .header {
-            background-color: #AC80EE;
+            background-color: #004AAD;
             color: #2D008A;
             padding: 15px 30px;
             display: flex;
@@ -242,7 +242,7 @@ if ($isLoggedIn) {
     <div class="header">
         <div class="logo-container">
             <div class="logo">
-                <img src="../assets/images/easyflow_logonew.png" width="469" height="238" alt="">
+                <img src="../assets/images/EasyFlow-L_white.png" width="469" height="238" alt="">
             </div>
 
             <div class="system-name" style="font-size: 18px; color: #FFFFFF;"><?php echo $text['system_name']; ?></div>
@@ -274,7 +274,10 @@ if ($isLoggedIn) {
                     data-last-backup-check="<?php echo time(); ?>"
                     style="display: none;">
                 </div>
-                <a href="../sops/index.php" class="current-time"><span>SOPs</span></a>
+                <a href="../SOPS/index.php" class="current-time"><span>SOPs</span></a>
+                <a href="../trainings/index.php" class="current-time" title="Training video tutorials on YouTube">
+                    <i class="fa fa-graduation-cap"></i>&nbsp;<span>Trainings</span>
+                </a>
 
                 <!-- Language Switcher: EN / FR / PT -->
                 <?php

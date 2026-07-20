@@ -2,3 +2,6 @@
 
 
 
+
+# Production secrets (never commit the real file)
+includes/config-iorpms.php

@@ -63,6 +63,65 @@ function applyI18n(root) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() { applyI18n(); });
+document.addEventListener('DOMContentLoaded', function() {
+    applyI18n();
+
+    // ── Global Iframe Preservation on Language Switch ──
+    const contentFrame = document.getElementById('contentFrame');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+
+    if (contentFrame && welcomeMessage) {
+        // Clear saved URL if coming from the main dashboard
+        const referrer = document.referrer;
+        if (referrer && referrer.indexOf('dashboard.php') !== -1) {
+            sessionStorage.removeItem('activeTabUrl');
+        }
+
+        const savedUrl = sessionStorage.getItem('activeTabUrl');
+        if (savedUrl && savedUrl !== 'about:blank') {
+            contentFrame.style.display = 'block';
+            welcomeMessage.style.display = 'none';
+            contentFrame.src = savedUrl;
+
+            // Highlight the correct sidebar link matching the saved page
+            try {
+                const navLinks = document.querySelectorAll('.nav-link[target="contentFrame"]');
+                const savedPath = new URL(savedUrl).pathname;
+                navLinks.forEach(link => {
+                    const linkUrl = link.getAttribute('href');
+                    if (linkUrl) {
+                        // Normalize paths
+                        const cleanLink = linkUrl.replace(/^\.\.\//, '').split('?')[0];
+                        if (savedPath.indexOf(cleanLink) !== -1) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    }
+                });
+            } catch(e) {}
+        }
+
+        // Listen for internal iframe loads to save current URL
+        contentFrame.addEventListener('load', function() {
+            try {
+                const currentUrl = this.contentWindow.location.href;
+                if (currentUrl && currentUrl.indexOf('about:blank') === -1) {
+                    sessionStorage.setItem('activeTabUrl', currentUrl);
+                }
+            } catch (e) {
+                // Ignore cross-origin errors (should not occur on same-origin)
+            }
+        });
+
+        // Clear active tab on Home link click
+        const homeLinks = document.querySelectorAll('.home-link');
+        homeLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                sessionStorage.removeItem('activeTabUrl');
+            });
+        });
+    }
+});
 /* ─────────────────────────────────────────────────────────────────── */
 </script>

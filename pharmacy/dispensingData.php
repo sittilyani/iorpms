@@ -21,6 +21,23 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['userrole'])) {
 // Get the user_id from the query parameter (if applicable)
 $userId = isset($_GET['mat_id']) ? $_GET['mat_id'] : null;
 
+// Fetch patient fingerprint template
+$registered_template_b64 = '';
+if ($userId) {
+    $stmt_print = $conn->prepare("SELECT template_data FROM fingerprints WHERE mat_id = ? ORDER BY capture_date DESC LIMIT 1");
+    if ($stmt_print) {
+        $stmt_print->bind_param("s", $userId);
+        $stmt_print->execute();
+        $res_print = $stmt_print->get_result();
+        if ($row_print = $res_print->fetch_assoc()) {
+            if (!empty($row_print['template_data'])) {
+                $registered_template_b64 = base64_encode($row_print['template_data']);
+            }
+        }
+        $stmt_print->close();
+    }
+}
+
 // Initialize variables to avoid PHP notices
 $currentSettings = [];
 $photo = null;
@@ -1125,6 +1142,15 @@ if (isset($_SESSION['dispensing_successes'])) {
 
     <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/fingerprint_listener.js"></script>
+    <script>
+        const registeredTemplate = <?php echo json_encode($registered_template_b64); ?>;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (registeredTemplate) {
+                startFingerprintVerifyLoop(registeredTemplate);
+            }
+        });
+    </script>
 
     <script>
         // Add Enter key listener to trigger dispense button

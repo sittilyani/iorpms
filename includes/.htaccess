@@ -1,0 +1,20 @@
+# ============================================================
+# Block ALL direct browser access to the /includes folder.
+# Files here (config.php, helpers, etc.) may only be used via
+# PHP include/require from other scripts — never via URL.
+# Works on Apache 2.2 and 2.4.
+# ============================================================
+
+# Apache 2.4+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# Apache 2.2 (legacy)
+<IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+</IfModule>
+
+# Extra safety: disable directory listing
+Options -Indexes

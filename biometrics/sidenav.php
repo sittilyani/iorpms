@@ -5,6 +5,7 @@ requireLogin();
 
 // Include configuration
 include "../includes/config.php";
+include "../includes/languages.php";
 
 // Get user info from session manager functions
 $userrole = getUserRole();
@@ -26,6 +27,7 @@ $full_name = getUserFullName();
 <link rel="manifest" href="../assets/favicons/site.webmanifest">
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="../assets/css/sidenav.css" type="text/css">
+<?php include "../includes/i18n_script.php"; ?>
 <style>
 
 </style>
@@ -40,10 +42,14 @@ $full_name = getUserFullName();
 </div>
 
 <div class="sidenav">
+    <div>
+        <img src="../assets/images/fingerprint.png" alt="" style="height: 150px; width: 150px; margin-left:40px; margin-right: auto;">
+    </div>
     <h2>
         <i class="fas fa-fingerprint"></i><br>
         Biometrics Registration
     </h2>
+    <?php include "../includes/lang_switcher_snippet.php"; ?>
 
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
@@ -52,13 +58,8 @@ $full_name = getUserFullName();
 
     <a href="../photos/client_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-camera"></i>Capture Photos</a>
-
-    <a href="fingerprints_search.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-lock"></i>Capture Fingerprints</a>
     <a href="fingerprint_search.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-lock"></i>Finger Prints Search</a>
-    <a href="fingerprint_view.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-lock"></i>View Finger Prints</a>
+        <i class="fa fa-lock"></i>Fingerprint capture</a>
     
 
 
@@ -285,15 +286,20 @@ $full_name = getUserFullName();
             // Clean up before page unload
             window.addEventListener('beforeunload', stopSessionKeepAlive);
 
-            // Reset timeout on user activity
+            // Throttle activity pings to at most once per 60 seconds
+            let lastActivityPing = 0;
             ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
                 document.addEventListener(event, function() {
-                    // Send activity ping
-                    fetch('../includes/keepalive.php?activity=1')
-                        .then(response => response.text())
-                        .then(data => {
-                            console.log('Activity recorded');
-                        });
+                    const now = Date.now();
+                    if (now - lastActivityPing > 60000) {
+                        lastActivityPing = now;
+                        fetch('../includes/keepalive.php?activity=1')
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('Activity recorded');
+                            })
+                            .catch(err => {});
+                    }
                 });
             });
     </script>

@@ -116,7 +116,7 @@ $conn->close();
         function showSuccessMessage() {
             document.getElementById('message').textContent = "Status and age updates with history logging completed successfully. Redirecting...";
             setTimeout(() => {
-                window.location.href = '../dashboard/admin_dashboard.php';
+                window.location.href = '../dashboard/dashboard.php';
             }, 4000);
         }
     </script>

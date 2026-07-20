@@ -12,7 +12,7 @@
                         $stmt->bind_param("ss", $startDate, $endDate);
                         $stmt->execute();
                         $row = $stmt->get_result()->fetch_assoc();
-                        echo '<p>Methadone Disp in the Month: <span style="font-weight: bold; color: #0033CC;">' . ($row['methadone_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_disp_month', ['{drug}' => 'Methadone']) : 'Methadone Dispensed in the Month:') . ' <span style="font-weight: bold; color: #0033CC;">' . ($row['methadone_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
                         $stmt->close();
                     } else {
                         echo "Error: " . $conn->error;
@@ -25,7 +25,7 @@
                         $stmt->bind_param("ss", $startDate, $endDate);
                         $stmt->execute();
                         $row = $stmt->get_result()->fetch_assoc();
-                        echo '<p>Buprenor 2mg Disp in the Month: <span style="font-weight: bold; color: #0033CC;">' . ($row['bupren2_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_disp_month', ['{drug}' => 'Buprenorphine 2mg']) : 'Buprenorphine 2mg Dispensed in the Month:') . ' <span style="font-weight: bold; color: #0033CC;">' . ($row['bupren2_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
                         $stmt->close();
                     } else {
                         echo "Error: " . $conn->error;
@@ -38,7 +38,7 @@
                         $stmt->bind_param("ss", $startDate, $endDate);
                         $stmt->execute();
                         $row = $stmt->get_result()->fetch_assoc();
-                        echo '<p>Buprenor 8mg Disp in the Month: <span style="font-weight: bold; color: #0033CC;">' . ($row['bupren8_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_disp_month', ['{drug}' => 'Buprenorphine 8mg']) : 'Buprenorphine 8mg Dispensed in the Month:') . ' <span style="font-weight: bold; color: #0033CC;">' . ($row['bupren8_total_dosage'] ?? 0) . '&nbsp;mg</span></p>';
                         $stmt->close();
                     } else {
                         echo "Error: " . $conn->error;

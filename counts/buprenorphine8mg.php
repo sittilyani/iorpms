@@ -28,9 +28,9 @@ if ($stmt) {
         $total_dosage = $row['total_dosage'];
 
         if ($total_dosage === null || $total_dosage == 0) {
-            echo '<p>No buprenorphine 8mg dispensed on ' . htmlspecialchars($current_display_date) . '.</p>';
+            echo '<p>' . (function_exists('tf') ? tf('tpl_no_dispensed', ['{drug}' => 'Buprenorphine 8mg', '{date}' => htmlspecialchars($current_display_date)]) : 'No buprenorphine 8mg dispensed on ' . htmlspecialchars($current_display_date) . '.') . '</p>';
         } else {
-            echo '<p>buprenorphine 8mg dispensed on ' . htmlspecialchars($current_display_date) . ': <span style="font-weight: bold; color: red;">' . htmlspecialchars($total_dosage) . '&nbsp;mg</span></p>';
+            echo '<p>' . (function_exists('tf') ? tf('tpl_dispensed', ['{drug}' => 'Buprenorphine 8mg', '{date}' => htmlspecialchars($current_display_date)]) : 'Buprenorphine 8mg dispensed on ' . htmlspecialchars($current_display_date) . ':') . ' <span style="font-weight: bold; color: red;">' . htmlspecialchars($total_dosage) . '&nbsp;mg</span></p>';
         }
     } else {
         error_log("Error executing query for buprenorphine 8mg: " . $stmt->error);

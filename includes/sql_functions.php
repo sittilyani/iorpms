@@ -14,9 +14,9 @@
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         $row = $result->fetch_assoc();
-                        echo '<p>Methadone Balance: <span style="font-weight: bold; color: #0033CC;">' . $row['methadone_total_qty'] . '&nbsp;mg</span> <span style="font-weight: bold; color: red;">(' . ($row['methadone_total_qty'] / 5) . ' mL)</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_balance', ['{drug}' => 'Methadone']) : 'Methadone Balance:') . ' <span style="font-weight: bold; color: #0033CC;">' . $row['methadone_total_qty'] . '&nbsp;mg</span> <span style="font-weight: bold; color: red;">(' . ($row['methadone_total_qty'] / 5) . ' mL)</span></p>';
                     } else {
-                        echo '<p>No Methadone stock records found.</p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_no_stock', ['{drug}' => 'Methadone']) : 'No Methadone stock records found.') . '</p>';
                     }
 
                     // --- Buprenorphine 2mg balance ---
@@ -31,9 +31,9 @@
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         $row = $result->fetch_assoc();
-                        echo '<p>Buprenor 2mg Bal: <span style="font-weight: bold; color: #0033CC;">' . $row['bupren2_total_qty'] . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_balance', ['{drug}' => 'Buprenorphine 2mg']) : 'Buprenorphine 2mg Balance:') . ' <span style="font-weight: bold; color: #0033CC;">' . $row['bupren2_total_qty'] . '&nbsp;mg</span></p>';
                     } else {
-                        echo '<p>No Buprenor 2mg stock records found.</p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_no_stock', ['{drug}' => 'Buprenorphine 2mg']) : 'No Buprenorphine 2mg stock records found.') . '</p>';
                     }
 
                     // --- Buprenorphine 4mg balance ---
@@ -48,9 +48,9 @@
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         $row = $result->fetch_assoc();
-                        echo '<p>Buprenor 4mg Bal: <span style="font-weight: bold; color: #0033CC;">' . $row['bupren4_total_qty'] . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_balance', ['{drug}' => 'Buprenorphine 4mg']) : 'Buprenorphine 4mg Balance:') . ' <span style="font-weight: bold; color: #0033CC;">' . $row['bupren4_total_qty'] . '&nbsp;mg</span></p>';
                     } else {
-                        echo '<p>No Buprenor 4mg stock records found.</p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_no_stock', ['{drug}' => 'Buprenorphine 4mg']) : 'No Buprenorphine 4mg stock records found.') . '</p>';
                     }
 
                     // --- Buprenorphine 8mg balance ---
@@ -65,8 +65,8 @@
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         $row = $result->fetch_assoc();
-                        echo '<p>Buprenor 8mg Bal: <span style="font-weight: bold; color: #0033CC;">' . $row['bupren8_total_qty'] . '&nbsp;mg</span></p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_balance', ['{drug}' => 'Buprenorphine 8mg']) : 'Buprenorphine 8mg Balance:') . ' <span style="font-weight: bold; color: #0033CC;">' . $row['bupren8_total_qty'] . '&nbsp;mg</span></p>';
                     } else {
-                        echo '<p>No Buprenor 8mg stock records found.</p>';
+                        echo '<p>' . (function_exists('tf') ? tf('tpl_no_stock', ['{drug}' => 'Buprenorphine 8mg']) : 'No Buprenorphine 8mg stock records found.') . '</p>';
                     }
                     ?>

@@ -20,8 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
+        // Make sure demo columns/tables exist (must_change_password, is_demo, login_logs)
+        include_once '../includes/demo_schema.php';
+        if (function_exists('ensureDemoSchema')) { ensureDemoSchema($conn); }
+
         // Prepare and execute the SQL query to check user credentials
-        $sql = "SELECT user_id, username, first_name, last_name, email, password, gender, mobile, userrole, date_created
+        $sql = "SELECT user_id, username, first_name, last_name, email, password, gender, mobile, userrole, date_created,
+                       COALESCE(must_change_password,0) AS must_change_password, COALESCE(is_demo,0) AS is_demo
                 FROM tblusers
                 WHERE username = ?";
         $stmt = $conn->prepare($sql);
@@ -45,6 +50,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Verify password
             if (password_verify($password, $user['password'])) {
+
+                // ── Log the login (powers superadmin/demo_analytics.php) ──
+                $conn->query("CREATE TABLE IF NOT EXISTS login_logs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NULL, username VARCHAR(100), userrole VARCHAR(100),
+                    is_demo TINYINT(1) DEFAULT 0, country VARCHAR(80) DEFAULT '',
+                    ip_address VARCHAR(64) DEFAULT '', user_agent VARCHAR(255) DEFAULT '',
+                    success TINYINT(1) DEFAULT 1, login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    INDEX idx_user (user_id), INDEX idx_time (login_time), INDEX idx_demo (is_demo)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+                $isDemo  = (int)($user['is_demo'] ?? 0);
+                $logCountry = '';
+                if ($cr = $conn->prepare("SELECT country FROM demo_requests WHERE email = ? LIMIT 1")) {
+                    $cr->bind_param('s', $user['email']);
+                    if ($cr->execute()) {
+                        $row = $cr->get_result()->fetch_assoc();
+                        $logCountry = $row['country'] ?? '';
+                    }
+                    $cr->close();
+                }
+                $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+                $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+                if ($ll = $conn->prepare("INSERT INTO login_logs (user_id, username, userrole, is_demo, country, ip_address, user_agent, success) VALUES (?,?,?,?,?,?,?,1)")) {
+                    $ll->bind_param('ississs', $user['user_id'], $user['username'], $user['userrole'], $isDemo, $logCountry, $ip, $ua);
+                    $ll->execute();
+                    $ll->close();
+                }
+
+                // ── Forced password change on first login ──
+                if ((int)($user['must_change_password'] ?? 0) === 1) {
+                    $_SESSION['pw_change_user_id']  = $user['user_id'];
+                    $_SESSION['pw_change_username'] = $user['username'];
+                    header("Location: change_password.php");
+                    exit();
+                }
+
                 // Password is correct, store user details in session
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['userrole'] = $user['userrole'];

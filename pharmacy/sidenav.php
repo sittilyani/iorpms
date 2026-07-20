@@ -258,8 +258,11 @@ $full_name = getUserFullName();
 </div>
 
 <div class="sidenav">
+    <div>
+        <img src="../assets/images/pharmacy.png" alt="" style="height: 150px; width: 150px; margin-left:40px; margin-right: auto;">
+    </div>
     <h2>
-        <i class="fa fa-pills"></i><br>
+        <br>
         <span data-i18n="dispensing_pharm">Pharmacy processes</span>
     </h2>
 

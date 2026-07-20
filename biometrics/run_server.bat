@@ -1,8 +1,9 @@
 @echo off
 REM This batch file explicitly uses Laragon's Python
 
-set PYTHON_PATH=C:\laragon\bin\python\python-3.13\python.exe
-set SCRIPT_PATH=zkteco_python_server.py
+set PYTHON_PATH=C:\laragon\bin\python\python-3.10-32\python.exe
+if not exist "%PYTHON_PATH%" set PYTHON_PATH=C:\laragon\bin\python\python-3.10\python.exe
+if not exist "%PYTHON_PATH%" set PYTHON_PATH=python
 
 echo Starting ZKTeco Fingerprint Server...
 echo Using: %PYTHON_PATH%

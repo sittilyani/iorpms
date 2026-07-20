@@ -226,6 +226,31 @@ $languages = [
         'mfl_code'          => 'MFL Code',
         'county'            => 'County',
         'sub_county'        => 'Sub-County',
+
+        // ----- Dashboard Summary Widgets -----
+        'patients_summary'      => 'Patients Summary',
+        'daily_consumption_sum' => 'Daily Consumption Summary',
+        'stocks_summary'        => 'Stocks Summary',
+        'monthly_consumption_sum' => 'Monthly Consumption Summary',
+        'patient_status'        => 'Patient Status',
+        'total_number'          => 'Total Number',
+        'pending_prescriptions' => 'Pending Prescriptions',
+        'expected_to_visit_today'=> 'Expected to visit today',
+        'cumulative_ever'       => 'Cumulative Ever',
+        'ever_enrolled'         => 'Ever Enrolled',
+        'weaned_off'            => 'Weaned Off',
+        'defaulters'            => 'Defaulters',
+        'lost_to_follow_up'     => 'Lost to Follow Up',
+        'discontinued_stopped'  => 'Discontinued (Stopped)',
+        'inmates'               => 'Inmates',
+        'died'                  => 'Died',
+
+        // ----- Dashboard Stock / Consumption Templates ({drug} and {date} are placeholders) -----
+        'tpl_no_dispensed'      => 'No {drug} dispensed on {date}.',
+        'tpl_dispensed'         => '{drug} dispensed on {date}:',
+        'tpl_balance'           => '{drug} Balance:',
+        'tpl_no_stock'          => 'No {drug} stock records found.',
+        'tpl_disp_month'        => '{drug} Dispensed in the Month:',
     ],
 
     // =====================================================================
@@ -450,6 +475,31 @@ $languages = [
         'mfl_code'          => 'Code MFL',
         'county'            => 'Comté',
         'sub_county'        => 'Sous-comté',
+
+        // ----- Dashboard Summary Widgets -----
+        'patients_summary'      => 'Résumé des Clients',
+        'daily_consumption_sum' => 'Résumé de Consommation Quotidienne',
+        'stocks_summary'        => 'Résumé des Stocks',
+        'monthly_consumption_sum' => 'Résumé de Consommation Mensuelle',
+        'patient_status'        => 'Statut du Client',
+        'total_number'          => 'Nombre Total',
+        'pending_prescriptions' => 'Prescriptions en Attente',
+        'expected_to_visit_today'=> 'Attendus aujourd’hui',
+        'cumulative_ever'       => 'Cumul Total',
+        'ever_enrolled'         => 'Jamais Inscrits',
+        'weaned_off'            => 'Sevrés',
+        'defaulters'            => 'Défaillants',
+        'lost_to_follow_up'     => 'Perdus de Vue',
+        'discontinued_stopped'  => 'Arrêté (Stoppé)',
+        'inmates'               => 'Détenus',
+        'died'                  => 'Décédés',
+
+        // ----- Dashboard Stock / Consumption Templates ({drug} and {date} are placeholders) -----
+        'tpl_no_dispensed'      => 'Aucun {drug} distribué le {date}.',
+        'tpl_dispensed'         => '{drug} distribué le {date} :',
+        'tpl_balance'           => 'Solde {drug} :',
+        'tpl_no_stock'          => 'Aucun enregistrement de stock trouvé pour {drug}.',
+        'tpl_disp_month'        => '{drug} distribué ce mois :',
     ],
 
     // =====================================================================
@@ -674,6 +724,31 @@ $languages = [
         'mfl_code'          => 'Código MFL',
         'county'            => 'Condado',
         'sub_county'        => 'Sub-condado',
+
+        // ----- Dashboard Summary Widgets -----
+        'patients_summary'      => 'Resumo de Clientes',
+        'daily_consumption_sum' => 'Resumo de Consumo Diário',
+        'stocks_summary'        => 'Resumo de Stock',
+        'monthly_consumption_sum' => 'Resumo de Consumo Mensal',
+        'patient_status'        => 'Estado do Cliente',
+        'total_number'          => 'Número Total',
+        'pending_prescriptions' => 'Prescrições Pendentes',
+        'expected_to_visit_today'=> 'Esperados hoje',
+        'cumulative_ever'       => 'Cumulativo Total',
+        'ever_enrolled'         => 'Alguma Vez Inscritos',
+        'weaned_off'            => 'Desmamados',
+        'defaulters'            => 'Incumpridores',
+        'lost_to_follow_up'     => 'Perdidos de Seguimento',
+        'discontinued_stopped'  => 'Descontinuado (Parado)',
+        'inmates'               => 'Reclusos',
+        'died'                  => 'Falecidos',
+
+        // ----- Dashboard Stock / Consumption Templates ({drug} and {date} are placeholders) -----
+        'tpl_no_dispensed'      => 'Nenhum {drug} dispensado em {date}.',
+        'tpl_dispensed'         => '{drug} dispensado em {date}:',
+        'tpl_balance'           => 'Saldo de {drug}:',
+        'tpl_no_stock'          => 'Nenhum registo de stock encontrado para {drug}.',
+        'tpl_disp_month'        => '{drug} dispensado no mês:',
     ],
 ];
 
@@ -718,6 +793,16 @@ if (!function_exists('t')) {
         if (isset($text[$key])) return $text[$key];
         // fallback to English
         return $languages['en'][$key] ?? $key;
+    }
+}
+
+/**
+ * Helper: translate a key then substitute placeholders, e.g.
+ * tf('tpl_dispensed', ['{drug}' => 'Methadone', '{date}' => $displayDate])
+ */
+if (!function_exists('tf')) {
+    function tf(string $key, array $replacements): string {
+        return strtr(t($key), $replacements);
     }
 }
 ?>

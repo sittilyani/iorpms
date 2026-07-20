@@ -1,19 +1,45 @@
 <?php
 /**
- * index.php — IORPMS Public Landing Page
+ * index.php — EasyFlow-L Public Landing Page
  * ========================================
  * Multilingual (EN / FR / PT) landing page.
  * Translations are embedded in page JS for instant switching — no API calls
  * needed on a static marketing page. App pages use translate_proxy.php instead.
  */
 session_start();
+
+// ── Load countries for the demo form dropdown (from the `countries` table) ──
+$landingCountries = [];
+try {
+    include_once 'includes/config.php';
+    include_once 'includes/demo_schema.php';
+    if (isset($conn) && $conn instanceof mysqli && function_exists('ensureDemoSchema')) {
+        ensureDemoSchema($conn);
+        $cq = $conn->query("SELECT name FROM countries ORDER BY sort_order ASC, name ASC");
+        if ($cq) { while ($cr = $cq->fetch_assoc()) { $landingCountries[] = $cr['name']; } }
+    }
+} catch (Throwable $e) {
+    // Landing page must still render even if the DB is unavailable
+    $landingCountries = [];
+}
+if (!$landingCountries) {
+    $landingCountries = ['Kenya','Tanzania','Uganda','Ethiopia','Rwanda','Nigeria',
+                         'South Africa','Mozambique','Angola','Democratic Republic of the Congo','Other'];
+}
+
+$updateAvailable = false;
+$sqlFile = 'updates/update.sql';
+$filesDir = 'updates/files';
+if (file_exists($sqlFile) || (is_dir($filesDir) && count(array_diff(scandir($filesDir), ['.', '..'])) > 0)) {
+    $updateAvailable = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IORPMS — Integrated Outpatient Rehabilitation &amp; Pharmacy Management System</title>
+<title>EasyFlow-L — Integrated Opioid &amp; Patient Management System</title>
 <meta name="description" content="Cloud-based MAT clinic management: methadone pump dispensing, client records, prison module, KHIS reporting.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,6 +62,9 @@ a{text-decoration:none;color:inherit;}
   display:flex;align-items:center;justify-content:space-between;
   padding:0 6%;height:68px;box-shadow:0 2px 20px rgba(0,0,0,.25);}
 .nav-logo{display:flex;align-items:center;gap:10px;color:#fff;}
+.nav-logo-badge{background:#fff;padding:5px 10px;border-radius:8px;display:flex;align-items:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.nav-logo-badge img{display:block;width:120px;height:auto;}
 .nav-logo-icon{width:38px;height:38px;background:var(--accent);border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;color:#fff;}
 .nav-logo-text{font-size:1.1rem;font-weight:700;}
@@ -137,6 +166,16 @@ section{padding:90px 6%;}
 .btn-pricing-primary:hover{background:var(--primary-dark);}
 .btn-pricing-outline{background:transparent;color:var(--primary);border:2px solid var(--primary) !important;}
 .btn-pricing-outline:hover{background:var(--primary);color:#fff;}
+.onetime-fees{max-width:760px;margin:38px auto 0;background:#fff;border:2px solid var(--border);
+  border-radius:14px;padding:26px 30px;text-align:center;}
+.onetime-fees h4{color:var(--primary);font-size:1rem;font-weight:800;margin-bottom:16px;}
+.onetime-fees-grid{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-bottom:16px;}
+.onetime-fee-item{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:140px;}
+.onetime-fee-amount{font-size:1.5rem;font-weight:800;color:var(--accent-dark);}
+.onetime-fee-item span:last-child{font-size:.82rem;color:var(--muted);}
+.onetime-fees-note{font-size:.78rem;color:var(--muted);font-style:italic;margin:0;}
+.pricing-varies{font-size:1.05rem;font-weight:700;color:var(--primary);display:block;margin-bottom:4px;}
+.pricing-varies-note{font-size:.78rem;color:var(--muted);font-style:italic;}
 
 /* ── Compliance ── */
 .compliance{background:linear-gradient(135deg,var(--primary-dark),var(--primary));
@@ -151,8 +190,9 @@ section{padding:90px 6%;}
 footer{background:var(--primary-dark);color:rgba(255,255,255,.7);padding:50px 6% 28px;}
 .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:36px;margin-bottom:36px;}
 .footer-brand{color:#fff;font-size:1.05rem;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px;}
-.footer-brand-icon{width:30px;height:30px;background:var(--accent);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;}
+.footer-brand-icon{background:#fff;padding:5px 9px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;}
+.footer-brand-icon img{display:block;width:110px;height:auto;}
 footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 .footer-col h4{color:#fff;font-size:.88rem;font-weight:700;margin-bottom:13px;}
 .footer-col ul{list-style:none;}
@@ -212,12 +252,13 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <div class="nav-logo">
-    <div class="nav-logo-icon">IO</div>
-    <span class="nav-logo-text">IORPMS</span>
+    <div class="nav-logo-badge"><img src="assets/images/lvctlogonew.png" alt="lvcthealth logo"></div>
+    <span class="nav-logo-text">EasyFlow-L</span>
   </div>
   <div class="nav-links" id="navLinks">
     <a href="#features" data-i18n="nav_features">Features</a>
     <a href="#how"      data-i18n="nav_how">How It Works</a>
+    <a href="#training" data-i18n="nav_training">Trainings</a>
     <a href="#pricing"  data-i18n="nav_pricing">Pricing</a>
     <a href="#contact"  data-i18n="nav_contact">Contact</a>
   </div>
@@ -238,7 +279,7 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
   <div class="hero-content">
     <div class="hero-badge"><i class="fa fa-shield-halved"></i>&nbsp;<span data-i18n="hero_badge">Trusted by MAT Clinics in Kenya</span></div>
     <h1 data-i18n="hero_h1">The Smarter Way to<br><span>Manage MAT Clinics</span></h1>
-    <p data-i18n="hero_sub">From automated methadone pump dispensing to KHIS monthly reporting — IORPMS handles your entire clinic workflow in one secure platform.</p>
+    <p data-i18n="hero_sub">From automated methadone pump dispensing to KHIS monthly reporting — EasyFlow-L handles your entire clinic workflow in one secure platform.</p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="openModal()">
         <i class="fa fa-rocket"></i>&nbsp;<span data-i18n="hero_cta1">Request Demo / Access</span>
@@ -291,6 +332,38 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
   </div>
 </section>
 
+<!-- TRAINING / SELF-LEARNING -->
+<section id="training" style="background:#fff;">
+  <div class="centered">
+    <div class="section-label" data-i18n="train_label">Self-Learning</div>
+    <h2 class="section-title" data-i18n="train_title">Train Yourself with Free Video Tutorials</h2>
+    <p class="section-sub" data-i18n="train_sub">No classroom needed — learn EasyFlow-L at your own pace, anytime, anywhere.</p>
+  </div>
+  <div style="max-width:820px;margin:0 auto;padding:0 6%;">
+    <p style="color:var(--muted);line-height:1.8;margin-bottom:14px;" data-i18n="train_story1">
+      When a new clinic joins EasyFlow-L, staff don't wait for a trainer to arrive. They open our
+      YouTube channel, watch a five-minute tutorial, and practise the same steps in their demo
+      account. One video at a time — first login, client registration, clinician workflow, pump
+      dispensing, stock, reports — most teams are working confidently within a day.
+    </p>
+    <p style="color:var(--muted);line-height:1.8;margin-bottom:24px;" data-i18n="train_story2">
+      Every module of the system has its own step-by-step video. Pause, rewind, and rewatch as
+      often as you like. Combined with the built-in SOPs and the Operational Manual, the tutorials
+      form a complete, free, self-paced training programme — no travel, no scheduling, no cost.
+    </p>
+    <div style="text-align:center;">
+      <a href="https://youtube.com/@easyflow-ltutorials?si=ilhwd43CT2mvYRKf" target="_blank" rel="noopener"
+         style="display:inline-block;background:#FF0000;color:#fff;font-weight:700;padding:14px 32px;border-radius:8px;">
+        <i class="fa-brands fa-youtube"></i>&nbsp;<span data-i18n="train_btn">Watch Tutorials on YouTube</span>
+      </a>
+      <a href="trainings/index.php"
+         style="display:inline-block;background:var(--primary);color:#fff;font-weight:700;padding:14px 32px;border-radius:8px;margin-left:12px;">
+        <i class="fa fa-graduation-cap"></i>&nbsp;<span data-i18n="train_btn2">Browse Training Topics</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section id="pricing">
   <div class="centered">
@@ -304,16 +377,17 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
       <div class="pricing-tier"  data-i18n="tier1">Starter</div>
       <div class="pricing-name"  data-i18n="tier1_name">Clinic Basic</div>
       <div class="pricing-desc"  data-i18n="tier1_desc">Ideal for single-site MAT clinics just getting started.</div>
-      <div class="pricing-price"><span class="pricing-amount">$99</span><span class="pricing-period" data-i18n="per_month">/ month</span></div>
+      <div class="pricing-price"><span class="pricing-varies" data-i18n="price_varies">Hosting cost varies by server</span><span class="pricing-varies-note" data-i18n="price_varies_note">Quoted based on your chosen hosting provider/infrastructure</span></div>
       <ul class="pricing-features">
-        <li><i class="fa fa-check"></i><span data-i18n="pf_c50">Up to 50 active clients</span></li>
-        <li><i class="fa fa-check"></i><span data-i18n="pf_pump">Pump dispensing</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_unlim">Unlimited clients</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_pump_manual">Pump dispensing (manual or automatic)</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_stock">Stock management</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_khis">KHIS reporting</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_bio">Biometric verification</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_prison">Prison module (MDD)</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_email_sup">Email support</span></li>
-        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_bio">Biometrics</span></li>
-        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_prison">Prison module</span></li>
-        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_multi">Multi-site</span></li>
+        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_khis_interop">KHIS interoperability (auto-submission)</span></li>
+        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_analytics">Advanced analytics &amp; risk reports</span></li>
       </ul>
       <button class="btn-pricing btn-pricing-outline" onclick="openModal()" data-i18n="btn_start">Get Started</button>
     </div>
@@ -323,16 +397,17 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
       <div class="pricing-tier"  data-i18n="tier2">Professional</div>
       <div class="pricing-name"  data-i18n="tier2_name">Clinic Pro</div>
       <div class="pricing-desc"  data-i18n="tier2_desc">For established clinics with larger caseloads and full features.</div>
-      <div class="pricing-price"><span class="pricing-amount">$249</span><span class="pricing-period" data-i18n="per_month">/ month</span></div>
+      <div class="pricing-price"><span class="pricing-varies" data-i18n="price_varies">Hosting cost varies by server</span><span class="pricing-varies-note" data-i18n="price_varies_note">Quoted based on your chosen hosting provider/infrastructure</span></div>
       <ul class="pricing-features">
-        <li><i class="fa fa-check"></i><span data-i18n="pf_c200">Up to 200 active clients</span></li>
-        <li><i class="fa fa-check"></i><span data-i18n="pf_pump">Pump dispensing</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_unlim">Unlimited clients</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_pump_manual">Pump dispensing (manual or automatic)</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_stock">Stock management</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_khis">KHIS reporting</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_bio">Biometric verification</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_prison">Prison module (MDD)</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_khis_interop">KHIS interoperability (auto-submission)</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_analytics">Advanced analytics &amp; risk reports</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_phone_sup">Phone &amp; email support</span></li>
-        <li class="unavail"><i class="fa fa-times"></i><span data-i18n="pf_multi">Multi-site</span></li>
       </ul>
       <button class="btn-pricing btn-pricing-primary" onclick="openModal()" data-i18n="btn_start">Get Started</button>
     </div>
@@ -341,12 +416,13 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
       <div class="pricing-tier"  data-i18n="tier3">Enterprise</div>
       <div class="pricing-name"  data-i18n="tier3_name">Network / Government</div>
       <div class="pricing-desc"  data-i18n="tier3_desc">For county health programmes, NGOs, and multi-facility networks.</div>
-      <div class="pricing-price"><span class="pricing-custom" data-i18n="price_custom">Custom</span></div>
+      <div class="pricing-price"><span class="pricing-varies" data-i18n="price_varies">Hosting cost varies by server</span><span class="pricing-varies-note" data-i18n="price_varies_note">Quoted based on your chosen hosting provider/infrastructure</span></div>
       <ul class="pricing-features">
         <li><i class="fa fa-check"></i><span data-i18n="pf_unlim">Unlimited clients</span></li>
-        <li><i class="fa fa-check"></i><span data-i18n="pf_pump">Pump dispensing</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_pump_manual">Pump dispensing (manual or automatic)</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_stock">Stock management</span></li>
-        <li><i class="fa fa-check"></i><span data-i18n="pf_khis">KHIS reporting</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_khis_interop">KHIS interoperability (auto-submission)</span></li>
+        <li><i class="fa fa-check"></i><span data-i18n="pf_analytics">Advanced analytics &amp; risk reports</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_bio">Biometric verification</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_prison">Prison module (MDD)</span></li>
         <li><i class="fa fa-check"></i><span data-i18n="pf_multi">Multi-site dashboard</span></li>
@@ -356,14 +432,23 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
     </div>
   </div>
   <p style="text-align:center;margin-top:22px;color:var(--muted);font-size:.83rem;" data-i18n="price_note">
-    All prices in USD. Annual billing available with 20% discount. On-premise deployment available for government institutions.
+    Hosting/subscription cost depends on your chosen server or cloud provider and is quoted per clinic. On-premise deployment available for government institutions.
   </p>
+  <div class="onetime-fees">
+    <h4 data-i18n="fees_title">One-Time Onboarding Fees (all plans)</h4>
+    <div class="onetime-fees-grid">
+      <div class="onetime-fee-item"><span class="onetime-fee-amount">$500</span><span data-i18n="fee_setup">Once-off setup fee</span></div>
+      <div class="onetime-fee-item"><span class="onetime-fee-amount">$1,000</span><span data-i18n="fee_migration">Data migration fee</span></div>
+      <div class="onetime-fee-item"><span class="onetime-fee-amount">$1,000</span><span data-i18n="fee_training">Training fee</span></div>
+    </div>
+    <p class="onetime-fees-note" data-i18n="fees_note">Additional costs (billed at cost, not included above): facilitator/trainer travel and hotel accommodation for onsite setup and training.</p>
+  </div>
 </section>
 
 <!-- COMPLIANCE / CONTACT -->
 <div class="compliance" id="contact">
   <h2 data-i18n="comp_title">Built for Regulatory Compliance</h2>
-  <p data-i18n="comp_sub">IORPMS is designed around Kenya Ministry of Health standards and NACADA guidelines for MAT programme management.</p>
+  <p data-i18n="comp_sub">EasyFlow-L is designed around Kenya Ministry of Health standards and NACADA guidelines for MAT programme management.</p>
   <button class="btn-primary" onclick="openModal()" style="display:inline-flex;margin:0 auto;">
     <i class="fa fa-envelope"></i>&nbsp;<span data-i18n="comp_cta">Talk to Us</span>
   </button>
@@ -380,9 +465,9 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-brand"><div class="footer-brand-icon">IO</div>IORPMS</div>
-      <p data-i18n="footer_about">Integrated Outpatient Rehabilitation &amp; Pharmacy Management System. Built for MAT clinics across Africa.</p>
-      <p style="font-size:.79rem;" data-i18n="footer_copy">&copy; 2025 IORPMS. All rights reserved.</p>
+      <div class="footer-brand"><div class="footer-brand-icon"><img src="assets/images/lvctlogonew.png" alt="lvcthealth logo"></div>EasyFlow-L</div>
+      <p data-i18n="footer_about">Integrated Opioid &amp; Patient Management System. Built for MAT clinics across Africa.</p>
+      <p style="font-size:.79rem;" data-i18n="footer_copy">&copy; 2026 EasyFlow-L. All rights reserved.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer_product">Product</h4>
@@ -390,20 +475,22 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
         <li><a href="#features" data-i18n="nav_features">Features</a></li>
         <li><a href="#pricing"  data-i18n="nav_pricing">Pricing</a></li>
         <li><a href="#how"      data-i18n="nav_how">How It Works</a></li>
+        <li><a href="trainings/index.php" data-i18n="nav_training">Trainings</a></li>
+        <li><a href="https://www.youtube.com/@EasyFlow-LTutorialsc" target="_blank" rel="noopener">YouTube Tutorials</a></li>
         <li><a href="public/login.php" data-i18n="nav_login">Login</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer_support">Support</h4>
       <ul>
-        <li><a href="mailto:support@iorpms.health">support@iorpms.health</a></li>
+        <li><a href="mailto:support@sitti.site">support@sitti.site</a></li>
         <li><a href="#" onclick="openModal()" data-i18n="nav_demo">Request Demo</a></li>
         <li><a href="#" data-i18n="footer_docs">Documentation</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span data-i18n="footer_copy">&copy; 2025 IORPMS. All rights reserved.</span>
+    <span data-i18n="footer_copy">&copy; 2026 EasyFlow-L. All rights reserved.</span>
     <span style="display:flex;gap:14px;align-items:center;">
       <span data-i18n="footer_lang">Language:</span>
       <a href="#" onclick="setLang('en');return false;" style="color:rgba(255,255,255,.6)">English</a>
@@ -438,10 +525,9 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
         <label data-i18n="field_country">Country *</label>
         <select name="country" required>
           <option value="" data-i18n="sel_country">Select country…</option>
-          <option>Kenya</option><option>Tanzania</option><option>Uganda</option>
-          <option>Ethiopia</option><option>Rwanda</option><option>Nigeria</option>
-          <option>South Africa</option><option>Mozambique</option><option>Angola</option>
-          <option>DRC</option><option>Other</option>
+          <?php foreach ($landingCountries as $cName): ?>
+          <option value="<?php echo htmlspecialchars($cName); ?>"><?php echo htmlspecialchars($cName); ?></option>
+          <?php endforeach; ?>
         </select>
       </div>
       <div class="form-field">
@@ -465,10 +551,15 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 const T = {
   en:{
     nav_features:"Features",nav_how:"How It Works",nav_pricing:"Pricing",nav_contact:"Contact",
-    nav_login:"Login",nav_demo:"Request Demo",
+    nav_login:"Login",nav_demo:"Request Demo",nav_training:"Trainings",
+    train_label:"Self-Learning",train_title:"Train Yourself with Free Video Tutorials",
+    train_sub:"No classroom needed — learn EasyFlow-L at your own pace, anytime, anywhere.",
+    train_story1:"When a new clinic joins EasyFlow-L, staff don't wait for a trainer to arrive. They open our YouTube channel, watch a five-minute tutorial, and practise the same steps in their demo account. One video at a time — first login, client registration, clinician workflow, pump dispensing, stock, reports — most teams are working confidently within a day.",
+    train_story2:"Every module of the system has its own step-by-step video. Pause, rewind, and rewatch as often as you like. Combined with the built-in SOPs and the Operational Manual, the tutorials form a complete, free, self-paced training programme — no travel, no scheduling, no cost.",
+    train_btn:"Watch Tutorials on YouTube",train_btn2:"Browse Training Topics",
     hero_badge:"Trusted by MAT Clinics in Kenya",
     hero_h1:"The Smarter Way to<br><span style='color:#82b543'>Manage MAT Clinics</span>",
-    hero_sub:"From automated methadone pump dispensing to KHIS monthly reporting — IORPMS handles your entire clinic workflow in one secure platform.",
+    hero_sub:"From automated methadone pump dispensing to KHIS monthly reporting — EasyFlow-L handles your entire clinic workflow in one secure platform.",
     hero_cta1:"Request Demo / Access",hero_cta2:"Log In",
     stat_clients:"Clients Managed",stat_uptime:"Uptime",stat_khis:"KHIS Integrated",
     feat_label:"What We Offer",feat_title:"Everything Your MAT Clinic Needs",
@@ -493,17 +584,22 @@ const T = {
     tier2:"Professional",tier2_name:"Clinic Pro",tier2_desc:"For established clinics with larger caseloads and full features.",
     tier3:"Enterprise",tier3_name:"Network / Government",tier3_desc:"For county health programmes, NGOs, and multi-facility networks.",
     per_month:"/ month",price_custom:"Custom",most_pop:"Most Popular",
-    pf_c50:"Up to 50 active clients",pf_c200:"Up to 200 active clients",pf_unlim:"Unlimited clients",
-    pf_pump:"Pump dispensing",pf_stock:"Stock management",pf_khis:"KHIS reporting",
+    price_varies:"Hosting cost varies by server",price_varies_note:"Quoted based on your chosen hosting provider/infrastructure",
+    pf_unlim:"Unlimited clients",
+    pf_pump:"Pump dispensing",pf_pump_manual:"Pump dispensing (manual or automatic)",pf_stock:"Stock management",pf_khis:"KHIS reporting",
+    pf_khis_interop:"KHIS interoperability (auto-submission)",pf_analytics:"Advanced analytics & risk reports",
     pf_bio:"Biometric verification",pf_prison:"Prison module (MDD)",pf_multi:"Multi-site dashboard",
     pf_email_sup:"Email support",pf_phone_sup:"Phone & email support",pf_sla:"Dedicated support & SLA",
     btn_start:"Get Started",btn_sales:"Contact Sales",
-    price_note:"All prices in USD. Annual billing available with 20% discount. On-premise deployment available for government institutions.",
+    price_note:"Hosting/subscription cost depends on your chosen server or cloud provider and is quoted per clinic. On-premise deployment available for government institutions.",
+    fees_title:"One-Time Onboarding Fees (all plans)",fee_setup:"Once-off setup fee",
+    fee_migration:"Data migration fee",fee_training:"Training fee",
+    fees_note:"Additional costs (billed at cost, not included above): facilitator/trainer travel and hotel accommodation for onsite setup and training.",
     comp_title:"Built for Regulatory Compliance",
-    comp_sub:"IORPMS is designed around Kenya Ministry of Health standards and NACADA guidelines for MAT programme management.",
+    comp_sub:"EasyFlow-L is designed around Kenya Ministry of Health standards and NACADA guidelines for MAT programme management.",
     comp_cta:"Talk to Us",
     footer_about:"Integrated Outpatient Rehabilitation & Pharmacy Management System. Built for MAT clinics across Africa.",
-    footer_copy:"© 2025 IORPMS. All rights reserved.",footer_product:"Product",footer_support:"Support",
+    footer_copy:"© 2025 EasyFlow-L. All rights reserved.",footer_product:"Product",footer_support:"Support",
     footer_docs:"Documentation",footer_lang:"Language:",
     modal_title:"Request Demo Access",
     modal_sub:"Fill in your details and we'll set up your account and send login credentials by email.",
@@ -515,10 +611,15 @@ const T = {
   },
   fr:{
     nav_features:"Fonctionnalités",nav_how:"Comment ça marche",nav_pricing:"Tarifs",nav_contact:"Contact",
-    nav_login:"Connexion",nav_demo:"Demander une démo",
+    nav_login:"Connexion",nav_demo:"Demander une démo",nav_training:"Formations",
+    train_label:"Auto-formation",train_title:"Formez-vous avec des tutoriels vidéo gratuits",
+    train_sub:"Pas besoin de salle de classe — apprenez EasyFlow-L à votre rythme, où que vous soyez.",
+    train_story1:"Quand une nouvelle clinique rejoint EasyFlow-L, le personnel n'attend pas l'arrivée d'un formateur. Il ouvre notre chaîne YouTube, regarde un tutoriel de cinq minutes et pratique les mêmes étapes dans son compte démo. Une vidéo à la fois — première connexion, enregistrement des clients, flux clinicien, distribution par pompe, stock, rapports — la plupart des équipes travaillent avec assurance en une journée.",
+    train_story2:"Chaque module du système a sa propre vidéo pas à pas. Mettez en pause, revenez en arrière et revisionnez autant que vous le souhaitez. Avec les SOP intégrées et le manuel opérationnel, les tutoriels forment un programme de formation complet, gratuit et à votre rythme — sans déplacement, sans planification, sans coût.",
+    train_btn:"Voir les tutoriels sur YouTube",train_btn2:"Parcourir les sujets de formation",
     hero_badge:"Approuvé par les cliniques MAT au Kenya",
     hero_h1:"La meilleure façon de<br><span style='color:#82b543'>gérer les cliniques MAT</span>",
-    hero_sub:"De la distribution automatisée par pompe à la déclaration mensuelle KHIS — IORPMS gère tout votre flux de travail clinique sur une plateforme sécurisée.",
+    hero_sub:"De la distribution automatisée par pompe à la déclaration mensuelle KHIS — EasyFlow-L gère tout votre flux de travail clinique sur une plateforme sécurisée.",
     hero_cta1:"Demander un accès / démo",hero_cta2:"Se connecter",
     stat_clients:"Clients gérés",stat_uptime:"Disponibilité",stat_khis:"KHIS Intégré",
     feat_label:"Ce que nous offrons",feat_title:"Tout ce dont votre clinique MAT a besoin",
@@ -543,17 +644,22 @@ const T = {
     tier2:"Professionnel",tier2_name:"Clinique Pro",tier2_desc:"Pour les cliniques établies avec charge de cas importante et besoins complets.",
     tier3:"Entreprise",tier3_name:"Réseau / Gouvernement",tier3_desc:"Pour programmes de santé du comté, ONG et réseaux multi-établissements.",
     per_month:"/ mois",price_custom:"Sur mesure",most_pop:"Le plus populaire",
-    pf_c50:"Jusqu'à 50 clients actifs",pf_c200:"Jusqu'à 200 clients actifs",pf_unlim:"Clients illimités",
-    pf_pump:"Distribution par pompe",pf_stock:"Gestion des stocks",pf_khis:"Rapports KHIS",
+    price_varies:"Le coût d'hébergement varie selon le serveur",price_varies_note:"Devis basé sur le fournisseur/l'infrastructure d'hébergement choisi",
+    pf_unlim:"Clients illimités",
+    pf_pump:"Distribution par pompe",pf_pump_manual:"Distribution par pompe (manuelle ou automatique)",pf_stock:"Gestion des stocks",pf_khis:"Rapports KHIS",
+    pf_khis_interop:"Interopérabilité KHIS (envoi automatique)",pf_analytics:"Analyses avancées & rapports de risque",
     pf_bio:"Vérification biométrique",pf_prison:"Module pénitentiaire (MDD)",pf_multi:"Tableau de bord multi-sites",
     pf_email_sup:"Support par email",pf_phone_sup:"Support téléphonique & email",pf_sla:"Support dédié & SLA",
     btn_start:"Commencer",btn_sales:"Contacter les ventes",
-    price_note:"Prix en USD. Facturation annuelle disponible avec 20% de réduction. Déploiement sur site possible pour institutions gouvernementales.",
+    price_note:"Le coût d'hébergement/abonnement dépend du serveur ou fournisseur cloud choisi et est devisé par clinique. Déploiement sur site possible pour institutions gouvernementales.",
+    fees_title:"Frais uniques de mise en service (tous les forfaits)",fee_setup:"Frais de mise en service unique",
+    fee_migration:"Frais de migration des données",fee_training:"Frais de formation",
+    fees_note:"Coûts additionnels (facturés au coût réel, non inclus ci-dessus) : voyage et hébergement du formateur/technicien pour la mise en service et la formation sur site.",
     comp_title:"Conçu pour la conformité réglementaire",
-    comp_sub:"IORPMS est conçu selon les normes du Ministère de la Santé du Kenya et les directives NACADA pour la gestion des programmes MAT.",
+    comp_sub:"EasyFlow-L est conçu selon les normes du Ministère de la Santé du Kenya et les directives NACADA pour la gestion des programmes MAT.",
     comp_cta:"Nous contacter",
     footer_about:"Système Intégré de Gestion de Pharmacie et Réhabilitation Ambulatoire. Conçu pour les cliniques MAT en Afrique.",
-    footer_copy:"© 2025 IORPMS. Tous droits réservés.",footer_product:"Produit",footer_support:"Support",
+    footer_copy:"© 2025 EasyFlow-L. Tous droits réservés.",footer_product:"Produit",footer_support:"Support",
     footer_docs:"Documentation",footer_lang:"Langue :",
     modal_title:"Demander un accès démo",
     modal_sub:"Remplissez vos informations et nous créerons votre compte et vous enverrons vos identifiants par email.",
@@ -565,10 +671,15 @@ const T = {
   },
   pt:{
     nav_features:"Funcionalidades",nav_how:"Como Funciona",nav_pricing:"Preços",nav_contact:"Contato",
-    nav_login:"Entrar",nav_demo:"Solicitar Demo",
+    nav_login:"Entrar",nav_demo:"Solicitar Demo",nav_training:"Formações",
+    train_label:"Autoaprendizagem",train_title:"Forme-se com tutoriais em vídeo gratuitos",
+    train_sub:"Sem sala de aula — aprenda o EasyFlow-L ao seu ritmo, em qualquer lugar.",
+    train_story1:"Quando uma nova clínica adere ao EasyFlow-L, a equipa não espera pela chegada de um formador. Abre o nosso canal do YouTube, vê um tutorial de cinco minutos e pratica os mesmos passos na sua conta demo. Um vídeo de cada vez — primeiro login, registo de clientes, fluxo clínico, distribuição por bomba, stock, relatórios — a maioria das equipas trabalha com confiança num dia.",
+    train_story2:"Cada módulo do sistema tem o seu próprio vídeo passo a passo. Pause, recue e reveja quantas vezes quiser. Em conjunto com as SOPs integradas e o Manual Operacional, os tutoriais formam um programa de formação completo, gratuito e ao seu ritmo — sem viagens, sem agendamento, sem custos.",
+    train_btn:"Ver tutoriais no YouTube",train_btn2:"Explorar tópicos de formação",
     hero_badge:"Confiado por clínicas MAT no Quénia",
     hero_h1:"A forma mais inteligente de<br><span style='color:#82b543'>gerir clínicas MAT</span>",
-    hero_sub:"Da distribuição automatizada por bomba ao relatório mensal KHIS — o IORPMS gere todo o fluxo de trabalho da sua clínica numa plataforma segura.",
+    hero_sub:"Da distribuição automatizada por bomba ao relatório mensal KHIS — o EasyFlow-L gere todo o fluxo de trabalho da sua clínica numa plataforma segura.",
     hero_cta1:"Solicitar Demo / Acesso",hero_cta2:"Entrar",
     stat_clients:"Clientes Geridos",stat_uptime:"Disponibilidade",stat_khis:"KHIS Integrado",
     feat_label:"O que oferecemos",feat_title:"Tudo o que a sua clínica MAT precisa",
@@ -593,17 +704,22 @@ const T = {
     tier2:"Profissional",tier2_name:"Clínica Pro",tier2_desc:"Para clínicas estabelecidas com maior carga de casos e funcionalidades completas.",
     tier3:"Empresarial",tier3_name:"Rede / Governo",tier3_desc:"Para programas de saúde do condado, ONGs e redes multifacilidades.",
     per_month:"/ mês",price_custom:"Personalizado",most_pop:"Mais Popular",
-    pf_c50:"Até 50 clientes ativos",pf_c200:"Até 200 clientes ativos",pf_unlim:"Clientes ilimitados",
-    pf_pump:"Dispensação por bomba",pf_stock:"Gestão de stock",pf_khis:"Relatórios KHIS",
+    price_varies:"O custo de alojamento varia conforme o servidor",price_varies_note:"Orçamento baseado no fornecedor/infraestrutura de alojamento escolhido",
+    pf_unlim:"Clientes ilimitados",
+    pf_pump:"Dispensação por bomba",pf_pump_manual:"Dispensação por bomba (manual ou automática)",pf_stock:"Gestão de stock",pf_khis:"Relatórios KHIS",
+    pf_khis_interop:"Interoperabilidade KHIS (envio automático)",pf_analytics:"Análises avançadas & relatórios de risco",
     pf_bio:"Verificação biométrica",pf_prison:"Módulo prisional (MDD)",pf_multi:"Dashboard multi-site",
     pf_email_sup:"Suporte por email",pf_phone_sup:"Suporte telefônico & email",pf_sla:"Suporte dedicado & SLA",
     btn_start:"Começar",btn_sales:"Contactar vendas",
-    price_note:"Preços em USD. Faturação anual disponível com 20% de desconto. Implantação no local disponível para instituições governamentais.",
+    price_note:"O custo de alojamento/subscrição depende do servidor ou fornecedor cloud escolhido e é orçamentado por clínica. Implantação no local disponível para instituições governamentais.",
+    fees_title:"Taxas únicas de integração (todos os planos)",fee_setup:"Taxa única de configuração",
+    fee_migration:"Taxa de migração de dados",fee_training:"Taxa de formação",
+    fees_note:"Custos adicionais (faturados ao custo real, não incluídos acima): viagem e alojamento do formador/técnico para a configuração e formação no local.",
     comp_title:"Criado para conformidade regulatória",
-    comp_sub:"O IORPMS foi concebido de acordo com as normas do Ministério da Saúde do Quénia e diretrizes NACADA para gestão de programas MAT.",
+    comp_sub:"O EasyFlow-L foi concebido de acordo com as normas do Ministério da Saúde do Quénia e diretrizes NACADA para gestão de programas MAT.",
     comp_cta:"Fale connosco",
     footer_about:"Sistema Integrado de Gestão de Farmácia e Reabilitação Ambulatória. Criado para clínicas MAT em África.",
-    footer_copy:"© 2025 IORPMS. Todos os direitos reservados.",footer_product:"Produto",footer_support:"Suporte",
+    footer_copy:"© 2025 EasyFlow-L. Todos os direitos reservados.",footer_product:"Produto",footer_support:"Suporte",
     footer_docs:"Documentação",footer_lang:"Idioma:",
     modal_title:"Solicitar acesso de demonstração",
     modal_sub:"Preencha os seus dados e criaremos a sua conta e enviaremos as credenciais de acesso por email.",
@@ -615,11 +731,11 @@ const T = {
   }
 };
 
-let lang = localStorage.getItem('iorpms_lang') || 'en';
+let lang = localStorage.getItem('EasyFlow-L_lang') || 'en';
 
 function setLang(l) {
   lang = l;
-  localStorage.setItem('iorpms_lang', l);
+  localStorage.setItem('EasyFlow-L_lang', l);
   document.querySelectorAll('.lang-btn').forEach(b =>
     b.classList.toggle('active', b.textContent.trim().toLowerCase() === l));
   applyT();
@@ -649,7 +765,10 @@ function submitDemo(e) {
     .then(r => r.json())
     .then(res => {
       if (res.success) {
-        document.getElementById('formSuccess').style.display = 'block';
+        const successBox = document.getElementById('formSuccess');
+        successBox.innerHTML = '<i class="fa ' + (res.email_sent ? 'fa-check-circle' : 'fa-exclamation-triangle') + '"></i>&nbsp;<span>' +
+          (res.message || 'Request submitted!') + '</span>';
+        successBox.style.display = 'block';
         document.getElementById('formError').style.display   = 'none';
         document.getElementById('demoForm').reset();
       } else {
@@ -685,5 +804,64 @@ window.addEventListener('scroll', () => {
 
 applyT();
 </script>
+
+<?php if ($updateAvailable): ?>
+<!-- System Update Banner -->
+<div id="updateBanner" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; max-width: 380px; background: rgba(44, 49, 98, 0.95); backdrop-filter: blur(10px); border: 1.5px solid rgba(130, 181, 67, 0.5); border-radius: 16px; padding: 20px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+  <div style="display: flex; align-items: flex-start; gap: 12px;">
+    <div style="width: 40px; height: 40px; border-radius: 50%; background: #82b543; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; box-shadow: 0 0 12px rgba(130, 181, 67, 0.5);">
+      🚀
+    </div>
+    <div style="flex-grow: 1;">
+      <h4 style="margin: 0 0 4px; font-weight: 700; font-size: 15px; color: #fff; font-family: 'Inter', sans-serif;">System Update Available</h4>
+      <p style="margin: 0 0 12px; font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.4; font-family: 'Inter', sans-serif;">An offline update package is ready to be applied (database/files).</p>
+      <div style="display: flex; gap: 8px;">
+        <button onclick="applySystemUpdate(this)" style="background: #82b543; border: none; padding: 6px 14px; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;">Apply Update</button>
+        <button onclick="document.getElementById('updateBanner').remove()" style="background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); padding: 5px 12px; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;">Dismiss</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes slideInUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
+<script>
+function applySystemUpdate(btn) {
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+    btn.style.background = '#666';
+    
+    fetch('public/apply_update.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Update completed successfully:\n' + data.message);
+                const banner = document.getElementById('updateBanner');
+                if (banner) banner.remove();
+                location.reload();
+            } else {
+                alert('Update failed:\n' + data.message);
+                btn.disabled = false;
+                btn.textContent = originalText;
+                btn.style.background = '#82b543';
+            }
+        })
+        .catch(error => {
+            console.error('Error applying update:', error);
+            alert('An unexpected error occurred during update execution.');
+            btn.disabled = false;
+            btn.textContent = originalText;
+            btn.style.background = '#82b543';
+        });
+}
+</script>
+<?php endif; ?>
+
 </body>
 </html>
