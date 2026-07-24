@@ -719,9 +719,19 @@ function formatFileSize($bytes) {
                 <div class="scanner-selector">
                     <label>Select Scanner Type:</label>
                     <select id="scanner-type" class="form-control">
-                        <option value="zkteco" <?php echo $defaultScanner === 'zkteco' ? 'selected' : ''; ?>>ZKTeco Scanner</option>
-                        <option value="digitalpersona" <?php echo $defaultScanner === 'digitalpersona' ? 'selected' : ''; ?>>Digital Persona Scanner</option>
+                        <option value="zkteco" <?php echo strtolower($defaultScanner) === 'zkteco' ? 'selected' : ''; ?>>ZKTeco Scanner</option>
+                        <option value="secugen" <?php echo strtolower($defaultScanner) === 'secugen' ? 'selected' : ''; ?>>SecuGen Scanner</option>
+                        <option value="digitalpersona" <?php echo strtolower($defaultScanner) === 'digitalpersona' ? 'selected' : ''; ?>>Digital Persona Scanner</option>
                     </select>
+                </div>
+
+                <div id="secugen-port-config" style="display: none; margin-bottom: 15px; background: #eef2ff; padding: 12px; border-radius: 8px; border: 1px solid #c7d2fe;">
+                    <label style="font-size: 14px; font-weight: 600; color: #3730a3;">SecuGen Server Port:</label>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 5px;">
+                        <input type="number" id="secugen-port" class="form-control" value="8443" placeholder="8443 or 8000" style="width: 140px;">
+                        <button type="button" class="btn btn-primary" onclick="initSecuGen()" style="padding: 8px 15px; font-size: 13px;">Check Port</button>
+                    </div>
+                    <small style="color: #4b5563; font-size: 12px; display: block; margin-top: 4px;">Standard SecuGen ports: 8443 (HTTPS), 8000, 8080, 8001</small>
                 </div>
 
                 <div class="scanner-container">
@@ -803,6 +813,8 @@ function formatFileSize($bytes) {
         let templateData = null;
         let qualityScore = 0;
         let activeZktecoPort = 3001; // default fallback
+        let activeSecugenPort = 8443;
+        let activeSecugenProtocol = 'https';
         let dpSocket = null;
 
         // Auto-detect ZKTeco port (3000 or 3001)
@@ -826,11 +838,128 @@ function formatFileSize($bytes) {
             return false;
         }
 
+        // Auto-detect SecuGen port across common standard ports
+        async function detectSecugenPort() {
+            const userPort = document.getElementById('secugen-port') ? document.getElementById('secugen-port').value : null;
+            const ports = userPort ? [parseInt(userPort), 8443, 8000, 8080, 8001, 3002] : [8443, 8000, 8080, 8001, 3002];
+            const protocols = ['https', 'http'];
+
+            for (let port of ports) {
+                for (let proto of protocols) {
+                    try {
+                        // Test health endpoint or WebAPI SGIFPCapture
+                        const healthUrl = `${proto}://localhost:${port}/health`;
+                        const resp = await fetch(healthUrl, { mode: 'cors' });
+                        if (resp.ok) {
+                            activeSecugenPort = port;
+                            activeSecugenProtocol = proto;
+                            if (document.getElementById('secugen-port')) document.getElementById('secugen-port').value = port;
+                            return true;
+                        }
+                    } catch(e) {}
+
+                    try {
+                        const testUrl = `${proto}://localhost:${port}/SGIFPCapture?Timeout=500&Quality=50&TemplateFormat=ANSI`;
+                        const resp = await fetch(testUrl, { method: 'POST', mode: 'cors' });
+                        if (resp.ok || resp.status === 400 || resp.status === 200) {
+                            activeSecugenPort = port;
+                            activeSecugenProtocol = proto;
+                            if (document.getElementById('secugen-port')) document.getElementById('secugen-port').value = port;
+                            return true;
+                        }
+                    } catch(e) {}
+                }
+            }
+            return false;
+        }
+
+        async function initSecuGen() {
+            const btn = document.getElementById('init-scanner');
+            const btnText = btn.querySelector('.btn-text');
+            const loading = btn.querySelector('.loading');
+
+            btnText.style.display = 'none';
+            loading.style.display = 'inline-block';
+            btn.disabled = true;
+
+            const inputPort = document.getElementById('secugen-port') ? document.getElementById('secugen-port').value : 8443;
+            updateStatus(`Checking SecuGen scanner connection via PHP...`, 'info');
+
+            try {
+                const resp = await fetch(`secugen_api.php?action=health&port=${inputPort}`);
+                const data = await resp.json();
+
+                if (data.success) {
+                    isScannerInitialized = true;
+                    document.getElementById('capture-fingerprint').disabled = false;
+                    activeSecugenPort = data.port || inputPort;
+                    localStorage.setItem('preferred_secugen_port', activeSecugenPort);
+                    updateStatus(`SecuGen Scanner ready on port ${activeSecugenPort} (PHP Bridge)`, 'success');
+                } else {
+                    isScannerInitialized = true; // Allow capture attempt
+                    document.getElementById('capture-fingerprint').disabled = false;
+                    updateStatus(`SecuGen service status: ${data.message}`, 'info');
+                }
+            } catch (error) {
+                updateStatus(`SecuGen status check: ${error.message}`, 'error');
+            } finally {
+                btnText.style.display = 'inline-block';
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        async function captureSecuGen() {
+            const inputPort = document.getElementById('secugen-port') ? document.getElementById('secugen-port').value : (activeSecugenPort || 8443);
+            const btn = document.getElementById('capture-fingerprint');
+            btn.disabled = true;
+
+            updateStatus('Place finger firmly on the SecuGen scanner to capture...', 'info');
+
+            try {
+                const resp = await fetch(`secugen_api.php?action=capture&port=${inputPort}`);
+                const data = await resp.json();
+
+                if (data.success) {
+                    fingerprintData = data.fingerprint_data_base64;
+                    templateData = data.fingerprint_template;
+                    qualityScore = data.quality_score || 85;
+
+                    document.getElementById('fingerprint-data-base64').value = fingerprintData;
+                    document.getElementById('fingerprint-template').value = templateData;
+                    document.getElementById('quality-score-input').value = qualityScore;
+
+                    if (fingerprintData) {
+                        const imgPrefix = fingerprintData.startsWith('iVBORw') ? 'data:image/png;base64,' : 'data:image/bmp;base64,';
+                        document.getElementById('fingerprint-image').src = imgPrefix + fingerprintData;
+                        document.getElementById('fingerprint-preview').style.display = 'block';
+                    }
+
+                    document.getElementById('quality-indicator').style.display = 'block';
+                    document.getElementById('quality-score').textContent = qualityScore;
+                    document.getElementById('quality-bar').style.width = qualityScore + '%';
+
+                    document.getElementById('btn-submit').disabled = false;
+                    updateStatus(`Fingerprint captured successfully from SecuGen! Quality: ${qualityScore}/100`, 'success');
+                } else {
+                    throw new Error(data.message || 'Capture failed');
+                }
+            } catch (error) {
+                updateStatus(`Capture error: ${error.message}`, 'error');
+                console.error('SecuGen capture error:', error);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
         async function initializeScanner() {
             const scannerType = document.getElementById('scanner-type').value;
 
             if (scannerType === 'digitalpersona') {
                 initDigitalPersona();
+                return;
+            } else if (scannerType === 'secugen') {
+                await initSecuGen();
                 return;
             }
 
@@ -876,6 +1005,9 @@ function formatFileSize($bytes) {
             const scannerType = document.getElementById('scanner-type').value;
             if (scannerType === 'digitalpersona') {
                 updateStatus('Place finger on the DigitalPersona scanner to capture...', 'info');
+                return;
+            } else if (scannerType === 'secugen') {
+                await captureSecuGen();
                 return;
             }
 
@@ -1106,12 +1238,23 @@ function formatFileSize($bytes) {
                     scannerSelect.value = savedScanner;
                 }
             }
+
+            const savedPort = localStorage.getItem('preferred_secugen_port');
+            if (savedPort && document.getElementById('secugen-port')) {
+                document.getElementById('secugen-port').value = savedPort;
+            }
             
             // Listen for scanner type changes
             document.getElementById('scanner-type').addEventListener('change', function() {
                 localStorage.setItem('preferred_scanner', this.value);
                 updateScannerUIElements();
             });
+
+            if (document.getElementById('secugen-port')) {
+                document.getElementById('secugen-port').addEventListener('change', function() {
+                    localStorage.setItem('preferred_secugen_port', this.value);
+                });
+            }
 
             updateScannerUIElements();
 
@@ -1126,7 +1269,10 @@ function formatFileSize($bytes) {
             const scannerType = document.getElementById('scanner-type').value;
             const title = document.getElementById('scanner-title');
             const instructions = document.getElementById('scanner-instructions');
+            const secugenConfig = document.getElementById('secugen-port-config');
             
+            if (secugenConfig) secugenConfig.style.display = (scannerType === 'secugen') ? 'block' : 'none';
+
             if (scannerType === 'digitalpersona') {
                 title.textContent = 'Digital Persona Fingerprint Scanner';
                 instructions.textContent = 'Ensure Digital Persona Agent is running. Place finger on scanner.';
@@ -1134,6 +1280,22 @@ function formatFileSize($bytes) {
                 isScannerInitialized = false;
                 document.getElementById('capture-fingerprint').disabled = true;
                 updateStatus('DigitalPersona scanner not connected', 'info');
+            } else if (scannerType === 'secugen') {
+                title.textContent = 'SecuGen Fingerprint Scanner';
+                instructions.textContent = 'Place finger on SecuGen scanner and click "Capture Fingerprint"';
+                document.getElementById('init-scanner').querySelector('.btn-text').textContent = 'Check SecuGen Port';
+                isScannerInitialized = false;
+                document.getElementById('capture-fingerprint').disabled = true;
+                updateStatus('Checking SecuGen scanner port...', 'info');
+                detectSecugenPort().then(found => {
+                    if (found) {
+                        isScannerInitialized = true;
+                        document.getElementById('capture-fingerprint').disabled = false;
+                        updateStatus(`SecuGen Scanner ready on port ${activeSecugenPort}`, 'success');
+                    } else {
+                        updateStatus(`SecuGen server not detected on port ${document.getElementById('secugen-port').value}. Click "Check Port" to retry.`, 'info');
+                    }
+                });
             } else {
                 title.textContent = 'ZKTeco Fingerprint Scanner';
                 instructions.textContent = 'Place your finger on the scanner and click "Capture Fingerprint"';

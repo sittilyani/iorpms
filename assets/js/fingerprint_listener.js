@@ -5,33 +5,51 @@
  */
 
 let fingerServerPort = 3000;
+let fingerServerProto = 'http';
+let fingerServerType = 'zkteco';
 let isScanningActive = false;
 let scanningLoopTimeout = null;
 
-// Detect active fingerprint server
+// Detect active fingerprint server (ZKTeco or SecuGen)
 let isAutoStarting = false;
 async function detectFingerprintServerPort() {
-    try {
-        let resp = await fetch('http://localhost:3000/health');
-        if (resp.ok) {
-            fingerServerPort = 3000;
-            console.log("Fingerprint scanner server detected on port 3000 (Python)");
-            return 3000;
+    // 1. Saved preference port
+    const savedSecugenPort = localStorage.getItem('preferred_secugen_port');
+    const portsToCheck = savedSecugenPort ? 
+        [parseInt(savedSecugenPort), 8443, 8000, 3000, 3001, 8080, 8001] : 
+        [8443, 8000, 3000, 3001, 8080, 8001];
+
+    for (let port of portsToCheck) {
+        for (let proto of ['https', 'http']) {
+            try {
+                let resp = await fetch(`${proto}://localhost:${port}/health`);
+                if (resp.ok) {
+                    fingerServerPort = port;
+                    fingerServerProto = proto;
+                    fingerServerType = (port === 8443 || port === 8000) ? 'secugen' : 'zkteco';
+                    console.log(`Fingerprint server detected on port ${port} (${proto.toUpperCase()})`);
+                    return port;
+                }
+            } catch(e) {}
+
+            try {
+                let testUrl = `${proto}://localhost:${port}/SGIFPCapture?Timeout=500&Quality=50&TemplateFormat=ANSI`;
+                let resp = await fetch(testUrl, { method: 'POST', mode: 'cors' });
+                if (resp.ok || resp.status === 200 || resp.status === 400) {
+                    fingerServerPort = port;
+                    fingerServerProto = proto;
+                    fingerServerType = 'secugen';
+                    console.log(`SecuGen WebAPI detected on port ${port} (${proto.toUpperCase()})`);
+                    return port;
+                }
+            } catch(e) {}
         }
-    } catch(e) {}
-    try {
-        let resp = await fetch('http://localhost:3001/health');
-        if (resp.ok) {
-            fingerServerPort = 3001;
-            console.log("Fingerprint scanner server detected on port 3001 (Node.js)");
-            return 3001;
-        }
-    } catch(e) {}
+    }
     
-    // Server is offline, trigger auto-start (only once per detection round)
+    // Server is offline, trigger auto-start
     if (!isAutoStarting) {
         isAutoStarting = true;
-        console.warn("No fingerprint scanner server detected on port 3000 or 3001. Launching in background...");
+        console.warn("No fingerprint scanner server detected. Launching in background...");
         let autoStartPath = '../biometrics/auto_start_server.php';
         if (window.location.pathname.indexOf('/biometrics/') !== -1) {
             autoStartPath = 'auto_start_server.php';
@@ -46,7 +64,7 @@ async function detectFingerprintServerPort() {
         }
     }
     
-    return 3000;
+    return fingerServerPort;
 }
 
 // Update status message UI
@@ -133,49 +151,89 @@ async function startFingerprintIdentifyLoop(isPumpMode) {
     
     updateScannerUI("Fingerprint Scanner: Ready (Place client's finger to identify)", "ready");
     
+    async function fetchCapturedTemplate() {
+        let secugenApiPath = '../biometrics/secugen_api.php';
+        if (window.location.pathname.indexOf('/biometrics/') !== -1) {
+            secugenApiPath = 'secugen_api.php';
+        }
+        
+        if (fingerServerType === 'secugen') {
+            try {
+                let resp = await fetch(`${secugenApiPath}?action=capture`);
+                if (resp.ok) {
+                    let data = await resp.json();
+                    if (data.success && data.fingerprint_template) {
+                        return data.fingerprint_template;
+                    }
+                }
+            } catch(e) {}
+        }
+        try {
+            let resp = await fetch(`${fingerServerProto}://localhost:${fingerServerPort}/capture`);
+            if (resp.ok) {
+                let data = await resp.json();
+                if (data.success && data.fingerprint_template) {
+                    return data.fingerprint_template;
+                }
+            }
+        } catch(e) {}
+        return null;
+    }
+
     async function scan() {
         if (!isScanningActive) return;
         
         try {
-            let resp = await fetch(`http://localhost:${fingerServerPort}/capture`);
-            if (resp.ok) {
-                let data = await resp.json();
-                if (data.success && data.fingerprint_template) {
-                    updateScannerUI("Fingerprint scanned. Identifying...", "scanning");
-                    
-                    // Send to server to identify
-                    let idResp = await fetch(`http://localhost:${fingerServerPort}/identify`, {
+            let capturedTemplate = await fetchCapturedTemplate();
+            if (capturedTemplate) {
+                updateScannerUI("Fingerprint scanned. Identifying...", "scanning");
+                
+                let secugenApiPath = '../biometrics/secugen_api.php';
+                if (window.location.pathname.indexOf('/biometrics/') !== -1) {
+                    secugenApiPath = 'secugen_api.php';
+                }
+
+                let idResp;
+                if (fingerServerType === 'secugen') {
+                    idResp = await fetch(`${secugenApiPath}?action=identify`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            captured_template: data.fingerprint_template,
+                            captured_template: capturedTemplate,
                             candidates: candidates
                         })
                     });
-                    
-                    if (idResp.ok) {
-                        let idData = await idResp.json();
-                        if (idData.success && idData.matched) {
-                            updateScannerUI(`Patient Identified! Opening dispensing page...`, "success");
-                            setTimeout(() => {
-                                const targetPage = isPumpMode ? 'dispensingData_pump.php' : 'dispensingData.php';
-                                window.location.href = `${targetPage}?mat_id=${encodeURIComponent(idData.match_id)}`;
-                            }, 1000);
-                            return; // Stop scanning since we are redirecting
-                        } else {
-                            updateScannerUI("No matching registered patient found. Try again.", "error");
-                        }
+                } else {
+                    idResp = await fetch(`http://localhost:${fingerServerPort}/identify`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            captured_template: capturedTemplate,
+                            candidates: candidates
+                        })
+                    });
+                }
+                
+                if (idResp && idResp.ok) {
+                    let idData = await idResp.json();
+                    if (idData.success && idData.matched) {
+                        updateScannerUI(`Patient Identified! Opening dispensing page...`, "success");
+                        setTimeout(() => {
+                            const targetPage = isPumpMode ? 'dispensingData_pump.php' : 'dispensingData.php';
+                            window.location.href = `${targetPage}?mat_id=${encodeURIComponent(idData.match_id)}`;
+                        }, 1000);
+                        return; // Stop scanning since we are redirecting
                     } else {
-                        updateScannerUI("Identification error on scanner server.", "error");
+                        updateScannerUI("No matching registered patient found. Try again.", "error");
                     }
+                } else {
+                    updateScannerUI("Identification error on scanner server.", "error");
                 }
             }
         } catch(e) {
-            // Server might be offline or call timed out
             console.log("Scanner connection waiting...");
         }
         
-        // Loop again
         scanningLoopTimeout = setTimeout(scan, 2000);
     }
     
@@ -195,55 +253,94 @@ async function startFingerprintVerifyLoop(registeredTemplateB64) {
     await detectFingerprintServerPort();
     updateScannerUI("Fingerprint Scanner: Ready (Scan finger again to confirm dispensing)", "ready");
     
+    async function fetchCapturedTemplate() {
+        let secugenApiPath = '../biometrics/secugen_api.php';
+        if (window.location.pathname.indexOf('/biometrics/') !== -1) {
+            secugenApiPath = 'secugen_api.php';
+        }
+
+        if (fingerServerType === 'secugen') {
+            try {
+                let resp = await fetch(`${secugenApiPath}?action=capture`);
+                if (resp.ok) {
+                    let data = await resp.json();
+                    if (data.success && data.fingerprint_template) {
+                        return data.fingerprint_template;
+                    }
+                }
+            } catch(e) {}
+        }
+        try {
+            let resp = await fetch(`${fingerServerProto}://localhost:${fingerServerPort}/capture`);
+            if (resp.ok) {
+                let data = await resp.json();
+                if (data.success && data.fingerprint_template) {
+                    return data.fingerprint_template;
+                }
+            }
+        } catch(e) {}
+        return null;
+    }
+
     async function scan() {
         if (!isScanningActive) return;
         
         try {
-            let resp = await fetch(`http://localhost:${fingerServerPort}/capture`);
-            if (resp.ok) {
-                let data = await resp.json();
-                if (data.success && data.fingerprint_template) {
-                    updateScannerUI("Fingerprint scanned. Verifying...", "scanning");
-                    
-                    // Compare templates
-                    let matchResp = await fetch(`http://localhost:${fingerServerPort}/match`, {
+            let capturedTemplate = await fetchCapturedTemplate();
+            if (capturedTemplate) {
+                updateScannerUI("Fingerprint scanned. Verifying...", "scanning");
+                
+                let secugenApiPath = '../biometrics/secugen_api.php';
+                if (window.location.pathname.indexOf('/biometrics/') !== -1) {
+                    secugenApiPath = 'secugen_api.php';
+                }
+
+                let matchResp;
+                if (fingerServerType === 'secugen') {
+                    matchResp = await fetch(`${secugenApiPath}?action=match`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            template1: data.fingerprint_template,
+                            template1: capturedTemplate,
                             template2: registeredTemplateB64
                         })
                     });
-                    
-                    if (matchResp.ok) {
-                        let matchData = await matchResp.json();
-                        if (matchData.success && matchData.match) {
-                            updateScannerUI("Fingerprint Verified! Submitting dose dispensing...", "success");
-                            
-                            // Trigger form submit
-                            setTimeout(() => {
-                                const form = document.getElementById('dispenseForm');
-                                if (form) {
-                                    // Call form validation if defined
-                                    if (typeof validateForm === 'function' && !validateForm()) {
-                                        updateScannerUI("Form validation failed. Check dosage/fields.", "error");
-                                        isScanningActive = false;
-                                        // Resume scan loop in case they fix it
-                                        setTimeout(() => startFingerprintVerifyLoop(registeredTemplateB64), 3000);
-                                        return;
-                                    }
-                                    form.submit();
-                                } else {
-                                    updateScannerUI("Dispensing form not found on page.", "error");
+                } else {
+                    matchResp = await fetch(`http://localhost:${fingerServerPort}/match`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            template1: capturedTemplate,
+                            template2: registeredTemplateB64
+                        })
+                    });
+                }
+                
+                if (matchResp && matchResp.ok) {
+                    let matchData = await matchResp.json();
+                    if (matchData.success && matchData.match) {
+                        updateScannerUI("Fingerprint Verified! Submitting dose dispensing...", "success");
+                        
+                        setTimeout(() => {
+                            const form = document.getElementById('dispenseForm');
+                            if (form) {
+                                if (typeof validateForm === 'function' && !validateForm()) {
+                                    updateScannerUI("Form validation failed. Check dosage/fields.", "error");
+                                    isScanningActive = false;
+                                    setTimeout(() => startFingerprintVerifyLoop(registeredTemplateB64), 3000);
+                                    return;
                                 }
-                            }, 1000);
-                            return; // Stop scanning since we are submitting
-                        } else {
-                            updateScannerUI("Verification Failed: Finger does not match this patient.", "error");
-                        }
+                                form.submit();
+                            } else {
+                                updateScannerUI("Dispensing form not found on page.", "error");
+                            }
+                        }, 1000);
+                        return; // Stop scanning since we are submitting
                     } else {
-                        updateScannerUI("Verification error on scanner server.", "error");
+                        updateScannerUI("Verification Failed: Finger does not match this patient.", "error");
                     }
+                } else {
+                    updateScannerUI("Verification error on scanner server.", "error");
                 }
             }
         } catch(e) {
