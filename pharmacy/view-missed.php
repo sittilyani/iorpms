@@ -1,5 +1,6 @@
 <?php
 include "../includes/config.php";
+require_once "../includes/dose_schedule_helpers.php";
 
 if (isset($_GET['mat_id'])) {
     $mat_id = $_GET['mat_id'];
@@ -84,40 +85,14 @@ function displayMissingDates($conn, $mat_id) {
     $first_day_of_month = date('Y-m-01');
     $today = date('Y-m-d');
 
-    // Get the actual days in month
-    $start_date = new DateTime($first_day_of_month);
-    $end_date = new DateTime($today);
-    $interval = new DateInterval('P1D');
-    $date_range = new DatePeriod($start_date, $interval, $end_date->modify('+1 day'));
+    // Schedule-aware adherence: a day only counts as "missed" if a dose was
+    // actually due that day per the client's dose schedule/pattern. Days
+    // that fall on an alternate-dosing "off" day (e.g. Buprenorphine every
+    // 2nd/3rd day) are shown separately and are NOT counted as missed.
+    $adherence = computeDoseAdherence($conn, $mat_id, $first_day_of_month, $today);
 
-    $all_dates = [];
-    foreach ($date_range as $date) {
-        $all_dates[] = $date->format('Y-m-d');
-    }
-
-    // Fetch dates when medication was dispensed (with dosage > 0)
-    $dispensed_query = "
-        SELECT DISTINCT visitDate
-        FROM pharmacy
-        WHERE mat_id = ?
-        AND visitDate BETWEEN ? AND ?
-        AND dosage > 0";
-
-    $stmt_dispensed = $conn->prepare($dispensed_query);
-    $stmt_dispensed->bind_param("sss", $mat_id, $first_day_of_month, $today);
-    $stmt_dispensed->execute();
-    $result_dispensed = $stmt_dispensed->get_result();
-
-    $dispensed_dates = [];
-    while ($row = $result_dispensed->fetch_assoc()) {
-        // Extract just the date part (remove time)
-        $date_only = date('Y-m-d', strtotime($row['visitDate']));
-        $dispensed_dates[] = $date_only;
-    }
-    $stmt_dispensed->close();
-
-    // Find missing dates (dates in month range but not in dispensed dates)
-    $missing_dates = array_diff($all_dates, $dispensed_dates);
+    $missing_dates = $adherence['missed_dates'];
+    $off_pattern_dates = array_keys(array_filter($adherence['days'], fn($status) => $status === 'off_pattern'));
 
     // Display missing dates
     if (empty($missing_dates)) {
@@ -146,11 +121,21 @@ function displayMissingDates($conn, $mat_id) {
 
         echo "</div>";
 
-        // Calculate adherence percentage
-        $total_days = count($all_dates);
-        $adherence_rate = $total_days > 0 ? round((($total_days - $missed_count) / $total_days) * 100, 1) : 0;
+        // Adherence percentage is calculated over DUE days only, so an
+        // alternate-dosing patient isn't penalised for planned off-days.
+        $due_days = $adherence['due_count'];
+        $adherence_rate = $due_days > 0 ? round((($due_days - $missed_count) / $due_days) * 100, 1) : 0;
 
-        echo "<p style='margin-left: 20px;'><strong>Adherence Rate:</strong> <span style='color: red; font-size: 20px; font-weight: bold;'> $adherence_rate% </span> ($total_days total days, $missed_count missed)</p>";
+        echo "<p style='margin-left: 20px;'><strong>Adherence Rate:</strong> <span style='color: red; font-size: 20px; font-weight: bold;'> $adherence_rate% </span> ($due_days dose days due this month, $missed_count missed)</p>";
+    }
+
+    // Show alternate-dosing off-pattern days separately, for clinician context.
+    if (!empty($off_pattern_dates)) {
+        echo "<p style='margin-left: 20px;'><strong>Alternate Dosing — Not Due (" . count($off_pattern_dates) . " days):</strong></p>";
+        echo "<div style='background-color: #e7f3ff; color: #31708f; padding: 10px; margin-left: 20px; margin-bottom: 20px; line-height: 2; width: 80%; border: 1px solid #bcdff1; border-radius: 5px;'>";
+        echo htmlspecialchars(implode(', ', $off_pattern_dates));
+        echo "</div>";
+        echo "<p style='margin-left: 20px; color: #555; font-size: 13px;'>These days fall on the client's alternate dosing pattern (or an explicit skip date) and are not counted as missed.</p>";
     }
 }
 ?>

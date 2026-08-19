@@ -291,7 +291,7 @@ $full_name = getUserFullName();
     <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i><span data-i18n="dashboard">Dashboard</span></a>
     <a href="../clinician/update_dose.php" target="contentFrame" class="nav-link" style="background: #ffd700; color: #000000; margin-top: 10px;">
-        <i class="fa fa-clone"></i><span data-i18n="dosage">Update Dosage</span></a>
+        <i class="fa fa-clone"></i><span data-i18n="update_dosage">Update Dosage</span></a>
     <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i><span data-i18n="dispense_with_pump">Dispense with Pump</span></a>
     <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
@@ -307,7 +307,7 @@ $full_name = getUserFullName();
     <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
         <i class="fa fa-anchor"></i><span>Retro Dispensing</span></a>
     <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link" style="background: #66ccff; color: #000000; margin-top: 10px;">
-        <i class="fa fa-ban"></i><span data-i18n="routine_dispensing">Dispense without Pump</span></a>
+        <i class="fa fa-ban"></i><span data-i18n="dispense_without_pump">Dispense without Pump</span></a>
     <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link" style="background: #ccccff; color: #000000; margin-top: 10px;">
         <i class="fa fa-anchor"></i><span data-i18n="delete">Delete Dispensed Doses</span></a>
     <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link" style="background: #b1f0c2; color: #000000; margin-top: 10px;">

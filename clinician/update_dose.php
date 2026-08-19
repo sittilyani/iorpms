@@ -193,7 +193,7 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
   <table class="schedule-table">
     <thead>
       <tr>
-        <th>#</th><th>Drug</th><th>Dose (mg)</th><th>Start Date</th>
+        <th>#</th><th>Drug</th><th>Dose (mg)</th><th>Dosing Pattern</th><th>Start Date</th>
         <th>End Date</th><th>Comments</th><th>Created By</th><th>Status</th><th></th>
       </tr>
     </thead>
@@ -203,6 +203,19 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
         <td><?= $i+1 ?></td>
         <td><?= htmlspecialchars($sc['drugname']) ?></td>
         <td><?= htmlspecialchars($sc['dose_mg']) ?></td>
+        <td>
+          <?php
+            $interval = isset($sc['dosing_interval_days']) ? (int)$sc['dosing_interval_days'] : 1;
+            if ($interval <= 1) {
+                echo 'Daily';
+            } else {
+                echo 'Every ' . $interval . ' days';
+            }
+            if (!empty($sc['skip_dates'])) {
+                echo ' <small class="text-muted">(+ skip dates)</small>';
+            }
+          ?>
+        </td>
         <td><?= htmlspecialchars($sc['start_date']) ?></td>
         <td><?= $sc['end_date'] ? htmlspecialchars($sc['end_date']) : '<em style="color:#888">Open-ended</em>' ?></td>
         <td><?= htmlspecialchars($sc['comments']) ?></td>
@@ -220,12 +233,14 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
           <?php if ($sc['status'] === 'active'): ?>
             <button type="button" class="btn-edit-dose"
               onclick="openEditModal(<?= htmlspecialchars(json_encode([
-                'id'         => $sc['id'],
-                'drugname'   => $sc['drugname'],
-                'dose_mg'    => $sc['dose_mg'],
-                'start_date' => $sc['start_date'],
-                'end_date'   => $sc['end_date'] ?? '',
-                'comments'   => $sc['comments'],
+                'id'                   => $sc['id'],
+                'drugname'             => $sc['drugname'],
+                'dose_mg'              => $sc['dose_mg'],
+                'start_date'           => $sc['start_date'],
+                'end_date'             => $sc['end_date'] ?? '',
+                'comments'             => $sc['comments'],
+                'dosing_interval_days' => $sc['dosing_interval_days'] ?? 1,
+                'skip_dates'           => $sc['skip_dates'] ?? '',
               ]), ENT_QUOTES) ?>)">
               <i class="fa fa-pencil"></i> Edit
             </button>
@@ -243,7 +258,9 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
   <h5><i class="fa fa-plus-circle"></i> Add / Update Dose Periods</h5>
   <p class="text-muted small">
     Each row is one dose period. Periods <strong>must not overlap</strong>.
-    For <strong>Buprenorphine</strong>, you may specify skip dates (dates within the period when no dose is given).
+    For <strong>Buprenorphine</strong>, you may choose an <strong>alternate dosing pattern</strong> (e.g. every 2 or 3 days) instead of daily —
+    the client will <strong>not</strong> be marked as having missed a dose on the off-pattern days. You may also add specific skip dates
+    on top of the pattern (e.g. a public holiday).
     For <strong>Methadone</strong>, leaving a gap between one period's end and the next's start will prompt a confirmation.
     If no end date is set, you will be asked to confirm before saving.
     Each dose period <strong>requires a comment</strong>.
@@ -304,6 +321,25 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
             <label class="required"><strong>New Dose (mg)</strong></label>
             <input type="number" class="form-control" id="editDoseMg" name="edit_dose_mg"
                    min="0.5" step="0.5" required placeholder="e.g. 40">
+          </div>
+
+          <div class="form-group" id="editDosingPatternGroup" style="display:none;">
+            <label><strong>Dosing Pattern</strong></label>
+            <select class="form-control" id="editDosingInterval" name="edit_dosing_interval">
+              <option value="1">Daily (every day)</option>
+              <option value="2">Alternate Day (every 2 days)</option>
+              <option value="3">Every 3 Days</option>
+              <option value="4">Every 4 Days</option>
+              <option value="5">Every 5 Days</option>
+              <option value="7">Weekly (every 7 days)</option>
+            </select>
+            <small class="text-muted">Off-pattern days will not count as missed doses for this client.</small>
+          </div>
+
+          <div class="form-group" id="editSkipDatesGroup" style="display:none;">
+            <label><strong>Extra Skip Dates</strong> <small class="text-muted">(optional, comma-separated YYYY-MM-DD)</small></label>
+            <input type="text" class="form-control" id="editSkipDates" name="edit_skip_dates"
+                   placeholder="2025-07-04, 2025-07-05">
           </div>
 
           <div class="form-group">
@@ -398,7 +434,7 @@ function addDoseRow() {
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="form-group">
             <label class="required">Drug</label>
             <input type="text" class="form-control drug-field" name="drug[]"
@@ -427,13 +463,33 @@ function addDoseRow() {
           </div>
         </div>
         ${isBupreno ? `
-        <div class="col-md-3">
+        <div class="col-md-2">
           <div class="form-group">
-            <label>Skip Dates <small class="text-muted">(comma-separated YYYY-MM-DD)</small></label>
+            <label>Dosing Pattern</label>
+            <select class="form-control interval-field" name="dosing_interval[]">
+              <option value="1">Daily (every day)</option>
+              <option value="2">Alternate Day (every 2 days)</option>
+              <option value="3">Every 3 Days</option>
+              <option value="4">Every 4 Days</option>
+              <option value="5">Every 5 Days</option>
+              <option value="7">Weekly (every 7 days)</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>Extra Skip Dates <small class="text-muted">(optional, comma-separated YYYY-MM-DD)</small></label>
             <input type="text" class="form-control" name="skip_dates[]"
                    placeholder="2025-07-04, 2025-07-05">
           </div>
-        </div>` : '<input type="hidden" name="skip_dates[]" value="">'}
+        </div>
+        <div class="col-12">
+          <p class="text-muted" style="font-size:.8rem; margin:-4px 0 8px;">
+            <i class="fa fa-info-circle"></i>
+            On a "Dosing Pattern" other than Daily, the off-pattern days will <strong>not</strong> count as missed doses for this client.
+            "Extra Skip Dates" lets you exclude specific individual dates (e.g. a holiday) on top of the chosen pattern.
+          </p>
+        </div>` : '<input type="hidden" class="interval-field" name="dosing_interval[]" value="1"><input type="hidden" name="skip_dates[]" value="">'}
       </div>
       <div class="form-group">
         <label class="required">Comments / Clinical Notes for this dose period</label>
@@ -697,6 +753,13 @@ function openEditModal(sc) {
     document.getElementById('editDoseMg').value       = sc.dose_mg;
     document.getElementById('editEndDate').value      = sc.end_date || '';
     document.getElementById('editComments').value     = '';  // always blank — clinician must enter reason
+
+    // Alternate dosing pattern / skip dates — only relevant for Buprenorphine
+    const editIsBupreno = String(sc.drugname || '').toLowerCase().includes('buprenorphine');
+    document.getElementById('editDosingPatternGroup').style.display = editIsBupreno ? '' : 'none';
+    document.getElementById('editSkipDatesGroup').style.display     = editIsBupreno ? '' : 'none';
+    document.getElementById('editDosingInterval').value = sc.dosing_interval_days || 1;
+    document.getElementById('editSkipDates').value      = sc.skip_dates || '';
 
     document.getElementById('editOverlapAlert').style.display = 'none';
     $('#editDoseModal').modal('show');

@@ -26,6 +26,14 @@ if ($action === 'edit_active') {
     $new_drug  = trim($_POST['edit_drugname']   ?? '');
     $comment   = trim($_POST['edit_comments']   ?? '');
 
+    // Alternate dosing pattern (only meaningful for Buprenorphine, but harmless
+    // to store for any drug — 1 = daily, N = every N days).
+    $new_interval = intval($_POST['edit_dosing_interval'] ?? 1);
+    if ($new_interval < 1)  $new_interval = 1;
+    if ($new_interval > 14) $new_interval = 14;
+    $new_skip_dates = trim($_POST['edit_skip_dates'] ?? '');
+    $new_skip_dates = $new_skip_dates !== '' ? $new_skip_dates : null;
+
     $errors = [];
 
     if ($edit_id <= 0)    $errors[] = "Invalid schedule ID.";
@@ -87,14 +95,19 @@ if ($action === 'edit_active') {
     try {
         $upd = $conn->prepare(
             "UPDATE dose_schedules
-             SET dose_mg    = ?,
-                 end_date   = ?,
-                 drugname   = ?,
-                 comments   = CONCAT(IFNULL(comments,''), ?),
-                 created_by = ?
+             SET dose_mg              = ?,
+                 end_date             = ?,
+                 drugname             = ?,
+                 dosing_interval_days = ?,
+                 skip_dates           = ?,
+                 comments             = CONCAT(IFNULL(comments,''), ?),
+                 created_by           = ?
              WHERE id = ? AND mat_id = ?"
         );
-        $upd->bind_param('dssssis', $new_dose, $new_end, $new_drug, $audit_note, $prescriber, $edit_id, $mat_id);
+        $upd->bind_param(
+            'dssisssis',
+            $new_dose, $new_end, $new_drug, $new_interval, $new_skip_dates, $audit_note, $prescriber, $edit_id, $mat_id
+        );
         $upd->execute();
         $upd->close();
 
@@ -127,6 +140,7 @@ $doses       = $_POST['dose_mg']    ?? [];
 $starts      = $_POST['start_date'] ?? [];
 $ends        = $_POST['end_date']   ?? [];
 $skips       = $_POST['skip_dates'] ?? [];
+$intervals   = $_POST['dosing_interval'] ?? [];
 $comments    = $_POST['comments']   ?? [];
 
 $errors = [];
@@ -154,6 +168,11 @@ for ($i = 0; $i < $count; $i++) {
     if (!$start)      $errors[] = "Period " . ($i+1) . ": Start date required.";
     if (!$comment)    $errors[] = "Period " . ($i+1) . ": Comments are required.";
     if ($end && $end < $start) $errors[] = "Period " . ($i+1) . ": End date cannot be before start date.";
+
+    $interval = isset($intervals[$i]) ? (int)$intervals[$i] : 1;
+    if ($interval < 1 || $interval > 14) {
+        $errors[] = "Period " . ($i+1) . ": Dosing pattern must be between 1 (daily) and 14 days.";
+    }
 }
 
 // ── Overlap check against EXISTING active schedules ───────────
@@ -206,19 +225,21 @@ $conn->begin_transaction();
 try {
     $ins = $conn->prepare(
         "INSERT INTO dose_schedules
-            (mat_id, drugname, dose_mg, start_date, end_date, skip_dates, comments, created_by, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active')"
+            (mat_id, drugname, dose_mg, start_date, end_date, skip_dates, dosing_interval_days, comments, created_by, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')"
     );
 
     for ($i = 0; $i < $count; $i++) {
-        $drug    = trim($drugs[$i] ?? $patient['drugname']);
-        $dose    = (float)$doses[$i];
-        $start   = $starts[$i];
-        $end     = !empty($ends[$i]) ? $ends[$i] : null;
-        $skip    = !empty($skips[$i]) ? $skips[$i] : null;
-        $comment = trim($comments[$i]);
+        $drug     = trim($drugs[$i] ?? $patient['drugname']);
+        $dose     = (float)$doses[$i];
+        $start    = $starts[$i];
+        $end      = !empty($ends[$i]) ? $ends[$i] : null;
+        $skip     = !empty($skips[$i]) ? $skips[$i] : null;
+        $interval = isset($intervals[$i]) ? (int)$intervals[$i] : 1;
+        if ($interval < 1) $interval = 1;
+        $comment  = trim($comments[$i]);
 
-        $ins->bind_param('ssdsssss', $mat_id, $drug, $dose, $start, $end, $skip, $comment, $prescriber);
+        $ins->bind_param('ssdsssiss', $mat_id, $drug, $dose, $start, $end, $skip, $interval, $comment, $prescriber);
         $ins->execute();
     }
     $ins->close();

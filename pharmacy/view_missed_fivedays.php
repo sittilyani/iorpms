@@ -1,5 +1,6 @@
 <?php
 include "../includes/config.php";
+require_once "../includes/dose_schedule_helpers.php";
 
 if (isset($_GET['mat_id'])) {
     $mat_id = $_GET['mat_id'];
@@ -79,36 +80,13 @@ function displayMissingDates($conn, $mat_id) {
         $today = new DateTime();
         $start_date = (clone $today)->modify('-4 days'); // today + previous 4 days
 
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($start_date, $interval, (clone $today)->modify('+1 day'));
-
-        $last_five_days = [];
-        foreach ($date_range as $date) {
-                $last_five_days[] = $date->format('Y-m-d');
-        }
-
-        // Fetch dispensed dates for last 5 days
-        $dispensed_query = "
-                SELECT DISTINCT DATE(dispDate) AS disp_date
-                FROM pharmacy
-                WHERE mat_id = ?
-                AND DATE(dispDate) BETWEEN ? AND ?
-                AND dosage > 0
-        ";
-
         $start_str = $start_date->format('Y-m-d');
         $end_str = $today->format('Y-m-d');
 
-        $stmt_dispensed = $conn->prepare($dispensed_query);
-        $stmt_dispensed->bind_param("sss", $mat_id, $start_str, $end_str);
-        $stmt_dispensed->execute();
-        $result_dispensed = $stmt_dispensed->get_result();
-
-        $dispensed_dates = [];
-        while ($row = $result_dispensed->fetch_assoc()) {
-                $dispensed_dates[] = $row['disp_date'];
-        }
-        $stmt_dispensed->close();
+        // Schedule-aware: classifies each day as dispensed / missed / an
+        // alternate-dosing off-pattern day (not counted as missed) / no
+        // active schedule that day.
+        $adherence = computeDoseAdherence($conn, $mat_id, $start_str, $end_str);
 
         // Display results in table format
         echo "<table style='margin-left:20px; width:90%; border-collapse: collapse; font-weight: normal;'>";
@@ -117,18 +95,32 @@ function displayMissingDates($conn, $mat_id) {
                         <th style='border:1px solid #ddd; padding:8px; font-weight: normal;'>Status</th>
                     </tr>";
 
-        foreach ($last_five_days as $date) {
+        foreach ($adherence['days'] as $date => $status) {
 
-                if (in_array($date, $dispensed_dates)) {
-                        echo "<tr>
-                                        <td style='border:1px solid #ddd; padding:8px;'>$date</td>
-                                        <td style='border:1px solid #ddd; padding:8px; color:green; font-weight: normal;'>Dispensed</td>
-                                    </tr>";
-                } else {
-                        echo "<tr style='background-color:#ffe6e6;'>
-                                        <td style='border:1px solid #ddd; padding:8px;'>$date</td>
-                                        <td style='border:1px solid #ddd; padding:8px; color:red;  font-weight: normal;'>Missed</td>
-                                    </tr>";
+                switch ($status) {
+                        case 'dispensed':
+                                echo "<tr>
+                                                <td style='border:1px solid #ddd; padding:8px;'>$date</td>
+                                                <td style='border:1px solid #ddd; padding:8px; color:green; font-weight: normal;'>Dispensed</td>
+                                            </tr>";
+                                break;
+                        case 'off_pattern':
+                                echo "<tr style='background-color:#e7f3ff;'>
+                                                <td style='border:1px solid #ddd; padding:8px;'>$date</td>
+                                                <td style='border:1px solid #ddd; padding:8px; color:#31708f; font-weight: normal;'>Not Due (Alternate Dosing)</td>
+                                            </tr>";
+                                break;
+                        case 'missed':
+                                echo "<tr style='background-color:#ffe6e6;'>
+                                                <td style='border:1px solid #ddd; padding:8px;'>$date</td>
+                                                <td style='border:1px solid #ddd; padding:8px; color:red;  font-weight: normal;'>Missed</td>
+                                            </tr>";
+                                break;
+                        default: // no_schedule
+                                echo "<tr>
+                                                <td style='border:1px solid #ddd; padding:8px;'>$date</td>
+                                                <td style='border:1px solid #ddd; padding:8px; color:#888; font-weight: normal;'>No Active Dose Schedule</td>
+                                            </tr>";
                 }
         }
 

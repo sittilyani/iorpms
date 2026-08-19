@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../includes/config.php';
+require_once '../includes/dose_schedule_helpers.php';
 
 $page_title = 'Routine Dispensing';
 
@@ -65,25 +66,19 @@ if ($userId) {
     // Calculate the end date (yesterday)
     $endDate = date('Y-m-d', strtotime('-1 day'));
 
-    // Construct the SQL query with a placeholder for the mat_id parameter
-    $query2 = "SELECT COUNT(*) AS num_rows
-                 FROM patients p
-                 JOIN pharmacy d ON p.mat_id = d.mat_id
-                 WHERE p.mat_id = ?
-                 AND d.dosage > 0
-                 AND d.visitDate BETWEEN ? AND ?"; // Add condition for visitDate between startDate and endDate
-
-    // Prepare the SQL statement
-    $stmt2 = $conn->prepare($query2);
-    $stmt2->bind_param('sss', $currentSettings['mat_id'], $startDate, $endDate); // Bind visitDate conditions
-    $stmt2->execute();
-    $stmt2->bind_result($num_rows);
-    $stmt2->fetch();
-    $stmt2->close();
-
-    // Calculate the missed days (new_num_rows)
-    $endDateObj = new DateTime($endDate);
-    $new_num_rows = $endDateObj->format('j') - $num_rows;
+    // Days-missed count, schedule-aware: a day only counts as "missed" if a
+    // dose was actually due that day per the client's dose schedule/pattern.
+    // Alternate-dosing (e.g. Buprenorphine every 2nd/3rd day) off-pattern
+    // days are excluded, so they no longer inflate the missed-days count.
+    if ($endDate >= $startDate) {
+        $adherence    = computeDoseAdherence($conn, $currentSettings['mat_id'], $startDate, $endDate);
+        $num_rows     = $adherence['dispensed_count'];
+        $new_num_rows = $adherence['missed_count'];
+    } else {
+        // First day of the month — nothing to evaluate yet.
+        $num_rows     = 0;
+        $new_num_rows = 0;
+    }
 
     // Fetch regimen data from medical_history_new
     $regimenQuery = "SELECT art_regimen, tb_regimen, tb_start_date, tb_end_date,
