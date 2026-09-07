@@ -69,6 +69,12 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
         $reasons = $_POST['reasons'];
         $current_status = $_POST['current_status'];
         $pharm_officer_name = $_POST['pharm_officer_name'];
+        // Reservoir the methadone was drawn from by syringe (no pump motor
+        // involved) — recorded on the pharmacy row exactly like the pump
+        // flow does, so reservoir-remaining accounting stays accurate.
+        $pump_device = (isset($_POST['pump_device']) && $_POST['pump_device'] !== '')
+            ? (int)$_POST['pump_device']
+            : null;
 
         // 1. Restrict submission if `current_status` is not "Active"
         if ($current_status !== "Active") {
@@ -119,10 +125,10 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
 
         // If no errors, proceed with insertion and update
         if (empty($routineErrors)) {
-            $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, pump_id)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param('ssssssssssssss', $visitDate, $mat_id, $mat_number, $clientName, $nickName, $age, $sex, $p_address, $cso, $drugname, $dosage, $reasons, $current_status, $pharm_officer_name);
+            $stmt->bind_param('ssssssssssssssi', $visitDate, $mat_id, $mat_number, $clientName, $nickName, $age, $sex, $p_address, $cso, $drugname, $dosage, $reasons, $current_status, $pharm_officer_name, $pump_device);
 
             if ($stmt->execute()) {
                 // Update stock quantity
@@ -138,18 +144,6 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
                 $updateStatusStmt->bind_param('s', $mat_id);
                 $updateStatusStmt->execute();
                 $updateStatusStmt->close();
-
-                // If methadone, trigger the pump via PHP before committing
-                if (strtolower($drugname) === 'methadone' && $dosage > 0) {
-                    $mls = isset($_POST['mls']) && is_numeric($_POST['mls']) && floatval($_POST['mls']) > 0
-                        ? floatval($_POST['mls'])
-                        : round($dosage / 10, 2); // fallback: 10mg/ml concentration
-                    $pumpUrl = "http://192.168.10.6/masterflexapi/pumpapi.php?action=raw&ml=" . urlencode($mls);
-                    $pumpResult = @file_get_contents($pumpUrl);
-                    if ($pumpResult === false) {
-                        throw new Exception("Pump dispensing failed: could not reach pump API for {$mls}ml. Please check the pump and retry.");
-                    }
-                }
 
                 $conn->commit();
                 $routineDispenseSuccess = true;

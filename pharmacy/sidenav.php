@@ -96,7 +96,7 @@ $full_name = getUserFullName();
         margin-left: 300px;
         padding: 30px;
         width: calc(100% - 250px);
-        min-height: 100vh;
+        min-height: auto;
     }
 
     .content-header {

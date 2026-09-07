@@ -532,6 +532,25 @@ if ($statusResult->num_rows > 0) {
     $statusOptions = "<option value=''>No status found</option>";
 }
 
+// Reservoir devices for methadone dispensed manually (by syringe) without the
+// pump motor. A syringe draw still comes out of a physical pump reservoir, so
+// we let the dispenser pick which one — dispensingData_process.php then
+// records it on the pharmacy row the same way the pump flow does, keeping
+// reservoir-remaining accounting accurate regardless of pump vs. syringe.
+$devices = [];
+$stmt_devices = $conn->prepare("SELECT * FROM pump_devices");
+if ($stmt_devices !== false) {
+    $stmt_devices->execute();
+    $devices = $stmt_devices->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt_devices->close();
+}
+$savedPumpId = null;
+if (count($devices) === 1) {
+    $savedPumpId = $devices[0]['id'];
+} elseif (!empty($_SESSION['pump_device_id'])) {
+    $savedPumpId = (int)$_SESSION['pump_device_id'];
+}
+
 if (isset($_SESSION['dispensing_errors'])) {
     $errorMessages = $_SESSION['dispensing_errors'];
     unset($_SESSION['dispensing_errors']);
@@ -786,12 +805,12 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <p><strong>✓</strong> <?php echo htmlspecialchars($msg); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0 text-muted" style="font-size:.85rem;">
-                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_countdown">2</strong>s…
+                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_countdown">3</strong>s…
                 </p>
             </div>
             <script>
             (function() {
-                var secs = 2;
+                var secs = 3;
                 var el = document.getElementById('nopump_countdown');
                 var t = setInterval(function() {
                     secs--;
@@ -811,12 +830,12 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <p><?php echo htmlspecialchars($error); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0" style="font-size:.85rem;">
-                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_err_countdown">2</strong>s…
+                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_err_countdown">3</strong>s…
                 </p>
             </div>
             <script>
             (function() {
-                var secs = 2;
+                var secs = 3;
                 var el = document.getElementById('nopump_err_countdown');
                 var t = setInterval(function() {
                     secs--;
@@ -938,6 +957,25 @@ if (isset($_SESSION['dispensing_successes'])) {
                 <div class="form-group2">
                     <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars($mlsValue); ?>">
                 </div>
+
+                <?php if (isset($currentSettings['drugname']) && strtolower($currentSettings['drugname']) === 'methadone'): ?>
+                <div class="form-group">
+                    <label for="pump_device">Reservoir Used (syringe draw — for stock tracking)</label>
+                    <select id="pump_device" name="pump_device" required>
+                        <?php if (!$savedPumpId): ?>
+                            <option value="" disabled hidden selected>select reservoir</option>
+                        <?php endif; ?>
+                        <?php foreach ($devices as $row): ?>
+                            <option value="<?php echo $row['id'] ?>"
+                                <?php echo ($row['id'] == $savedPumpId) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($row['label']) ?> (<?php echo htmlspecialchars($row['port']) ?>)
+                                <?php echo ($row['id'] == $savedPumpId) ? '✓' : ''; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <?php endif; ?>
+
                 <input type="hidden" name="daysToNextAppointment" value="<?php echo $daysToAppointment; ?>">
                 <input type="hidden" name="isMissed" value="<?php echo $isMissed ? 'true' : 'false'; ?>">
                 <input type="hidden" name="appointmentType" value="<?php echo htmlspecialchars($appointmentInfo['appointmentType']); ?>">

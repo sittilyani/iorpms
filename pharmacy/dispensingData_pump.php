@@ -749,12 +749,12 @@ h2{
                     <p><strong>✓</strong> <?php echo htmlspecialchars($msg); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0 text-muted" style="font-size:.85rem;">
-                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpCountdown">2</strong>s…
+                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpCountdown">3</strong>s…
                 </p>
             </div>
             <script>
             (function() {
-                var secs = 2;
+                var secs = 3;
                 var el = document.getElementById('pumpCountdown');
                 var t = setInterval(function() {
                     secs--;
@@ -774,12 +774,12 @@ h2{
                     <p><?php echo htmlspecialchars($error); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0" style="font-size:.85rem;">
-                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpErrCountdown">2</strong>s…
+                    <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpErrCountdown">3</strong>s…
                 </p>
             </div>
             <script>
             (function() {
-                var secs = 2;
+                var secs = 3;
                 var el = document.getElementById('pumpErrCountdown');
                 var t = setInterval(function() {
                     secs--;
