@@ -287,7 +287,7 @@ $full_name = getUserFullName();
 
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="home-link">
-        <i class="fa fa-home"></i><span data-i18n="dashboard">Home</span></a>
+        <i class="fa fa-home"></i><span data-i18n="nav_home">Home</span></a>
     <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i><span data-i18n="dashboard">Dashboard</span></a>
     <a href="../clinician/update_dose.php" target="contentFrame" class="nav-link" style="background: #ffd700; color: #000000; margin-top: 10px;">
@@ -295,23 +295,23 @@ $full_name = getUserFullName();
     <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i><span data-i18n="dispense_with_pump">Dispense with Pump</span></a>
     <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-hourglass-half"></i><span data-i18n="pump_reservoir">Pump Reservoir</span></a>
+        <i class="fa fa-hourglass-half"></i><span data-i18n="pump_reservoir">Pump Priming</span></a>
     <a href="../pharmacy/calibration.php" target="contentFrame" class="nav-link" style="background: #2C3162; color: #ffffff; margin-top: 10px;">
-        <i class="fa fa-cog"></i><span data-i18n="calibration_factor">Calibrate Pump</span></a>
+        <i class="fa fa-cog"></i><span data-i18n="calibrate_pump">Calibrate Pump</span></a>
     <a href="../pharmacy/calibration_table.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-bar-chart"></i><span data-i18n="reports">Calibration History</span></a>
+        <i class="fa fa-bar-chart"></i><span data-i18n="calibration_history">Calibration History</span></a>
     <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-adjust"></i><span data-i18n="prescriptions">Prescribe Other Drugs</span></a>
+        <i class="fa fa-adjust"></i><span data-i18n="prescribe_other_drugs">Prescribe Other Drugs</span></a>
     <a href="../pharmacy/prisons_module.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-anchor"></i><span data-i18n="dispensing">Prisons Dispensing</span></a>
+        <i class="fa fa-anchor"></i><span data-i18n="prisons_dispensing">Bulk Dispensing</span></a>
     <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-anchor"></i><span>Retro Dispensing</span></a>
+        <i class="fa fa-anchor"></i><span data-i18n="retro_dispensing">Retro Dispensing</span></a>
     <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link" style="background: #66ccff; color: #000000; margin-top: 10px;">
         <i class="fa fa-ban"></i><span data-i18n="dispense_without_pump">Dispense without Pump</span></a>
     <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link" style="background: #ccccff; color: #000000; margin-top: 10px;">
-        <i class="fa fa-anchor"></i><span data-i18n="delete">Delete Dispensed Doses</span></a>
+        <i class="fa fa-anchor"></i><span data-i18n="delete_dispensed_doses">Delete Dispensed Doses</span></a>
     <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link" style="background: #b1f0c2; color: #000000; margin-top: 10px;">
-        <i class="fa fa-anchor"></i><span data-i18n="stock">Daily Stores Movements</span></a>
+        <i class="fa fa-anchor"></i><span data-i18n="daily_stores_movements">Daily Stores Movements</span></a>
     <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
         <i class="fa fa-balance-scale"></i><span data-i18n="stock_in">Add Stocks</span></a>
     <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
@@ -319,17 +319,17 @@ $full_name = getUserFullName();
     <a href="../pharmacy/view_other_drugs.php" target="contentFrame" class="nav-link">
         <i class="fa fa-binoculars"></i><span data-i18n="drug_list">View Items / Drugs List</span></a>
     <a href="../pharmacy/dispensed_drugs.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-briefcase"></i><span data-i18n="dispensed_today">View Drugs Dispensed</span></a>
+        <i class="fa fa-briefcase"></i><span data-i18n="view_drugs_dispensed">View Drugs Dispensed</span></a>
     <a href="../pharmacy/stock_taking.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-calculator"></i><span data-i18n="stock">Stock Taking</span></a>
+        <i class="fa fa-calculator"></i><span data-i18n="stock_taking">Stock Taking</span></a>
     <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-cc"></i><span data-i18n="stock">Stock Cards</span></a>
+        <i class="fa fa-cc"></i><span data-i18n="stock_cards">Stock Cards</span></a>
     <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
         <i class="fa fa-stethoscope"></i><span data-i18n="view_referrals">View Referrals</span></a>
     <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-check-circle"></i><span data-i18n="prescriptions">View Prescriptions</span></a>
+        <i class="fa fa-check-circle"></i><span data-i18n="view_prescriptions">View Prescriptions</span></a>
     <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background: #9EFF9E; color: #000000; margin-top: 10px;">
-        <i class="fa fa-stethoscope"></i><span data-i18n="appointments">Update Appointments</span></a>
+        <i class="fa fa-stethoscope"></i><span data-i18n="update_appointments">Update Appointments</span></a>
 </div>
 
 <div class="main">
