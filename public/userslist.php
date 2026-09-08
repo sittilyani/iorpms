@@ -18,6 +18,10 @@ include '../includes/config.php';
 $sql = "SELECT * FROM tblusers";
 $result = $conn->query($sql);
 $users = $result->fetch_all(MYSQLI_ASSOC);
+
+// Demo/evaluation accounts get full read access to explore the system, but
+// cannot delete users or reset another user's password.
+$isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
 ?>
 
 <!DOCTYPE html>
@@ -290,15 +294,19 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
                                 <button class="btn btn-update" onclick="location.href='../public/update_user.php?id=<?php echo $user['user_id']; ?>'">
                                     <i class="fas fa-edit"></i> Update
                                 </button>
-                                <button class="btn btn-delete" onclick="if(confirm('Are you sure you want to delete this user?')) location.href='../public/delete_user.php?id=<?php echo $user['user_id']; ?>'">
+                                <?php if (!$isDemoUser): ?>
+                                <button class="btn btn-delete" onclick="if(confirm('Are you sure you want to delete this user?')) location.href='../processors/delete_user.php?id=<?php echo $user['user_id']; ?>'">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
+                                <?php endif; ?>
                                 <button class="btn btn-view" onclick="location.href='../public/view_user.php?user_id=<?php echo $user['user_id']; ?>'">
                                     <i class="fas fa-eye"></i> View
                                 </button>
+                                <?php if (!$isDemoUser): ?>
                                 <button class="btn btn-warning" onclick="if(confirm('Are you sure you want to reset the password for this user to default (123456)?')) location.href='../public/reset_user_password.php?id=<?php echo $user['user_id']; ?>'">
                                     <i class="fas fa-sync-alt"></i> Reset
                                 </button>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>

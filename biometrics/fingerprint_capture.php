@@ -13,8 +13,9 @@ $fingerprintId = isset($_GET['id']) ? intval($_GET['id']) : null;
 $action = isset($_GET['action']) ? $_GET['action'] : 'capture';
 $performedBy = $_SESSION['username'];
 
-// Fetch latest scanner type for default persistence
-$defaultScanner = 'zkteco';
+// Default to SecuGen (Hamster Plus) unless this workstation has already
+// registered a fingerprint with a different scanner type.
+$defaultScanner = 'secugen';
 $latestScannerQ = $conn->query("SELECT scanner_type FROM fingerprints ORDER BY capture_date DESC LIMIT 1");
 if ($latestScannerQ && $row = $latestScannerQ->fetch_assoc()) {
     if (!empty($row['scanner_type'])) {
@@ -838,38 +839,27 @@ function formatFileSize($bytes) {
             return false;
         }
 
-        // Auto-detect SecuGen port across common standard ports
+        // Ask the PHP bridge which port the SecuGen WebAPI is actually on.
+        // (Never probe the raw WebAPI directly here: it silently drops
+        // requests to routes it doesn't recognize like /health instead of
+        // responding with 404, so an unguarded fetch() would hang forever.)
         async function detectSecugenPort() {
             const userPort = document.getElementById('secugen-port') ? document.getElementById('secugen-port').value : null;
-            const ports = userPort ? [parseInt(userPort), 8443, 8000, 8080, 8001, 3002] : [8443, 8000, 8080, 8001, 3002];
-            const protocols = ['https', 'http'];
-
-            for (let port of ports) {
-                for (let proto of protocols) {
-                    try {
-                        // Test health endpoint or WebAPI SGIFPCapture
-                        const healthUrl = `${proto}://localhost:${port}/health`;
-                        const resp = await fetch(healthUrl, { mode: 'cors' });
-                        if (resp.ok) {
-                            activeSecugenPort = port;
-                            activeSecugenProtocol = proto;
-                            if (document.getElementById('secugen-port')) document.getElementById('secugen-port').value = port;
-                            return true;
-                        }
-                    } catch(e) {}
-
-                    try {
-                        const testUrl = `${proto}://localhost:${port}/SGIFPCapture?Timeout=500&Quality=50&TemplateFormat=ANSI`;
-                        const resp = await fetch(testUrl, { method: 'POST', mode: 'cors' });
-                        if (resp.ok || resp.status === 400 || resp.status === 200) {
-                            activeSecugenPort = port;
-                            activeSecugenProtocol = proto;
-                            if (document.getElementById('secugen-port')) document.getElementById('secugen-port').value = port;
-                            return true;
-                        }
-                    } catch(e) {}
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 8000);
+                const resp = await fetch(`secugen_api.php?action=health${userPort ? '&port=' + encodeURIComponent(userPort) : ''}`, { signal: controller.signal });
+                clearTimeout(timer);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.success) {
+                        activeSecugenPort = data.port || userPort || 8000;
+                        activeSecugenProtocol = data.protocol || 'http';
+                        if (document.getElementById('secugen-port')) document.getElementById('secugen-port').value = activeSecugenPort;
+                        return true;
+                    }
                 }
-            }
+            } catch (e) {}
             return false;
         }
 

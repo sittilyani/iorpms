@@ -10,6 +10,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Demo/evaluation accounts have full read access but cannot reset passwords.
+if (strtolower($_SESSION['userrole'] ?? '') === 'demo') {
+    header("Location: userslist.php?error=" . urlencode("Demo accounts cannot reset user passwords."));
+    exit;
+}
+
 /*// Check for the 'id' parameter in the URL
 if (!isset($_GET['user_id']) || empty($_GET['user_id'])) {
     // If no user ID is provided, redirect back

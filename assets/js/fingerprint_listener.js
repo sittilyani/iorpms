@@ -10,42 +10,61 @@ let fingerServerType = 'zkteco';
 let isScanningActive = false;
 let scanningLoopTimeout = null;
 
+// Path to the SecuGen PHP bridge, from either a biometrics/ page or a page
+// one level up (dispensing.php, dispensingData.php, etc.)
+function getSecugenApiPath() {
+    return window.location.pathname.indexOf('/biometrics/') !== -1
+        ? 'secugen_api.php'
+        : '../biometrics/secugen_api.php';
+}
+
+// fetch() has no built-in timeout, and the raw SecuGen WebAPI silently drops
+// requests to routes it doesn't recognize (e.g. /health) instead of
+// responding with 404 - that leaves an unbounded fetch() hanging forever.
+// Every direct, unguarded probe below is wrapped with this so detection can
+// never freeze the page.
+function fetchWithTimeout(url, options = {}, timeoutMs = 3000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 // Detect active fingerprint server (ZKTeco or SecuGen)
 let isAutoStarting = false;
 async function detectFingerprintServerPort() {
-    // 1. Saved preference port
-    const savedSecugenPort = localStorage.getItem('preferred_secugen_port');
-    const portsToCheck = savedSecugenPort ? 
-        [parseInt(savedSecugenPort), 8443, 8000, 3000, 3001, 8080, 8001] : 
-        [8443, 8000, 3000, 3001, 8080, 8001];
-
-    for (let port of portsToCheck) {
-        for (let proto of ['https', 'http']) {
-            try {
-                let resp = await fetch(`${proto}://localhost:${port}/health`);
-                if (resp.ok) {
-                    fingerServerPort = port;
-                    fingerServerProto = proto;
-                    fingerServerType = (port === 8443 || port === 8000) ? 'secugen' : 'zkteco';
-                    console.log(`Fingerprint server detected on port ${port} (${proto.toUpperCase()})`);
-                    return port;
-                }
-            } catch(e) {}
-
-            try {
-                let testUrl = `${proto}://localhost:${port}/SGIFPCapture?Timeout=500&Quality=50&TemplateFormat=ANSI`;
-                let resp = await fetch(testUrl, { method: 'POST', mode: 'cors' });
-                if (resp.ok || resp.status === 200 || resp.status === 400) {
-                    fingerServerPort = port;
-                    fingerServerProto = proto;
-                    fingerServerType = 'secugen';
-                    console.log(`SecuGen WebAPI detected on port ${port} (${proto.toUpperCase()})`);
-                    return port;
-                }
-            } catch(e) {}
+    // SecuGen: always go through the PHP bridge (secugen_api.php), never the
+    // raw WebAPI directly. The bridge already knows which port is open, adds
+    // the Origin header the WebAPI requires, and answers with a fast TCP
+    // check rather than physically engaging the sensor just to say "online".
+    try {
+        const resp = await fetchWithTimeout(`${getSecugenApiPath()}?action=health`, {}, 6000);
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.success) {
+                fingerServerType = 'secugen';
+                fingerServerPort = data.port || 8000;
+                fingerServerProto = data.protocol || 'http';
+                console.log(`SecuGen WebAPI detected via PHP bridge on port ${fingerServerPort}`);
+                return fingerServerPort;
+            }
         }
+    } catch (e) {}
+
+    // ZKTeco: talk to its local REST server directly (it responds to /health
+    // quickly and correctly, unlike the SecuGen WebAPI).
+    for (let port of [3000, 3001]) {
+        try {
+            let resp = await fetchWithTimeout(`http://localhost:${port}/health`, {}, 1500);
+            if (resp.ok) {
+                fingerServerPort = port;
+                fingerServerProto = 'http';
+                fingerServerType = 'zkteco';
+                console.log(`ZKTeco server detected on port ${port}`);
+                return port;
+            }
+        } catch (e) {}
     }
-    
+
     // Server is offline, trigger auto-start
     if (!isAutoStarting) {
         isAutoStarting = true;
@@ -54,7 +73,7 @@ async function detectFingerprintServerPort() {
         if (window.location.pathname.indexOf('/biometrics/') !== -1) {
             autoStartPath = 'auto_start_server.php';
         }
-        
+
         try {
             fetch(autoStartPath).then(() => {
                 setTimeout(() => { isAutoStarting = false; }, 5000);
@@ -63,7 +82,7 @@ async function detectFingerprintServerPort() {
             isAutoStarting = false;
         }
     }
-    
+
     return fingerServerPort;
 }
 
@@ -150,16 +169,15 @@ async function startFingerprintIdentifyLoop(isPumpMode) {
     }
     
     updateScannerUI("Fingerprint Scanner: Ready (Place client's finger to identify)", "ready");
-    
+
     async function fetchCapturedTemplate() {
-        let secugenApiPath = '../biometrics/secugen_api.php';
-        if (window.location.pathname.indexOf('/biometrics/') !== -1) {
-            secugenApiPath = 'secugen_api.php';
-        }
-        
         if (fingerServerType === 'secugen') {
+            // Some SecuGen devices/drivers take ~10s per capture attempt even
+            // when no finger is present, so give this a generous timeout -
+            // but always through the PHP bridge, never a raw /capture route
+            // on the WebAPI (it doesn't have one, and would hang forever).
             try {
-                let resp = await fetch(`${secugenApiPath}?action=capture`);
+                let resp = await fetchWithTimeout(`${getSecugenApiPath()}?action=capture`, {}, 25000);
                 if (resp.ok) {
                     let data = await resp.json();
                     if (data.success && data.fingerprint_template) {
@@ -167,9 +185,10 @@ async function startFingerprintIdentifyLoop(isPumpMode) {
                     }
                 }
             } catch(e) {}
+            return null;
         }
         try {
-            let resp = await fetch(`${fingerServerProto}://localhost:${fingerServerPort}/capture`);
+            let resp = await fetchWithTimeout(`${fingerServerProto}://localhost:${fingerServerPort}/capture`, {}, 5000);
             if (resp.ok) {
                 let data = await resp.json();
                 if (data.success && data.fingerprint_template) {
@@ -182,36 +201,31 @@ async function startFingerprintIdentifyLoop(isPumpMode) {
 
     async function scan() {
         if (!isScanningActive) return;
-        
+
         try {
             let capturedTemplate = await fetchCapturedTemplate();
             if (capturedTemplate) {
                 updateScannerUI("Fingerprint scanned. Identifying...", "scanning");
-                
-                let secugenApiPath = '../biometrics/secugen_api.php';
-                if (window.location.pathname.indexOf('/biometrics/') !== -1) {
-                    secugenApiPath = 'secugen_api.php';
-                }
 
                 let idResp;
                 if (fingerServerType === 'secugen') {
-                    idResp = await fetch(`${secugenApiPath}?action=identify`, {
+                    idResp = await fetchWithTimeout(`${getSecugenApiPath()}?action=identify`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             captured_template: capturedTemplate,
                             candidates: candidates
                         })
-                    });
+                    }, 8000);
                 } else {
-                    idResp = await fetch(`http://localhost:${fingerServerPort}/identify`, {
+                    idResp = await fetchWithTimeout(`http://localhost:${fingerServerPort}/identify`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             captured_template: capturedTemplate,
                             candidates: candidates
                         })
-                    });
+                    }, 8000);
                 }
                 
                 if (idResp && idResp.ok) {
@@ -252,16 +266,15 @@ async function startFingerprintVerifyLoop(registeredTemplateB64) {
     
     await detectFingerprintServerPort();
     updateScannerUI("Fingerprint Scanner: Ready (Scan finger again to confirm dispensing)", "ready");
-    
-    async function fetchCapturedTemplate() {
-        let secugenApiPath = '../biometrics/secugen_api.php';
-        if (window.location.pathname.indexOf('/biometrics/') !== -1) {
-            secugenApiPath = 'secugen_api.php';
-        }
 
+    async function fetchCapturedTemplate() {
         if (fingerServerType === 'secugen') {
+            // Some SecuGen devices/drivers take ~10s per capture attempt even
+            // when no finger is present, so give this a generous timeout -
+            // but always through the PHP bridge, never a raw /capture route
+            // on the WebAPI (it doesn't have one, and would hang forever).
             try {
-                let resp = await fetch(`${secugenApiPath}?action=capture`);
+                let resp = await fetchWithTimeout(`${getSecugenApiPath()}?action=capture`, {}, 25000);
                 if (resp.ok) {
                     let data = await resp.json();
                     if (data.success && data.fingerprint_template) {
@@ -269,9 +282,10 @@ async function startFingerprintVerifyLoop(registeredTemplateB64) {
                     }
                 }
             } catch(e) {}
+            return null;
         }
         try {
-            let resp = await fetch(`${fingerServerProto}://localhost:${fingerServerPort}/capture`);
+            let resp = await fetchWithTimeout(`${fingerServerProto}://localhost:${fingerServerPort}/capture`, {}, 5000);
             if (resp.ok) {
                 let data = await resp.json();
                 if (data.success && data.fingerprint_template) {
@@ -284,36 +298,31 @@ async function startFingerprintVerifyLoop(registeredTemplateB64) {
 
     async function scan() {
         if (!isScanningActive) return;
-        
+
         try {
             let capturedTemplate = await fetchCapturedTemplate();
             if (capturedTemplate) {
                 updateScannerUI("Fingerprint scanned. Verifying...", "scanning");
-                
-                let secugenApiPath = '../biometrics/secugen_api.php';
-                if (window.location.pathname.indexOf('/biometrics/') !== -1) {
-                    secugenApiPath = 'secugen_api.php';
-                }
 
                 let matchResp;
                 if (fingerServerType === 'secugen') {
-                    matchResp = await fetch(`${secugenApiPath}?action=match`, {
+                    matchResp = await fetchWithTimeout(`${getSecugenApiPath()}?action=match`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             template1: capturedTemplate,
                             template2: registeredTemplateB64
                         })
-                    });
+                    }, 8000);
                 } else {
-                    matchResp = await fetch(`http://localhost:${fingerServerPort}/match`, {
+                    matchResp = await fetchWithTimeout(`http://localhost:${fingerServerPort}/match`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             template1: capturedTemplate,
                             template2: registeredTemplateB64
                         })
-                    });
+                    }, 8000);
                 }
                 
                 if (matchResp && matchResp.ok) {

@@ -1,5 +1,17 @@
 <?php
+session_start();
 include '../includes/config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../public/login.php");
+    exit();
+}
+
+// Demo/evaluation accounts have full read access but cannot delete users.
+if (strtolower($_SESSION['userrole'] ?? '') === 'demo') {
+    header("Location: ../public/userslist.php?error=" . urlencode("Demo accounts cannot delete users."));
+    exit();
+}
 
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
@@ -8,13 +20,12 @@ if (isset($_GET['id'])) {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
+    $stmt->close();
 
-    // Redirect to display_users.php after deletion
-    header("Location: ../views/view_user.php");
+    header("Location: ../public/userslist.php?success=" . urlencode("User deleted successfully."));
     exit();
 } else {
-    // Redirect to display_users.php if user_id is not provided
-    header("Location: errorpage.php");
+    header("Location: ../public/userslist.php?error=" . urlencode("User ID not specified."));
     exit();
 }
 ?>

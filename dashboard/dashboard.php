@@ -33,6 +33,29 @@ $rolePermissions = [
         ],
         'sidebars' => ['Patients Summary', 'Daily Consumption Summary', 'Stocks Summary', 'Monthly Consumption Summary'],
     ],
+    // Demo/evaluation accounts get the same full dashboard access as admin so
+    // they can explore every module. Destructive user-management actions
+    // (delete user, reset user password) are blocked at the point of action
+    // in admin/sidenav.php's sub-pages, not by hiding this card.
+    'demo' => [
+        'cards' => [
+            'Administrator'         => '../admin/sidenav.php',
+            'BackUp and Refresh'        => '../backup/sidenav.php',
+            'Patient Management'        => '../patients/sidenav.php',
+            'Dispensing Pharmacy'       => '../pharmacy/sidenav.php',
+            'Nursing/Clinician'                 => '../clinician/sidenav.php',
+            'Psychosocial support'      => '../psycho-social/sidenav.php',
+            'Laboratory and Diagnostics'=> '../laboratory/sidenav.php',
+            'View Referrals'            => '../referrals/sidenav.php',
+            'Reports Management'        => '../reports/sidenav.php',
+            'Biometrics'                => '../biometrics/sidenav.php',
+            'Profile'                   => '../profile/sidenav.php',
+            'Appointments'              => '../appointments/sidenav.php',
+            'Pharmacovigilance'         => '../pharmacovigilance/sidenav.php',
+            'Health Records'            => '../records/sidenav.php',
+        ],
+        'sidebars' => ['Patients Summary', 'Daily Consumption Summary', 'Stocks Summary', 'Monthly Consumption Summary'],
+    ],
     'pharmacist' => [
         'cards' => [
             'BackUp and Refresh'        => '../backup/sidenav.php',

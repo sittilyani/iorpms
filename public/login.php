@@ -224,6 +224,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <br><br>
                         <button type="submit" class="btn-submit"><?php echo $text['login']; ?></button>
                     </form>
+                    <?php if (APP_ENV === 'online'): ?>
+                    <p style="text-align:center;margin-top:14px;">
+                        <a href="forgot_password.php" style="color:#2D008A;font-weight:bold;text-decoration:none;">Forgot Password?</a>
+                    </p>
+                    <?php endif; ?>
             </div>
             <div class="container-item">
                 <table style="margin: 20px auto; border-collapse: collapse; background: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">

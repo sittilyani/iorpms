@@ -7,6 +7,7 @@
  * certificate errors in the browser.
  */
 session_start();
+set_time_limit(30); // A real capture round-trip can take up to ~20s on some scanners/drivers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -22,15 +23,41 @@ $port = isset($_GET['port']) ? intval($_GET['port']) : (isset($_POST['port']) ? 
 $possible_ports = array_unique([$port, 8443, 8000, 8080, 8001, 3002]);
 
 /**
- * Send HTTP/HTTPS cURL request to local SecuGen WebAPI service
+ * Cheap TCP connect check so we don't waste seconds sending a real
+ * SGIFPCapture request (which now engages the sensor) to ports nothing is
+ * listening on.
  */
-function callSecuGenWebAPI($endpoint, $params = [], $targetPort = 8443, $method = 'POST', $timeout = 12) {
+function isPortOpen($port, $timeoutSec = 0.3) {
+    $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, $timeoutSec);
+    if ($fp) {
+        fclose($fp);
+        return true;
+    }
+    return false;
+}
+
+// SecuGen WebAPI rejects requests with ErrorCode 10004 ("WebAPI may not have
+// received the origin header from the browser") unless an Origin header is
+// present, but this is a server-side PHP proxy so browsers don't send one.
+$webApiOrigin = (($_SERVER['HTTPS'] ?? '') === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+
+/**
+ * Send HTTP/HTTPS cURL request to local SecuGen WebAPI service.
+ *
+ * $paramsInBody: SGIFPCapture's params are small scalars and work fine as a
+ * URL query string, but SGIMatchScore's Template1/Template2 are large
+ * base64 blobs - passed as query-string params the WebAPI fails to parse
+ * them (returns a generic ErrorCode 100) even though the same values work
+ * when sent as a POST body. Pass true for endpoints that take template data.
+ */
+function callSecuGenWebAPI($endpoint, $params = [], $targetPort = 8443, $method = 'POST', $timeout = 12, $paramsInBody = false) {
+    global $webApiOrigin;
     $protocols = ['https', 'http'];
-    
+
     foreach ($protocols as $proto) {
-        $queryString = !empty($params) ? '?' . http_build_query($params) : '';
+        $queryString = (!empty($params) && !$paramsInBody) ? '?' . http_build_query($params) : '';
         $url = "{$proto}://127.0.0.1:{$targetPort}/{$endpoint}{$queryString}";
-        
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -38,10 +65,11 @@ function callSecuGenWebAPI($endpoint, $params = [], $targetPort = 8443, $method 
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Origin: {$webApiOrigin}"]);
+
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $paramsInBody ? http_build_query($params) : '');
         }
 
         $response = curl_exec($ch);
@@ -60,49 +88,93 @@ function callSecuGenWebAPI($endpoint, $params = [], $targetPort = 8443, $method 
     return ['success' => false, 'error' => $curlErr ?: "HTTP Code $httpCode"];
 }
 
+// Minimum SGIMatchScore (0-199) accepted as a genuine match. This is a
+// commonly used default for 1:1/1:N verification with SecuGen readers.
+define('SECUGEN_MATCH_THRESHOLD', 40);
+
 /**
- * Ensure SecuGenWebAPI.exe process is running on Windows
+ * Compare two fingerprint templates using the WebAPI's own minutiae-based
+ * matcher (SGIMatchScore), not a naive byte comparison - two captures of the
+ * same finger are never byte-identical, so byte comparison always fails.
+ * Returns the 0-199 matching score, or null if the WebAPI could not be
+ * reached or returned an error.
+ */
+function secuGenMatchScore($tmpl1B64, $tmpl2B64, $possible_ports) {
+    if ($tmpl1B64 === $tmpl2B64) {
+        return 199; // identical template, no need to ask the WebAPI
+    }
+
+    foreach ($possible_ports as $p) {
+        $res = callSecuGenWebAPI('SGIMatchScore', [
+            'Template1' => $tmpl1B64,
+            'Template2' => $tmpl2B64,
+            // This device/driver always outputs ISO-format templates
+            // regardless of what TemplateFormat is requested at capture
+            // time (see the 'capture' action below) - telling SGIMatchScore
+            // it's ANSI makes it reject a valid, self-matching template with
+            // ErrorCode 103 "Invalid template".
+            'TemplateFormat' => 'ISO'
+        ], $p, 'POST', 10, true);
+
+        if ($res['success']) {
+            $data = $res['data'];
+            if (($data['ErrorCode'] ?? -1) === 0) {
+                return (int)($data['MatchingScore'] ?? 0);
+            }
+            return null; // WebAPI responded but rejected the templates
+        }
+    }
+
+    return null; // could not reach the WebAPI at all
+}
+
+/**
+ * Ensure the SecuGen WebAPI client service (SgiBioSrv / sgibiosrv.exe) is
+ * running on Windows. The installer names/locations vary by SDK version, so
+ * check the known candidates.
  */
 function ensureSecuGenServiceRunning() {
-    $secugenExe = 'C:\\Program Files\\SecuGen\\SecuGen WebAPI\\SecuGenWebAPI.exe';
-    if (file_exists($secugenExe) && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        // Check if process is already running
-        $output = @shell_exec('tasklist /FI "IMAGENAME eq SecuGenWebAPI.exe" 2>nul');
-        if (strpos($output, 'SecuGenWebAPI.exe') === false) {
-            // Launch SecuGenWebAPI in background
+    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        return;
+    }
+
+    $candidates = [
+        'sgibiosrv.exe' => 'C:\\Program Files\\SecuGen\\SgiBioSrv\\sgibiosrv.exe',
+        'SecuGenWebAPI.exe' => 'C:\\Program Files\\SecuGen\\SecuGen WebAPI\\SecuGenWebAPI.exe',
+    ];
+
+    foreach ($candidates as $processName => $secugenExe) {
+        if (!file_exists($secugenExe)) {
+            continue;
+        }
+
+        $output = @shell_exec('tasklist /FI "IMAGENAME eq ' . $processName . '" 2>nul');
+        if (strpos($output, $processName) === false) {
+            // Launch the WebAPI client in background
             @pclose(@popen('start /B "" "' . $secugenExe . '"', "r"));
             usleep(1500000); // 1.5s delay for service initialization
         }
+        return; // Found and handled a valid install; no need to check others
     }
 }
 
 // Ensure background service is running
 ensureSecuGenServiceRunning();
 
+// Only probe ports something is actually listening on
+$possible_ports = array_values(array_filter($possible_ports, 'isPortOpen'));
+
 // Action Handlers
 switch ($action) {
     case 'health':
     case 'test':
-        $connectedPort = null;
-        $connectedProto = null;
-        $webData = null;
-
-        foreach ($possible_ports as $p) {
-            $res = callSecuGenWebAPI('SGIFPCapture', [
-                'Timeout' => '500',
-                'Quality' => '50',
-                'TemplateFormat' => 'ANSI'
-            ], $p, 'POST', 2);
-
-            if ($res['success']) {
-                $connectedPort = $res['port'];
-                $connectedProto = $res['proto'];
-                $webData = $res['data'];
-                break;
-            }
-        }
-
-        if ($connectedPort) {
+        // A real SGIFPCapture round-trip physically engages the sensor and
+        // can take 10+ seconds on some devices/drivers, which is far too
+        // slow for a connectivity check. A TCP connect is enough to confirm
+        // the WebAPI client service is up and listening.
+        if (!empty($possible_ports)) {
+            $connectedPort = $possible_ports[0];
+            $connectedProto = ($connectedPort === 8443) ? 'https' : 'http';
             echo json_encode([
                 'success' => true,
                 'status' => 'online',
@@ -126,11 +198,14 @@ switch ($action) {
             $res = callSecuGenWebAPI('SGIFPCapture', [
                 'Timeout' => '10000',
                 'Quality' => '50',
-                'TemplateFormat' => 'ANSI',
+                // This device/driver always outputs ISO-format templates
+                // regardless of what's requested here, but declare it
+                // explicitly so SGIMatchScore is told the truth later.
+                'TemplateFormat' => 'ISO',
                 'ImageWidth' => '260',
                 'ImageHeight' => '300',
                 'ImageDPI' => '500'
-            ], $p, 'POST', 12);
+            ], $p, 'POST', 20);
 
             if ($res['success']) break;
         }
@@ -144,17 +219,46 @@ switch ($action) {
                     'success' => true,
                     'fingerprint_data_base64' => $data['BMPBase64'] ?? '',
                     'fingerprint_template' => $data['TemplateBase64'] ?? '',
-                    'quality_score' => $data['Quality'] ?? 85,
+                    'quality_score' => $data['ImageQuality'] ?? 85,
                     'image_width' => $data['ImageWidth'] ?? 260,
                     'image_height' => $data['ImageHeight'] ?? 300,
                     'message' => 'SecuGen fingerprint captured successfully via PHP'
                 ]);
             } else {
+                // Per SecuGen WebAPI Programmer's Manual (SG1-0121A-008)
                 $errMsgs = [
+                    1 => "Fingerprint reader not correctly installed or driver files error",
+                    2 => "Wrong type of fingerprint reader or not correctly installed",
+                    3 => "Invalid parameters to sensor API",
+                    5 => "SecuGen DLL load failed",
+                    6 => "SecuGen driver DLL load failed",
+                    7 => "SecuGen algorithm DLL load failed",
+                    51 => "System file load failure",
+                    52 => "Sensor chip initialization failed - No SecuGen scanner device attached",
+                    53 => "Sensor line dropped - Failed to initialize SecuGen scanner device",
                     54 => "Timeout - No finger detected on SecuGen scanner",
-                    52 => "No SecuGen fingerprint scanner device attached",
-                    53 => "Failed to initialize SecuGen scanner device",
-                    51 => "System memory error"
+                    55 => "SecuGen device not found",
+                    56 => "SecuGen driver load failed",
+                    57 => "Wrong image captured, please try again",
+                    58 => "Lack of USB bandwidth",
+                    59 => "SecuGen device busy",
+                    60 => "Cannot get serial number of the device",
+                    61 => "Unsupported SecuGen device",
+                    101 => "Very low minutiae count, please try again",
+                    102 => "Wrong template type",
+                    103 => "Invalid template",
+                    104 => "Invalid template",
+                    105 => "Could not extract fingerprint features",
+                    106 => "Match failed",
+                    1000 => "SecuGen WebAPI: no memory",
+                    2000 => "SecuGen WebAPI internal error",
+                    3000 => "SecuGen WebAPI internal error (extended)",
+                    4000 => "Invalid parameter passed to SecuGen WebAPI",
+                    6000 => "SecuGen WebAPI certificate error - cannot decode",
+                    10001 => "SecuGen WebAPI license error",
+                    10002 => "SecuGen WebAPI invalid domain for license",
+                    10003 => "SecuGen WebAPI license expired",
+                    10004 => "SecuGen WebAPI did not receive an Origin header from the request",
                 ];
                 $msg = $errMsgs[$errorCode] ?? "SecuGen Error Code: {$errorCode}";
                 echo json_encode([
@@ -174,7 +278,7 @@ switch ($action) {
     case 'match':
         $rawInput = file_get_contents('php://input');
         $body = json_decode($rawInput, true) ?? $_POST;
-        
+
         $tmpl1 = $body['template1'] ?? '';
         $tmpl2 = $body['template2'] ?? '';
 
@@ -183,30 +287,13 @@ switch ($action) {
             exit;
         }
 
-        if ($tmpl1 === $tmpl2) {
-            echo json_encode(['success' => true, 'match' => true, 'score' => 100]);
-            exit;
+        $score = secuGenMatchScore($tmpl1, $tmpl2, $possible_ports);
+
+        if ($score === null) {
+            echo json_encode(['success' => false, 'message' => 'SecuGen WebAPI could not compute a match score (unreachable or rejected the templates)']);
+        } else {
+            echo json_encode(['success' => true, 'match' => ($score >= SECUGEN_MATCH_THRESHOLD), 'score' => $score]);
         }
-
-        $b1 = base64_decode($tmpl1);
-        $b2 = base64_decode($tmpl2);
-
-        if ($b1 !== false && $b2 !== false && strlen($b1) > 0 && strlen($b2) > 0) {
-            $minLen = min(strlen($b1), strlen($b2));
-            $matches = 0;
-            for ($i = 0; $i < $minLen; $i++) {
-                if ($b1[$i] === $b2[$i]) $matches++;
-            }
-            $similarity = ($matches / $minLen) * 100;
-            echo json_encode([
-                'success' => true,
-                'match' => ($similarity >= 65.0),
-                'score' => round($similarity, 2)
-            ]);
-            exit;
-        }
-
-        echo json_encode(['success' => true, 'match' => false, 'score' => 0]);
         break;
 
     case 'identify':
@@ -221,40 +308,28 @@ switch ($action) {
             exit;
         }
 
-        $capBytes = base64_decode($captured);
         $bestMatchId = null;
-        $bestScore = 0;
+        $bestScore = -1;
 
         foreach ($candidates as $cand) {
-            $candTmpl = $cand['template_data'] ?? $cand['fingerprint_template'] ?? '';
+            // get_all_fingerprints.php sends {id, template}; accept the
+            // legacy/alternate key names too so any other caller keeps working.
+            $candTmpl = $cand['template'] ?? $cand['template_data'] ?? $cand['fingerprint_template'] ?? '';
             $matId = $cand['mat_id'] ?? $cand['id'] ?? null;
 
             if (empty($candTmpl)) continue;
 
-            if ($candTmpl === $captured) {
-                echo json_encode(['success' => true, 'matched' => true, 'match_id' => $matId, 'score' => 100]);
-                exit;
-            }
-
-            $candBytes = base64_decode($candTmpl);
-            if ($capBytes !== false && $candBytes !== false && strlen($capBytes) > 0 && strlen($candBytes) > 0) {
-                $minLen = min(strlen($capBytes), strlen($candBytes));
-                $matches = 0;
-                for ($i = 0; $i < $minLen; $i++) {
-                    if ($capBytes[$i] === $candBytes[$i]) $matches++;
-                }
-                $similarity = ($matches / $minLen) * 100;
-                if ($similarity > $bestScore) {
-                    $bestScore = $similarity;
-                    $bestMatchId = $matId;
-                }
+            $score = secuGenMatchScore($captured, $candTmpl, $possible_ports);
+            if ($score !== null && $score > $bestScore) {
+                $bestScore = $score;
+                $bestMatchId = $matId;
             }
         }
 
-        if ($bestScore >= 65.0 && $bestMatchId) {
-            echo json_encode(['success' => true, 'matched' => true, 'match_id' => $bestMatchId, 'score' => round($bestScore, 2)]);
+        if ($bestScore >= SECUGEN_MATCH_THRESHOLD && $bestMatchId) {
+            echo json_encode(['success' => true, 'matched' => true, 'match_id' => $bestMatchId, 'score' => $bestScore]);
         } else {
-            echo json_encode(['success' => true, 'matched' => false, 'message' => 'No matching patient found', 'best_score' => round($bestScore, 2)]);
+            echo json_encode(['success' => true, 'matched' => false, 'message' => 'No matching patient found', 'best_score' => max($bestScore, 0)]);
         }
         break;
 

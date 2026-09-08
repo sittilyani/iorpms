@@ -18,11 +18,18 @@
 if (!defined('APP_ENV')) {
     $httpHost = strtolower($_SERVER['HTTP_HOST'] ?? 'localhost');
     $hostOnly = preg_replace('/:\d+$/', '', $httpHost); // strip :port
+    // Client machines on the clinic's LAN reach this server by its private
+    // IP (e.g. http://10.53.220.14/iorpms), not by "localhost" - without
+    // this check that IP falls through to ONLINE mode and tries production
+    // (remote hosting) DB credentials against the local MySQL, which fails.
+    $isPrivateIp = filter_var($hostOnly, FILTER_VALIDATE_IP) !== false
+                && !filter_var($hostOnly, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
     $isLocal  = ($hostOnly === 'localhost'
               || $hostOnly === '127.0.0.1'
               || $hostOnly === '::1'
               || substr($hostOnly, -5) === '.test'
-              || substr($hostOnly, -6) === '.local'); // PHP 7.x compatible
+              || substr($hostOnly, -6) === '.local' // PHP 7.x compatible
+              || $isPrivateIp);
     define('APP_ENV', $isLocal ? 'offline' : 'online');
 }
 

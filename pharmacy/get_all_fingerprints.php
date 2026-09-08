@@ -11,7 +11,16 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-$query = "SELECT mat_id, template_data, fingerprint_path FROM fingerprints";
+// A patient can have more than one historical fingerprints row (re-captures,
+// scanner changes, etc.) - only the most recent one per mat_id is valid for
+// identification, otherwise a stale/replaced template can still match.
+$query = "SELECT f.mat_id, f.template_data, f.fingerprint_path
+          FROM fingerprints f
+          INNER JOIN (
+              SELECT mat_id, MAX(capture_date) AS latest_capture
+              FROM fingerprints
+              GROUP BY mat_id
+          ) latest ON latest.mat_id = f.mat_id AND latest.latest_capture = f.capture_date";
 $result = $conn->query($query);
 $data = [];
 
