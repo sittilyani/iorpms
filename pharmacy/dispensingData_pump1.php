@@ -368,19 +368,32 @@ if ($stmt_devices !== false) {
     $devices = $result_devices->fetch_all(MYSQLI_ASSOC);
 }
 
-$sql_str = "SELECT (
-    SELECT JSON_OBJECTAGG(id, rem) FROM (
-        SELECT
-        id,
-        (
-            (SELECT new_milligrams FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC) -
-            (SELECT COALESCE(SUM(dosage), 0) FROM pharmacy WHERE pump_id = pd.id AND dispDate >= (SELECT `topup_from` FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC))
-        ) AS rem
-        FROM pump_devices pd GROUP BY pd.id
-    ) tbl
-)";
+// NOTE: the reservoir "remaining" subtraction is done via a derived table
+// (ps) rather than nested 3 levels deep as a correlated subquery-of-a-
+// subquery - that nesting made MySQL's optimizer discard the
+// pharmacy(pump_id, dispDate) index and scan the entire (177k+ row)
+// pharmacy table once per pump device on every page load. This join
+// structure lets the optimizer use a normal index range scan on
+// pharmacy(pump_id, dispDate) if that index exists, without depending on
+// any specific index name being present.
+$sql_str = "SELECT JSON_OBJECTAGG(id, rem) FROM (
+    SELECT ps.id,
+           ps.new_milligrams - (
+               SELECT COALESCE(SUM(dosage), 0) FROM pharmacy
+               WHERE pump_id = ps.id AND dispDate >= ps.topup_from
+           ) AS rem
+    FROM (
+        SELECT pd.id AS id, h.new_milligrams AS new_milligrams, h.topup_from AS topup_from
+        FROM pump_devices pd
+        LEFT JOIN pump_reservoir_history h ON h.pump_id = pd.id AND h.topup_to IS NULL
+    ) ps
+) tbl";
 
-$resultJson = $conn->query($sql_str)->fetch_row()[0] ?? '{}';
+$reservoirRes = $conn->query($sql_str);
+$resultJson = $reservoirRes ? ($reservoirRes->fetch_row()[0] ?? '{}') : '{}';
+if (!$reservoirRes) {
+    error_log('dispensingData_pump1.php reservoir query failed: ' . $conn->error);
+}
 $rem = json_decode($resultJson, true);
 
 if (isset($_SESSION['errorMessages'])) {

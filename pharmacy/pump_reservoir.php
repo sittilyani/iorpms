@@ -85,16 +85,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmtUpdate->execute();
             $stmtUpdate->close();
 
-            $pumpQuery = "SELECT (
-                    (SELECT new_milligrams FROM pump_reservoir_history WHERE id = ?) -
-                    (SELECT COALESCE(SUM(dosage), 0) FROM pharmacy WHERE pump_id = pd.id AND dispDate >= (SELECT `topup_from` FROM pump_reservoir_history WHERE id = ?))
-                ) AS rem FROM pump_devices pd WHERE pd.id = ?";
-            $pumpStmt = $conn->prepare($pumpQuery);
-            $pumpStmt->bind_param('iii', $lastTopUp, $lastTopUp, $dev);
-            $pumpStmt->execute();
-            $pumpResult = $pumpStmt->get_result();
-            $pumpRow = $pumpResult->fetch_assoc();
-            $remainingQuantity = $pumpRow['rem'] ?? 0;
+            // NOTE: previously a single query nested a correlated SUM(dosage)
+            // subquery inside another correlated subquery - that nesting made
+            // MySQL's optimizer discard the pharmacy(pump_id, dispDate) index
+            // and scan the entire pharmacy table. Splitting into two simple
+            // queries (both index-friendly) is both correct and fast.
+            $topUpStmt = $conn->prepare("SELECT new_milligrams, topup_from FROM pump_reservoir_history WHERE id = ?");
+            $topUpStmt->bind_param('i', $lastTopUp);
+            $topUpStmt->execute();
+            $topUpRow = $topUpStmt->get_result()->fetch_assoc() ?: ['new_milligrams' => 0, 'topup_from' => null];
+            $topUpStmt->close();
+
+            $sumStmt = $conn->prepare(
+                "SELECT COALESCE(SUM(dosage), 0) AS total FROM pharmacy
+                 WHERE pump_id = ? AND dispDate >= ?"
+            );
+            $sumStmt->bind_param('is', $dev, $topUpRow['topup_from']);
+            $sumStmt->execute();
+            $dispensedSinceTopUp = (float)$sumStmt->get_result()->fetch_assoc()['total'];
+            $sumStmt->close();
+
+            $remainingQuantity = $topUpRow['new_milligrams'] - $dispensedSinceTopUp;
             $newTotal = $remainingQuantity + $mg;
 
             $stmtCreate = $conn->prepare("INSERT INTO pump_reservoir_history (`milligrams`, new_milligrams, `topup_from`, `pump_id`) VALUES (?, ?, NOW(), ?)");
@@ -132,10 +143,23 @@ $limit = 3;
 $offset = ($page - 1) * $limit;
 
 // Query pump_reservoir_history ordered by created_at DESC with pagination
+// NOTE: applying ORDER BY/LIMIT to pump_reservoir_history in an inner derived
+// table (h) BEFORE joining/evaluating the per-row COUNT subquery is
+// essential - the original single-query version made MySQL materialize
+// the whole history table into a temp table first ("Using temporary;
+// Using filesort"), which ran the correlated pharmacy COUNT subquery once
+// per history row (271+ times) instead of once per displayed row (3).
 $stmt_history = $conn->prepare("
-    SELECT prs.id, prs.milligrams, prs.new_milligrams, prs.topup_from, prs.topup_to, prs.created_at, dev.label AS device_label, dev.port AS device_port,
-    (SELECT COUNT(*) FROM pharmacy p WHERE p.pump_id = dev.id AND p.dispDate >= prs.topup_from AND (prs.topup_to IS NULL OR p.dispDate <= prs.topup_to)) AS dispenses
-    FROM pump_reservoir_history prs INNER JOIN pump_devices dev ON prs.pump_id = dev.id ORDER BY created_at DESC LIMIT ? OFFSET ?;
+    SELECT h.id, h.milligrams, h.new_milligrams, h.topup_from, h.topup_to, h.created_at,
+           dev.label AS device_label, dev.port AS device_port,
+           (SELECT COUNT(*) FROM pharmacy p WHERE p.pump_id = h.pump_id
+              AND p.dispDate >= h.topup_from
+              AND (h.topup_to IS NULL OR p.dispDate <= h.topup_to)) AS dispenses
+    FROM (
+        SELECT * FROM pump_reservoir_history ORDER BY created_at DESC LIMIT ? OFFSET ?
+    ) h
+    JOIN pump_devices dev ON h.pump_id = dev.id
+    ORDER BY h.created_at DESC
 ");
 $stmt_history->bind_param('ii', $limit, $offset);
 $stmt_history->execute();
@@ -150,16 +174,27 @@ $date_filters = [
     'all_time' => '1800-01-01',
 ];
 
+// NOTE: the reservoir "remaining" subtraction is done via a derived table
+// (ps) rather than nested 3 levels deep as a correlated subquery-of-a-
+// subquery - that nesting made MySQL's optimizer discard the
+// pharmacy(pump_id, dispDate) index and scan the entire (177k+ row)
+// pharmacy table once per pump device on every page load. This join
+// structure lets the optimizer use a normal index range scan on
+// pharmacy(pump_id, dispDate) if that index exists, without depending on
+// any specific index name being present.
 $sql_str_builder = [
     "(
         SELECT JSON_OBJECTAGG(id, rem) FROM (
-            SELECT
-            id,
-            (
-                (SELECT new_milligrams FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC) -
-                (SELECT COALESCE(SUM(dosage), 0) FROM pharmacy WHERE pump_id = pd.id AND dispDate >= (SELECT `topup_from` FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC))
-            ) AS rem
-            FROM pump_devices pd GROUP BY id
+            SELECT ps.id,
+                   ps.new_milligrams - (
+                       SELECT COALESCE(SUM(dosage), 0) FROM pharmacy
+                       WHERE pump_id = ps.id AND dispDate >= ps.topup_from
+                   ) AS rem
+            FROM (
+                SELECT pd.id AS id, h.new_milligrams AS new_milligrams, h.topup_from AS topup_from
+                FROM pump_devices pd
+                LEFT JOIN pump_reservoir_history h ON h.pump_id = pd.id AND h.topup_to IS NULL
+            ) ps
         ) tbl
     ) AS remaining"
 ];
@@ -179,11 +214,17 @@ foreach ($date_filters as $filter => $date_filter) {
     ";
 }
 
-$summary = [];
+// Defaults ensure every key the JS reads (jsonData['remaining'], etc.)
+// always exists even if the summary query below fails for any reason -
+// previously a failed query left $summary empty, which made the frontend
+// throw on jsonData['remaining'][...] and silently break pump selection.
+$summary = ['remaining' => '{}', 'today' => '{}', 'this_week' => '{}', 'this_month' => '{}', 'all_time' => '{}'];
 $res = $conn->query('SELECT ' . implode(', ', $sql_str_builder));
 if ($res) {
-    $summary = $res->fetch_assoc();
+    $summary = array_merge($summary, $res->fetch_assoc());
     $res->free();
+} else {
+    error_log('pump_reservoir.php summary query failed: ' . $conn->error);
 }
 
 $summary = array_map(function ($v) {

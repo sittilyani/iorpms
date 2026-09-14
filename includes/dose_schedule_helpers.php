@@ -155,7 +155,7 @@ if (!function_exists('computeDoseAdherence')) {
         $dispensedDates = [];
         $dStmt = $conn->prepare(
             "SELECT DISTINCT DATE(dispDate) AS d FROM pharmacy
-             WHERE mat_id = ? AND DATE(dispDate) BETWEEN ? AND ? AND dosage > 0"
+             WHERE mat_id = ? AND dispDate >= ? AND dispDate < DATE_ADD(?, INTERVAL 1 DAY) AND dosage > 0"
         );
         $dStmt->bind_param('sss', $mat_id, $startDate, $endDate);
         $dStmt->execute();

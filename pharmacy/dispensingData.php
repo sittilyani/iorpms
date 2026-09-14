@@ -245,19 +245,10 @@ if ($userId) {
         $daysToAppointmentDisplay = $appointmentInfo['message'];
     }
 
-// Fetch photo from the mat_id and photos table based on mat_id
+// Patient details were already fetched into $currentSettings above; reuse it
+// instead of re-querying the same row from the patients table.
 if (isset($_GET['mat_id'])) {
-    $patientsId = $_GET['mat_id'];
-
-    // Fetch patient details from the database based on the ID
-    $sql = "SELECT * FROM patients WHERE mat_id = ?";
-    $stmt = $conn->prepare($sql);
-    // Assuming mat_id can be a string, keeping 's' if it's alphanumeric, but the previous bind was 'i'. Reverting to 's' as mat_id is often a code.
-    $stmt->bind_param('s', $patientsId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $patients = $result->fetch_assoc();
+    $patients = $currentSettings;
 
     if (!$patients) {
         die("Patient not found");
@@ -1175,6 +1166,10 @@ if (isset($_SESSION['dispensing_successes'])) {
 
     <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Fingerprint auto-verify disabled: the polling loop (every ~2s, each
+         cycle re-probing the scanner service) made this page feel very slow.
+         Uncomment to re-enable hands-free verification.
     <script src="../assets/js/fingerprint_listener.js"></script>
     <script>
         const registeredTemplate = <?php echo json_encode($registered_template_b64); ?>;
@@ -1184,6 +1179,7 @@ if (isset($_SESSION['dispensing_successes'])) {
             }
         });
     </script>
+    -->
 
     <script>
         // Add Enter key listener to trigger dispense button

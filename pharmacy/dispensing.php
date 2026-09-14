@@ -191,12 +191,20 @@ echo "</div>";
 
 <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
+
+    <!-- Fingerprint auto-identify disabled: this unconditionally started a
+         continuous scanner-polling loop (every ~2s) the moment the search
+         page loaded, loading every registered fingerprint template and
+         repeatedly hitting the scanner service in the background - the same
+         issue that made the pump dispensing pages feel very slow.
+         Uncomment to re-enable hands-free patient identification.
     <script src="../assets/js/fingerprint_listener.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             startFingerprintIdentifyLoop(false);
         });
     </script>
+    -->
 
 <script>
         function cancelSearch() {

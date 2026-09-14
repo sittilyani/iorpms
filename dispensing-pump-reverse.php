@@ -95,14 +95,27 @@ try {
     }
 
     // 5. Device pump quantity check
+    // NOTE: the reservoir "remaining" subtraction is joined to
+    // pump_reservoir_history (h) rather than nested 3 levels deep as a
+    // correlated subquery-of-a-subquery - that nesting made MySQL's
+    // optimizer discard the pharmacy(pump_id, dispDate) index and scan the
+    // entire (177k+ row) pharmacy table on every dispense. This join
+    // structure lets the optimizer use a normal index range scan on
+    // pharmacy(pump_id, dispDate) if that index exists, without depending
+    // on any specific index name being present.
     $pumpQuery = "SELECT
         pd.label,
         pd.port,
         (
-            (SELECT new_milligrams FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC) -
-            (SELECT COALESCE(SUM(dosage), 0) FROM pharmacy WHERE pump_id = pd.id AND dispDate >= (SELECT `topup_from` FROM pump_reservoir_history WHERE pump_id = pd.id AND `topup_to` IS NULL ORDER BY created_at DESC))
+            h.new_milligrams - (
+                SELECT COALESCE(SUM(dosage), 0) FROM pharmacy
+                WHERE pump_id = pd.id AND dispDate >= h.topup_from
+            )
         ) AS rem
-        FROM pump_devices pd WHERE pd.id = ?";
+        FROM pump_devices pd
+        LEFT JOIN pump_reservoir_history h
+            ON h.pump_id = pd.id AND h.topup_to IS NULL
+        WHERE pd.id = ?";
     $pumpStmt = $conn->prepare($pumpQuery);
     $pumpStmt->bind_param('i', $pump_device);
     $pumpStmt->execute();
