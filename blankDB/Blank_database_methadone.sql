@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 26, 2026 at 07:35 AM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Generation Time: Sep 15, 2026 at 01:29 PM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `administrationroutes`
 --
 
-CREATE TABLE `administrationroutes` (
+CREATE TABLE IF NOT EXISTS `administrationroutes` (
   `route_id` int NOT NULL,
   `routetype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -52,7 +52,7 @@ INSERT IGNORE INTO `administrationroutes` (`route_id`, `routetype`, `date_create
 -- Table structure for table `backup_log`
 --
 
-CREATE TABLE `backup_log` (
+CREATE TABLE IF NOT EXISTS `backup_log` (
   `id` int NOT NULL,
   `backup_date` date NOT NULL,
   `backup_type` enum('morning','midday') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `backup_log` (
 -- Table structure for table `categories`
 --
 
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` int NOT NULL,
   `name` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -89,7 +89,7 @@ INSERT IGNORE INTO `categories` (`id`, `name`, `description`, `photo`) VALUES
 -- Table structure for table `client_consents`
 --
 
-CREATE TABLE `client_consents` (
+CREATE TABLE IF NOT EXISTS `client_consents` (
   `id` int NOT NULL,
   `p_id` int NOT NULL COMMENT 'ID from the patients table',
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE `client_consents` (
 -- Table structure for table `clinical_encounters`
 --
 
-CREATE TABLE `clinical_encounters` (
+CREATE TABLE IF NOT EXISTS `clinical_encounters` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -220,7 +220,7 @@ CREATE TABLE `clinical_encounters` (
 -- Table structure for table `clinical_encounter_drafts`
 --
 
-CREATE TABLE `clinical_encounter_drafts` (
+CREATE TABLE IF NOT EXISTS `clinical_encounter_drafts` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `form_data` json NOT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE `clinical_encounter_drafts` (
 -- Table structure for table `clinic_visits`
 --
 
-CREATE TABLE `clinic_visits` (
+CREATE TABLE IF NOT EXISTS `clinic_visits` (
   `clinic_id` int NOT NULL,
   `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -265,7 +265,7 @@ INSERT IGNORE INTO `clinic_visits` (`clinic_id`, `visit_name`) VALUES
 -- Table structure for table `consents`
 --
 
-CREATE TABLE `consents` (
+CREATE TABLE IF NOT EXISTS `consents` (
   `consent_id` int NOT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -281,7 +281,7 @@ CREATE TABLE `consents` (
 -- Table structure for table `counties`
 --
 
-CREATE TABLE `counties` (
+CREATE TABLE IF NOT EXISTS `counties` (
   `id` int NOT NULL,
   `county_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -340,8 +340,191 @@ INSERT IGNORE INTO `counties` (`id`, `county_code`, `county_name`, `region`, `da
 (44, '044', 'Migori', 'Nyanza', '2025-01-10 00:00:00'),
 (45, '045', 'Kisii', 'Nyanza', '2025-01-10 00:00:00'),
 (46, '046', 'Nyamira', 'Nyanza', '2025-01-10 00:00:00'),
-(47, '047', 'Nairobi (County)', 'Nairobi (City)', '2025-01-10 00:00:00'),
-(48, '048', 'LVCT Health County', 'LVCT Health Region', '2025-10-10 19:37:01');
+(47, '047', 'Nairobi (County)', 'Nairobi (City)', '2025-01-10 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `countries`
+--
+
+CREATE TABLE IF NOT EXISTS `countries` (
+  `id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `iso2` char(2) NOT NULL DEFAULT '',
+  `region` varchar(40) DEFAULT '',
+  `sort_order` int DEFAULT '100'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `countries`
+--
+
+INSERT IGNORE INTO `countries` (`id`, `name`, `iso2`, `region`, `sort_order`) VALUES
+(1, 'Kenya', 'KE', 'Africa', 1),
+(2, 'Tanzania', 'TZ', 'Africa', 1),
+(3, 'Uganda', 'UG', 'Africa', 1),
+(4, 'Ethiopia', 'ET', 'Africa', 1),
+(5, 'Rwanda', 'RW', 'Africa', 1),
+(6, 'Burundi', 'BI', 'Africa', 1),
+(7, 'South Sudan', 'SS', 'Africa', 1),
+(8, 'Somalia', 'SO', 'Africa', 1),
+(9, 'Nigeria', 'NG', 'Africa', 1),
+(10, 'Ghana', 'GH', 'Africa', 1),
+(11, 'South Africa', 'ZA', 'Africa', 1),
+(12, 'Mozambique', 'MZ', 'Africa', 1),
+(13, 'Angola', 'AO', 'Africa', 1),
+(14, 'Zambia', 'ZM', 'Africa', 1),
+(15, 'Zimbabwe', 'ZW', 'Africa', 1),
+(16, 'Malawi', 'MW', 'Africa', 1),
+(17, 'Botswana', 'BW', 'Africa', 1),
+(18, 'Namibia', 'NA', 'Africa', 1),
+(19, 'Lesotho', 'LS', 'Africa', 1),
+(20, 'Eswatini', 'SZ', 'Africa', 1),
+(21, 'Democratic Republic of the Congo', 'CD', 'Africa', 1),
+(22, 'Republic of the Congo', 'CG', 'Africa', 1),
+(23, 'Cameroon', 'CM', 'Africa', 1),
+(24, 'Senegal', 'SN', 'Africa', 1),
+(25, 'Ivory Coast', 'CI', 'Africa', 1),
+(26, 'Mali', 'ML', 'Africa', 1),
+(27, 'Burkina Faso', 'BF', 'Africa', 1),
+(28, 'Niger', 'NE', 'Africa', 1),
+(29, 'Chad', 'TD', 'Africa', 1),
+(30, 'Sudan', 'SD', 'Africa', 1),
+(31, 'Egypt', 'EG', 'Africa', 1),
+(32, 'Libya', 'LY', 'Africa', 1),
+(33, 'Tunisia', 'TN', 'Africa', 1),
+(34, 'Algeria', 'DZ', 'Africa', 1),
+(35, 'Morocco', 'MA', 'Africa', 1),
+(36, 'Mauritania', 'MR', 'Africa', 1),
+(37, 'Gambia', 'GM', 'Africa', 1),
+(38, 'Guinea', 'GN', 'Africa', 1),
+(39, 'Guinea-Bissau', 'GW', 'Africa', 1),
+(40, 'Sierra Leone', 'SL', 'Africa', 1),
+(41, 'Liberia', 'LR', 'Africa', 1),
+(42, 'Togo', 'TG', 'Africa', 1),
+(43, 'Benin', 'BJ', 'Africa', 1),
+(44, 'Gabon', 'GA', 'Africa', 1),
+(45, 'Equatorial Guinea', 'GQ', 'Africa', 1),
+(46, 'Central African Republic', 'CF', 'Africa', 1),
+(47, 'Eritrea', 'ER', 'Africa', 1),
+(48, 'Djibouti', 'DJ', 'Africa', 1),
+(49, 'Madagascar', 'MG', 'Africa', 1),
+(50, 'Mauritius', 'MU', 'Africa', 1),
+(51, 'Seychelles', 'SC', 'Africa', 1),
+(52, 'Comoros', 'KM', 'Africa', 1),
+(53, 'Cape Verde', 'CV', 'Africa', 1),
+(54, 'São Tomé and Príncipe', 'ST', 'Africa', 1),
+(55, 'Afghanistan', 'AF', 'World', 50),
+(56, 'Albania', 'AL', 'World', 50),
+(57, 'Argentina', 'AR', 'World', 50),
+(58, 'Armenia', 'AM', 'World', 50),
+(59, 'Australia', 'AU', 'World', 50),
+(60, 'Austria', 'AT', 'World', 50),
+(61, 'Azerbaijan', 'AZ', 'World', 50),
+(62, 'Bahrain', 'BH', 'World', 50),
+(63, 'Bangladesh', 'BD', 'World', 50),
+(64, 'Belarus', 'BY', 'World', 50),
+(65, 'Belgium', 'BE', 'World', 50),
+(66, 'Bolivia', 'BO', 'World', 50),
+(67, 'Bosnia and Herzegovina', 'BA', 'World', 50),
+(68, 'Brazil', 'BR', 'World', 50),
+(69, 'Bulgaria', 'BG', 'World', 50),
+(70, 'Cambodia', 'KH', 'World', 50),
+(71, 'Canada', 'CA', 'World', 50),
+(72, 'Chile', 'CL', 'World', 50),
+(73, 'China', 'CN', 'World', 50),
+(74, 'Colombia', 'CO', 'World', 50),
+(75, 'Costa Rica', 'CR', 'World', 50),
+(76, 'Croatia', 'HR', 'World', 50),
+(77, 'Cuba', 'CU', 'World', 50),
+(78, 'Cyprus', 'CY', 'World', 50),
+(79, 'Czech Republic', 'CZ', 'World', 50),
+(80, 'Denmark', 'DK', 'World', 50),
+(81, 'Dominican Republic', 'DO', 'World', 50),
+(82, 'Ecuador', 'EC', 'World', 50),
+(83, 'El Salvador', 'SV', 'World', 50),
+(84, 'Estonia', 'EE', 'World', 50),
+(85, 'Finland', 'FI', 'World', 50),
+(86, 'France', 'FR', 'World', 50),
+(87, 'Georgia', 'GE', 'World', 50),
+(88, 'Germany', 'DE', 'World', 50),
+(89, 'Greece', 'GR', 'World', 50),
+(90, 'Guatemala', 'GT', 'World', 50),
+(91, 'Haiti', 'HT', 'World', 50),
+(92, 'Honduras', 'HN', 'World', 50),
+(93, 'Hungary', 'HU', 'World', 50),
+(94, 'Iceland', 'IS', 'World', 50),
+(95, 'India', 'IN', 'World', 50),
+(96, 'Indonesia', 'ID', 'World', 50),
+(97, 'Iran', 'IR', 'World', 50),
+(98, 'Iraq', 'IQ', 'World', 50),
+(99, 'Ireland', 'IE', 'World', 50),
+(100, 'Israel', 'IL', 'World', 50),
+(101, 'Italy', 'IT', 'World', 50),
+(102, 'Jamaica', 'JM', 'World', 50),
+(103, 'Japan', 'JP', 'World', 50),
+(104, 'Jordan', 'JO', 'World', 50),
+(105, 'Kazakhstan', 'KZ', 'World', 50),
+(106, 'Kuwait', 'KW', 'World', 50),
+(107, 'Kyrgyzstan', 'KG', 'World', 50),
+(108, 'Laos', 'LA', 'World', 50),
+(109, 'Latvia', 'LV', 'World', 50),
+(110, 'Lebanon', 'LB', 'World', 50),
+(111, 'Lithuania', 'LT', 'World', 50),
+(112, 'Luxembourg', 'LU', 'World', 50),
+(113, 'Malaysia', 'MY', 'World', 50),
+(114, 'Maldives', 'MV', 'World', 50),
+(115, 'Malta', 'MT', 'World', 50),
+(116, 'Mexico', 'MX', 'World', 50),
+(117, 'Moldova', 'MD', 'World', 50),
+(118, 'Mongolia', 'MN', 'World', 50),
+(119, 'Montenegro', 'ME', 'World', 50),
+(120, 'Myanmar', 'MM', 'World', 50),
+(121, 'Nepal', 'NP', 'World', 50),
+(122, 'Netherlands', 'NL', 'World', 50),
+(123, 'New Zealand', 'NZ', 'World', 50),
+(124, 'Nicaragua', 'NI', 'World', 50),
+(125, 'North Macedonia', 'MK', 'World', 50),
+(126, 'Norway', 'NO', 'World', 50),
+(127, 'Oman', 'OM', 'World', 50),
+(128, 'Pakistan', 'PK', 'World', 50),
+(129, 'Panama', 'PA', 'World', 50),
+(130, 'Papua New Guinea', 'PG', 'World', 50),
+(131, 'Paraguay', 'PY', 'World', 50),
+(132, 'Peru', 'PE', 'World', 50),
+(133, 'Philippines', 'PH', 'World', 50),
+(134, 'Poland', 'PL', 'World', 50),
+(135, 'Portugal', 'PT', 'World', 50),
+(136, 'Qatar', 'QA', 'World', 50),
+(137, 'Romania', 'RO', 'World', 50),
+(138, 'Russia', 'RU', 'World', 50),
+(139, 'Saudi Arabia', 'SA', 'World', 50),
+(140, 'Serbia', 'RS', 'World', 50),
+(141, 'Singapore', 'SG', 'World', 50),
+(142, 'Slovakia', 'SK', 'World', 50),
+(143, 'Slovenia', 'SI', 'World', 50),
+(144, 'South Korea', 'KR', 'World', 50),
+(145, 'Spain', 'ES', 'World', 50),
+(146, 'Sri Lanka', 'LK', 'World', 50),
+(147, 'Sweden', 'SE', 'World', 50),
+(148, 'Switzerland', 'CH', 'World', 50),
+(149, 'Syria', 'SY', 'World', 50),
+(150, 'Taiwan', 'TW', 'World', 50),
+(151, 'Tajikistan', 'TJ', 'World', 50),
+(152, 'Thailand', 'TH', 'World', 50),
+(153, 'Timor-Leste', 'TL', 'World', 50),
+(154, 'Turkey', 'TR', 'World', 50),
+(155, 'Turkmenistan', 'TM', 'World', 50),
+(156, 'Ukraine', 'UA', 'World', 50),
+(157, 'United Arab Emirates', 'AE', 'World', 50),
+(158, 'United Kingdom', 'GB', 'World', 50),
+(159, 'United States', 'US', 'World', 50),
+(160, 'Uruguay', 'UY', 'World', 50),
+(161, 'Uzbekistan', 'UZ', 'World', 50),
+(162, 'Venezuela', 'VE', 'World', 50),
+(163, 'Vietnam', 'VN', 'World', 50),
+(164, 'Yemen', 'YE', 'World', 50);
 
 -- --------------------------------------------------------
 
@@ -349,7 +532,7 @@ INSERT IGNORE INTO `counties` (`id`, `county_code`, `county_name`, `region`, `da
 -- Table structure for table `daily_report_comments`
 --
 
-CREATE TABLE `daily_report_comments` (
+CREATE TABLE IF NOT EXISTS `daily_report_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -362,7 +545,7 @@ CREATE TABLE `daily_report_comments` (
 -- Table structure for table `deleted_patients`
 --
 
-CREATE TABLE `deleted_patients` (
+CREATE TABLE IF NOT EXISTS `deleted_patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -414,51 +597,13 @@ CREATE TABLE `deleted_patients` (
   `occupation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `deleted_patients`
---
-
-INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
-(1, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-10-22 00:00:00', '454545', '121313', 'egesa', 'egesa', 'eges', '000000000', '1998-02-17', '27', 'Male', 'Married (Polygamous)', 'matuga', '', '', 'New', '', 'Self', NULL, '', '', '', '', '', '', 'Buprenorphine 2mg', 5.00, 'New dose', 'Active', 'Normal', 'User Admin', '2025-10-22 11:56:17', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(2, 'Kishon Health centre', '19736', 'Narok', 'Narok South', '1970-01-01 00:00:00', '197836MAT0001', '00001', 'Lyani Sitti', '', '', '', '1957-06-06', '68', 'Male', '', '', '', '', 'Transit', '', 'Self', NULL, ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'initial', 'Active', 'Normal', 'User', '2025-10-22 12:57:00', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(3, 'Bande Dispensary', '13494', 'Migori', 'Baringo Central', '1970-01-01 00:00:00', '13494MAT0001', '00001', 'Lyani', 'Gully', '', '', '1997-10-22', '28', 'Male', 'Single', '', '', '', 'New', '', 'Self', NULL, ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 2mg', 2.00, '', 'Weaned', 'Normal', 'User', '2025-10-22 12:57:00', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(6, 'Kisayani Health Centre', '12342', 'Kitui', 'Kitui South', '2025-10-22 00:00:00', '45454', '121313', 'people', 'Lyani', 'eges', '', '1999-01-22', '26', 'Female', 'Married (Monogamous)', '', '', '', 'Transfer In', '', 'Transfer from MAT clinic', NULL, 'Aina Dispensary', '', 'Parent', '', '', '', 'Buprenorphine 2mg', 2.00, '', 'Active', 'Normal', 'User Admin', '2025-10-22 14:42:53', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(7, 'Arombe Medical Centre', '28500', 'Homa Bay', 'Ndhiwa', '2025-10-08 00:00:00', '90876', '', 'John Rambo', '', 'Bandit', '', '2005-02-09', '20', 'Male', '', '', '', '', 'Transit', '', '', NULL, '', '', '', '', '', '', 'Buprenorphine 2mg', 30.00, 'adjustments\r\n', 'Active', 'Normal', 'User Admin', '2025-10-22 14:43:44', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(8, 'AAR Health Care Ruaka', '21981', 'Kiambu', 'Kiambaa', '2025-10-22 00:00:00', '21981MAT0005', '21981MAT0005', 'Patrick Mwalimu', '', 'Patoo', '', '2025-01-01', '0', 'Male', '', '', '', '', 'Transit', '', 'Transfer from MAT clinic', NULL, '', '', '', '', '', '', 'Methadone', 1.00, '', 'Active', 'Normal', 'User Admin', '2025-10-22 14:43:47', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(9, 'South B Police Band', '13444', 'Nairobi', 'Starehe', '2025-10-22 00:00:00', '13444MAT0033', '0033', 'JACOB', 'WACHIRA', 'JAC', '', '1991-06-19', '34', 'Male', 'Single', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Buprenorphine 2mg', 2.00, '', 'Active', 'Normal', 'User Admin', '2025-10-22 14:44:25', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(10, 'South B Police Band', '13444', 'Nairobi', 'Starehe', '2025-10-22 00:00:00', '23368mat0012', '0012', 'tom', 'john', 'oduor', '23607437', '2023-01-22', '2', 'Male', 'Single', 'mvita', 'ganjoni', '0721958980', 'New', 'nil', 'CSO', NULL, '', '', '', '', '0721958980', 'boniface', 'Methadone', 30.00, 'new', 'Active', 'Normal', 'User Admin', '2025-10-22 14:45:01', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(11, 'Ace Africa (k) Wellness Centre', '20823', 'Bungoma', 'Kanduyi', '2025-08-14 00:00:00', '968745', '', 'John Cena', '', '', '', '1965-07-08', '60', 'Female', 'Cohabiting', '', 'Inmate', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 35.00, 'updating', 'Active', 'Normal', 'User Admin', '2025-10-22 14:45:35', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(12, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-22 00:00:00', '28293/00300', 'K0300', 'ABDUL', 'JUMA', 'DULLA', '', '2000-02-09', '25', 'Male', 'Single', '', '', '', 'New', 'K0234', 'CSO', NULL, '', '', '', '', '', '', 'Methadone', 1.00, '', 'Active', 'Normal', 'User Admin', '2025-10-22 14:46:24', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(13, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-22 00:00:00', '28293/0034', 'K0034', 'JOHN', 'MWAURA', '', '', '2009-07-18', '16', 'Male', 'Single', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 1.00, '', 'Active', 'Normal', 'User Admin', '2025-10-22 14:50:24', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(14, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-24 00:00:00', '28293', '', 'Johana Clay', '', 'Mr Bean', '', '1989-11-23', '35', 'Female', '', '', 'Inmate', '', 'Transit', '', '', NULL, '', '', '', '', '', '', 'Buprenorphine 8mg', 1.00, 'new dose', 'Active', 'Normal', 'User Admin', '2025-10-23 01:13:23', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(15, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-08-06 00:00:00', '23368', '', 'Jackson Harleys', '', '', '', '2000-07-07', '25', 'Female', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'User Admin', '2025-10-23 01:21:10', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(16, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', 'Kis', 'Abc07', 'Ahmed', 'Mohammed', '', '2909090', '1980-11-01', '44', 'Male', 'Separated/Divorced', 'Jomvu', '', '', 'New', '', 'Self', NULL, 'Bakarani Community Clinic', '', 'None', '', '', '', '', 0.00, '', 'Active', 'Normal', 'User Admin', '2025-10-23 12:26:39', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(17, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '1970-01-01 00:00:00', '28293MAT', 'K0001', 'John', 'Mwalimu', 'odijo', '37253532', '1990-04-08', '35', 'Male', 'Single', 'Nyali', 'Kisauni', '0736424343', 'Transfer In', '', 'CSO', NULL, 'Mewa Hospital', '', 'Outreach worker', 'Abdul', '735259837', 'Julius', 'Methadone', 30.00, 'induction dose', 'Active', 'Normal', 'User', '2025-10-23 12:30:00', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(18, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-22 00:00:00', 'k1029', 'k1029', 'justin', 'musyoka', 'jay', '2450009', '2018-03-01', '7', 'Male', 'Single', 'mombasa', 'kisauni', '0768605432', 'New', 'k1029', 'CSO', NULL, '', '', 'None', '', '', 'josphine', 'Buprenorphine 8mg', 32.00, 'insomia', 'Active', 'Normal', 'User Admin', '2025-10-23 12:31:12', '2025-01-23', '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(19, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT999', 'T0100', 'Noise', 'Maker', 'Noisemaker', '', '1993-10-21', '32', 'Male', 'Married (Polygamous)', '', '', '', 'Transfer In', 'S0100', 'GoK facility', NULL, 'ACK Dispensary (Isiolo)', '', 'Friend', '', '', '', 'Buprenorphine 2mg', 0.00, 'Withdrawal', 'Active', 'Normal', 'User Admin', '2025-10-23 12:31:46', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(20, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT0023', 'K0023', 'Kassim', 'Kassim', 'Ali', '33454456', '1997-10-04', '28', 'Male', 'Never married', 'kisauni', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 30.00, 'initial', 'Active', 'Normal', 'Hrio Mombasa', '2025-10-23 12:33:08', NULL, 'None', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(21, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-11-06 00:00:00', 'k0299', 'k0299', 'leila', 'ali', 'leila', '38394566', '1995-08-12', '30', 'Female', 'Remarried', 'nyali', 'kisauni', '0708000000', 'New', 'k0299', 'CSO', NULL, 'Afraha Maternity and Nursing Home', 'k0299', 'Outreach worker', 'shaban', '0700000000', 'shaban', 'Buprenorphine 8mg', 32.00, 'insomnia', 'Active', 'Normal', 'User Admin', '2025-10-23 12:33:22', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(22, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT0098', 'KOO98', 'MUTUA', 'JAMES', 'JOMBA', '', '1994-11-23', '30', 'Male', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'User Admin', '2025-10-23 12:34:09', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(23, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT011', 'K011', 'DJ CATNIP', '', '', '', '2000-01-01', '25', 'Female', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 90.00, 'taper', 'Active', 'Normal', 'User Admin', '2025-10-23 12:34:12', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(24, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT1993', 'K1993', 'Mohamed', 'Salim', 'Chapa', '36696996', '2006-10-23', '19', 'Male', 'Single', 'Nyali', 'Frere', '0700063663', 'New', '', 'CSO', NULL, '', '', 'Outreach worker', '', '', 'Masha', 'Buprenorphine 4mg', 4.00, 'Insomnia ', 'Active', 'Normal', 'User Admin', '2025-10-23 12:34:23', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(26, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-10-23 00:00:00', '23368MAT0001', '', 'JUMA', 'JOBWE', '', '', '1990-06-15', '35', 'Male', '', '', '', '', 'Re-induction', '', '', NULL, '', '', '', '', '', '', 'Buprenorphine 2mg', 8.00, 'CRAVING', 'Active', 'Normal', 'User Admin', '2025-10-23 12:34:59', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(28, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '28293MAT1059', 'K1059', 'KIBWANA', 'JUMA', '', '', '2000-05-16', '25', 'Male', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 40.00, 'INITIAL DOSE', 'Active', 'Normal', 'User Admin', '2025-10-23 12:35:07', '2025-10-23', '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(29, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-12-31 00:00:00', '28293MAT1230', 'K1230', 'ANN', '', '', '', '1990-01-23', '35', 'Female', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 80.00, 'MIXING', 'Active', 'Normal', 'User Admin', '2025-10-23 12:35:34', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(30, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-02-10 00:00:00', '290980003', 'K0003', 'JOHN MWANGI', 'OMWAMI', 'OMWANAWEFE', '32568934', '1990-10-10', '35', 'Male', 'Cohabiting', 'NYALI', '', '', 'New', '', '', NULL, '3KR Health Centre', '', 'Partner', '', '', '', 'Methadone', 40.00, 'SLEEPS ALOT', 'Active', 'Normal', 'User Admin', '2025-10-23 12:35:49', '2025-04-23', 'LDL', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(31, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-10-23 00:00:00', '23368MAT008', 'KM008', 'BEN', 'MAK', 'SULU', '', '1991-06-23', '34', 'Male', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 20.00, 'reviews', 'Active', 'Normal', 'User Admin', '2025-10-23 12:35:55', NULL, '', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(33, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-10-23 00:00:00', '23368MAT0009', '', 'Tom bakari', 'Mawe', '', '', '1986-01-30', '39', 'Male', 'Married (Monogamous)', '', 'mwabungo', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Buprenorphine 2mg', 4.00, 'lack of sleep', 'Active', 'Normal', 'User Admin', '2025-10-23 13:51:13', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(34, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-23 00:00:00', '02012', '', 'WASHINGTON', '', '', '', '2000-01-01', '25', 'Female', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 120.00, 'updating', 'Active', 'Normal', 'WINNIE MANDELA', '2025-10-23 13:52:55', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(36, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-10-24 00:00:00', '123654789', '', 'James Bond', '', '', '', '2024-04-10', '1', 'Male', '', '', '', '', 'Transfer In', '', '', NULL, '', '', '', '', '', '', 'Methadone', 87.00, 'Trial dosing', 'Active', 'Normal', 'User Admin', '2025-10-24 08:47:44', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(37, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', '2025-10-30 00:00:00', '9999999', '', 'KNEC Exams', '', '', '', '2025-02-27', '0', 'Female', '', '', '', '', 'New', '', '', NULL, '', '', '', '', '', '', 'Methadone', 110.00, 'Trial', 'Active', 'Normal', 'User Admin', '2025-10-24 09:12:58', NULL, NULL, '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', '2025-12-15', NULL, NULL),
-(1447, 'Shimo La Tewa MAT clinic', '99999', 'Mombasa (County)', 'Kisauni', '1970-01-01 00:00:00', '23368mat T-1466', 'T-1466', 'BENSON KATHENGE', 'IRUNGU', '', '', '1989-08-12', '36', 'Male', 'Unknown', 'INMATE', 'INMATE', '', 'Re-induction', 'T-1466', 'Transfer from MAT clinic', NULL, ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'RE-INDUCATION', 'Active', 'Normal', 'EUNICE', '2025-11-12 11:52:00', NULL, NULL, '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', '2026-03-30', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `deleted_prescriptions`
 --
 
-CREATE TABLE `deleted_prescriptions` (
+CREATE TABLE IF NOT EXISTS `deleted_prescriptions` (
   `del_id` int NOT NULL,
   `disp_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -473,12 +618,27 @@ CREATE TABLE `deleted_prescriptions` (
   `date_of_deletion` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `deleted_prescriptions`
+-- Table structure for table `demo_requests`
 --
 
-INSERT IGNORE INTO `deleted_prescriptions` (`del_id`, `disp_id`, `clientName`, `mat_id`, `sex`, `drugname`, `dosage`, `pharm_officer_name`, `dispDate`, `deletion_reason`, `deleted_by`, `date_of_deletion`) VALUES
-(10, '4', 'KENNEDY KIMINDA GICHOHI', '11094MAT0006', 'Male', 'Methadone', 120, 'Lyani Sitti', '2026-06-20', 'testing', 'Lyani Sitti', '2026-06-20 19:35:39');
+CREATE TABLE IF NOT EXISTS `demo_requests` (
+  `id` int NOT NULL,
+  `first_name` varchar(80) NOT NULL,
+  `last_name` varchar(80) NOT NULL,
+  `clinic_name` varchar(160) NOT NULL,
+  `email` varchar(120) NOT NULL,
+  `phone` varchar(40) NOT NULL,
+  `country` varchar(80) NOT NULL,
+  `plan` varchar(40) DEFAULT 'professional',
+  `token` varchar(64) NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `notified_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -486,7 +646,7 @@ INSERT IGNORE INTO `deleted_prescriptions` (`del_id`, `disp_id`, `clientName`, `
 -- Table structure for table `dispensing_comments`
 --
 
-CREATE TABLE `dispensing_comments` (
+CREATE TABLE IF NOT EXISTS `dispensing_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -499,28 +659,20 @@ CREATE TABLE `dispensing_comments` (
 -- Table structure for table `dose_schedules`
 --
 
-CREATE TABLE `dose_schedules` (
+CREATE TABLE IF NOT EXISTS `dose_schedules` (
   `id` int NOT NULL,
-  `mat_id` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `drugname` varchar(225) COLLATE utf8mb4_general_ci NOT NULL,
+  `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `drugname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `dose_mg` decimal(10,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date DEFAULT NULL COMMENT 'NULL = open-ended / no end date',
-  `skip_dates` text COLLATE utf8mb4_general_ci COMMENT 'JSON array of YYYY-MM-DD dates to skip (Buprenorphine only)',
-  `comments` text COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Mandatory clinical comment for this dose period',
-  `created_by` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `skip_dates` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT 'JSON array of YYYY-MM-DD dates to skip (Buprenorphine only)',
+  `dosing_interval_days` tinyint UNSIGNED DEFAULT '1',
+  `comments` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Mandatory clinical comment for this dose period',
+  `created_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('active','superseded','cancelled') COLLATE utf8mb4_general_ci DEFAULT 'active'
+  `status` enum('active','superseded','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `dose_schedules`
---
-
-INSERT IGNORE INTO `dose_schedules` (`id`, `mat_id`, `drugname`, `dose_mg`, `start_date`, `end_date`, `skip_dates`, `comments`, `created_by`, `created_at`, `status`) VALUES
-(6, '11094MAT0011', 'Methadone', '50.00', '2026-06-16', '2026-06-30', NULL, 'testing dose adjustments', 'Lyani Sitti', '2026-06-16 21:47:56', 'active'),
-(7, '11094MAT0002', 'Methadone', '40.00', '2026-06-24', '2026-06-30', NULL, 'test1', 'Lyani Sitti', '2026-06-24 16:48:22', 'active'),
-(8, '11094MAT0002', 'Methadone', '45.00', '2026-07-01', '2026-07-11', NULL, 'test2', 'Lyani Sitti', '2026-06-24 16:48:22', 'active');
 
 -- --------------------------------------------------------
 
@@ -528,7 +680,7 @@ INSERT IGNORE INTO `dose_schedules` (`id`, `mat_id`, `drugname`, `dose_mg`, `sta
 -- Table structure for table `dosing`
 --
 
-CREATE TABLE `dosing` (
+CREATE TABLE IF NOT EXISTS `dosing` (
   `id` int NOT NULL,
   `dosage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -551,7 +703,7 @@ INSERT IGNORE INTO `dosing` (`id`, `dosage`) VALUES
 -- Table structure for table `drug`
 --
 
-CREATE TABLE `drug` (
+CREATE TABLE IF NOT EXISTS `drug` (
   `drugID` int NOT NULL,
   `drugName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drugCategory` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -565,10 +717,10 @@ CREATE TABLE `drug` (
 --
 
 INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, `price`, `date_created`) VALUES
-(2, 'Methadone', 'Narcotics', 'Controlled drug', 150, '2025-09-18 12:31:41'),
+(2, 'Methadone', NULL, '', 150, '2025-09-18 12:31:41'),
 (6, 'Buprenorphine 2mg', 'narcotic', 'Suppress the brain neural system and calms the patient', 10, '2025-09-18 12:31:41'),
 (7, 'Buprenorphine 4mg', 'narcotic', 'Suppress the brain neural system and calms the patient', 10, '2025-09-18 12:31:41'),
-(8, 'Buprenorphine 8mg', NULL, 'Suppress the brain neural system and calms the patient', 10, '2025-09-18 12:31:41'),
+(8, 'Buprenorphine 8mg', 'narcotic', 'Suppress the brain neural system and calms the patient', 10, '2025-09-18 12:31:41'),
 (9, 'Naltrexone 50mg', 'stimulant', 'Used where analgesic drugs have low pain threshold', 10, '2025-09-18 12:31:41'),
 (10, 'Naltrexone 100mg', 'narcotic', 'Used where analgesic drugs have low pain threshold', 10, '2025-09-18 12:31:41'),
 (11, 'Naltrexone 150mg', 'narcotic', 'Used where analgesic drugs have low pain threshold', 10, '2025-09-18 12:31:41'),
@@ -859,7 +1011,20 @@ INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, 
 (1028, 'Albendazole 400mg/10mL', 'Medicines', NULL, 50, '2025-09-18 12:31:41'),
 (1030, 'HPV vaccines', 'medicines', '', 200, '2025-09-18 15:02:22'),
 (1031, 'New drug', 'antihistamine', 'bhcr', 15, '2025-09-23 08:13:22'),
-(1032, 'mpox vccc.', 'antiviral', 'bbb', 150, '2025-10-23 15:44:10');
+(1032, 'Tenofovir/lamivudine/dolutegravir', NULL, 'Tablets', 1, '2025-11-05 10:38:57'),
+(1033, 'Ibuprofen 200mg', 'analgesic', 'Tablets', 10, '2025-11-07 10:29:16'),
+(1034, 'Clotrimazole Vaginal Tablet 500mg', 'medicines', 'Pessaries', 0, '2025-12-08 10:35:59'),
+(1035, 'Benzathine Benzyl penicillin 2.4 IU', 'antibacterial', 'VIALS', 0, '2025-12-08 10:39:09'),
+(1036, 'Naloxone hydrochloride injection 0.4mg/ml', 'narcotic', 'Ampoules', 0, '2025-12-08 10:41:53'),
+(1037, 'Pyridoxin tablets 50mg', 'medicines', 'multivitamin /supplement', 1, '2025-12-08 11:11:26'),
+(1038, 'Flucloxacillin 500mg', 'antibacterial', 'capsules', 15, '2025-12-08 11:27:28'),
+(1039, 'adrenalin  1mg/1ml injection', 'medicines', 'vasodilator', 10, '2025-12-08 11:31:53'),
+(1040, 'bisacodyl 5mg tablets', 'stimulant', 'stimulant purgative', 10, '2025-12-08 11:37:05'),
+(1041, 'burn cream 100g', 'antibacterial', 'antibiotic', 350, '2025-12-08 11:44:47'),
+(1042, 'tenofovir/emcitarabine-prep', NULL, 'prep,tdf /ftc', 1, '2025-12-08 11:59:51'),
+(1043, 'Tenofovir/lamivudine 300MG/300MG', 'antiviral', 'Tablets', 0, '2025-12-08 12:37:35'),
+(1044, 'TB PACKS', 'antibacterial', 'Tablets', 0, '2025-12-10 13:04:43'),
+(1045, 'Griseofulvin 500mg', NULL, 'Tablets', 1, '2026-03-24 09:53:10');
 
 -- --------------------------------------------------------
 
@@ -867,7 +1032,7 @@ INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, 
 -- Table structure for table `drugcategory`
 --
 
-CREATE TABLE `drugcategory` (
+CREATE TABLE IF NOT EXISTS `drugcategory` (
   `id` int NOT NULL,
   `catname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
@@ -895,7 +1060,7 @@ INSERT IGNORE INTO `drugcategory` (`id`, `catname`, `description`) VALUES
 -- Table structure for table `drug_sources`
 --
 
-CREATE TABLE `drug_sources` (
+CREATE TABLE IF NOT EXISTS `drug_sources` (
   `source_id` int NOT NULL,
   `source_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -916,7 +1081,7 @@ INSERT IGNORE INTO `drug_sources` (`source_id`, `source_name`, `date_created`) V
 -- Table structure for table `durationunits`
 --
 
-CREATE TABLE `durationunits` (
+CREATE TABLE IF NOT EXISTS `durationunits` (
   `unit_id` int NOT NULL,
   `duration` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -938,21 +1103,10 @@ INSERT IGNORE INTO `durationunits` (`unit_id`, `duration`, `date_created`) VALUE
 -- Table structure for table `education_level`
 --
 
-CREATE TABLE `education_level` (
+CREATE TABLE IF NOT EXISTS `education_level` (
   `edu_id` int NOT NULL,
   `edu_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `education_level`
---
-
-INSERT IGNORE INTO `education_level` (`edu_id`, `edu_name`) VALUES
-(5, 'None'),
-(4, 'Other'),
-(3, 'Post-secondary'),
-(1, 'Primary'),
-(2, 'Secondary');
 
 -- --------------------------------------------------------
 
@@ -960,7 +1114,7 @@ INSERT IGNORE INTO `education_level` (`edu_id`, `edu_name`) VALUES
 -- Table structure for table `employment_status`
 --
 
-CREATE TABLE `employment_status` (
+CREATE TABLE IF NOT EXISTS `employment_status` (
   `emp_id` int NOT NULL,
   `emp_status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -970,10 +1124,10 @@ CREATE TABLE `employment_status` (
 --
 
 INSERT IGNORE INTO `employment_status` (`emp_id`, `emp_status_name`) VALUES
-(3, 'Self employment'),
-(1, 'Skilled employment'),
+(3, 'Self Employed'),
+(1, 'Skilled Employment'),
 (4, 'Unemployed'),
-(2, 'Unskilled employment');
+(2, 'Unskilled Employment');
 
 -- --------------------------------------------------------
 
@@ -981,7 +1135,7 @@ INSERT IGNORE INTO `employment_status` (`emp_id`, `emp_status_name`) VALUES
 -- Table structure for table `enrolment_status`
 --
 
-CREATE TABLE `enrolment_status` (
+CREATE TABLE IF NOT EXISTS `enrolment_status` (
   `enrolment_id` int NOT NULL,
   `enrolment_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `decsription` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1004,7 +1158,7 @@ INSERT IGNORE INTO `enrolment_status` (`enrolment_id`, `enrolment_status_name`, 
 -- Table structure for table `facerecognitionnodes`
 --
 
-CREATE TABLE `facerecognitionnodes` (
+CREATE TABLE IF NOT EXISTS `facerecognitionnodes` (
   `Id` int NOT NULL,
   `PatientId` int DEFAULT NULL,
   `Complexity` double NOT NULL,
@@ -1022,7 +1176,7 @@ CREATE TABLE `facerecognitionnodes` (
 -- Table structure for table `facilities`
 --
 
-CREATE TABLE `facilities` (
+CREATE TABLE IF NOT EXISTS `facilities` (
   `id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -1296,8 +1450,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (250, 'Busia County Referral Hospital', '15834', 'Busia', 'Matayos', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'AMRS', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (251, 'Busibwabo Dispensary', '15835', 'Busia', 'Matayos', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.41086', '34.20122', '2025-07-13 05:15:02'),
 (252, 'Butula Mission Health Centre', '15838', 'Busia', 'Butula', 'Other Faith Based', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.34325', '34.33363', '2025-07-13 05:15:02'),
-(253, 'Bwaliro Dispensary', '15840', 'Busia', 'Butula', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.37825', '34.3162', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(253, 'Bwaliro Dispensary', '15840', 'Busia', 'Butula', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.37825', '34.3162', '2025-07-13 05:15:02'),
 (254, 'GK Prisons Dispensary (Busia)', '15891', 'Busia', 'Matayos', 'Other Public Institution', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.45296', '34.11452', '2025-07-13 05:15:02'),
 (255, 'Igara Dispensary', '15897', 'Busia', 'Nambale', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.53294', '34.36315', '2025-07-13 05:15:02'),
 (256, 'Khayo Dispensary', '15937', 'Busia', 'Nambale', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', '', 'Stalled/Inactive', 'On Premises', '0.51051', '34.38897', '2025-07-13 05:15:02'),
@@ -1546,8 +1699,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (499, 'Ogongo Sub County Hospital', '13967', 'Homa Bay', 'Mbita', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (500, 'Okiki Amayo Health Centre', '13972', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.41198', '34.51135', '2025-07-13 05:15:02'),
 (501, 'Olando Dispensary', '13974', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.43246', '34.65263', '2025-07-13 05:15:02'),
-(502, 'Ombek Health Centre', '13978', 'Homa Bay', 'Rachuonyo South', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(502, 'Ombek Health Centre', '13978', 'Homa Bay', 'Rachuonyo South', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (503, 'Ombo Kachieng Dispensary', '13979', 'Homa Bay', 'Ndhiwa', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (504, 'Omboga Dispensary', '13980', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.43925', '34.62273', '2025-07-13 05:15:02'),
 (505, 'Omiro Dispensary', '13981', 'Homa Bay', 'Kabondo Kasipul', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.45299', '34.80357', '2025-07-13 05:15:02'),
@@ -1791,8 +1943,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (743, 'St Charles Lwanga Health Centre', '15957', 'Kakamega', 'Lugari', 'Kenya Episcopal Conference-Catholic Secretariat', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.62801', '34.88434', '2025-07-13 05:15:02'),
 (744, 'Kuvasali Health Centre', '15959', 'Kakamega', 'Malava', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.42106', '34.94322', '2025-07-13 05:15:02'),
 (745, 'Likuyani Sub-County Hospital', '15961', 'Kakamega', 'Likuyani', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(746, 'Lugari Forest Dispensary', '15964', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.66328', '34.90693', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(746, 'Lugari Forest Dispensary', '15964', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.66328', '34.90693', '2025-07-13 05:15:02'),
 (747, 'Lumakanda Sub County Hospital', '15969', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.63478', '34.97615', '2025-07-13 05:15:02'),
 (748, 'Lumani Dispensary', '15970', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.4904', '34.72177', '2025-07-13 05:15:02'),
 (749, 'Lunganyiro Health Centre', '15972', 'Kakamega', 'Matungu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -2041,8 +2192,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (992, 'Makongeni dispensary', '18432', 'Kiambu', 'Thika Town', 'Local Authority', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-1.06234', '37.10882', '2025-07-13 05:15:02'),
 (993, 'Gachororo health centre', '18608', 'Kiambu', 'Juja', 'Ministry of Health', 'Kiambu County Endeleza Program', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-1.08697', '37.02015', '2025-07-13 05:15:02'),
 (994, 'Mundoro Community Dispensary', '18658', 'Kiambu', 'Gatundu South', 'Community Development Fund', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.95055', '36.76462', '2025-07-13 05:15:02'),
-(995, 'Langata Health centre (Ruiru)', '18762', 'Kiambu', 'Ruiru', 'Ministry of Health', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(995, 'Langata Health centre (Ruiru)', '18762', 'Kiambu', 'Ruiru', 'Ministry of Health', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (996, 'Cordis Maria Dispensary', '19722', 'Kiambu', 'Ruiru', 'Kenya Episcopal Conference-Catholic Secretariat', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-1.21589', '36.93658', '2025-07-13 05:15:02'),
 (997, 'Holy family catholic hospital githunguri', '19963', 'Kiambu', 'Githunguri', 'Kenya Episcopal Conference-Catholic Secretariat', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (998, 'Child & Family Wellness Clinic', '19985', 'Kiambu', 'Kiambu Town', 'Other Faith Based', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.17535', '36.8304', '2025-07-13 05:15:02'),
@@ -2285,8 +2435,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1235, 'Gucha District Hospital', '13594', 'Kisii', 'Bomachoge Chache', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.79631', '34.72383', '2025-07-13 05:15:02'),
 (1236, 'Hema Hospital', '13603', 'Kisii', 'Kitutu Chache South', 'Private Enterprise (Institution)', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.67496', '34.77007', '2025-07-13 05:15:02'),
 (1237, 'Ibacho Sub-District Hospital', '13611', 'Kisii', 'Nyaribari Masaba', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.89806', '34.94024', '2025-07-13 05:15:02'),
-(1238, 'Ibeno Sub-District Hospital', '13612', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.77956', '34.85261', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(1238, 'Ibeno Sub-District Hospital', '13612', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.77956', '34.85261', '2025-07-13 05:15:02'),
 (1239, 'Igare Medical Clinic', '13613', 'Kisii', 'Bobasi', 'Private Enterprise (Institution)', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1240, 'Iranda Health Centre', '13620', 'Kisii', 'Kitutu Chache South', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.62703', '34.74898', '2025-07-13 05:15:02'),
 (1241, 'Irondi Dispensary', '13621', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.7861', '34.87875', '2025-07-13 05:15:02'),
@@ -2529,8 +2678,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1478, 'OTIENO OWALA HEALTH CENTRE', '20024', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1479, 'Osewre Dispensary', '20069', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', '-0.13337', '34.44436', '2025-07-13 05:15:02'),
 (1480, 'Avenue Hospital Kisumu', '20123', 'Kisumu', 'Kisumu Central', 'Private Enterprise (Institution)', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.088626', '34.770387', '2025-07-13 05:15:02'),
-(1481, 'Mbaka Oromo Health Centre', '20199', 'Kisumu', 'Kisumu West', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(1481, 'Mbaka Oromo Health Centre', '20199', 'Kisumu', 'Kisumu West', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1482, 'Onyuongo Dispensary', '20209', 'Kisumu', 'Nyakach', 'Ministry of Health', 'CIHEB Entrench', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-0.32515', '35.00533', '2025-07-13 05:15:02'),
 (1483, 'Dago Jonyo Dispensary', '20377', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', '-0.18251', '34.50411', '2025-07-13 05:15:02'),
 (1484, 'Manyatta Community Medical Clinic', '20512', 'Kisumu', 'Kisumu East', 'Private Practice - Clinical Officer', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-0.09366', '34.78063', '2025-07-13 05:15:02'),
@@ -2779,8 +2927,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1728, 'Mother Angela Huruma Hospital', '14553', 'Laikipia', 'Laikipia East', 'Kenya Episcopal Conference-Catholic Secretariat', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1729, 'Ilpolei Dispensary', '14561', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '0.35968', '37.07226', '2025-07-13 05:15:02'),
 (1730, 'Kalalu Dispensary', '14659', 'Laikipia', 'Laikipia East', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.08227', '37.16625', '2025-07-13 05:15:02'),
-(1731, 'Kimanjo Dispensary', '14869', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.47444', '37.01297', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(1731, 'Kimanjo Dispensary', '14869', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.47444', '37.01297', '2025-07-13 05:15:02'),
 (1732, 'Lamuria Dispensary (Laikipia East)', '15007', 'Laikipia', 'Laikipia East', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.13434', '36.86165', '2025-07-13 05:15:02'),
 (1733, 'Likii Dispensary', '15035', 'Laikipia', 'Laikipia East', 'Other Public Institution', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.02416', '37.07758', '2025-07-13 05:15:02'),
 (1734, 'Lokusero Dispensary', '15065', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '0.30832', '37.29749', '2025-07-13 05:15:02'),
@@ -3029,8 +3176,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1977, 'Ilatu Health Centre (Makindu)', '19976', 'Makueni', 'Kibwezi West', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1978, 'Kimeeni Dispensary', '20130', 'Makueni', 'Mbooni', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.6939', '37.7391', '2025-07-13 05:15:02'),
 (1979, 'Mbuvo Health Centre', '20271', 'Makueni', 'Makueni', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-2.07199', '37.76967', '2025-07-13 05:15:02'),
-(1980, 'GK Makueni', '20722', 'Makueni', 'Makueni', 'Ministry of Health', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(1980, 'GK Makueni', '20722', 'Makueni', 'Makueni', 'Ministry of Health', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1981, 'Haifa Med Clinic', '20974', 'Makueni', 'Mbooni', 'Private Practice - Nurse / Midwifery', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.6594', '37.44871', '2025-07-13 05:15:02'),
 (1982, 'Banisa Sub County Hospital', '13300', 'Mandera', 'Banissa', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1983, 'Mandera Central Sub county Hospital', '13335', 'Mandera', 'Mandera South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -3276,8 +3422,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2223, 'Aga Khan Hospital (Mombasa)', '11203', 'Mombasa', 'Mvita', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-4.07012', '39.67003', '2025-07-13 05:15:02'),
 (2224, 'Al Farooq Hospital', '11208', 'Mombasa', 'Mvita', 'Private Practice - Private Institution Academic', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.04899', '39.66513', '2025-07-13 05:15:02'),
 (2225, 'Amurt Health Centre (Likoni)', '11221', 'Mombasa', 'Likoni', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-4.07765', '39.65362', '2025-07-13 05:15:02'),
-(2226, 'Bamburi Dispensary', '11239', 'Mombasa', 'Nyali', 'Local Authority', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.00435', '39.69335', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(2226, 'Bamburi Dispensary', '11239', 'Mombasa', 'Nyali', 'Local Authority', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.00435', '39.69335', '2025-07-13 05:15:02'),
 (2227, 'Bamburi Medicare', '11240', 'Mombasa', 'Nyali', 'Private Enterprise (Institution)', 'USAID Stawisha Pwani', 'USAID', '', '', 'On Premises', '-4.00329', '39.6986', '2025-07-13 05:15:02'),
 (2228, 'Baobab Clinic - Bamburi Cement', '11243', 'Mombasa', 'Nyali', 'Private Enterprise (Institution)', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-3.96975', '39.7061', '2025-07-13 05:15:02'),
 (2229, 'Bokole CDF Dispensary', '11254', 'Mombasa', 'Changamwe', 'Ministry of Health', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.01724', '39.60873', '2025-07-13 05:15:02'),
@@ -3518,8 +3663,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2466, 'Marura Nursing Home', '13070', 'Nairobi', 'Ruaraka', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.24875', '36.871', '2025-07-13 05:15:02'),
 (2467, 'Marurui Dispensary', '13071', 'Nairobi', 'Roysambu', 'Private Enterprise (Institution)', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.20244', '36.9038', '2025-07-13 05:15:02'),
 (2468, 'Mary Immaculate Sisters Dispensary', '13072', 'Nairobi', 'Makadara', 'Other Faith Based', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.29206', '36.8574', '2025-07-13 05:15:02'),
-(2469, 'The Mater Misericordiae Hospital', '13074', 'Nairobi', 'Starehe', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(2469, 'The Mater Misericordiae Hospital', '13074', 'Nairobi', 'Starehe', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2470, 'Mathare 3A (EDARP)', '13075', 'Nairobi', 'Mathare', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'ECare', 'Active', 'On Premises', '-1.26038', '36.8476', '2025-07-13 05:15:02'),
 (2471, 'Mathari Hospital', '13076', 'Nairobi', 'Mathare', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.26097', '36.84912', '2025-07-13 05:15:02'),
 (2472, 'Mathare North Health Centre', '13077', 'Nairobi', 'Ruaraka', 'Local Authority', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.25323', '36.86485', '2025-07-13 05:15:02'),
@@ -3533,7 +3677,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2480, 'Mji Wa Huruma Dispensary ', '13093', 'Nairobi', 'Westlands', 'Ministry of Health', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2481, 'Moi Airbase Hospital', '13095', 'Nairobi', 'Kamukunji', 'Armed Forces', 'HJF-Nairobi', 'DOD', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2482, 'Mukuru Mmm Clinic', '13101', 'Nairobi', 'Embakasi South', 'Kenya Episcopal Conference-Catholic Secretariat', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.30472', '36.885', '2025-07-13 05:15:02'),
-(2483, 'Mutuini Sub-District Hospital', '13105', 'Nairobi', 'Dagoretti South', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.3', '36.7', '2025-07-13 05:15:02'),
+(2483, 'Mutuini Sub-District Hospital', '13105', 'Nairobi', 'Dagoretti South', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.3', '36.7', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (2484, 'Nairobi Deaf (Liverpool)', '13108', 'Nairobi', 'Starehe', 'Non-Governmental Organizations', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.2852', '36.821', '2025-07-13 05:15:02'),
 (2485, 'Meridian Equator Hospital', '13109', 'Nairobi', 'Langata', 'Private Enterprise (Institution)', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Cloud', '-1.30801', '36.82421', '2025-07-13 05:15:02'),
 (2486, 'Nairobi Hospital', '13110', 'Nairobi', 'Dagoretti North', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.296139', '36.803995', '2025-07-13 05:15:02'),
@@ -3753,8 +3898,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2700, 'Kamara Dispensary', '14668', 'Nakuru', 'Kuresoi North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.0965', '35.67934', '2025-07-13 05:15:02'),
 (2701, 'Kapkures Health Centre (Nakuru West)', '14733', 'Nakuru', 'Nakuru West', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2702, 'Karagita Health Centre', '14801', 'Nakuru', 'Naivasha', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(2703, 'Karati Dispensary', '14802', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.69032', '36.47886', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(2703, 'Karati Dispensary', '14802', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.69032', '36.47886', '2025-07-13 05:15:02'),
 (2704, 'Karunga Dispensary', '14805', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.40633', '36.35059', '2025-07-13 05:15:02'),
 (2705, 'Keringet  Sub County Hospital', '14836', 'Nakuru', 'Kuresoi South', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2706, 'Kiambogo Dispensary (Gilgil)', '14845', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -3997,8 +4141,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2943, 'Bogwendo Health Centre(Manga)', '13504', 'Nyamira', 'Manga', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', 'Stalled/Inactive', 'On Premises', '-0.64391', '34.89357', '2025-07-13 05:15:02'),
 (2944, 'Bosiango Health Centre', '13514', 'Nyamira', 'Nyamira', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.63996', '34.95055', '2025-07-13 05:15:02'),
 (2945, 'Chepngombe Health Centre', '13523', 'Nyamira', 'Borabu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.83926', '35.00363', '2025-07-13 05:15:02'),
-(2946, 'Chaina Dispensary', '13525', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(2946, 'Chaina Dispensary', '13525', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2947, 'Ekerenyo Sub-District Hospital', '13540', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.52815', '34.98799', '2025-07-13 05:15:02'),
 (2948, 'Embonga Health Centre', '13543', 'Nyamira', 'Nyamira', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', 'Stalled/Inactive', 'On Premises', '-0.54319', '34.88419', '2025-07-13 05:15:02'),
 (2949, 'Endiba Health Centre', '13544', 'Nyamira', 'Borabu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.55994', '34.96206', '2025-07-13 05:15:02'),
@@ -4241,8 +4384,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3186, 'Kadenge Ratuoro Health Centre', '13641', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.02373', '34.17477', '2025-07-13 05:15:02'),
 (3187, 'Kagwa Health Centre', '13644', 'Siaya', 'Rarieda', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.22851', '34.25665', '2025-07-13 05:15:02'),
 (3188, 'Kaluo Health Centre', '13648', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(3189, 'Kambajo Dispensary', '13651', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.078944', '34.21136', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(3189, 'Kambajo Dispensary', '13651', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.078944', '34.21136', '2025-07-13 05:15:02'),
 (3190, 'Kapiyo Health Centre', '13655', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3191, 'Kogelo Dispensary', '13710', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.00716', '34.3448', '2025-07-13 05:15:02'),
 (3192, 'Kunya Dispensary', '13725', 'Siaya', 'Rarieda', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.28581', '34.39937', '2025-07-13 05:15:02'),
@@ -4493,8 +4635,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3437, 'Muthambi Health Centre', '12589', 'Tharaka-Nithi', 'Muthambi', 'Ministry of Health', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.27457', '37.66054', '2025-07-13 05:15:02'),
 (3438, 'Mutindwa Dispensary', '12597', 'Tharaka-Nithi', 'Mwimbi', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-0.24269', '37.60172', '2025-07-13 05:15:02'),
 (3439, 'Nguruki-Iruma Dispensary', '12659', 'Tharaka-Nithi', 'Mwimbi', 'Christian Health Association of Kenya', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-0.22126', '37.689', '2025-07-13 05:15:02'),
-(3440, 'Nkondi Health centre', '12665', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(3440, 'Nkondi Health centre', '12665', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3441, 'St Orsola Mission Hospital', '12769', 'Tharaka-Nithi', 'Tharaka South', 'Christian Health Association of Kenya', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-0.31621', '37.90028', '2025-07-13 05:15:02'),
 (3442, 'Thanantu Faith Hospital', '12793', 'Tharaka-Nithi', 'Tharaka North', 'Private Enterprise (Institution)', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3443, 'Tharaka District Hospital', '12795', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.15802', '37.97501', '2025-07-13 05:15:02'),
@@ -4738,8 +4879,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3681, 'Jepkoyai Dispensary', '16453', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.00584', '34.72548', '2025-07-13 05:15:02'),
 (3682, 'Joint Partner Medical Clinic', '16455', 'Vihiga', 'Hamisi', 'Private Practice - Nurse / Midwife', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.14149', '34.8809', '2025-07-13 05:15:02'),
 (3683, 'Kaptech Dispensary', '16456', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.16416', '34.82459', '2025-07-13 05:15:02'),
-(3684, 'Kaptisi Dispensary', '16457', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.18418', '34.92219', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(3684, 'Kaptisi Dispensary', '16457', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.18418', '34.92219', '2025-07-13 05:15:02'),
 (3685, 'Kimogoi Dispensary', '16458', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.05252', '34.7792', '2025-07-13 05:15:02'),
 (3686, 'Emusire Sub County Hospital', '16979', 'Vihiga', 'Emuhaya', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3687, 'Ebukoolo Dispensary', '17113', 'Vihiga', 'Emuhaya', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.07013', '34.56275', '2025-07-13 05:15:02'),
@@ -4776,10 +4916,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3718, 'Alale Health Centre', '16367', 'West Pokot', 'Pokot North', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '2.25005', '35.02779', '2025-07-13 05:15:02'),
 (3719, 'Tiinei Dispensary', '16368', 'West Pokot', 'Pokot North', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '1.46722', '34.94112', '2025-07-13 05:15:02'),
 (3720, 'Murkwijit Dispensary', '20055', 'West Pokot', 'West Pokot', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '1.1921', '35.09173', '2025-07-13 05:15:02'),
-(3721, 'Onoch Dispensary', '20317', 'West Pokot', 'Pokot Central', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '1.46325', '35.42293', '2025-07-13 05:15:02'),
-(3722, 'Test Health Facility', '10001', 'LVCT Health County', 'LVCT Health Sub County', 'LVCT', 'Health Centre', 'BD', 'Self', 'Active', 'Onsite', '0.00012', '-1.33256', '2025-10-10 19:44:50'),
-(3723, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', 'MOH', 'MOH', NULL, 'MOH', 'ACTIVE', '', '', '02222', '2025-10-22 12:50:44'),
-(3724, 'Shimo La Tewa MAT clinic', '99999', 'Mombasa (County)', 'Kisauni', 'MOH', 'Stawisha', NULL, 'IORPMS', 'Active', 'Local', '1', '1', '2025-11-07 10:43:43');
+(3721, 'Onoch Dispensary', '20317', 'West Pokot', 'Pokot Central', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '1.46325', '35.42293', '2025-07-13 05:15:02');
 
 -- --------------------------------------------------------
 
@@ -4787,7 +4924,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 -- Table structure for table `facility_settings`
 --
 
-CREATE TABLE `facility_settings` (
+CREATE TABLE IF NOT EXISTS `facility_settings` (
   `id` int NOT NULL,
   `facility_id` int DEFAULT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -4806,7 +4943,7 @@ CREATE TABLE `facility_settings` (
 -- Table structure for table `fingerprints`
 --
 
-CREATE TABLE `fingerprints` (
+CREATE TABLE IF NOT EXISTS `fingerprints` (
   `print_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -4823,15 +4960,15 @@ CREATE TABLE `fingerprints` (
 -- Table structure for table `fingerprint_audit`
 --
 
-CREATE TABLE `fingerprint_audit` (
+CREATE TABLE IF NOT EXISTS `fingerprint_audit` (
   `id` int NOT NULL,
   `fingerprint_id` int DEFAULT NULL,
-  `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `operation` enum('INSERT','UPDATE','DELETE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `performed_by` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `mat_id` varchar(50) DEFAULT NULL,
+  `operation` enum('INSERT','UPDATE','DELETE') DEFAULT NULL,
+  `performed_by` varchar(100) DEFAULT NULL,
   `performed_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `details` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -4839,7 +4976,7 @@ CREATE TABLE `fingerprint_audit` (
 -- Table structure for table `followup_psychiatric_form`
 --
 
-CREATE TABLE `followup_psychiatric_form` (
+CREATE TABLE IF NOT EXISTS `followup_psychiatric_form` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -4856,7 +4993,7 @@ CREATE TABLE `followup_psychiatric_form` (
 -- Table structure for table `formulation`
 --
 
-CREATE TABLE `formulation` (
+CREATE TABLE IF NOT EXISTS `formulation` (
   `formID` int NOT NULL,
   `fname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
@@ -4879,7 +5016,7 @@ INSERT IGNORE INTO `formulation` (`formID`, `fname`, `description`) VALUES
 -- Table structure for table `gad7_assessments`
 --
 
-CREATE TABLE `gad7_assessments` (
+CREATE TABLE IF NOT EXISTS `gad7_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -4898,20 +5035,13 @@ CREATE TABLE `gad7_assessments` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `gad7_assessments`
---
-
-INSERT IGNORE INTO `gad7_assessments` (`assessment_id`, `p_id`, `mat_id`, `visitDate`, `therapist_id`, `q1`, `q2`, `q3`, `q4`, `q5`, `q6`, `q7`, `total_score`, `diagnosis`, `management_plan`, `created_at`) VALUES
-(1, 7, '11094MAT0007', '2026-04-23', 1, 1, 2, 1, 1, 2, 2, 2, 11, 'Moderate anxiety', 'Provide supportive counselling and psychoeducation.\nRefer to a psychologist or mental health team.\nMonitor closely; consider referral to a medical officer if symptoms worsen or persist.', '2026-04-23 12:53:06');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `hepb_status`
 --
 
-CREATE TABLE `hepb_status` (
+CREATE TABLE IF NOT EXISTS `hepb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -4932,7 +5062,7 @@ INSERT IGNORE INTO `hepb_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `hepc_status`
 --
 
-CREATE TABLE `hepc_status` (
+CREATE TABLE IF NOT EXISTS `hepc_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -4953,7 +5083,7 @@ INSERT IGNORE INTO `hepc_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `initial_psychiatric_form`
 --
 
-CREATE TABLE `initial_psychiatric_form` (
+CREATE TABLE IF NOT EXISTS `initial_psychiatric_form` (
   `psy_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `occupation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -4987,27 +5117,10 @@ CREATE TABLE `initial_psychiatric_form` (
 -- Table structure for table `integration_status`
 --
 
-CREATE TABLE `integration_status` (
+CREATE TABLE IF NOT EXISTS `integration_status` (
   `integration_id` int NOT NULL,
   `integration_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `integration_status`
---
-
-INSERT IGNORE INTO `integration_status` (`integration_id`, `integration_name`) VALUES
-(6, 'Community Reintegration'),
-(10, 'Cultural Reintegration'),
-(5, 'Education Reintegration'),
-(2, 'Employment Reintegration'),
-(1, 'Family Reintegration'),
-(8, 'Health Reintegration'),
-(3, 'Housing Reintegration'),
-(7, 'Legal Reintegration'),
-(11, 'None'),
-(9, 'Peer Support Reintegration'),
-(4, 'Stable Reintegration');
 
 -- --------------------------------------------------------
 
@@ -5015,7 +5128,7 @@ INSERT IGNORE INTO `integration_status` (`integration_id`, `integration_name`) V
 -- Table structure for table `involuntary_discontinuation`
 --
 
-CREATE TABLE `involuntary_discontinuation` (
+CREATE TABLE IF NOT EXISTS `involuntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5047,7 +5160,7 @@ CREATE TABLE `involuntary_discontinuation` (
 -- Table structure for table `laboratory`
 --
 
-CREATE TABLE `laboratory` (
+CREATE TABLE IF NOT EXISTS `laboratory` (
   `lab_id` int NOT NULL,
   `visitDate` date NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5074,25 +5187,29 @@ CREATE TABLE `laboratory` (
 -- Table structure for table `living_conditions`
 --
 
-CREATE TABLE `living_conditions` (
+CREATE TABLE IF NOT EXISTS `living_conditions` (
   `cond_id` int NOT NULL,
   `condition_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `living_conditions`
+-- Table structure for table `login_logs`
 --
 
-INSERT IGNORE INTO `living_conditions` (`cond_id`, `condition_name`) VALUES
-(3, 'Abandoned buildings'),
-(6, 'Bus stations'),
-(1, 'Friends House'),
-(8, 'Injection Sites'),
-(9, 'Other Specify'),
-(5, 'Parks'),
-(4, 'Public areas'),
-(2, 'Streets'),
-(7, 'Tunnels');
+CREATE TABLE IF NOT EXISTS `login_logs` (
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `userrole` varchar(100) DEFAULT NULL,
+  `is_demo` tinyint(1) DEFAULT '0',
+  `country` varchar(80) DEFAULT '',
+  `ip_address` varchar(64) DEFAULT '',
+  `user_agent` varchar(255) DEFAULT '',
+  `success` tinyint(1) DEFAULT '1',
+  `login_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -5100,7 +5217,7 @@ INSERT IGNORE INTO `living_conditions` (`cond_id`, `condition_name`) VALUES
 -- Table structure for table `marital_status`
 --
 
-CREATE TABLE `marital_status` (
+CREATE TABLE IF NOT EXISTS `marital_status` (
   `mar_id` int NOT NULL,
   `marital_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5117,9 +5234,7 @@ INSERT IGNORE INTO `marital_status` (`mar_id`, `marital_status_name`, `date_crea
 (6, 'Separated/Divorced', '2024-04-18 20:27:32'),
 (7, 'Cohabiting', '2024-04-18 20:27:48'),
 (8, 'Widowed', '2024-04-20 09:17:55'),
-(9, 'Unknown', '2024-11-13 00:00:00'),
-(10, 'Remarried', '2025-10-04 18:14:07'),
-(11, 'Never married', '2025-10-04 18:14:07');
+(9, 'Unknown', '2024-11-13 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -5127,7 +5242,7 @@ INSERT IGNORE INTO `marital_status` (`mar_id`, `marital_status_name`, `date_crea
 -- Table structure for table `medical_history`
 --
 
-CREATE TABLE `medical_history` (
+CREATE TABLE IF NOT EXISTS `medical_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5160,8 +5275,8 @@ DELIMITER $$
 CREATE TRIGGER `update_patient_next_appointment` AFTER INSERT ON `medical_history` FOR EACH ROW BEGIN
     -- Update next_appointment in patients table only if new value is not empty
     IF NEW.next_appointment IS NOT NULL AND NEW.next_appointment != '' THEN
-        UPDATE patients
-        SET next_appointment = NEW.next_appointment
+        UPDATE patients 
+        SET next_appointment = NEW.next_appointment 
         WHERE mat_id = NEW.mat_id;
     END IF;
 END
@@ -5174,7 +5289,7 @@ DELIMITER ;
 -- Table structure for table `medical_history_new`
 --
 
-CREATE TABLE `medical_history_new` (
+CREATE TABLE IF NOT EXISTS `medical_history_new` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5207,21 +5322,13 @@ CREATE TABLE `medical_history_new` (
   `appointment_status` enum('scheduled','done') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'scheduled'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `medical_history_new`
---
-
-INSERT IGNORE INTO `medical_history_new` (`id`, `visitDate`, `mat_id`, `clientName`, `nickName`, `sname`, `dob`, `reg_date`, `sex`, `hiv_status`, `marital_status`, `art_regimen`, `regimen_type`, `tb_status`, `tb_regimen`, `tb_start_date`, `tb_end_date`, `tpt_regimen`, `tpt_start_date`, `tpt_end_date`, `hepc_status`, `other_status`, `clinical_notes`, `current_status`, `last_vlDate`, `results`, `clinician_name`, `next_appointment`, `rx_date`, `appointment_status`) VALUES
-(2, '2026-06-15 00:00:00', '11094MAT0002', 'RICHARD KINUTHIA', '', '', '1990-01-04', '2023-09-13', 'Male', 'Positive', '', 'Not Provided', 'Not Provided', 'Positive', '2 RHZE', '2026-06-16', '2026-12-16', '', NULL, NULL, '', '', 'testing', 'Active', NULL, '', 'Lyani Sitti', '2025-09-22', '2026-06-16 00:28:00', 'scheduled'),
-(3, '2026-06-15 00:00:00', '11094MAT0002', 'RICHARD KINUTHIA', '', '', '1990-01-04', '2023-09-13', 'Male', 'Positive', '', 'AF2E - TDF + 3TC + DTG', 'First Line', 'Positive', '2 RHZE', '2026-06-16', '2026-12-16', '', NULL, NULL, '', '', 'Testing server', 'Active', NULL, '', 'Lyani Sitti', '2025-09-22', '2026-06-16 00:38:46', 'scheduled');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `nursing_history`
 --
 
-CREATE TABLE `nursing_history` (
+CREATE TABLE IF NOT EXISTS `nursing_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5254,18 +5361,10 @@ CREATE TABLE `nursing_history` (
 -- Table structure for table `nursing_services`
 --
 
-CREATE TABLE `nursing_services` (
+CREATE TABLE IF NOT EXISTS `nursing_services` (
   `nursing_id` int NOT NULL,
   `nurising_service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `nursing_services`
---
-
-INSERT IGNORE INTO `nursing_services` (`nursing_id`, `nurising_service_name`) VALUES
-(1, 'Wound dressing'),
-(2, 'Injection');
 
 -- --------------------------------------------------------
 
@@ -5273,29 +5372,10 @@ INSERT IGNORE INTO `nursing_services` (`nursing_id`, `nurising_service_name`) VA
 -- Table structure for table `offences`
 --
 
-CREATE TABLE `offences` (
+CREATE TABLE IF NOT EXISTS `offences` (
   `offense_id` int NOT NULL,
   `offense_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `offences`
---
-
-INSERT IGNORE INTO `offences` (`offense_id`, `offense_name`) VALUES
-(8, 'Assault'),
-(6, 'Burglary/Larceny'),
-(4, 'Drug peddling'),
-(3, 'Drunk and disorderly'),
-(12, 'Fraud/forgery'),
-(10, 'Murder'),
-(9, 'Rape'),
-(7, 'Robbery'),
-(13, 'Scrap-off'),
-(11, 'Sex work'),
-(1, 'Shoplifting'),
-(2, 'Vandalism'),
-(5, 'Weapons offense');
 
 -- --------------------------------------------------------
 
@@ -5303,7 +5383,7 @@ INSERT IGNORE INTO `offences` (`offense_id`, `offense_name`) VALUES
 -- Table structure for table `other_prescriptions`
 --
 
-CREATE TABLE `other_prescriptions` (
+CREATE TABLE IF NOT EXISTS `other_prescriptions` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5322,7 +5402,7 @@ CREATE TABLE `other_prescriptions` (
 -- Table structure for table `other_status`
 --
 
-CREATE TABLE `other_status` (
+CREATE TABLE IF NOT EXISTS `other_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5347,7 +5427,7 @@ INSERT IGNORE INTO `other_status` (`status_id`, `status_name`, `date_created`) V
 -- Table structure for table `patientfingerprints`
 --
 
-CREATE TABLE `patientfingerprints` (
+CREATE TABLE IF NOT EXISTS `patientfingerprints` (
   `Id` int NOT NULL,
   `Template` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5358,7 +5438,7 @@ CREATE TABLE `patientfingerprints` (
 -- Table structure for table `patients`
 --
 
-CREATE TABLE `patients` (
+CREATE TABLE IF NOT EXISTS `patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5442,7 +5522,7 @@ DELIMITER ;
 -- Table structure for table `patientsignatures`
 --
 
-CREATE TABLE `patientsignatures` (
+CREATE TABLE IF NOT EXISTS `patientsignatures` (
   `SessionId` int NOT NULL,
   `ImageData` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5453,7 +5533,7 @@ CREATE TABLE `patientsignatures` (
 -- Table structure for table `patient_checkins`
 --
 
-CREATE TABLE `patient_checkins` (
+CREATE TABLE IF NOT EXISTS `patient_checkins` (
   `checkin_id` int NOT NULL,
   `patient_id` int DEFAULT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5469,7 +5549,7 @@ CREATE TABLE `patient_checkins` (
 -- Table structure for table `patient_drug_histories`
 --
 
-CREATE TABLE `patient_drug_histories` (
+CREATE TABLE IF NOT EXISTS `patient_drug_histories` (
   `id` int NOT NULL,
   `encounter_id` int NOT NULL,
   `drug_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5487,7 +5567,7 @@ CREATE TABLE `patient_drug_histories` (
 -- Table structure for table `pharmacy`
 --
 
-CREATE TABLE `pharmacy` (
+CREATE TABLE IF NOT EXISTS `pharmacy` (
   `disp_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5513,7 +5593,7 @@ CREATE TABLE `pharmacy` (
 -- Table structure for table `photos`
 --
 
-CREATE TABLE `photos` (
+CREATE TABLE IF NOT EXISTS `photos` (
   `photo_id` int NOT NULL,
   `visitDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5528,7 +5608,7 @@ CREATE TABLE `photos` (
 -- Table structure for table `phq9_assessments`
 --
 
-CREATE TABLE `phq9_assessments` (
+CREATE TABLE IF NOT EXISTS `phq9_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5549,20 +5629,13 @@ CREATE TABLE `phq9_assessments` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `phq9_assessments`
---
-
-INSERT IGNORE INTO `phq9_assessments` (`assessment_id`, `p_id`, `mat_id`, `visitDate`, `therapist_id`, `q1`, `q2`, `q3`, `q4`, `q5`, `q6`, `q7`, `q8`, `q9`, `total_score`, `diagnosis`, `management_plan`, `created_at`) VALUES
-(1, 1, '11094MAT0001', '2026-04-23', 1, 1, 1, 0, 1, 2, 2, 1, 1, 1, 10, 'Moderate depression*', 'Provide supportive counselling (refer to a psychologist if available).\nRefer to a medical officer, psychiatrist, or mental health team if available.\nIf patient is on ARVs that causes anxiety, substitute with a different ARV after ruling out treatment failure IF APPLICABLE (See \'Managing Single Drug Substitutions for ART\').\n*Symptoms should ideally be present for at least 2 weeks for a diagnosis of depression and before considering treatment with antidepressant medication.', '2026-04-23 12:53:48');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `prescription_drugs`
 --
 
-CREATE TABLE `prescription_drugs` (
+CREATE TABLE IF NOT EXISTS `prescription_drugs` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drug_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5581,7 +5654,7 @@ CREATE TABLE `prescription_drugs` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
   `id` int NOT NULL,
   `category` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `productname` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5600,705 +5673,704 @@ CREATE TABLE `products` (
 --
 
 INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `packsize`, `pack_price`, `unit_price`, `price`, `reorder_level`, `currentstatus`, `date_created`) VALUES
-(1, '1', 'Ibuprofen Tablet BP 400mg', 'Gesic 400 ADL Brufen', 100, 125, '1.25', 3, 33, 'active', '2025-09-04 14:52:46'),
-(2, '1', 'Paracetamol Tablet BP 500mg', 'Cetamol 500mg', 100, 60, '0.60', 2, 33, 'active', '2025-09-04 14:52:46'),
-(3, '1', 'Piroxicam Capsules USP', 'Roxicam 20mg', 100, 65, '0.65', 5, 33, 'active', '2025-09-04 14:52:46'),
-(4, '1', 'Meloxicam Tablet 7.5mg BP', 'Melostar 7.5mg', 100, 161, '1.61', 5, 33, 'active', '2025-09-04 14:52:46'),
-(5, '1', 'Soluble Paracetamol BP 1000mg', 'PARA NOVA ', 8, 185, '23.13', 40, 3, 'active', '2025-09-04 14:52:46'),
-(6, '1', 'Ibuprofen 400mg/Paracetamol 325mg BP', 'Brustan Tablets', 10, 99, '9.90', 20, 3, 'active', '2025-09-04 14:52:46'),
-(7, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'ACEPAR-MR Caplets', 10, 260, '26.00', 35, 3, 'active', '2025-09-04 14:52:46'),
-(8, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'Rilif - MR Tablets', 20, 495, '24.75', 35, 7, 'active', '2025-09-04 14:52:46'),
-(9, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 500mg', 'Zyrtal - MR Tablets', 20, 685, '34.25', 50, 7, 'active', '2025-09-04 14:52:46'),
-(10, '1', 'Diclofenac 50mg/Paracetamol 500mg/Chlorzoxazone 250mg', 'DOLOACT - MR Tablets', 100, 1807, '18.07', 25, 33, 'active', '2025-09-04 14:52:46'),
-(11, '1', 'Paracetamol Tablet BP 500mg/Caffeine 65mg', 'Panadol Extra Tablets (Pairs)', 50, 396, '7.92', 20, 17, 'active', '2025-09-04 14:52:46'),
-(12, '1', 'Paracetamol Tablet BP 500mg', 'Panadol Advance Tablets (Pairs)', 50, 396, '7.92', 15, 17, 'active', '2025-09-04 14:52:46'),
-(13, '1', 'Etoricoxib Tablet 60mg', 'Tory 60 Tablet', 30, 830, '27.67', 40, 10, 'active', '2025-09-04 14:52:46'),
-(14, '1', 'Etoricoxib Tablet 90mg', 'Tory 90 Tablet', 30, 877, '29.23', 45, 10, 'active', '2025-09-04 14:52:46'),
-(15, '1', 'Etoricoxib Tablet 120mg', 'Tory 120 Tablet', 30, 1066, '35.53', 50, 10, 'active', '2025-09-04 14:52:46'),
-(16, '1', 'Paracetamol Tablet BP 500mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg', 'Panadol Cold&Flu Tablets', 24, 320, '13.33', 20, 8, 'active', '2025-09-04 14:52:46'),
-(17, '1', 'Paracetamol Tablet BP 300mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg/Caffeine 30mg', 'FLU-GONE Capsules', 1, 115, '115.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(18, '1', 'Paracetamol Tablet BP 650mg/Phenylephrine Hydrochloride 5mg/Chlorpheniramine Maleate 2mg', 'CONTUS-650 Tablet', 1, 99, '99.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(19, '1', 'Cetirizine Hydrochloride Tablet 10mg', 'CACHCET Tablet', 100, 78, '0.78', 5, 33, 'active', '2025-09-04 14:52:46'),
-(20, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Montallerg Tablets', 20, 1000, '50.00', 70, 7, 'active', '2025-09-04 14:52:46'),
-(21, '1', 'Montelukast 10mg', 'Montana 10mg', 14, 740, '52.86', 75, 5, 'active', '2025-09-04 14:52:46'),
-(22, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Motechest', 30, 409, '13.63', 40, 10, 'active', '2025-09-04 14:52:46'),
-(23, '1', 'Ephedrine 12mg/Theophyline 120mg', 'F-Tab (Franol) Tablet', 100, 179, '1.79', 5, 33, 'active', '2025-09-04 14:52:46'),
-(24, '1', 'Salbutamol Inhaler 100mcg', 'Medisalant 100mcg', 1, 165, '165.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(25, '1', 'Betamethasone 0.25mg/Dexchlorpheniramine Maleate BP 2mg', 'Celestinac Tablet', 30, 149, '4.97', 15, 10, 'active', '2025-09-04 14:52:46'),
-(26, '1', 'Paracetamol 500mg/Chlorzoxazone 250mg', 'Myospaz Tablet', 100, 1595, '15.95', 25, 33, 'active', '2025-09-04 14:52:46'),
-(27, '1', 'Diclofenac 100mg', 'ZOFENAC 100', 100, 75, '0.75', 10, 33, 'active', '2025-09-04 14:52:46'),
-(28, '1', 'Predinsolone 5mg', 'Olsolone Tablets', 100, 68, '0.68', 3, 33, 'active', '2025-09-04 14:52:46'),
-(29, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Duxscospan Plus (Buscopan Plus Generic)', 20, 338, '16.90', 25, 7, 'active', '2025-09-04 14:52:46'),
-(30, '1', 'Doxylamine Succ. 10mg/Pyridoxine 10mg ', 'NOSIC ', 20, 385, '19.25', 25, 7, 'active', '2025-09-04 14:52:46'),
-(31, '1', 'Metoclopramide 10mg', 'Emeton 10mg Tablet', 100, 70, '0.70', 5, 33, 'active', '2025-09-04 14:52:46'),
-(32, '1', 'Meloxicam EP Tablet 7.5mg', 'Melcam 7.5mg Tablet', 100, 331.5, '3.32', 5, 33, 'active', '2025-09-04 14:52:46'),
-(33, '1', 'Meloxicam EP Tablet 15mg', 'Melcam 15mg Tablet', 50, 306, '6.12', 10, 17, 'active', '2025-09-04 14:52:46'),
-(34, '1', 'Metoclopramide 10mg', 'Melasil - 10 Tablet', 100, 70, '0.70', 5, 33, 'active', '2025-09-04 14:52:46'),
-(35, '1', 'Promethazine 25mg', 'Promethazine Tablet', 100, 55, '0.55', 5, 33, 'active', '2025-09-04 14:52:46'),
-(36, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 60mL', 1, 26, '26.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(37, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 100mL', 1, 47, '47.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(38, '1', 'Paracetamol 120mg/5ml', 'Calpol Suspension 60mL', 1, 220, '220.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(39, '1', 'Ibuprofen 100mg/5ml', 'Triofen 60mL', 1, 21, '21.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(40, '1', 'Ibuprofen 100mg/5ml', 'Triofen 100mL', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(41, '1', 'Paracetamol 120mg/5ml', 'Panadol Baby&Infant 100mL', 1, 343, '343.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(42, '1', 'Ibuprofen 100mg/Paracetamol 125mg BP', 'Brustan Suspension', 1, 235, '235.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(43, '1', 'Soluble Paracetamol BP 1000mg', 'Parafast ET 1000 Tablet', 8, 380, '47.50', 50, 3, 'active', '2025-09-04 14:52:46'),
-(44, '1', 'Loratidine USP 10mg', 'Loratin Fast', 100, 850, '8.50', 15, 33, 'active', '2025-09-04 14:52:46'),
-(45, '1', 'Hyoscine - N- Butylbromide 10mg', 'HYCIN 10 Tablets (Buscopan Generic)', 100, 240, '2.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(46, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Hismopan Plus Tablets (Buscopan Plus Generic)', 100, 600, '6.00', 15, 33, 'active', '2025-09-04 14:52:46'),
-(47, '1', 'Metronidazole 400mg', 'Tricozole - 400mg Tablet', 100, 120, '1.20', 5, 33, 'active', '2025-09-04 14:52:46'),
-(48, '1', 'Tetracycline Eye Ointment USP', 'Metacycline', 1, 33, '33.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(49, '1', 'Betamethasone 0.1% w/v/Neomycin 0.5 %w/v', 'Probeta-N', 1, 105, '105.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(50, '1', 'Ciprofloxacin/Dexamethasone Eye/Ear Drops', 'Ciploglax-D Eye Drops', 1, 149, '149.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(51, '1', 'Ciprofloxacin 0.3% USP', 'Ciproken', 1, 102, '102.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(52, '1', 'Dextran 70 USP 1mg/Hypromellose USP 3mg', 'Lubtear', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(53, '1', 'Ciprofloxacin 0.3%/Beclomethasone 0.025%/Clotrimazole 1%/Lignocaine 2% Ear Drops', 'Otobiotic', 1, 228, '228.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(54, '1', 'fluticasone propionate ', 'Flonaspray', 1, 680, '680.00', 950, 1, 'active', '2025-09-04 14:52:46'),
-(55, '1', 'Esomeprazole', 'Protas 40 Tablets', 100, 1190, '11.90', 30, 33, 'active', '2025-09-04 14:52:46'),
-(56, '1', 'Esomeprazole', 'Nexium 20', 14, 550, '39.29', 70, 5, 'active', '2025-09-04 14:52:46'),
-(57, '1', 'Omeprazole Satchets', 'Risek insta', 10, 331, '33.10', 50, 3, 'active', '2025-09-04 14:52:46'),
-(58, '1', 'Omeprazole ', 'Omecos 20 Capsules', 100, 105, '1.05', 5, 33, 'active', '2025-09-04 14:52:46'),
-(59, '1', 'Pantoprazole Delayed Release', 'Pantakind 40', 60, 1440, '24.00', 35, 20, 'active', '2025-09-04 14:52:46'),
-(60, '1', 'Clotrimazole Vaginal Tablets 200mg', 'Canazol Vaginal Tablet, 3s', 1, 46, '46.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(61, '1', 'Ketocozole 200mg  BP', 'Hitoral 200mg Tablet', 100, 340, '3.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(62, '1', 'Amoxicllin 125mg/5mL', 'ELYMOX Suspension 100mL', 1, 43, '43.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(63, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 100mL', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(64, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 50mL', 1, 30, '30.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(65, '1', 'Ampicillin/Cloxacillin 250mg/5mL', 'Ampiclo-Dawa Suspension', 1, 68, '68.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(66, '1', 'Ampicillin/Cloxacillin 250mg/250mg', 'Ampiclo-Dawa 500 Capsule', 100, 400, '4.00', 10, 33, 'active', '2025-09-04 14:52:46'),
-(67, '1', 'Flucloxacillin 125mg/5mL', 'ELYFLOX 100mL Suspension', 1, 76, '76.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(68, '1', 'Azithromycin Oral Suspension 200mg', 'IzziThree 15mg', 1, 39, '39.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(69, '1', 'Vitamin B Complex', 'Neuro-Forte', 20, 270, '13.50', 20, 7, 'active', '2025-09-04 14:52:46'),
-(70, '1', 'Levocetirizine 5mg', 'VIVACET L 5', 10, 55, '5.50', 20, 3, 'active', '2025-09-04 14:52:46'),
-(71, '1', 'Maternity Pads', 'Medimax', 1, 97, '97.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(72, '1', 'Maternity Pads', 'Medicott', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(73, '1', 'Absorbent Cotton Wool 400mg', 'Velvex', 1, 250, '250.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(74, '1', 'Adult Diapers XL', 'MY A+ XLARGE', 10, 100, '10.00', 15, 3, 'active', '2025-09-04 14:52:46'),
-(75, '1', 'Adult Diapers L', 'MY A+ LARGE', 10, 100, '10.00', 15, 3, 'active', '2025-09-04 14:52:46'),
-(76, '1', 'Adult Pants L', 'ADFIT  PANTS LARGE', 30, 100, '3.33', 5, 10, 'active', '2025-09-04 14:52:46'),
-(77, '1', 'Sulphadoxine 500mg/Pyrimethamine 25mg', 'FANLAR Tablets', 25, 30, '1.20', 50, 8, 'active', '2025-09-04 14:52:46'),
-(78, '1', 'Terbinafine 250mg', 'Terbinaforce 250 Tablets', 30, 953, '31.77', 50, 10, 'active', '2025-09-04 14:52:46'),
-(79, '1', 'Fluconazole 150mg', 'NOCANZ 150 Tablet', 1, 15, '15.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(80, '1', 'Griseofulvin 250mg', 'Grisolab-250 Tablet', 100, 520, '5.20', 10, 33, 'active', '2025-09-04 14:52:46'),
-(81, '1', 'Griseofulvin 125mg', 'Biofulvin 125 Tablet', 100, 390, '3.90', 10, 33, 'active', '2025-09-04 14:52:46'),
-(82, '1', 'Artemether 20mg/Lumefantrine 120mg', 'LONART Tablet, 24s', 1, 55, '55.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(83, '1', 'Artemether 20mg/Lumefantrine 120mg', 'PANAART 20/120, 24s', 1, 0, '0.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(84, '1', 'Povidone-Iodine USP 1%', 'Peardine Mouth Wash, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(85, '1', 'Povidone-Iodine USP 1%', 'Rexe-Dine Mouth Wash', 1, 135, '135.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(86, '1', 'Amoxicillin 500mg', 'AMOXIMED 500 Capsule', 100, 320, '3.20', 6.6, 33, 'active', '2025-09-04 14:52:46'),
-(87, '1', 'Cefuroxime 500mg USP', 'Theoroxime 500 Tablets', 1, 165, '165.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(88, '1', 'Cefixime 400mg USP', 'Theofix - 400 Tablets', 10, 170, '17.00', 350, 3, 'active', '2025-09-04 14:52:46'),
-(89, '1', 'Azithromycin 500mg USP', 'AGYCIN-500 Tablet, 3s', 1, 55, '55.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(90, '1', 'Nitrofurantoin 100mg', 'NIFURAN', 100, 200, '2.00', 10, 33, 'active', '2025-09-04 14:52:46'),
-(91, '1', 'Tinidazole 500mg', 'Tinizol 500 Tablets,4s', 1, 11, '11.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(92, '1', 'Amoxicillin 250mg', 'SPASMOX 250 Capsule', 100, 195, '1.95', 3.3, 33, 'active', '2025-09-04 14:52:46'),
-(93, '1', 'Doxycycline 100mg', 'XYCYCLINE 100 Capsule', 100, 149, '1.49', 5, 33, 'active', '2025-09-04 14:52:46'),
-(94, '1', 'Secnidazole 1g', 'Secnida Forte Tablets, 2s', 1, 25, '25.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(95, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Microgynon Fe Tablets', 1, 225, '225.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(96, '1', 'Sildenafil 50mg ', 'MTM-50 Tablet', 4, 36, '9.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(97, '1', 'Sildenafil 100mg ', 'MTM-100 Tablet', 4, 46, '11.50', 50, 1, 'active', '2025-09-04 14:52:46'),
-(98, '1', 'Sildenafil 100mg ', 'Nelgra-100 Tablet', 4, 43, '10.75', 50, 1, 'active', '2025-09-04 14:52:46'),
-(99, '1', 'Sildenafil 100mg ', 'VEGA-100 Tablet', 4, 41, '10.25', 50, 1, 'active', '2025-09-04 14:52:46'),
-(100, '1', 'Levonogestrel 0.75mg', 'Postinor-2 Tablets, 2s', 1, 143, '143.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(101, '1', 'levonogestrel 0.75mg', 'Safe-72 Tablets,2s', 1, 20, '20.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(102, '1', 'Betamethasone Sodium Phosphate 2mg/ml/Betamethasone Dipropionate 5mg/ml Suspension for Inj,2ml', 'KRIDOFOS Injection', 1, 675, '675.00', 900, 1, 'active', '2025-09-04 14:52:46'),
-(103, '1', 'Medroxyprogesterone Injection 150mg/mL', 'Lydia Contraceptive Injection', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(104, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Femiplan Tablets', 1, 85, '85.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(105, '1', 'Diclofenac 75mg Injection', 'CAREFENAC Injection', 10, 45, '4.50', 20, 3, 'active', '2025-09-04 14:52:46'),
-(106, '1', 'Carbamazepine 200mg BP', 'Carbamazepine 200mg Tablets', 100, 369, '3.69', 5, 33, 'active', '2025-09-04 14:52:46'),
-(107, '1', 'Amitriptyline 25mg', 'Amitiptyline Tablets, Cosmos', 100, 252, '2.52', 5, 33, 'active', '2025-09-04 14:52:46'),
-(108, '1', 'Phenobarbital 30mg', 'Phenobarbital Tablets, Cosmos', 100, 235, '2.35', 5, 33, 'active', '2025-09-04 14:52:46'),
-(109, '1', 'Diazepam 5mg', 'Cozepam Tablets', 100, 302, '3.02', 5, 33, 'active', '2025-09-04 14:52:46'),
-(110, '1', 'Maternity Pants', 'Dafi Maternity Pants, M-L', 6, 750, '125.00', 200, 2, 'active', '2025-09-04 14:52:46'),
-(111, '1', 'Maternity Pants', 'Dafi Maternity Pants, S-L', 6, 750, '125.00', 200, 2, 'active', '2025-09-04 14:52:46'),
-(112, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'Augmentin 457 Suspension', 1, 990, '990.00', 1200, 1, 'active', '2025-09-04 14:52:46'),
-(113, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Augmentin 228 Suspension', 1, 635, '635.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(114, '1', 'Tamsulosin 0.4mg', 'Tamsolin Capsules', 10, 770, '77.00', 100, 3, 'active', '2025-09-04 14:52:46'),
-(115, '1', 'Amoxicillin/Clavulanate 625mg', 'Labclav 625 Tablets', 1, 115, '115.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(116, '1', 'Amoxicillin/Clavulanate 1000mg', 'Acinet 1000 Tablets', 1, 275, '275.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(117, '1', 'Amoxicillin/Clavulanate 375mg', 'Acinet 375 Tablets', 1, 171, '171.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(118, '1', 'Ciprofloxacin 500mg USP', 'Ciproglax 500mg Tablets', 100, 240, '2.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(119, '1', 'Finasteride 5mg/Tamsulosin 400mcg', 'FINOSIN Tablets', 30, 1750, '58.33', 75, 10, 'active', '2025-09-04 14:52:46'),
-(120, '1', 'Flucloxacillin Injection 500mg Vial', 'Flupene Injection', 1, 38, '38.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(121, '1', 'HydrocortisoneInjection 100mg', 'OCORTIN 100 Injection', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(122, '1', 'Lidocaine Injection 20mg/mL, 30mL', 'LIDOCAINE 2% Injection', 1, 36, '36.00', 60, 1, 'active', '2025-09-04 14:52:46'),
-(123, '1', 'Cefuroxime 125mg/5mL', 'Evorox, 50mL Suspension', 1, 220, '220.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(124, '1', 'Cefalexin 125mh/5mL', 'Leocef, 100mL Suspension', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(125, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Labclav 228 Suspension', 1, 102, '102.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(126, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'ACINET DRY SYRUP 457', 1, 260, '260.00', 380, 1, 'active', '2025-09-04 14:52:46'),
-(127, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Neonatal Ampiclox Drops', 1, 345, '345.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(128, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Ampliclo-Dawa (Neonata Amplicox Gen)', 1, 50, '50.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(129, '1', 'Amlodipine 5mg/Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Amlozaar-H Tablet', 30, 1400, '46.67', 70, 10, 'active', '2025-09-04 14:52:46'),
-(130, '1', 'Flucloxacillin 250mg/Amoxicillin 250mg', 'MoxaForte 500 Capsules, 20s', 1, 354, '354.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(131, '1', 'Ceftriaxone 1g', '\'GALAXY\'S SEFIN Injection', 1, 32, '32.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(132, '1', 'Urine Bag', 'Urine Collection Bag, 2000mL', 1, 48, '48.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(133, '1', 'Zinc Sulfate DT 20mg', 'Junior Zinc Tablets', 100, 89, '0.89', 5, 33, 'active', '2025-09-04 14:52:46'),
-(134, '1', 'Normal Saline Nasal Drops', 'Nosfree Saline Drops', 1, 17, '17.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(135, '1', 'Hyoscine - N- Butylbromide 5mg/5mL', 'Hycin Syrup, 60mL', 1, 62, '62.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(136, '1', 'Orals Rehydration Salts', 'ORASOL, ORS', 1, 8, '8.00', 20, 1, 'active', '2025-09-04 14:52:46'),
-(137, '1', 'Ondasetron 2mg/5mL', 'EMITOSS Oral Solution, 30mL', 1, 270, '270.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(138, '1', 'Zinc Sulfate 20mg Syrup', 'TOTO-ZincOD Syrup', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(139, '1', 'Nystatin 100,000 units', 'NYSTAL Suspension', 1, 62, '62.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(140, '1', 'Glucosamine/Chondroitin/Cod Liver/Omega 3', 'Cartil Omega Softgel Capsules', 30, 1758, '58.60', 75, 10, 'active', '2025-09-04 14:52:46'),
-(141, '1', 'Calcium/Magnesium/Vitamin D', 'Osteocare Tablets', 30, 620, '20.67', 30, 10, 'active', '2025-09-04 14:52:46'),
-(142, '1', 'Calcium 320mg/Phosphorus 137.5mg', 'Purecal Chewable Tablets', 30, 750, '25.00', 35, 10, 'active', '2025-09-04 14:52:46'),
-(143, '1', 'Calcium/Magnesium/Vitamin D', 'Zedcal Oral Suspension, 200mL', 1, 549, '549.00', 750, 1, 'active', '2025-09-04 14:52:46'),
-(144, '1', 'Lansoprazole/Tinidazole/Clarithromycin', 'Sure Kit, H. Pylori Kit', 1, 698, '698.00', 1000, 1, 'active', '2025-09-04 14:52:46'),
-(145, '1', 'Amoxicillin,clarithromycin,Esomeprazole', 'Esofag kit,H.Pylori kit', 1, 950, '950.00', 1300, 1, 'active', '2025-09-04 14:52:46'),
-(146, '1', 'lansoprazole/Amoxicilin/Clarithromycin', 'Pylotrip,H.Pylori Kit', 1, 890, '890.00', 1300, 1, 'active', '2025-09-04 14:52:46'),
-(147, '1', 'syringe 10cc', 'Syringe 10cc', 1, 450, '450.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(148, '1', 'Syringe 5cc', 'Syringe 5cc', 1, 270, '270.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(149, '1', 'Lactulose solution', 'Osmolax Suspension', 1, 340, '340.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(150, '1', 'magaldrate and simethicone 200ml', 'Maganta Suspension', 1, 361.25, '361.25', 500, 1, 'active', '2025-09-04 14:52:46'),
-(151, '1', 'Sodium alginate 500mg/sodium bicarbonate/calcium carbonate', ' Asynta Max 200mL', 1, 467.5, '467.50', 700, 1, 'active', '2025-09-04 14:52:46'),
-(152, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 180mL', 1, 325, '325.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(153, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 100mL', 1, 247, '247.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(154, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Alugel Suspension, 100mL', 1, 81, '81.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(155, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 200mL Suspension', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(156, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 100mL Suspension', 1, 135, '135.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(157, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Gocid 100mL Suspension', 1, 35, '35.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(158, '1', 'Alginic Acid Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone ', 'ULGICID Suspension 200mL', 1, 285, '285.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(159, '1', 'Sucralfate/Oxetacaine', 'Sucrafil O Gel Suspension, 100mL', 1, 280, '280.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(160, '1', 'Aluminium Hydroxide 300mg/magnesium hydroxyde 150mg/simethicone 100mg', 'Benagas Gel, 100mL', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(161, '1', 'Aluminium Hydroxide 150mg/Magnesium Trisilicate 250mg', 'Tryactin Suspension, 100mL', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(162, '1', 'Magaldrate 480mg and simethicone 20mg', 'Magnacid Gel 100mL', 1, 55, '55.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(163, '1', 'Ferric Ammonium Citrate 200mg/Folic 1.5mg/Cyanocobalamin 50mcg/Ethanol', 'Ranferon 12 Suspension, 200mL', 1, 325, '325.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(164, '1', 'Dried Ferrous Sulphate 200mg/Folic Acid 0.4mg', 'Ferrolic-LF Tablets, IFAS', 100, 133, '1.33', 5, 33, 'active', '2025-09-04 14:52:46'),
-(165, '1', 'Ferrous Fumarate 305mg/Folic Acid 0.75mg/Cyanocobalamin 5mcg/Ascorbic Acid 75mg/Zinc Sulphate 5mg', 'Ranferon Capsules', 30, 286, '9.53', 20, 10, 'active', '2025-09-04 14:52:46'),
-(166, '1', 'Iron 50mg/Manganese 1.33mg/Copper 0.70mg', '\'Tot\'Hema Ampoules\'', 20, 860, '43.00', 80, 7, 'active', '2025-09-04 14:52:46'),
-(167, '1', 'Diloxanide Furoate 250mg/Metronidazole 200mg/Dicyclomine 10mg/5mL', 'Entamaxin Oral Suspension, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(168, '1', 'Metronidazole 200mg/5mL', 'Amizole Oral Suspension', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(169, '1', 'Metronidazole Benzoate 200mg/5mL', 'Tricozole - 200mg Suspension', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(170, '1', 'Multivitamin Syrup', 'Filwel Kids, 100mL', 1, 204, '204.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(171, '1', 'Secnidazole 750mg/15mL', 'Secnida for Children, 15mL', 1, 98, '98.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(172, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Tablets', 30, 360, '12.00', 15, 10, 'active', '2025-09-04 14:52:46'),
-(173, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Syrup, 200mL', 30, 320, '10.67', 450, 10, 'active', '2025-09-04 14:52:46'),
-(174, '1', 'Cyproheptadine 2mg/ B Vitamins/Minerals', 'Cypro B Plus Syrup, 200mL', 1, 235, '235.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(175, '1', 'Cyproheptadine 2mg/ Tricholine Citrate 275mg', 'Cypon Syrup,100mL', 1, 210, '210.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(176, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Ambroxol Expectorant Syrup, 100mL', 1, 178.4, '178.40', 250, 1, 'active', '2025-09-04 14:52:46'),
-(177, '1', 'Adovas Syrup', 'Adovas Syrup, 100mL', 1, 204, '204.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(178, '1', 'Sulbutamol 1mg/Bromhexine 2mg/Guaifenesin 50mg', 'Cadistin Plus, 100mL', 1, 175, '175.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(179, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadiphen Syrup, 100mL', 1, 140, '140.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(180, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg', 'Flu-Gone DM, 60mL', 1, 165, '165.00', 230, 1, 'active', '2025-09-04 14:52:46'),
-(181, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg/Paracetamol', 'Flu-Gone P+, 60mL', 1, 165, '165.00', 230, 1, 'active', '2025-09-04 14:52:46'),
-(182, '1', 'Promethazine 2.5mg/Diphenhydramine 5mg/Ammonium Cl 90mg/Sodium Citrate 45mg/Ephedrine Hcl 7.5mg', 'Tridex Cough Mixture,100mL', 1, 58, '58.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(183, '1', 'Dextromethorphan 10mg/Cetirizine 5mg/Phenylephrine Hcl 5mg', 'Zefcolin Dry Cough Formula Syrup, 100mL', 1, 229, '229.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(184, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 100mL', 1, 214.4, '214.40', 300, 1, 'active', '2025-09-04 14:52:46'),
-(185, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 200mL', 1, 375.4, '375.40', 500, 1, 'active', '2025-09-04 14:52:46'),
-(186, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadistin Expectorant, 100mL', 1, 98, '98.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(187, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 10mg/Paracetamol 120mg', 'Coldcap Syrup, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(188, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 60mL', 1, 36, '36.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(189, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 100mL', 1, 53, '53.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(190, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Guaifenesin 100mg', 'Trimex Diabetic', 1, 215, '215.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(191, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Mucosolvan Syrup,100mL', 1, 590, '590.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(192, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Sodium Citrate 44mg/Dextromethorphan 10mg/Menthol 1mg', 'Coscof-DM Linctus,100mL', 1, 155, '155.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(193, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Original, 100mL, Syrup', 1, 410, '410.00', 600, 1, 'active', '2025-09-04 14:52:46'),
-(194, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Orange Flavour, 100mL, Syrup', 1, 410, '410.00', 600, 1, 'active', '2025-09-04 14:52:46'),
-(195, '1', 'Bonnisan', 'Bonnisan, 120mL, Syrup', 1, 385, '385.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(196, '1', 'Sodium Bicarbonate 50mg/Terpeneless Dillseed Oil 2.15mg', 'Gripe Water', 1, 92, '92.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(197, '1', 'Levosalbutamol 1mg/5mg', 'Levostar, 100mL Syrup', 1, 216, '216.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(198, '1', 'Levocetirizine 2.5mg', 'ALERFREE Syrup,60mL', 1, 123, '123.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(199, '1', 'Desloratidine 2.5mg/5mL', 'DESOSTAR Syrup, 60mL', 1, 266, '266.00', 380, 1, 'active', '2025-09-04 14:52:46'),
-(200, '1', 'Loratidine USP 5mg/5mL', 'Lorhistina Syrup,  60mL', 1, 179, '179.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(201, '1', 'Predinsolone 5mg/5mL', 'Olsolone Syrup, 50mL', 1, 100, '100.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(202, '1', 'Promethazine Hcl, 5mg/5mL', 'Largan, Syrup', 1, 19, '19.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(203, '1', 'Chlorpheniramine Maleate 4mg', 'Dawa-CPM Tablets, 4mg', 100, 31, '0.31', 2, 33, 'active', '2025-09-04 14:52:46'),
-(204, '1', 'Chlorpheniramine Maleate 2mg/5mL', 'Dawa-CPM Syrup, 60mL', 1, 22, '22.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(205, '1', 'Cetirizine HCL 5mg/5mL', 'CetriPlain, 60mL Syrup', 1, 20, '20.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(206, '1', 'Sodium Lactate IV Infusion', 'Ringer - Lactate, 500mL,IV Infusion', 1, 80, '80.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(207, '1', 'Sodium Chloride, 0.9%', 'VIDASAL, 500mL, IV Infusion (Normal Saline)', 1, 80, '80.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(208, '1', 'Erythromycin 125mg/5mL', 'Erythrox 100mL', 1, 78, '78.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(209, '1', 'Clarithromycin 500mg', 'Aziclar-500 Tablets', 1, 229, '229.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(210, '1', 'Diloxanide Furoate 500mg/Metronidazole 400mg', 'Diracip-MDS, Tablets,15s', 1, 225, '225.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(211, '1', 'Azithromycin 1g/Fluconazole 150mg/Secnidazole 1g', 'AZFLOSEC KIT', 1, 325, '325.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(212, '1', 'Ciprofloxacin 500mg/Tinidazole 600mg', 'CIPRO-T, Tablets', 1, 150, '150.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(213, '1', 'Cefalexin 500mg', 'Felaxin 500 Capsules', 1, 6.8, '6.80', 15, 1, 'active', '2025-09-04 14:52:46'),
-(214, '1', 'Tramadol 50mg', 'Metadol Capsules', 100, 350, '3.50', 10, 33, 'active', '2025-09-04 14:52:46'),
-(215, '1', 'Cefadroxil 500mg', 'DROX 500', 1, 183.6, '183.60', 400, 1, 'active', '2025-09-04 14:52:46'),
-(216, '1', 'Pregnancy Test Strip', 'Pregnancy Test Strip', 1, 11, '11.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(217, '1', 'Metformin HCl 500mg', 'Glucophage 500 Tablets', 90, 395, '4.39', 8, 30, 'active', '2025-09-04 14:52:46'),
-(218, '1', 'Metformin HCl 850mg', 'Glucophage 850 Tablets', 60, 564, '9.40', 15, 20, 'active', '2025-09-04 14:52:46'),
-(219, '1', 'Norethisterone 5mg', 'Primolut N Tablets', 30, 940, '31.33', 45, 10, 'active', '2025-09-04 14:52:46'),
-(220, '1', 'Clomifene 50mg', 'Clophene 50mg, Tablets', 30, 379, '12.63', 50, 10, 'active', '2025-09-04 14:52:46'),
-(221, '1', 'Fluconazole 150mg/Azithromycin 1g/Secnidazole 1g', 'VDM KIT, Tablets', 1, 645, '645.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(222, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 28s Tablets', 28, 145, '5.18', 7, 9, 'active', '2025-09-04 14:52:46'),
-(223, '1', 'Metformin 500mg', 'Sukarmin 500mg Tablets', 100, 85, '0.85', 5, 33, 'active', '2025-09-04 14:52:46'),
-(224, '1', 'Amlodipine 5mg', 'Varinil 5 Tablets', 28, 155, '5.54', 10, 9, 'active', '2025-09-04 14:52:46'),
-(225, '1', 'Hydrochlorothiazide 50mg', 'HYMET Tablets', 100, 75, '0.75', 4, 33, 'active', '2025-09-04 14:52:46'),
-(226, '1', 'Acetylsalicylic Acid 75mg', 'Ascard 75 Tablets', 30, 105, '3.50', 150, 10, 'active', '2025-09-04 14:52:46'),
-(227, '1', 'Metformin HCl 850mg', 'Glucomet 850 Tablets', 56, 420, '7.50', 15, 19, 'active', '2025-09-04 14:52:46'),
-(228, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 112s Tablets', 112, 495, '4.42', 7, 37, 'active', '2025-09-04 14:52:46'),
-(229, '1', 'Anusol', 'Anusol Suppositories', 12, 700, '58.33', 80, 4, 'active', '2025-09-04 14:52:46'),
-(230, '1', 'Atenolol 50mg', 'Cardinol 50 Tablets, 28s', 28, 125, '4.46', 8, 9, 'active', '2025-09-04 14:52:46'),
-(231, '1', 'Losartan 50mg', 'Amlozaar 50 Tablets', 30, 950, '31.67', 45, 10, 'active', '2025-09-04 14:52:46'),
-(232, '1', 'Carvedilol 12.5mg', 'Vidol 12.5 Tablets', 28, 410, '14.64', 20, 9, 'active', '2025-09-04 14:52:46'),
-(233, '1', 'Carvedilol 6.25mg', 'Vidol 6.25 Tablets', 28, 285, '10.18', 15, 9, 'active', '2025-09-04 14:52:46'),
-(234, '1', 'Nifedipine 20mg', 'Nicardin-SR Tablets', 100, 80, '0.80', 5, 33, 'active', '2025-09-04 14:52:46'),
-(235, '1', 'Losartan 50mg', 'Angilock 50 Tablets', 30, 131.75, '4.39', 8, 10, 'active', '2025-09-04 14:52:46'),
-(236, '1', 'Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Angilock-Plus 50/12.5 Tablets', 30, 170, '5.67', 10, 10, 'active', '2025-09-04 14:52:46'),
-(237, '1', 'Atenolol 50mg', 'Lonet 50 Tablets', 100, 337, '3.37', 5, 33, 'active', '2025-09-04 14:52:46'),
-(238, '1', 'Atorvastatin 20mg ', 'Avastatin 20 Tablets', 28, 304, '10.86', 20, 9, 'active', '2025-09-04 14:52:46'),
-(239, '1', 'Atorvastatin 20mg ', 'Atsta*20 Tablets', 30, 170, '5.67', 15, 10, 'active', '2025-09-04 14:52:46'),
-(240, '1', 'Enalapril 10mg', 'Dawapril 10 Tablet', 100, 113, '1.13', 5, 33, 'active', '2025-09-04 14:52:46'),
-(241, '1', 'Enalapril 5mg', 'Dawapril 5 Tablet', 100, 123, '1.23', 5, 33, 'active', '2025-09-04 14:52:46'),
-(242, '1', 'Co-trimoxazole 480mg Tablets', 'CO-TRI 480 Tablets', 100, 149, '1.49', 5, 33, 'active', '2025-09-04 14:52:46'),
-(243, '1', 'Co-trimoxazole 960mg Tablets', 'Co-trimoxazole 960 Tablets', 100, 485, '4.85', 10, 33, 'active', '2025-09-04 14:52:46'),
-(244, '1', 'Blood Lancets', 'Blood Lancets Pieces', 100, 174, '1.74', 300, 33, 'active', '2025-09-04 14:52:46'),
-(245, '1', 'Benzyl Benzoate Application 25%', 'Scabees Application, 100mL', 1, 210, '210.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(246, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 75MG', 1, 120, '120.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(247, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 150MG', 1, 220, '220.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(248, '1', 'Calcium Antiacids', 'ENO Tablets (Pairs)', 100, 595, '5.95', 20, 33, 'active', '2025-09-04 14:52:46'),
-(249, '1', 'Touch ang Go', 'Touch and Go', 1, 220, '220.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(250, '1', 'Hydrocortisone Ointment 1% w/w', 'ELYCORT 15G OINTMENT', 1, 62, '62.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(251, '1', 'Hydrocortisone Cream 1% w/w', 'ELYCORT 15G CREAM', 1, 66, '66.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(252, '1', 'Neomycin 5mg/Bacitracin 2.5mg/Gramicidin 0.5mg Powder', 'GRABACIN POWDER 10GM', 1, 125, '125.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(253, '1', 'Neomycin 5mg/Bacitracin 250 IU', 'NEBANOL POWDER 5MG', 1, 59, '59.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(254, '1', 'Neomycin 3.5mg/Bacitracin 5000 units/Bacitracin 500 units', 'GRABACIN 3 Ointment', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(255, '1', 'Hydrocortisone Ointment 1% w/w', 'HYDROTOPIC Ointment 15g Tube', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(256, '1', 'Condoms', 'Kiss Classic Condoms, 3s', 24, 627, '26.13', 50, 8, 'active', '2025-09-04 14:52:46'),
-(257, '1', 'Condoms', 'Kiss Strawberry Condoms, 3s', 24, 826, '34.42', 100, 8, 'active', '2025-09-04 14:52:46'),
-(258, '1', 'Condoms', 'Kiss Studded Condoms, 3s', 24, 892, '37.17', 100, 8, 'active', '2025-09-04 14:52:46'),
-(259, '1', 'Condoms', 'Kiss Chocolate Condoms, 3s', 24, 826, '34.42', 100, 8, 'active', '2025-09-04 14:52:46'),
-(260, '1', 'Condoms', 'Durex Fetherlite Ultra, 3s', 1, 337, '337.00', 550, 1, 'active', '2025-09-04 14:52:46'),
-(261, '1', 'Condoms', 'Durex Extra Safe, 3s', 1, 302, '302.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(262, '1', 'Condoms', 'TRUST RIBBED, 3s', 24, 920, '38.33', 100, 8, 'active', '2025-09-04 14:52:46'),
-(263, '1', 'Condoms', 'TRUST CLASSIC, 3s', 24, 600, '25.00', 50, 8, 'active', '2025-09-04 14:52:46'),
-(264, '1', 'Condoms', 'TRUST STUDDED, 3s', 24, 900, '37.50', 100, 8, 'active', '2025-09-04 14:52:46'),
-(265, '1', 'Bandages', 'Crepe Bandage Spandex 5cm', 1, 18, '18.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(266, '1', 'Bandages', 'Crepe Bandage Spandex 7.5cm', 1, 29, '29.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(267, '1', 'Bandages', 'Crepe Bandage Spandex 15cm', 1, 49, '49.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(268, '1', 'Bandages', 'Crepe Bandage Spandex 10cm', 1, 46, '46.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(269, '1', 'Diclofenac Gel 1%', 'DICLOGEN 1% GEL', 1, 19, '19.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(270, '1', 'Clotrimazole 1% w/w/Beclomethasone Dipropionate 0.025% w/w', 'Bulkot-B Cream', 1, 51, '51.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(271, '1', 'Betamethasone Dipropionate, Gentamicin & Clotrimazole  Cream', 'Xtraderm Cream', 1, 126, '126.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(272, '1', 'Clotrimazole 10.0% w/w/Betamethasone 0.5mg', 'Clozole-B Cream', 1, 72, '72.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(273, '1', 'Clotrimazole 1.0% w/w', 'Clozole Cream', 1, 28, '28.00', 70, 1, 'active', '2025-09-04 14:52:46'),
-(274, '1', 'Hydrocortisone Cream 1% w/w', 'OLCORT 15G Cream', 1, 28, '28.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(275, '1', 'Beclomethasone 0.025%, Miconazole 2%, Neomycin Sulphate 0.5% Chlorocresol 0.25%', 'Beclomin Ointment 15g', 1, 150, '150.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(276, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Ointment 15g', 1, 76, '76.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(277, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Cream 15g', 1, 45, '45.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(278, '1', 'Betamethasone Valerate 0.1% w/w/Salicylic acid 3% w/w', 'MEDIVEN-S Ointment 15g', 1, 180, '180.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(279, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 15g', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(280, '1', 'Calamine Lotion', 'COVIGEN Calamine Lotion, 100mL', 1, 29, '29.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(281, '1', 'Surgical Spirit 70% v/v', 'COVIGEN Surgical Spirit, 50mL', 1, 26, '26.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(282, '1', 'Povidone-Iodine USP 10% w/v', 'FAHOLO POVIDONE IODINE, 50mL', 1, 50, '50.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(283, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 100g', 1, 169, '169.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(284, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 250g', 1, 308, '308.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(285, '1', 'Chlorine 3.5% w/v', 'FAHOLO Sodium Hypochlorite 3.5% w/v', 1, 300, '300.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(286, '1', 'Sterile Paraffin Dressing ', 'Sterifin Dressing Gauze, 10x10', 10, 287, '28.70', 50, 3, 'active', '2025-09-04 14:52:46'),
-(287, '1', 'Sodium Bicarbonate 300mg ', 'SodaMint Tablets', 100, 87, '0.87', 5, 33, 'active', '2025-09-04 14:52:46'),
-(288, '1', 'Indomethacin 25mg', 'Caredomet 25mg Capsules, Indocid', 100, 80, '0.80', 3, 33, 'active', '2025-09-04 14:52:46'),
-(289, '1', 'Esomeprazole 20mg', 'ESOMAC 20', 28, 789, '28.18', 35, 9, 'active', '2025-09-04 14:52:46'),
-(290, '1', 'Esomeprazole 20mg', 'ESOMAC 40', 14, 745, '53.21', 70, 5, 'active', '2025-09-04 14:52:46'),
-(291, '1', 'Albendazole 400mg', 'Zentel 400 Tablet', 1, 190, '190.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(292, '1', 'Ketoconazole 2% w/v', 'Hitoral  Shampoo, 100mL', 1, 316, '316.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(293, '1', 'Ivermectin BP 6mg', 'Iverkot-6', 10, 2100, '210.00', 250, 3, 'active', '2025-09-04 14:52:46'),
-(294, '1', 'Lidocaine HCl/Cetylpyridinium', 'Dentinox 10g', 2, 646, '323.00', 900, 1, 'active', '2025-09-04 14:52:46'),
-(295, '1', 'Trimetabol', 'Trimetabol Solution', 1, 750, '750.00', 1100, 1, 'active', '2025-09-04 14:52:46'),
-(296, '1', 'Diclofenac/Linseed/Methyl Salicylate/Racementhol/Benzyl Alcohol', 'VOLINI GEL, 100MG', 1, 218, '218.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(297, '1', 'Good Morning Lung Tonic', 'Good Morning, 60mL', 1, 76, '76.00', 130, 1, 'active', '2025-09-04 14:52:46'),
-(298, '1', 'Kofgon Red', 'KOFGON Syr, 60mL', 1, 25, '25.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(299, '1', 'Tricohist ', 'Tricohist, 100mL', 1, 108, '108.00', 180, 1, 'active', '2025-09-04 14:52:46'),
-(300, '1', 'Tricohist ', 'Tricohist, 60mL', 1, 95, '95.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(301, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg', 'Tripozed, Expectorant, 100mL', 1, 41, '41.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(302, '1', 'Diclofenac Sodium Slow Release 100mg', 'Diclomol SR 100mg, Tablets', 100, 435, '4.35', 10, 33, 'active', '2025-09-04 14:52:46'),
-(303, '1', 'Tretinoine 0.05% w/w', 'Acnesol Cream, 25g', 1, 153, '153.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(304, '1', 'Telmisartan 80mg/Amlodipine 5mg', 'AMTEL 80/5 Tabs', 30, 2000, '66.67', 80, 10, 'active', '2025-09-04 14:52:46'),
-(305, '1', 'Sulfadoxine/Pyrimethamine', 'Malodar Tbalets, 3s', 1, 40, '40.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(306, '1', 'Flucloxacillin/Amoxicillin 250mg/5mL', 'MoxaForte Suspension, 100mL', 1, 265, '265.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(307, '1', 'Sensodyne Toothpaste', 'Sensodyne Multicare, 40mL', 1, 241, '241.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(308, '1', 'Sildenafil 100mg/5g', 'KAMAGRA ORAL JELLY 100MG', 1, 660, '660.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(309, '1', 'aceclofenac/Paracetamol/Chlorzoxazone', 'ACETAL MR Tablets', 10, 519, '51.90', 15, 3, 'active', '2025-09-04 14:52:46'),
-(310, '1', 'Canullas G22 (Blue)', 'Canullas G22 (Blue)', 1, 13, '13.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(311, '1', 'Canullas G24(Yellow)', 'Canullas G24(Yellow)', 1, 14, '14.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(312, '1', 'FloraNorm Satchets', 'FloraNorm Satchets', 10, 870, '87.00', 130, 3, 'active', '2025-09-04 14:52:46'),
-(313, '1', 'Amoxicillin 1g/Clavulanate 200mg', 'GAMOK Injection, Vial', 1, 125, '125.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(314, '1', 'Insulin Syringes, 0.5mL', 'Insulin Syringes, 0.5mL', 10, 205, '20.50', 30, 3, 'active', '2025-09-04 14:52:46'),
-(315, '1', 'Insulin Syringes, 1mL', 'Insulin Syringes, 1mL', 10, 200, '20.00', 30, 3, 'active', '2025-09-04 14:52:46'),
-(316, '1', 'Diclofenac/Paracetamol/Chlorzoxazone', 'LOBAK Tablets, 100s', 100, 969, '9.69', 15, 33, 'active', '2025-09-04 14:52:46'),
-(317, '1', 'Tranexamic Acid 500mg/5mL', 'MENOZIP INJ, 500mg/5mL', 5, 461, '92.20', 150, 2, 'active', '2025-09-04 14:52:46'),
-(318, '1', 'Carbocisteine 100mg', 'NASITHIOL INFANT, 60mL', 1, 56, '56.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(319, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 100mL', 1, 67, '67.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(320, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 60mL', 1, 56, '56.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(321, '1', 'Needle G21', 'Needle G21', 100, 128, '1.28', 5, 33, 'active', '2025-09-04 14:52:46'),
-(322, '1', 'Needle G23', 'Needle G23', 100, 128, '1.28', 5, 33, 'active', '2025-09-04 14:52:46'),
-(323, '1', 'Omeprazole Inj 40mg', 'Ompac 40mg', 1, 60, '60.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(324, '1', 'Ondasetron 4mg/2mL', 'ONDEX 4MG', 5, 431, '86.20', 150, 2, 'active', '2025-09-04 14:52:46'),
-(325, '1', 'Dihydroartemisinin 40mg/Piperaquine 320mg', 'P-ALAXIN 9S', 1, 175, '175.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(326, '1', 'Paracetamol/Codeine Phosphate/Doxylamine, Caffeine', 'TAMEPYN, 20S', 20, 215, '10.75', 15, 7, 'active', '2025-09-04 14:52:46'),
-(327, '1', 'Lubricating Jelly', 'Veri-Lube, 42g', 1, 117, '117.00', 280, 1, 'active', '2025-09-04 14:52:46'),
-(328, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'Vithiol Syrup, 125mg', 1, 130, '130.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(329, '1', 'Timolol Eye Drops 0.5%', 'TIMOGLAX EYE DROPS, 5mL', 1, 67, '67.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(330, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, LEMON', 20, 185, '9.25', 30, 7, 'active', '2025-09-04 14:52:46'),
-(331, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, ORANGE', 20, 185, '9.25', 30, 7, 'active', '2025-09-04 14:52:46'),
-(332, '1', 'Miconazole Nitrate 2%w/w', 'MUCOBEN CREAM', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(333, '1', 'Medicated Soap', 'TETMOSOL Medicated Soap', 1, 95, '95.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(334, '1', 'Strepsils', 'Strepsils Soothing, Honey & Lemon', 100, 1300, '13.00', 50, 33, 'active', '2025-09-04 14:52:46'),
-(335, '1', 'Strepsils', 'Strepsils Regular', 100, 1300, '13.00', 50, 33, 'active', '2025-09-04 14:52:46'),
-(336, '1', 'Mupirocin Ointment 2%', 'Zupricin Ointment, 15g', 1, 505.5, '505.50', 750, 1, 'active', '2025-09-04 14:52:46'),
-(337, '1', 'Mupirocin 2%/Betamethasone 0.5% Ointment', 'Zupricin B Ointment, 15g', 1, 625.5, '625.50', 850, 1, 'active', '2025-09-04 14:52:46'),
-(338, '1', 'Anti-Rabies Vaccine', 'Anti-Rabies Vaccine, Vial', 3, 800, '266.67', 1200, 1, 'active', '2025-09-04 14:52:46'),
-(339, '1', 'Vitamin B Complex', 'Neurobion Forte Tablets', 1, 3, '3.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(340, '1', 'Insulin 70/30', 'Mixtard 30, Vial', 1, 500, '500.00', 700, 1, 'active', '2025-09-04 14:52:46'),
-(341, '1', 'Bisacodyl 5mg', 'Bicolex 5, Tablets', 100, 187, '1.87', 5, 33, 'active', '2025-09-04 14:52:46'),
-(342, '1', 'Clindamycin 300mg', 'Clindacin-300 Capsules', 1, 135, '135.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(343, '1', 'Diloxanide 250mg/Metronidazole 200mg/Dicyclomine 10mg', 'Entamaxin Capsules,', 1, 190, '190.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(344, '1', 'Fluconazole 200mg ', 'Diconazol 200mg Tablets', 100, 1086, '10.86', 15, 33, 'active', '2025-09-04 14:52:46'),
-(345, '1', 'Crotamiton+Sulphur', 'Scabion Cream, 20g', 1, 135, '135.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, '3.00', 10, 17, 'active', '2025-09-04 14:52:46'),
-(347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, '41.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, '9.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, '18.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(1, '1', 'Ibuprofen Tablet BP 400mg', 'Gesic 400 ADL Brufen', 100, 125, '1.25', 3, 33, 'active', '2025-09-04 14:52:46'),
-(2, '1', 'Paracetamol Tablet BP 500mg', 'Cetamol 500mg', 100, 60, '0.60', 2, 33, 'active', '2025-09-04 14:52:46'),
-(3, '1', 'Piroxicam Capsules USP', 'Roxicam 20mg', 100, 65, '0.65', 5, 33, 'active', '2025-09-04 14:52:46'),
-(4, '1', 'Meloxicam Tablet 7.5mg BP', 'Melostar 7.5mg', 100, 161, '1.61', 5, 33, 'active', '2025-09-04 14:52:46'),
-(5, '1', 'Soluble Paracetamol BP 1000mg', 'PARA NOVA ', 8, 185, '23.13', 40, 3, 'active', '2025-09-04 14:52:46'),
-(6, '1', 'Ibuprofen 400mg/Paracetamol 325mg BP', 'Brustan Tablets', 10, 99, '9.90', 20, 3, 'active', '2025-09-04 14:52:46'),
-(7, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'ACEPAR-MR Caplets', 10, 260, '26.00', 35, 3, 'active', '2025-09-04 14:52:46'),
-(8, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'Rilif - MR Tablets', 20, 495, '24.75', 35, 7, 'active', '2025-09-04 14:52:46'),
-(9, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 500mg', 'Zyrtal - MR Tablets', 20, 685, '34.25', 50, 7, 'active', '2025-09-04 14:52:46'),
-(10, '1', 'Diclofenac 50mg/Paracetamol 500mg/Chlorzoxazone 250mg', 'DOLOACT - MR Tablets', 100, 1807, '18.07', 25, 33, 'active', '2025-09-04 14:52:46'),
-(11, '1', 'Paracetamol Tablet BP 500mg/Caffeine 65mg', 'Panadol Extra Tablets (Pairs)', 50, 396, '7.92', 20, 17, 'active', '2025-09-04 14:52:46'),
-(12, '1', 'Paracetamol Tablet BP 500mg', 'Panadol Advance Tablets (Pairs)', 50, 396, '7.92', 15, 17, 'active', '2025-09-04 14:52:46'),
-(13, '1', 'Etoricoxib Tablet 60mg', 'Tory 60 Tablet', 30, 830, '27.67', 40, 10, 'active', '2025-09-04 14:52:46'),
-(14, '1', 'Etoricoxib Tablet 90mg', 'Tory 90 Tablet', 30, 877, '29.23', 45, 10, 'active', '2025-09-04 14:52:46'),
-(15, '1', 'Etoricoxib Tablet 120mg', 'Tory 120 Tablet', 30, 1066, '35.53', 50, 10, 'active', '2025-09-04 14:52:46'),
-(16, '1', 'Paracetamol Tablet BP 500mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg', 'Panadol Cold&Flu Tablets', 24, 320, '13.33', 20, 8, 'active', '2025-09-04 14:52:46'),
-(17, '1', 'Paracetamol Tablet BP 300mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg/Caffeine 30mg', 'FLU-GONE Capsules', 1, 115, '115.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(18, '1', 'Paracetamol Tablet BP 650mg/Phenylephrine Hydrochloride 5mg/Chlorpheniramine Maleate 2mg', 'CONTUS-650 Tablet', 1, 99, '99.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(19, '1', 'Cetirizine Hydrochloride Tablet 10mg', 'CACHCET Tablet', 100, 78, '0.78', 5, 33, 'active', '2025-09-04 14:52:46'),
-(20, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Montallerg Tablets', 20, 1000, '50.00', 70, 7, 'active', '2025-09-04 14:52:46'),
-(21, '1', 'Montelukast 10mg', 'Montana 10mg', 14, 740, '52.86', 75, 5, 'active', '2025-09-04 14:52:46'),
-(22, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Motechest', 30, 409, '13.63', 40, 10, 'active', '2025-09-04 14:52:46'),
-(23, '1', 'Ephedrine 12mg/Theophyline 120mg', 'F-Tab (Franol) Tablet', 100, 179, '1.79', 5, 33, 'active', '2025-09-04 14:52:46'),
-(24, '1', 'Salbutamol Inhaler 100mcg', 'Medisalant 100mcg', 1, 165, '165.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(25, '1', 'Betamethasone 0.25mg/Dexchlorpheniramine Maleate BP 2mg', 'Celestinac Tablet', 30, 149, '4.97', 15, 10, 'active', '2025-09-04 14:52:46'),
-(26, '1', 'Paracetamol 500mg/Chlorzoxazone 250mg', 'Myospaz Tablet', 100, 1595, '15.95', 25, 33, 'active', '2025-09-04 14:52:46'),
-(27, '1', 'Diclofenac 100mg', 'ZOFENAC 100', 100, 75, '0.75', 10, 33, 'active', '2025-09-04 14:52:46'),
-(28, '1', 'Predinsolone 5mg', 'Olsolone Tablets', 100, 68, '0.68', 3, 33, 'active', '2025-09-04 14:52:46'),
-(29, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Duxscospan Plus (Buscopan Plus Generic)', 20, 338, '16.90', 25, 7, 'active', '2025-09-04 14:52:46'),
-(30, '1', 'Doxylamine Succ. 10mg/Pyridoxine 10mg ', 'NOSIC ', 20, 385, '19.25', 25, 7, 'active', '2025-09-04 14:52:46'),
-(31, '1', 'Metoclopramide 10mg', 'Emeton 10mg Tablet', 100, 70, '0.70', 5, 33, 'active', '2025-09-04 14:52:46'),
-(32, '1', 'Meloxicam EP Tablet 7.5mg', 'Melcam 7.5mg Tablet', 100, 331.5, '3.32', 5, 33, 'active', '2025-09-04 14:52:46'),
-(33, '1', 'Meloxicam EP Tablet 15mg', 'Melcam 15mg Tablet', 50, 306, '6.12', 10, 17, 'active', '2025-09-04 14:52:46'),
-(34, '1', 'Metoclopramide 10mg', 'Melasil - 10 Tablet', 100, 70, '0.70', 5, 33, 'active', '2025-09-04 14:52:46'),
-(35, '1', 'Promethazine 25mg', 'Promethazine Tablet', 100, 55, '0.55', 5, 33, 'active', '2025-09-04 14:52:46'),
-(36, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 60mL', 1, 26, '26.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(37, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 100mL', 1, 47, '47.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(38, '1', 'Paracetamol 120mg/5ml', 'Calpol Suspension 60mL', 1, 220, '220.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(39, '1', 'Ibuprofen 100mg/5ml', 'Triofen 60mL', 1, 21, '21.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(40, '1', 'Ibuprofen 100mg/5ml', 'Triofen 100mL', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(41, '1', 'Paracetamol 120mg/5ml', 'Panadol Baby&Infant 100mL', 1, 343, '343.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(42, '1', 'Ibuprofen 100mg/Paracetamol 125mg BP', 'Brustan Suspension', 1, 235, '235.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(43, '1', 'Soluble Paracetamol BP 1000mg', 'Parafast ET 1000 Tablet', 8, 380, '47.50', 50, 3, 'active', '2025-09-04 14:52:46'),
-(44, '1', 'Loratidine USP 10mg', 'Loratin Fast', 100, 850, '8.50', 15, 33, 'active', '2025-09-04 14:52:46'),
-(45, '1', 'Hyoscine - N- Butylbromide 10mg', 'HYCIN 10 Tablets (Buscopan Generic)', 100, 240, '2.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(46, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Hismopan Plus Tablets (Buscopan Plus Generic)', 100, 600, '6.00', 15, 33, 'active', '2025-09-04 14:52:46'),
-(47, '1', 'Metronidazole 400mg', 'Tricozole - 400mg Tablet', 100, 120, '1.20', 5, 33, 'active', '2025-09-04 14:52:46'),
-(48, '1', 'Tetracycline Eye Ointment USP', 'Metacycline', 1, 33, '33.00', 50, 1, 'active', '2025-09-04 14:52:46');
-INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `packsize`, `pack_price`, `unit_price`, `price`, `reorder_level`, `currentstatus`, `date_created`) VALUES
-(49, '1', 'Betamethasone 0.1% w/v/Neomycin 0.5 %w/v', 'Probeta-N', 1, 105, '105.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(50, '1', 'Ciprofloxacin/Dexamethasone Eye/Ear Drops', 'Ciploglax-D Eye Drops', 1, 149, '149.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(51, '1', 'Ciprofloxacin 0.3% USP', 'Ciproken', 1, 102, '102.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(52, '1', 'Dextran 70 USP 1mg/Hypromellose USP 3mg', 'Lubtear', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(53, '1', 'Ciprofloxacin 0.3%/Beclomethasone 0.025%/Clotrimazole 1%/Lignocaine 2% Ear Drops', 'Otobiotic', 1, 228, '228.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(54, '1', 'fluticasone propionate ', 'Flonaspray', 1, 680, '680.00', 950, 1, 'active', '2025-09-04 14:52:46'),
-(55, '1', 'Esomeprazole', 'Protas 40 Tablets', 100, 1190, '11.90', 30, 33, 'active', '2025-09-04 14:52:46'),
-(56, '1', 'Esomeprazole', 'Nexium 20', 14, 550, '39.29', 70, 5, 'active', '2025-09-04 14:52:46'),
-(57, '1', 'Omeprazole Satchets', 'Risek insta', 10, 331, '33.10', 50, 3, 'active', '2025-09-04 14:52:46'),
-(58, '1', 'Omeprazole ', 'Omecos 20 Capsules', 100, 105, '1.05', 5, 33, 'active', '2025-09-04 14:52:46'),
-(59, '1', 'Pantoprazole Delayed Release', 'Pantakind 40', 60, 1440, '24.00', 35, 20, 'active', '2025-09-04 14:52:46'),
-(60, '1', 'Clotrimazole Vaginal Tablets 200mg', 'Canazol Vaginal Tablet, 3s', 1, 46, '46.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(61, '1', 'Ketocozole 200mg  BP', 'Hitoral 200mg Tablet', 100, 340, '3.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(62, '1', 'Amoxicllin 125mg/5mL', 'ELYMOX Suspension 100mL', 1, 43, '43.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(63, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 100mL', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(64, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 50mL', 1, 30, '30.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(65, '1', 'Ampicillin/Cloxacillin 250mg/5mL', 'Ampiclo-Dawa Suspension', 1, 68, '68.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(66, '1', 'Ampicillin/Cloxacillin 250mg/250mg', 'Ampiclo-Dawa 500 Capsule', 100, 400, '4.00', 10, 33, 'active', '2025-09-04 14:52:46'),
-(67, '1', 'Flucloxacillin 125mg/5mL', 'ELYFLOX 100mL Suspension', 1, 76, '76.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(68, '1', 'Azithromycin Oral Suspension 200mg', 'IzziThree 15mg', 1, 39, '39.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(69, '1', 'Vitamin B Complex', 'Neuro-Forte', 20, 270, '13.50', 20, 7, 'active', '2025-09-04 14:52:46'),
-(70, '1', 'Levocetirizine 5mg', 'VIVACET L 5', 10, 55, '5.50', 20, 3, 'active', '2025-09-04 14:52:46'),
-(71, '1', 'Maternity Pads', 'Medimax', 1, 97, '97.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(72, '1', 'Maternity Pads', 'Medicott', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(73, '1', 'Absorbent Cotton Wool 400mg', 'Velvex', 1, 250, '250.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(74, '1', 'Adult Diapers XL', 'MY A+ XLARGE', 10, 100, '10.00', 15, 3, 'active', '2025-09-04 14:52:46'),
-(75, '1', 'Adult Diapers L', 'MY A+ LARGE', 10, 100, '10.00', 15, 3, 'active', '2025-09-04 14:52:46'),
-(76, '1', 'Adult Pants L', 'ADFIT  PANTS LARGE', 30, 100, '3.33', 5, 10, 'active', '2025-09-04 14:52:46'),
-(77, '1', 'Sulphadoxine 500mg/Pyrimethamine 25mg', 'FANLAR Tablets', 25, 30, '1.20', 50, 8, 'active', '2025-09-04 14:52:46'),
-(78, '1', 'Terbinafine 250mg', 'Terbinaforce 250 Tablets', 30, 953, '31.77', 50, 10, 'active', '2025-09-04 14:52:46'),
-(79, '1', 'Fluconazole 150mg', 'NOCANZ 150 Tablet', 1, 15, '15.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(80, '1', 'Griseofulvin 250mg', 'Grisolab-250 Tablet', 100, 520, '5.20', 10, 33, 'active', '2025-09-04 14:52:46'),
-(81, '1', 'Griseofulvin 125mg', 'Biofulvin 125 Tablet', 100, 390, '3.90', 10, 33, 'active', '2025-09-04 14:52:46'),
-(82, '1', 'Artemether 20mg/Lumefantrine 120mg', 'LONART Tablet, 24s', 1, 55, '55.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(83, '1', 'Artemether 20mg/Lumefantrine 120mg', 'PANAART 20/120, 24s', 1, 0, '0.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(84, '1', 'Povidone-Iodine USP 1%', 'Peardine Mouth Wash, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(85, '1', 'Povidone-Iodine USP 1%', 'Rexe-Dine Mouth Wash', 1, 135, '135.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(86, '1', 'Amoxicillin 500mg', 'AMOXIMED 500 Capsule', 100, 320, '3.20', 6.6, 33, 'active', '2025-09-04 14:52:46'),
-(87, '1', 'Cefuroxime 500mg USP', 'Theoroxime 500 Tablets', 1, 165, '165.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(88, '1', 'Cefixime 400mg USP', 'Theofix - 400 Tablets', 10, 170, '17.00', 350, 3, 'active', '2025-09-04 14:52:46'),
-(89, '1', 'Azithromycin 500mg USP', 'AGYCIN-500 Tablet, 3s', 1, 55, '55.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(90, '1', 'Nitrofurantoin 100mg', 'NIFURAN', 100, 200, '2.00', 10, 33, 'active', '2025-09-04 14:52:46'),
-(91, '1', 'Tinidazole 500mg', 'Tinizol 500 Tablets,4s', 1, 11, '11.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(92, '1', 'Amoxicillin 250mg', 'SPASMOX 250 Capsule', 100, 195, '1.95', 3.3, 33, 'active', '2025-09-04 14:52:46'),
-(93, '1', 'Doxycycline 100mg', 'XYCYCLINE 100 Capsule', 100, 149, '1.49', 5, 33, 'active', '2025-09-04 14:52:46'),
-(94, '1', 'Secnidazole 1g', 'Secnida Forte Tablets, 2s', 1, 25, '25.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(95, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Microgynon Fe Tablets', 1, 225, '225.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(96, '1', 'Sildenafil 50mg ', 'MTM-50 Tablet', 4, 36, '9.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(97, '1', 'Sildenafil 100mg ', 'MTM-100 Tablet', 4, 46, '11.50', 50, 1, 'active', '2025-09-04 14:52:46'),
-(98, '1', 'Sildenafil 100mg ', 'Nelgra-100 Tablet', 4, 43, '10.75', 50, 1, 'active', '2025-09-04 14:52:46'),
-(99, '1', 'Sildenafil 100mg ', 'VEGA-100 Tablet', 4, 41, '10.25', 50, 1, 'active', '2025-09-04 14:52:46'),
-(100, '1', 'Levonogestrel 0.75mg', 'Postinor-2 Tablets, 2s', 1, 143, '143.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(101, '1', 'levonogestrel 0.75mg', 'Safe-72 Tablets,2s', 1, 20, '20.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(102, '1', 'Betamethasone Sodium Phosphate 2mg/ml/Betamethasone Dipropionate 5mg/ml Suspension for Inj,2ml', 'KRIDOFOS Injection', 1, 675, '675.00', 900, 1, 'active', '2025-09-04 14:52:46'),
-(103, '1', 'Medroxyprogesterone Injection 150mg/mL', 'Lydia Contraceptive Injection', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(104, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Femiplan Tablets', 1, 85, '85.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(105, '1', 'Diclofenac 75mg Injection', 'CAREFENAC Injection', 10, 45, '4.50', 20, 3, 'active', '2025-09-04 14:52:46'),
-(106, '1', 'Carbamazepine 200mg BP', 'Carbamazepine 200mg Tablets', 100, 369, '3.69', 5, 33, 'active', '2025-09-04 14:52:46'),
-(107, '1', 'Amitriptyline 25mg', 'Amitiptyline Tablets, Cosmos', 100, 252, '2.52', 5, 33, 'active', '2025-09-04 14:52:46'),
-(108, '1', 'Phenobarbital 30mg', 'Phenobarbital Tablets, Cosmos', 100, 235, '2.35', 5, 33, 'active', '2025-09-04 14:52:46'),
-(109, '1', 'Diazepam 5mg', 'Cozepam Tablets', 100, 302, '3.02', 5, 33, 'active', '2025-09-04 14:52:46'),
-(110, '1', 'Maternity Pants', 'Dafi Maternity Pants, M-L', 6, 750, '125.00', 200, 2, 'active', '2025-09-04 14:52:46'),
-(111, '1', 'Maternity Pants', 'Dafi Maternity Pants, S-L', 6, 750, '125.00', 200, 2, 'active', '2025-09-04 14:52:46'),
-(112, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'Augmentin 457 Suspension', 1, 990, '990.00', 1200, 1, 'active', '2025-09-04 14:52:46'),
-(113, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Augmentin 228 Suspension', 1, 635, '635.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(114, '1', 'Tamsulosin 0.4mg', 'Tamsolin Capsules', 10, 770, '77.00', 100, 3, 'active', '2025-09-04 14:52:46'),
-(115, '1', 'Amoxicillin/Clavulanate 625mg', 'Labclav 625 Tablets', 1, 115, '115.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(116, '1', 'Amoxicillin/Clavulanate 1000mg', 'Acinet 1000 Tablets', 1, 275, '275.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(117, '1', 'Amoxicillin/Clavulanate 375mg', 'Acinet 375 Tablets', 1, 171, '171.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(118, '1', 'Ciprofloxacin 500mg USP', 'Ciproglax 500mg Tablets', 100, 240, '2.40', 10, 33, 'active', '2025-09-04 14:52:46'),
-(119, '1', 'Finasteride 5mg/Tamsulosin 400mcg', 'FINOSIN Tablets', 30, 1750, '58.33', 75, 10, 'active', '2025-09-04 14:52:46'),
-(120, '1', 'Flucloxacillin Injection 500mg Vial', 'Flupene Injection', 1, 38, '38.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(121, '1', 'HydrocortisoneInjection 100mg', 'OCORTIN 100 Injection', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(122, '1', 'Lidocaine Injection 20mg/mL, 30mL', 'LIDOCAINE 2% Injection', 1, 36, '36.00', 60, 1, 'active', '2025-09-04 14:52:46'),
-(123, '1', 'Cefuroxime 125mg/5mL', 'Evorox, 50mL Suspension', 1, 220, '220.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(124, '1', 'Cefalexin 125mh/5mL', 'Leocef, 100mL Suspension', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(125, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Labclav 228 Suspension', 1, 102, '102.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(126, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'ACINET DRY SYRUP 457', 1, 260, '260.00', 380, 1, 'active', '2025-09-04 14:52:46'),
-(127, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Neonatal Ampiclox Drops', 1, 345, '345.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(128, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Ampliclo-Dawa (Neonata Amplicox Gen)', 1, 50, '50.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(129, '1', 'Amlodipine 5mg/Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Amlozaar-H Tablet', 30, 1400, '46.67', 70, 10, 'active', '2025-09-04 14:52:46'),
-(130, '1', 'Flucloxacillin 250mg/Amoxicillin 250mg', 'MoxaForte 500 Capsules, 20s', 1, 354, '354.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(131, '1', 'Ceftriaxone 1g', '\'GALAXY\'S SEFIN Injection', 1, 32, '32.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(132, '1', 'Urine Bag', 'Urine Collection Bag, 2000mL', 1, 48, '48.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(133, '1', 'Zinc Sulfate DT 20mg', 'Junior Zinc Tablets', 100, 89, '0.89', 5, 33, 'active', '2025-09-04 14:52:46'),
-(134, '1', 'Normal Saline Nasal Drops', 'Nosfree Saline Drops', 1, 17, '17.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(135, '1', 'Hyoscine - N- Butylbromide 5mg/5mL', 'Hycin Syrup, 60mL', 1, 62, '62.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(136, '1', 'Orals Rehydration Salts', 'ORASOL, ORS', 1, 8, '8.00', 20, 1, 'active', '2025-09-04 14:52:46'),
-(137, '1', 'Ondasetron 2mg/5mL', 'EMITOSS Oral Solution, 30mL', 1, 270, '270.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(138, '1', 'Zinc Sulfate 20mg Syrup', 'TOTO-ZincOD Syrup', 1, 80, '80.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(139, '1', 'Nystatin 100,000 units', 'NYSTAL Suspension', 1, 62, '62.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(140, '1', 'Glucosamine/Chondroitin/Cod Liver/Omega 3', 'Cartil Omega Softgel Capsules', 30, 1758, '58.60', 75, 10, 'active', '2025-09-04 14:52:46'),
-(141, '1', 'Calcium/Magnesium/Vitamin D', 'Osteocare Tablets', 30, 620, '20.67', 30, 10, 'active', '2025-09-04 14:52:46'),
-(142, '1', 'Calcium 320mg/Phosphorus 137.5mg', 'Purecal Chewable Tablets', 30, 750, '25.00', 35, 10, 'active', '2025-09-04 14:52:46'),
-(143, '1', 'Calcium/Magnesium/Vitamin D', 'Zedcal Oral Suspension, 200mL', 1, 549, '549.00', 750, 1, 'active', '2025-09-04 14:52:46'),
-(144, '1', 'Lansoprazole/Tinidazole/Clarithromycin', 'Sure Kit, H. Pylori Kit', 1, 698, '698.00', 1000, 1, 'active', '2025-09-04 14:52:46'),
-(145, '1', 'Amoxicillin,clarithromycin,Esomeprazole', 'Esofag kit,H.Pylori kit', 1, 950, '950.00', 1300, 1, 'active', '2025-09-04 14:52:46'),
-(146, '1', 'lansoprazole/Amoxicilin/Clarithromycin', 'Pylotrip,H.Pylori Kit', 1, 890, '890.00', 1300, 1, 'active', '2025-09-04 14:52:46'),
-(147, '1', 'syringe 10cc', 'Syringe 10cc', 1, 450, '450.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(148, '1', 'Syringe 5cc', 'Syringe 5cc', 1, 270, '270.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(149, '1', 'Lactulose solution', 'Osmolax Suspension', 1, 340, '340.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(150, '1', 'magaldrate and simethicone 200ml', 'Maganta Suspension', 1, 361.25, '361.25', 500, 1, 'active', '2025-09-04 14:52:46'),
-(151, '1', 'Sodium alginate 500mg/sodium bicarbonate/calcium carbonate', ' Asynta Max 200mL', 1, 467.5, '467.50', 700, 1, 'active', '2025-09-04 14:52:46'),
-(152, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 180mL', 1, 325, '325.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(153, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 100mL', 1, 247, '247.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(154, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Alugel Suspension, 100mL', 1, 81, '81.00', 120, 1, 'active', '2025-09-04 14:52:46'),
-(155, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 200mL Suspension', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(156, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 100mL Suspension', 1, 135, '135.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(157, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Gocid 100mL Suspension', 1, 35, '35.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(158, '1', 'Alginic Acid Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone ', 'ULGICID Suspension 200mL', 1, 285, '285.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(159, '1', 'Sucralfate/Oxetacaine', 'Sucrafil O Gel Suspension, 100mL', 1, 280, '280.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(160, '1', 'Aluminium Hydroxide 300mg/magnesium hydroxyde 150mg/simethicone 100mg', 'Benagas Gel, 100mL', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(161, '1', 'Aluminium Hydroxide 150mg/Magnesium Trisilicate 250mg', 'Tryactin Suspension, 100mL', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(162, '1', 'Magaldrate 480mg and simethicone 20mg', 'Magnacid Gel 100mL', 1, 55, '55.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(163, '1', 'Ferric Ammonium Citrate 200mg/Folic 1.5mg/Cyanocobalamin 50mcg/Ethanol', 'Ranferon 12 Suspension, 200mL', 1, 325, '325.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(164, '1', 'Dried Ferrous Sulphate 200mg/Folic Acid 0.4mg', 'Ferrolic-LF Tablets, IFAS', 100, 133, '1.33', 5, 33, 'active', '2025-09-04 14:52:46'),
-(165, '1', 'Ferrous Fumarate 305mg/Folic Acid 0.75mg/Cyanocobalamin 5mcg/Ascorbic Acid 75mg/Zinc Sulphate 5mg', 'Ranferon Capsules', 30, 286, '9.53', 20, 10, 'active', '2025-09-04 14:52:46'),
-(166, '1', 'Iron 50mg/Manganese 1.33mg/Copper 0.70mg', '\'Tot\'Hema Ampoules\'', 20, 860, '43.00', 80, 7, 'active', '2025-09-04 14:52:46'),
-(167, '1', 'Diloxanide Furoate 250mg/Metronidazole 200mg/Dicyclomine 10mg/5mL', 'Entamaxin Oral Suspension, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(168, '1', 'Metronidazole 200mg/5mL', 'Amizole Oral Suspension', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(169, '1', 'Metronidazole Benzoate 200mg/5mL', 'Tricozole - 200mg Suspension', 1, 45, '45.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(170, '1', 'Multivitamin Syrup', 'Filwel Kids, 100mL', 1, 204, '204.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(171, '1', 'Secnidazole 750mg/15mL', 'Secnida for Children, 15mL', 1, 98, '98.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(172, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Tablets', 30, 360, '12.00', 15, 10, 'active', '2025-09-04 14:52:46'),
-(173, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Syrup, 200mL', 30, 320, '10.67', 450, 10, 'active', '2025-09-04 14:52:46'),
-(174, '1', 'Cyproheptadine 2mg/ B Vitamins/Minerals', 'Cypro B Plus Syrup, 200mL', 1, 235, '235.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(175, '1', 'Cyproheptadine 2mg/ Tricholine Citrate 275mg', 'Cypon Syrup,100mL', 1, 210, '210.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(176, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Ambroxol Expectorant Syrup, 100mL', 1, 178.4, '178.40', 250, 1, 'active', '2025-09-04 14:52:46'),
-(177, '1', 'Adovas Syrup', 'Adovas Syrup, 100mL', 1, 204, '204.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(178, '1', 'Sulbutamol 1mg/Bromhexine 2mg/Guaifenesin 50mg', 'Cadistin Plus, 100mL', 1, 175, '175.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(179, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadiphen Syrup, 100mL', 1, 140, '140.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(180, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg', 'Flu-Gone DM, 60mL', 1, 165, '165.00', 230, 1, 'active', '2025-09-04 14:52:46'),
-(181, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg/Paracetamol', 'Flu-Gone P+, 60mL', 1, 165, '165.00', 230, 1, 'active', '2025-09-04 14:52:46'),
-(182, '1', 'Promethazine 2.5mg/Diphenhydramine 5mg/Ammonium Cl 90mg/Sodium Citrate 45mg/Ephedrine Hcl 7.5mg', 'Tridex Cough Mixture,100mL', 1, 58, '58.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(183, '1', 'Dextromethorphan 10mg/Cetirizine 5mg/Phenylephrine Hcl 5mg', 'Zefcolin Dry Cough Formula Syrup, 100mL', 1, 229, '229.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(184, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 100mL', 1, 214.4, '214.40', 300, 1, 'active', '2025-09-04 14:52:46'),
-(185, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 200mL', 1, 375.4, '375.40', 500, 1, 'active', '2025-09-04 14:52:46'),
-(186, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadistin Expectorant, 100mL', 1, 98, '98.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(187, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 10mg/Paracetamol 120mg', 'Coldcap Syrup, 100mL', 1, 90, '90.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(188, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 60mL', 1, 36, '36.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(189, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 100mL', 1, 53, '53.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(190, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Guaifenesin 100mg', 'Trimex Diabetic', 1, 215, '215.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(191, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Mucosolvan Syrup,100mL', 1, 590, '590.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(192, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Sodium Citrate 44mg/Dextromethorphan 10mg/Menthol 1mg', 'Coscof-DM Linctus,100mL', 1, 155, '155.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(193, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Original, 100mL, Syrup', 1, 410, '410.00', 600, 1, 'active', '2025-09-04 14:52:46'),
-(194, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Orange Flavour, 100mL, Syrup', 1, 410, '410.00', 600, 1, 'active', '2025-09-04 14:52:46'),
-(195, '1', 'Bonnisan', 'Bonnisan, 120mL, Syrup', 1, 385, '385.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(196, '1', 'Sodium Bicarbonate 50mg/Terpeneless Dillseed Oil 2.15mg', 'Gripe Water', 1, 92, '92.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(197, '1', 'Levosalbutamol 1mg/5mg', 'Levostar, 100mL Syrup', 1, 216, '216.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(198, '1', 'Levocetirizine 2.5mg', 'ALERFREE Syrup,60mL', 1, 123, '123.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(199, '1', 'Desloratidine 2.5mg/5mL', 'DESOSTAR Syrup, 60mL', 1, 266, '266.00', 380, 1, 'active', '2025-09-04 14:52:46'),
-(200, '1', 'Loratidine USP 5mg/5mL', 'Lorhistina Syrup,  60mL', 1, 179, '179.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(201, '1', 'Predinsolone 5mg/5mL', 'Olsolone Syrup, 50mL', 1, 100, '100.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(202, '1', 'Promethazine Hcl, 5mg/5mL', 'Largan, Syrup', 1, 19, '19.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(203, '1', 'Chlorpheniramine Maleate 4mg', 'Dawa-CPM Tablets, 4mg', 100, 31, '0.31', 2, 33, 'active', '2025-09-04 14:52:46'),
-(204, '1', 'Chlorpheniramine Maleate 2mg/5mL', 'Dawa-CPM Syrup, 60mL', 1, 22, '22.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(205, '1', 'Cetirizine HCL 5mg/5mL', 'CetriPlain, 60mL Syrup', 1, 20, '20.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(206, '1', 'Sodium Lactate IV Infusion', 'Ringer - Lactate, 500mL,IV Infusion', 1, 80, '80.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(207, '1', 'Sodium Chloride, 0.9%', 'VIDASAL, 500mL, IV Infusion (Normal Saline)', 1, 80, '80.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(208, '1', 'Erythromycin 125mg/5mL', 'Erythrox 100mL', 1, 78, '78.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(209, '1', 'Clarithromycin 500mg', 'Aziclar-500 Tablets', 1, 229, '229.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(210, '1', 'Diloxanide Furoate 500mg/Metronidazole 400mg', 'Diracip-MDS, Tablets,15s', 1, 225, '225.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(211, '1', 'Azithromycin 1g/Fluconazole 150mg/Secnidazole 1g', 'AZFLOSEC KIT', 1, 325, '325.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(212, '1', 'Ciprofloxacin 500mg/Tinidazole 600mg', 'CIPRO-T, Tablets', 1, 150, '150.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(213, '1', 'Cefalexin 500mg', 'Felaxin 500 Capsules', 1, 6.8, '6.80', 15, 1, 'active', '2025-09-04 14:52:46'),
-(214, '1', 'Tramadol 50mg', 'Metadol Capsules', 100, 350, '3.50', 10, 33, 'active', '2025-09-04 14:52:46'),
-(215, '1', 'Cefadroxil 500mg', 'DROX 500', 1, 183.6, '183.60', 400, 1, 'active', '2025-09-04 14:52:46'),
-(216, '1', 'Pregnancy Test Strip', 'Pregnancy Test Strip', 1, 11, '11.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(217, '1', 'Metformin HCl 500mg', 'Glucophage 500 Tablets', 90, 395, '4.39', 8, 30, 'active', '2025-09-04 14:52:46'),
-(218, '1', 'Metformin HCl 850mg', 'Glucophage 850 Tablets', 60, 564, '9.40', 15, 20, 'active', '2025-09-04 14:52:46'),
-(219, '1', 'Norethisterone 5mg', 'Primolut N Tablets', 30, 940, '31.33', 45, 10, 'active', '2025-09-04 14:52:46'),
-(220, '1', 'Clomifene 50mg', 'Clophene 50mg, Tablets', 30, 379, '12.63', 50, 10, 'active', '2025-09-04 14:52:46'),
-(221, '1', 'Fluconazole 150mg/Azithromycin 1g/Secnidazole 1g', 'VDM KIT, Tablets', 1, 645, '645.00', 850, 1, 'active', '2025-09-04 14:52:46'),
-(222, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 28s Tablets', 28, 145, '5.18', 7, 9, 'active', '2025-09-04 14:52:46'),
-(223, '1', 'Metformin 500mg', 'Sukarmin 500mg Tablets', 100, 85, '0.85', 5, 33, 'active', '2025-09-04 14:52:46'),
-(224, '1', 'Amlodipine 5mg', 'Varinil 5 Tablets', 28, 155, '5.54', 10, 9, 'active', '2025-09-04 14:52:46'),
-(225, '1', 'Hydrochlorothiazide 50mg', 'HYMET Tablets', 100, 75, '0.75', 4, 33, 'active', '2025-09-04 14:52:46'),
-(226, '1', 'Acetylsalicylic Acid 75mg', 'Ascard 75 Tablets', 30, 105, '3.50', 150, 10, 'active', '2025-09-04 14:52:46'),
-(227, '1', 'Metformin HCl 850mg', 'Glucomet 850 Tablets', 56, 420, '7.50', 15, 19, 'active', '2025-09-04 14:52:46'),
-(228, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 112s Tablets', 112, 495, '4.42', 7, 37, 'active', '2025-09-04 14:52:46'),
-(229, '1', 'Anusol', 'Anusol Suppositories', 12, 700, '58.33', 80, 4, 'active', '2025-09-04 14:52:46'),
-(230, '1', 'Atenolol 50mg', 'Cardinol 50 Tablets, 28s', 28, 125, '4.46', 8, 9, 'active', '2025-09-04 14:52:46'),
-(231, '1', 'Losartan 50mg', 'Amlozaar 50 Tablets', 30, 950, '31.67', 45, 10, 'active', '2025-09-04 14:52:46'),
-(232, '1', 'Carvedilol 12.5mg', 'Vidol 12.5 Tablets', 28, 410, '14.64', 20, 9, 'active', '2025-09-04 14:52:46'),
-(233, '1', 'Carvedilol 6.25mg', 'Vidol 6.25 Tablets', 28, 285, '10.18', 15, 9, 'active', '2025-09-04 14:52:46'),
-(234, '1', 'Nifedipine 20mg', 'Nicardin-SR Tablets', 100, 80, '0.80', 5, 33, 'active', '2025-09-04 14:52:46'),
-(235, '1', 'Losartan 50mg', 'Angilock 50 Tablets', 30, 131.75, '4.39', 8, 10, 'active', '2025-09-04 14:52:46'),
-(236, '1', 'Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Angilock-Plus 50/12.5 Tablets', 30, 170, '5.67', 10, 10, 'active', '2025-09-04 14:52:46'),
-(237, '1', 'Atenolol 50mg', 'Lonet 50 Tablets', 100, 337, '3.37', 5, 33, 'active', '2025-09-04 14:52:46'),
-(238, '1', 'Atorvastatin 20mg ', 'Avastatin 20 Tablets', 28, 304, '10.86', 20, 9, 'active', '2025-09-04 14:52:46'),
-(239, '1', 'Atorvastatin 20mg ', 'Atsta*20 Tablets', 30, 170, '5.67', 15, 10, 'active', '2025-09-04 14:52:46'),
-(240, '1', 'Enalapril 10mg', 'Dawapril 10 Tablet', 100, 113, '1.13', 5, 33, 'active', '2025-09-04 14:52:46'),
-(241, '1', 'Enalapril 5mg', 'Dawapril 5 Tablet', 100, 123, '1.23', 5, 33, 'active', '2025-09-04 14:52:46'),
-(242, '1', 'Co-trimoxazole 480mg Tablets', 'CO-TRI 480 Tablets', 100, 149, '1.49', 5, 33, 'active', '2025-09-04 14:52:46'),
-(243, '1', 'Co-trimoxazole 960mg Tablets', 'Co-trimoxazole 960 Tablets', 100, 485, '4.85', 10, 33, 'active', '2025-09-04 14:52:46'),
-(244, '1', 'Blood Lancets', 'Blood Lancets Pieces', 100, 174, '1.74', 300, 33, 'active', '2025-09-04 14:52:46'),
-(245, '1', 'Benzyl Benzoate Application 25%', 'Scabees Application, 100mL', 1, 210, '210.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(246, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 75MG', 1, 120, '120.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(247, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 150MG', 1, 220, '220.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(248, '1', 'Calcium Antiacids', 'ENO Tablets (Pairs)', 100, 595, '5.95', 20, 33, 'active', '2025-09-04 14:52:46'),
-(249, '1', 'Touch ang Go', 'Touch and Go', 1, 220, '220.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(250, '1', 'Hydrocortisone Ointment 1% w/w', 'ELYCORT 15G OINTMENT', 1, 62, '62.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(251, '1', 'Hydrocortisone Cream 1% w/w', 'ELYCORT 15G CREAM', 1, 66, '66.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(252, '1', 'Neomycin 5mg/Bacitracin 2.5mg/Gramicidin 0.5mg Powder', 'GRABACIN POWDER 10GM', 1, 125, '125.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(253, '1', 'Neomycin 5mg/Bacitracin 250 IU', 'NEBANOL POWDER 5MG', 1, 59, '59.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(254, '1', 'Neomycin 3.5mg/Bacitracin 5000 units/Bacitracin 500 units', 'GRABACIN 3 Ointment', 1, 255, '255.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(255, '1', 'Hydrocortisone Ointment 1% w/w', 'HYDROTOPIC Ointment 15g Tube', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(256, '1', 'Condoms', 'Kiss Classic Condoms, 3s', 24, 627, '26.13', 50, 8, 'active', '2025-09-04 14:52:46'),
-(257, '1', 'Condoms', 'Kiss Strawberry Condoms, 3s', 24, 826, '34.42', 100, 8, 'active', '2025-09-04 14:52:46'),
-(258, '1', 'Condoms', 'Kiss Studded Condoms, 3s', 24, 892, '37.17', 100, 8, 'active', '2025-09-04 14:52:46'),
-(259, '1', 'Condoms', 'Kiss Chocolate Condoms, 3s', 24, 826, '34.42', 100, 8, 'active', '2025-09-04 14:52:46'),
-(260, '1', 'Condoms', 'Durex Fetherlite Ultra, 3s', 1, 337, '337.00', 550, 1, 'active', '2025-09-04 14:52:46'),
-(261, '1', 'Condoms', 'Durex Extra Safe, 3s', 1, 302, '302.00', 400, 1, 'active', '2025-09-04 14:52:46'),
-(262, '1', 'Condoms', 'TRUST RIBBED, 3s', 24, 920, '38.33', 100, 8, 'active', '2025-09-04 14:52:46'),
-(263, '1', 'Condoms', 'TRUST CLASSIC, 3s', 24, 600, '25.00', 50, 8, 'active', '2025-09-04 14:52:46'),
-(264, '1', 'Condoms', 'TRUST STUDDED, 3s', 24, 900, '37.50', 100, 8, 'active', '2025-09-04 14:52:46'),
-(265, '1', 'Bandages', 'Crepe Bandage Spandex 5cm', 1, 18, '18.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(266, '1', 'Bandages', 'Crepe Bandage Spandex 7.5cm', 1, 29, '29.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(267, '1', 'Bandages', 'Crepe Bandage Spandex 15cm', 1, 49, '49.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(268, '1', 'Bandages', 'Crepe Bandage Spandex 10cm', 1, 46, '46.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(269, '1', 'Diclofenac Gel 1%', 'DICLOGEN 1% GEL', 1, 19, '19.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(270, '1', 'Clotrimazole 1% w/w/Beclomethasone Dipropionate 0.025% w/w', 'Bulkot-B Cream', 1, 51, '51.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(271, '1', 'Betamethasone Dipropionate, Gentamicin & Clotrimazole  Cream', 'Xtraderm Cream', 1, 126, '126.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(272, '1', 'Clotrimazole 10.0% w/w/Betamethasone 0.5mg', 'Clozole-B Cream', 1, 72, '72.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(273, '1', 'Clotrimazole 1.0% w/w', 'Clozole Cream', 1, 28, '28.00', 70, 1, 'active', '2025-09-04 14:52:46'),
-(274, '1', 'Hydrocortisone Cream 1% w/w', 'OLCORT 15G Cream', 1, 28, '28.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(275, '1', 'Beclomethasone 0.025%, Miconazole 2%, Neomycin Sulphate 0.5% Chlorocresol 0.25%', 'Beclomin Ointment 15g', 1, 150, '150.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(276, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Ointment 15g', 1, 76, '76.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(277, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Cream 15g', 1, 45, '45.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(278, '1', 'Betamethasone Valerate 0.1% w/w/Salicylic acid 3% w/w', 'MEDIVEN-S Ointment 15g', 1, 180, '180.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(279, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 15g', 1, 40, '40.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(280, '1', 'Calamine Lotion', 'COVIGEN Calamine Lotion, 100mL', 1, 29, '29.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(281, '1', 'Surgical Spirit 70% v/v', 'COVIGEN Surgical Spirit, 50mL', 1, 26, '26.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(282, '1', 'Povidone-Iodine USP 10% w/v', 'FAHOLO POVIDONE IODINE, 50mL', 1, 50, '50.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(283, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 100g', 1, 169, '169.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(284, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 250g', 1, 308, '308.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(285, '1', 'Chlorine 3.5% w/v', 'FAHOLO Sodium Hypochlorite 3.5% w/v', 1, 300, '300.00', 450, 1, 'active', '2025-09-04 14:52:46'),
-(286, '1', 'Sterile Paraffin Dressing ', 'Sterifin Dressing Gauze, 10x10', 10, 287, '28.70', 50, 3, 'active', '2025-09-04 14:52:46'),
-(287, '1', 'Sodium Bicarbonate 300mg ', 'SodaMint Tablets', 100, 87, '0.87', 5, 33, 'active', '2025-09-04 14:52:46'),
-(288, '1', 'Indomethacin 25mg', 'Caredomet 25mg Capsules, Indocid', 100, 80, '0.80', 3, 33, 'active', '2025-09-04 14:52:46'),
-(289, '1', 'Esomeprazole 20mg', 'ESOMAC 20', 28, 789, '28.18', 35, 9, 'active', '2025-09-04 14:52:46'),
-(290, '1', 'Esomeprazole 20mg', 'ESOMAC 40', 14, 745, '53.21', 70, 5, 'active', '2025-09-04 14:52:46'),
-(291, '1', 'Albendazole 400mg', 'Zentel 400 Tablet', 1, 190, '190.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(292, '1', 'Ketoconazole 2% w/v', 'Hitoral  Shampoo, 100mL', 1, 316, '316.00', 500, 1, 'active', '2025-09-04 14:52:46'),
-(293, '1', 'Ivermectin BP 6mg', 'Iverkot-6', 10, 2100, '210.00', 250, 3, 'active', '2025-09-04 14:52:46'),
-(294, '1', 'Lidocaine HCl/Cetylpyridinium', 'Dentinox 10g', 2, 646, '323.00', 900, 1, 'active', '2025-09-04 14:52:46'),
-(295, '1', 'Trimetabol', 'Trimetabol Solution', 1, 750, '750.00', 1100, 1, 'active', '2025-09-04 14:52:46'),
-(296, '1', 'Diclofenac/Linseed/Methyl Salicylate/Racementhol/Benzyl Alcohol', 'VOLINI GEL, 100MG', 1, 218, '218.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(297, '1', 'Good Morning Lung Tonic', 'Good Morning, 60mL', 1, 76, '76.00', 130, 1, 'active', '2025-09-04 14:52:46'),
-(298, '1', 'Kofgon Red', 'KOFGON Syr, 60mL', 1, 25, '25.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(299, '1', 'Tricohist ', 'Tricohist, 100mL', 1, 108, '108.00', 180, 1, 'active', '2025-09-04 14:52:46'),
-(300, '1', 'Tricohist ', 'Tricohist, 60mL', 1, 95, '95.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(301, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg', 'Tripozed, Expectorant, 100mL', 1, 41, '41.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(302, '1', 'Diclofenac Sodium Slow Release 100mg', 'Diclomol SR 100mg, Tablets', 100, 435, '4.35', 10, 33, 'active', '2025-09-04 14:52:46'),
-(303, '1', 'Tretinoine 0.05% w/w', 'Acnesol Cream, 25g', 1, 153, '153.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(304, '1', 'Telmisartan 80mg/Amlodipine 5mg', 'AMTEL 80/5 Tabs', 30, 2000, '66.67', 80, 10, 'active', '2025-09-04 14:52:46'),
-(305, '1', 'Sulfadoxine/Pyrimethamine', 'Malodar Tbalets, 3s', 1, 40, '40.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(306, '1', 'Flucloxacillin/Amoxicillin 250mg/5mL', 'MoxaForte Suspension, 100mL', 1, 265, '265.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(307, '1', 'Sensodyne Toothpaste', 'Sensodyne Multicare, 40mL', 1, 241, '241.00', 350, 1, 'active', '2025-09-04 14:52:46'),
-(308, '1', 'Sildenafil 100mg/5g', 'KAMAGRA ORAL JELLY 100MG', 1, 660, '660.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(309, '1', 'aceclofenac/Paracetamol/Chlorzoxazone', 'ACETAL MR Tablets', 10, 519, '51.90', 15, 3, 'active', '2025-09-04 14:52:46'),
-(310, '1', 'Canullas G22 (Blue)', 'Canullas G22 (Blue)', 1, 13, '13.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(311, '1', 'Canullas G24(Yellow)', 'Canullas G24(Yellow)', 1, 14, '14.00', 30, 1, 'active', '2025-09-04 14:52:46'),
-(312, '1', 'FloraNorm Satchets', 'FloraNorm Satchets', 10, 870, '87.00', 130, 3, 'active', '2025-09-04 14:52:46'),
-(313, '1', 'Amoxicillin 1g/Clavulanate 200mg', 'GAMOK Injection, Vial', 1, 125, '125.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(314, '1', 'Insulin Syringes, 0.5mL', 'Insulin Syringes, 0.5mL', 10, 205, '20.50', 30, 3, 'active', '2025-09-04 14:52:46'),
-(315, '1', 'Insulin Syringes, 1mL', 'Insulin Syringes, 1mL', 10, 200, '20.00', 30, 3, 'active', '2025-09-04 14:52:46'),
-(316, '1', 'Diclofenac/Paracetamol/Chlorzoxazone', 'LOBAK Tablets, 100s', 100, 969, '9.69', 15, 33, 'active', '2025-09-04 14:52:46'),
-(317, '1', 'Tranexamic Acid 500mg/5mL', 'MENOZIP INJ, 500mg/5mL', 5, 461, '92.20', 150, 2, 'active', '2025-09-04 14:52:46'),
-(318, '1', 'Carbocisteine 100mg', 'NASITHIOL INFANT, 60mL', 1, 56, '56.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(319, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 100mL', 1, 67, '67.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(320, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 60mL', 1, 56, '56.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(321, '1', 'Needle G21', 'Needle G21', 100, 128, '1.28', 5, 33, 'active', '2025-09-04 14:52:46'),
-(322, '1', 'Needle G23', 'Needle G23', 100, 128, '1.28', 5, 33, 'active', '2025-09-04 14:52:46'),
-(323, '1', 'Omeprazole Inj 40mg', 'Ompac 40mg', 1, 60, '60.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(324, '1', 'Ondasetron 4mg/2mL', 'ONDEX 4MG', 5, 431, '86.20', 150, 2, 'active', '2025-09-04 14:52:46'),
-(325, '1', 'Dihydroartemisinin 40mg/Piperaquine 320mg', 'P-ALAXIN 9S', 1, 175, '175.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(326, '1', 'Paracetamol/Codeine Phosphate/Doxylamine, Caffeine', 'TAMEPYN, 20S', 20, 215, '10.75', 15, 7, 'active', '2025-09-04 14:52:46'),
-(327, '1', 'Lubricating Jelly', 'Veri-Lube, 42g', 1, 117, '117.00', 280, 1, 'active', '2025-09-04 14:52:46'),
-(328, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'Vithiol Syrup, 125mg', 1, 130, '130.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(329, '1', 'Timolol Eye Drops 0.5%', 'TIMOGLAX EYE DROPS, 5mL', 1, 67, '67.00', 150, 1, 'active', '2025-09-04 14:52:46'),
-(330, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, LEMON', 20, 185, '9.25', 30, 7, 'active', '2025-09-04 14:52:46'),
-(331, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, ORANGE', 20, 185, '9.25', 30, 7, 'active', '2025-09-04 14:52:46'),
-(332, '1', 'Miconazole Nitrate 2%w/w', 'MUCOBEN CREAM', 1, 30, '30.00', 100, 1, 'active', '2025-09-04 14:52:46'),
-(333, '1', 'Medicated Soap', 'TETMOSOL Medicated Soap', 1, 95, '95.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(334, '1', 'Strepsils', 'Strepsils Soothing, Honey & Lemon', 100, 1300, '13.00', 50, 33, 'active', '2025-09-04 14:52:46'),
-(335, '1', 'Strepsils', 'Strepsils Regular', 100, 1300, '13.00', 50, 33, 'active', '2025-09-04 14:52:46'),
-(336, '1', 'Mupirocin Ointment 2%', 'Zupricin Ointment, 15g', 1, 505.5, '505.50', 750, 1, 'active', '2025-09-04 14:52:46'),
-(337, '1', 'Mupirocin 2%/Betamethasone 0.5% Ointment', 'Zupricin B Ointment, 15g', 1, 625.5, '625.50', 850, 1, 'active', '2025-09-04 14:52:46'),
-(338, '1', 'Anti-Rabies Vaccine', 'Anti-Rabies Vaccine, Vial', 3, 800, '266.67', 1200, 1, 'active', '2025-09-04 14:52:46'),
-(339, '1', 'Vitamin B Complex', 'Neurobion Forte Tablets', 1, 3, '3.00', 10, 1, 'active', '2025-09-04 14:52:46'),
-(340, '1', 'Insulin 70/30', 'Mixtard 30, Vial', 1, 500, '500.00', 700, 1, 'active', '2025-09-04 14:52:46'),
-(341, '1', 'Bisacodyl 5mg', 'Bicolex 5, Tablets', 100, 187, '1.87', 5, 33, 'active', '2025-09-04 14:52:46'),
-(342, '1', 'Clindamycin 300mg', 'Clindacin-300 Capsules', 1, 135, '135.00', 250, 1, 'active', '2025-09-04 14:52:46'),
-(343, '1', 'Diloxanide 250mg/Metronidazole 200mg/Dicyclomine 10mg', 'Entamaxin Capsules,', 1, 190, '190.00', 300, 1, 'active', '2025-09-04 14:52:46'),
-(344, '1', 'Fluconazole 200mg ', 'Diconazol 200mg Tablets', 100, 1086, '10.86', 15, 33, 'active', '2025-09-04 14:52:46'),
-(345, '1', 'Crotamiton+Sulphur', 'Scabion Cream, 20g', 1, 135, '135.00', 200, 1, 'active', '2025-09-04 14:52:46'),
-(346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, '3.00', 10, 17, 'active', '2025-09-04 14:52:46'),
-(347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, '41.00', 80, 1, 'active', '2025-09-04 14:52:46'),
-(348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, '9.00', 50, 1, 'active', '2025-09-04 14:52:46'),
-(349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, '18.00', 50, 1, 'active', '2025-09-04 14:52:46');
+(1, '1', 'Ibuprofen Tablet BP 400mg', 'Gesic 400 ADL Brufen', 100, 125, 1.25, 3, 33, 'active', '2025-09-04 14:52:46'),
+(2, '1', 'Paracetamol Tablet BP 500mg', 'Cetamol 500mg', 100, 60, 0.60, 2, 33, 'active', '2025-09-04 14:52:46'),
+(3, '1', 'Piroxicam Capsules USP', 'Roxicam 20mg', 100, 65, 0.65, 5, 33, 'active', '2025-09-04 14:52:46'),
+(4, '1', 'Meloxicam Tablet 7.5mg BP', 'Melostar 7.5mg', 100, 161, 1.61, 5, 33, 'active', '2025-09-04 14:52:46'),
+(5, '1', 'Soluble Paracetamol BP 1000mg', 'PARA NOVA ', 8, 185, 23.13, 40, 3, 'active', '2025-09-04 14:52:46'),
+(6, '1', 'Ibuprofen 400mg/Paracetamol 325mg BP', 'Brustan Tablets', 10, 99, 9.90, 20, 3, 'active', '2025-09-04 14:52:46'),
+(7, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'ACEPAR-MR Caplets', 10, 260, 26.00, 35, 3, 'active', '2025-09-04 14:52:46'),
+(8, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'Rilif - MR Tablets', 20, 495, 24.75, 35, 7, 'active', '2025-09-04 14:52:46'),
+(9, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 500mg', 'Zyrtal - MR Tablets', 20, 685, 34.25, 50, 7, 'active', '2025-09-04 14:52:46'),
+(10, '1', 'Diclofenac 50mg/Paracetamol 500mg/Chlorzoxazone 250mg', 'DOLOACT - MR Tablets', 100, 1807, 18.07, 25, 33, 'active', '2025-09-04 14:52:46'),
+(11, '1', 'Paracetamol Tablet BP 500mg/Caffeine 65mg', 'Panadol Extra Tablets (Pairs)', 50, 396, 7.92, 20, 17, 'active', '2025-09-04 14:52:46'),
+(12, '1', 'Paracetamol Tablet BP 500mg', 'Panadol Advance Tablets (Pairs)', 50, 396, 7.92, 15, 17, 'active', '2025-09-04 14:52:46'),
+(13, '1', 'Etoricoxib Tablet 60mg', 'Tory 60 Tablet', 30, 830, 27.67, 40, 10, 'active', '2025-09-04 14:52:46'),
+(14, '1', 'Etoricoxib Tablet 90mg', 'Tory 90 Tablet', 30, 877, 29.23, 45, 10, 'active', '2025-09-04 14:52:46'),
+(15, '1', 'Etoricoxib Tablet 120mg', 'Tory 120 Tablet', 30, 1066, 35.53, 50, 10, 'active', '2025-09-04 14:52:46'),
+(16, '1', 'Paracetamol Tablet BP 500mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg', 'Panadol Cold&Flu Tablets', 24, 320, 13.33, 20, 8, 'active', '2025-09-04 14:52:46'),
+(17, '1', 'Paracetamol Tablet BP 300mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg/Caffeine 30mg', 'FLU-GONE Capsules', 1, 115, 115.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(18, '1', 'Paracetamol Tablet BP 650mg/Phenylephrine Hydrochloride 5mg/Chlorpheniramine Maleate 2mg', 'CONTUS-650 Tablet', 1, 99, 99.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(19, '1', 'Cetirizine Hydrochloride Tablet 10mg', 'CACHCET Tablet', 100, 78, 0.78, 5, 33, 'active', '2025-09-04 14:52:46'),
+(20, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Montallerg Tablets', 20, 1000, 50.00, 70, 7, 'active', '2025-09-04 14:52:46'),
+(21, '1', 'Montelukast 10mg', 'Montana 10mg', 14, 740, 52.86, 75, 5, 'active', '2025-09-04 14:52:46'),
+(22, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Motechest', 30, 409, 13.63, 40, 10, 'active', '2025-09-04 14:52:46'),
+(23, '1', 'Ephedrine 12mg/Theophyline 120mg', 'F-Tab (Franol) Tablet', 100, 179, 1.79, 5, 33, 'active', '2025-09-04 14:52:46'),
+(24, '1', 'Salbutamol Inhaler 100mcg', 'Medisalant 100mcg', 1, 165, 165.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(25, '1', 'Betamethasone 0.25mg/Dexchlorpheniramine Maleate BP 2mg', 'Celestinac Tablet', 30, 149, 4.97, 15, 10, 'active', '2025-09-04 14:52:46'),
+(26, '1', 'Paracetamol 500mg/Chlorzoxazone 250mg', 'Myospaz Tablet', 100, 1595, 15.95, 25, 33, 'active', '2025-09-04 14:52:46'),
+(27, '1', 'Diclofenac 100mg', 'ZOFENAC 100', 100, 75, 0.75, 10, 33, 'active', '2025-09-04 14:52:46'),
+(28, '1', 'Predinsolone 5mg', 'Olsolone Tablets', 100, 68, 0.68, 3, 33, 'active', '2025-09-04 14:52:46'),
+(29, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Duxscospan Plus (Buscopan Plus Generic)', 20, 338, 16.90, 25, 7, 'active', '2025-09-04 14:52:46'),
+(30, '1', 'Doxylamine Succ. 10mg/Pyridoxine 10mg ', 'NOSIC ', 20, 385, 19.25, 25, 7, 'active', '2025-09-04 14:52:46'),
+(31, '1', 'Metoclopramide 10mg', 'Emeton 10mg Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
+(32, '1', 'Meloxicam EP Tablet 7.5mg', 'Melcam 7.5mg Tablet', 100, 331.5, 3.32, 5, 33, 'active', '2025-09-04 14:52:46'),
+(33, '1', 'Meloxicam EP Tablet 15mg', 'Melcam 15mg Tablet', 50, 306, 6.12, 10, 17, 'active', '2025-09-04 14:52:46'),
+(34, '1', 'Metoclopramide 10mg', 'Melasil - 10 Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
+(35, '1', 'Promethazine 25mg', 'Promethazine Tablet', 100, 55, 0.55, 5, 33, 'active', '2025-09-04 14:52:46'),
+(36, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 60mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(37, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 100mL', 1, 47, 47.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(38, '1', 'Paracetamol 120mg/5ml', 'Calpol Suspension 60mL', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(39, '1', 'Ibuprofen 100mg/5ml', 'Triofen 60mL', 1, 21, 21.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(40, '1', 'Ibuprofen 100mg/5ml', 'Triofen 100mL', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(41, '1', 'Paracetamol 120mg/5ml', 'Panadol Baby&Infant 100mL', 1, 343, 343.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(42, '1', 'Ibuprofen 100mg/Paracetamol 125mg BP', 'Brustan Suspension', 1, 235, 235.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(43, '1', 'Soluble Paracetamol BP 1000mg', 'Parafast ET 1000 Tablet', 8, 380, 47.50, 50, 3, 'active', '2025-09-04 14:52:46'),
+(44, '1', 'Loratidine USP 10mg', 'Loratin Fast', 100, 850, 8.50, 15, 33, 'active', '2025-09-04 14:52:46'),
+(45, '1', 'Hyoscine - N- Butylbromide 10mg', 'HYCIN 10 Tablets (Buscopan Generic)', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(46, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Hismopan Plus Tablets (Buscopan Plus Generic)', 100, 600, 6.00, 15, 33, 'active', '2025-09-04 14:52:46'),
+(47, '1', 'Metronidazole 400mg', 'Tricozole - 400mg Tablet', 100, 120, 1.20, 5, 33, 'active', '2025-09-04 14:52:46'),
+(48, '1', 'Tetracycline Eye Ointment USP', 'Metacycline', 1, 33, 33.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(49, '1', 'Betamethasone 0.1% w/v/Neomycin 0.5 %w/v', 'Probeta-N', 1, 105, 105.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(50, '1', 'Ciprofloxacin/Dexamethasone Eye/Ear Drops', 'Ciploglax-D Eye Drops', 1, 149, 149.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(51, '1', 'Ciprofloxacin 0.3% USP', 'Ciproken', 1, 102, 102.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(52, '1', 'Dextran 70 USP 1mg/Hypromellose USP 3mg', 'Lubtear', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(53, '1', 'Ciprofloxacin 0.3%/Beclomethasone 0.025%/Clotrimazole 1%/Lignocaine 2% Ear Drops', 'Otobiotic', 1, 228, 228.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(54, '1', 'fluticasone propionate ', 'Flonaspray', 1, 680, 680.00, 950, 1, 'active', '2025-09-04 14:52:46'),
+(55, '1', 'Esomeprazole', 'Protas 40 Tablets', 100, 1190, 11.90, 30, 33, 'active', '2025-09-04 14:52:46'),
+(56, '1', 'Esomeprazole', 'Nexium 20', 14, 550, 39.29, 70, 5, 'active', '2025-09-04 14:52:46'),
+(57, '1', 'Omeprazole Satchets', 'Risek insta', 10, 331, 33.10, 50, 3, 'active', '2025-09-04 14:52:46'),
+(58, '1', 'Omeprazole ', 'Omecos 20 Capsules', 100, 105, 1.05, 5, 33, 'active', '2025-09-04 14:52:46'),
+(59, '1', 'Pantoprazole Delayed Release', 'Pantakind 40', 60, 1440, 24.00, 35, 20, 'active', '2025-09-04 14:52:46'),
+(60, '1', 'Clotrimazole Vaginal Tablets 200mg', 'Canazol Vaginal Tablet, 3s', 1, 46, 46.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(61, '1', 'Ketocozole 200mg  BP', 'Hitoral 200mg Tablet', 100, 340, 3.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(62, '1', 'Amoxicllin 125mg/5mL', 'ELYMOX Suspension 100mL', 1, 43, 43.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(63, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 100mL', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(64, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 50mL', 1, 30, 30.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(65, '1', 'Ampicillin/Cloxacillin 250mg/5mL', 'Ampiclo-Dawa Suspension', 1, 68, 68.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(66, '1', 'Ampicillin/Cloxacillin 250mg/250mg', 'Ampiclo-Dawa 500 Capsule', 100, 400, 4.00, 10, 33, 'active', '2025-09-04 14:52:46'),
+(67, '1', 'Flucloxacillin 125mg/5mL', 'ELYFLOX 100mL Suspension', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(68, '1', 'Azithromycin Oral Suspension 200mg', 'IzziThree 15mg', 1, 39, 39.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(69, '1', 'Vitamin B Complex', 'Neuro-Forte', 20, 270, 13.50, 20, 7, 'active', '2025-09-04 14:52:46'),
+(70, '1', 'Levocetirizine 5mg', 'VIVACET L 5', 10, 55, 5.50, 20, 3, 'active', '2025-09-04 14:52:46'),
+(71, '1', 'Maternity Pads', 'Medimax', 1, 97, 97.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(72, '1', 'Maternity Pads', 'Medicott', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(73, '1', 'Absorbent Cotton Wool 400mg', 'Velvex', 1, 250, 250.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(74, '1', 'Adult Diapers XL', 'MY A+ XLARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
+(75, '1', 'Adult Diapers L', 'MY A+ LARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
+(76, '1', 'Adult Pants L', 'ADFIT  PANTS LARGE', 30, 100, 3.33, 5, 10, 'active', '2025-09-04 14:52:46'),
+(77, '1', 'Sulphadoxine 500mg/Pyrimethamine 25mg', 'FANLAR Tablets', 25, 30, 1.20, 50, 8, 'active', '2025-09-04 14:52:46'),
+(78, '1', 'Terbinafine 250mg', 'Terbinaforce 250 Tablets', 30, 953, 31.77, 50, 10, 'active', '2025-09-04 14:52:46'),
+(79, '1', 'Fluconazole 150mg', 'NOCANZ 150 Tablet', 1, 15, 15.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(80, '1', 'Griseofulvin 250mg', 'Grisolab-250 Tablet', 100, 520, 5.20, 10, 33, 'active', '2025-09-04 14:52:46'),
+(81, '1', 'Griseofulvin 125mg', 'Biofulvin 125 Tablet', 100, 390, 3.90, 10, 33, 'active', '2025-09-04 14:52:46'),
+(82, '1', 'Artemether 20mg/Lumefantrine 120mg', 'LONART Tablet, 24s', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(83, '1', 'Artemether 20mg/Lumefantrine 120mg', 'PANAART 20/120, 24s', 1, 0, 0.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(84, '1', 'Povidone-Iodine USP 1%', 'Peardine Mouth Wash, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(85, '1', 'Povidone-Iodine USP 1%', 'Rexe-Dine Mouth Wash', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(86, '1', 'Amoxicillin 500mg', 'AMOXIMED 500 Capsule', 100, 320, 3.20, 6.6, 33, 'active', '2025-09-04 14:52:46'),
+(87, '1', 'Cefuroxime 500mg USP', 'Theoroxime 500 Tablets', 1, 165, 165.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(88, '1', 'Cefixime 400mg USP', 'Theofix - 400 Tablets', 10, 170, 17.00, 350, 3, 'active', '2025-09-04 14:52:46'),
+(89, '1', 'Azithromycin 500mg USP', 'AGYCIN-500 Tablet, 3s', 1, 55, 55.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(90, '1', 'Nitrofurantoin 100mg', 'NIFURAN', 100, 200, 2.00, 10, 33, 'active', '2025-09-04 14:52:46'),
+(91, '1', 'Tinidazole 500mg', 'Tinizol 500 Tablets,4s', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(92, '1', 'Amoxicillin 250mg', 'SPASMOX 250 Capsule', 100, 195, 1.95, 3.3, 33, 'active', '2025-09-04 14:52:46'),
+(93, '1', 'Doxycycline 100mg', 'XYCYCLINE 100 Capsule', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
+(94, '1', 'Secnidazole 1g', 'Secnida Forte Tablets, 2s', 1, 25, 25.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(95, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Microgynon Fe Tablets', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(96, '1', 'Sildenafil 50mg ', 'MTM-50 Tablet', 4, 36, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(97, '1', 'Sildenafil 100mg ', 'MTM-100 Tablet', 4, 46, 11.50, 50, 1, 'active', '2025-09-04 14:52:46'),
+(98, '1', 'Sildenafil 100mg ', 'Nelgra-100 Tablet', 4, 43, 10.75, 50, 1, 'active', '2025-09-04 14:52:46'),
+(99, '1', 'Sildenafil 100mg ', 'VEGA-100 Tablet', 4, 41, 10.25, 50, 1, 'active', '2025-09-04 14:52:46'),
+(100, '1', 'Levonogestrel 0.75mg', 'Postinor-2 Tablets, 2s', 1, 143, 143.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(101, '1', 'levonogestrel 0.75mg', 'Safe-72 Tablets,2s', 1, 20, 20.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(102, '1', 'Betamethasone Sodium Phosphate 2mg/ml/Betamethasone Dipropionate 5mg/ml Suspension for Inj,2ml', 'KRIDOFOS Injection', 1, 675, 675.00, 900, 1, 'active', '2025-09-04 14:52:46'),
+(103, '1', 'Medroxyprogesterone Injection 150mg/mL', 'Lydia Contraceptive Injection', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(104, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Femiplan Tablets', 1, 85, 85.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(105, '1', 'Diclofenac 75mg Injection', 'CAREFENAC Injection', 10, 45, 4.50, 20, 3, 'active', '2025-09-04 14:52:46'),
+(106, '1', 'Carbamazepine 200mg BP', 'Carbamazepine 200mg Tablets', 100, 369, 3.69, 5, 33, 'active', '2025-09-04 14:52:46'),
+(107, '1', 'Amitriptyline 25mg', 'Amitiptyline Tablets, Cosmos', 100, 252, 2.52, 5, 33, 'active', '2025-09-04 14:52:46'),
+(108, '1', 'Phenobarbital 30mg', 'Phenobarbital Tablets, Cosmos', 100, 235, 2.35, 5, 33, 'active', '2025-09-04 14:52:46'),
+(109, '1', 'Diazepam 5mg', 'Cozepam Tablets', 100, 302, 3.02, 5, 33, 'active', '2025-09-04 14:52:46'),
+(110, '1', 'Maternity Pants', 'Dafi Maternity Pants, M-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
+(111, '1', 'Maternity Pants', 'Dafi Maternity Pants, S-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
+(112, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'Augmentin 457 Suspension', 1, 990, 990.00, 1200, 1, 'active', '2025-09-04 14:52:46'),
+(113, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Augmentin 228 Suspension', 1, 635, 635.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(114, '1', 'Tamsulosin 0.4mg', 'Tamsolin Capsules', 10, 770, 77.00, 100, 3, 'active', '2025-09-04 14:52:46'),
+(115, '1', 'Amoxicillin/Clavulanate 625mg', 'Labclav 625 Tablets', 1, 115, 115.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(116, '1', 'Amoxicillin/Clavulanate 1000mg', 'Acinet 1000 Tablets', 1, 275, 275.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(117, '1', 'Amoxicillin/Clavulanate 375mg', 'Acinet 375 Tablets', 1, 171, 171.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(118, '1', 'Ciprofloxacin 500mg USP', 'Ciproglax 500mg Tablets', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(119, '1', 'Finasteride 5mg/Tamsulosin 400mcg', 'FINOSIN Tablets', 30, 1750, 58.33, 75, 10, 'active', '2025-09-04 14:52:46'),
+(120, '1', 'Flucloxacillin Injection 500mg Vial', 'Flupene Injection', 1, 38, 38.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(121, '1', 'HydrocortisoneInjection 100mg', 'OCORTIN 100 Injection', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(122, '1', 'Lidocaine Injection 20mg/mL, 30mL', 'LIDOCAINE 2% Injection', 1, 36, 36.00, 60, 1, 'active', '2025-09-04 14:52:46'),
+(123, '1', 'Cefuroxime 125mg/5mL', 'Evorox, 50mL Suspension', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(124, '1', 'Cefalexin 125mh/5mL', 'Leocef, 100mL Suspension', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(125, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Labclav 228 Suspension', 1, 102, 102.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(126, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'ACINET DRY SYRUP 457', 1, 260, 260.00, 380, 1, 'active', '2025-09-04 14:52:46'),
+(127, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Neonatal Ampiclox Drops', 1, 345, 345.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(128, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Ampliclo-Dawa (Neonata Amplicox Gen)', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(129, '1', 'Amlodipine 5mg/Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Amlozaar-H Tablet', 30, 1400, 46.67, 70, 10, 'active', '2025-09-04 14:52:46'),
+(130, '1', 'Flucloxacillin 250mg/Amoxicillin 250mg', 'MoxaForte 500 Capsules, 20s', 1, 354, 354.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(131, '1', 'Ceftriaxone 1g', '\'GALAXY\'S SEFIN Injection', 1, 32, 32.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(132, '1', 'Urine Bag', 'Urine Collection Bag, 2000mL', 1, 48, 48.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(133, '1', 'Zinc Sulfate DT 20mg', 'Junior Zinc Tablets', 100, 89, 0.89, 5, 33, 'active', '2025-09-04 14:52:46'),
+(134, '1', 'Normal Saline Nasal Drops', 'Nosfree Saline Drops', 1, 17, 17.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(135, '1', 'Hyoscine - N- Butylbromide 5mg/5mL', 'Hycin Syrup, 60mL', 1, 62, 62.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(136, '1', 'Orals Rehydration Salts', 'ORASOL, ORS', 1, 8, 8.00, 20, 1, 'active', '2025-09-04 14:52:46'),
+(137, '1', 'Ondasetron 2mg/5mL', 'EMITOSS Oral Solution, 30mL', 1, 270, 270.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(138, '1', 'Zinc Sulfate 20mg Syrup', 'TOTO-ZincOD Syrup', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(139, '1', 'Nystatin 100,000 units', 'NYSTAL Suspension', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(140, '1', 'Glucosamine/Chondroitin/Cod Liver/Omega 3', 'Cartil Omega Softgel Capsules', 30, 1758, 58.60, 75, 10, 'active', '2025-09-04 14:52:46'),
+(141, '1', 'Calcium/Magnesium/Vitamin D', 'Osteocare Tablets', 30, 620, 20.67, 30, 10, 'active', '2025-09-04 14:52:46'),
+(142, '1', 'Calcium 320mg/Phosphorus 137.5mg', 'Purecal Chewable Tablets', 30, 750, 25.00, 35, 10, 'active', '2025-09-04 14:52:46'),
+(143, '1', 'Calcium/Magnesium/Vitamin D', 'Zedcal Oral Suspension, 200mL', 1, 549, 549.00, 750, 1, 'active', '2025-09-04 14:52:46'),
+(144, '1', 'Lansoprazole/Tinidazole/Clarithromycin', 'Sure Kit, H. Pylori Kit', 1, 698, 698.00, 1000, 1, 'active', '2025-09-04 14:52:46'),
+(145, '1', 'Amoxicillin,clarithromycin,Esomeprazole', 'Esofag kit,H.Pylori kit', 1, 950, 950.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
+(146, '1', 'lansoprazole/Amoxicilin/Clarithromycin', 'Pylotrip,H.Pylori Kit', 1, 890, 890.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
+(147, '1', 'syringe 10cc', 'Syringe 10cc', 1, 450, 450.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(148, '1', 'Syringe 5cc', 'Syringe 5cc', 1, 270, 270.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(149, '1', 'Lactulose solution', 'Osmolax Suspension', 1, 340, 340.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(150, '1', 'magaldrate and simethicone 200ml', 'Maganta Suspension', 1, 361.25, 361.25, 500, 1, 'active', '2025-09-04 14:52:46'),
+(151, '1', 'Sodium alginate 500mg/sodium bicarbonate/calcium carbonate', ' Asynta Max 200mL', 1, 467.5, 467.50, 700, 1, 'active', '2025-09-04 14:52:46'),
+(152, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 180mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(153, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 100mL', 1, 247, 247.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(154, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Alugel Suspension, 100mL', 1, 81, 81.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(155, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 200mL Suspension', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(156, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 100mL Suspension', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(157, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Gocid 100mL Suspension', 1, 35, 35.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(158, '1', 'Alginic Acid Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone ', 'ULGICID Suspension 200mL', 1, 285, 285.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(159, '1', 'Sucralfate/Oxetacaine', 'Sucrafil O Gel Suspension, 100mL', 1, 280, 280.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(160, '1', 'Aluminium Hydroxide 300mg/magnesium hydroxyde 150mg/simethicone 100mg', 'Benagas Gel, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(161, '1', 'Aluminium Hydroxide 150mg/Magnesium Trisilicate 250mg', 'Tryactin Suspension, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(162, '1', 'Magaldrate 480mg and simethicone 20mg', 'Magnacid Gel 100mL', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(163, '1', 'Ferric Ammonium Citrate 200mg/Folic 1.5mg/Cyanocobalamin 50mcg/Ethanol', 'Ranferon 12 Suspension, 200mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(164, '1', 'Dried Ferrous Sulphate 200mg/Folic Acid 0.4mg', 'Ferrolic-LF Tablets, IFAS', 100, 133, 1.33, 5, 33, 'active', '2025-09-04 14:52:46'),
+(165, '1', 'Ferrous Fumarate 305mg/Folic Acid 0.75mg/Cyanocobalamin 5mcg/Ascorbic Acid 75mg/Zinc Sulphate 5mg', 'Ranferon Capsules', 30, 286, 9.53, 20, 10, 'active', '2025-09-04 14:52:46'),
+(166, '1', 'Iron 50mg/Manganese 1.33mg/Copper 0.70mg', '\'Tot\'Hema Ampoules\'', 20, 860, 43.00, 80, 7, 'active', '2025-09-04 14:52:46'),
+(167, '1', 'Diloxanide Furoate 250mg/Metronidazole 200mg/Dicyclomine 10mg/5mL', 'Entamaxin Oral Suspension, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(168, '1', 'Metronidazole 200mg/5mL', 'Amizole Oral Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(169, '1', 'Metronidazole Benzoate 200mg/5mL', 'Tricozole - 200mg Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(170, '1', 'Multivitamin Syrup', 'Filwel Kids, 100mL', 1, 204, 204.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(171, '1', 'Secnidazole 750mg/15mL', 'Secnida for Children, 15mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(172, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Tablets', 30, 360, 12.00, 15, 10, 'active', '2025-09-04 14:52:46'),
+(173, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Syrup, 200mL', 30, 320, 10.67, 450, 10, 'active', '2025-09-04 14:52:46'),
+(174, '1', 'Cyproheptadine 2mg/ B Vitamins/Minerals', 'Cypro B Plus Syrup, 200mL', 1, 235, 235.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(175, '1', 'Cyproheptadine 2mg/ Tricholine Citrate 275mg', 'Cypon Syrup,100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(176, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Ambroxol Expectorant Syrup, 100mL', 1, 178.4, 178.40, 250, 1, 'active', '2025-09-04 14:52:46'),
+(177, '1', 'Adovas Syrup', 'Adovas Syrup, 100mL', 1, 204, 204.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(178, '1', 'Sulbutamol 1mg/Bromhexine 2mg/Guaifenesin 50mg', 'Cadistin Plus, 100mL', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(179, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadiphen Syrup, 100mL', 1, 140, 140.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(180, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg', 'Flu-Gone DM, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
+(181, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg/Paracetamol', 'Flu-Gone P+, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
+(182, '1', 'Promethazine 2.5mg/Diphenhydramine 5mg/Ammonium Cl 90mg/Sodium Citrate 45mg/Ephedrine Hcl 7.5mg', 'Tridex Cough Mixture,100mL', 1, 58, 58.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(183, '1', 'Dextromethorphan 10mg/Cetirizine 5mg/Phenylephrine Hcl 5mg', 'Zefcolin Dry Cough Formula Syrup, 100mL', 1, 229, 229.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(184, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 100mL', 1, 214.4, 214.40, 300, 1, 'active', '2025-09-04 14:52:46'),
+(185, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 200mL', 1, 375.4, 375.40, 500, 1, 'active', '2025-09-04 14:52:46'),
+(186, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadistin Expectorant, 100mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(187, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 10mg/Paracetamol 120mg', 'Coldcap Syrup, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(188, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 60mL', 1, 36, 36.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(189, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 100mL', 1, 53, 53.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(190, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Guaifenesin 100mg', 'Trimex Diabetic', 1, 215, 215.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(191, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Mucosolvan Syrup,100mL', 1, 590, 590.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(192, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Sodium Citrate 44mg/Dextromethorphan 10mg/Menthol 1mg', 'Coscof-DM Linctus,100mL', 1, 155, 155.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(193, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Original, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
+(194, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Orange Flavour, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
+(195, '1', 'Bonnisan', 'Bonnisan, 120mL, Syrup', 1, 385, 385.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(196, '1', 'Sodium Bicarbonate 50mg/Terpeneless Dillseed Oil 2.15mg', 'Gripe Water', 1, 92, 92.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(197, '1', 'Levosalbutamol 1mg/5mg', 'Levostar, 100mL Syrup', 1, 216, 216.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(198, '1', 'Levocetirizine 2.5mg', 'ALERFREE Syrup,60mL', 1, 123, 123.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(199, '1', 'Desloratidine 2.5mg/5mL', 'DESOSTAR Syrup, 60mL', 1, 266, 266.00, 380, 1, 'active', '2025-09-04 14:52:46'),
+(200, '1', 'Loratidine USP 5mg/5mL', 'Lorhistina Syrup,  60mL', 1, 179, 179.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(201, '1', 'Predinsolone 5mg/5mL', 'Olsolone Syrup, 50mL', 1, 100, 100.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(202, '1', 'Promethazine Hcl, 5mg/5mL', 'Largan, Syrup', 1, 19, 19.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(203, '1', 'Chlorpheniramine Maleate 4mg', 'Dawa-CPM Tablets, 4mg', 100, 31, 0.31, 2, 33, 'active', '2025-09-04 14:52:46'),
+(204, '1', 'Chlorpheniramine Maleate 2mg/5mL', 'Dawa-CPM Syrup, 60mL', 1, 22, 22.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(205, '1', 'Cetirizine HCL 5mg/5mL', 'CetriPlain, 60mL Syrup', 1, 20, 20.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(206, '1', 'Sodium Lactate IV Infusion', 'Ringer - Lactate, 500mL,IV Infusion', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(207, '1', 'Sodium Chloride, 0.9%', 'VIDASAL, 500mL, IV Infusion (Normal Saline)', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(208, '1', 'Erythromycin 125mg/5mL', 'Erythrox 100mL', 1, 78, 78.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(209, '1', 'Clarithromycin 500mg', 'Aziclar-500 Tablets', 1, 229, 229.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(210, '1', 'Diloxanide Furoate 500mg/Metronidazole 400mg', 'Diracip-MDS, Tablets,15s', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(211, '1', 'Azithromycin 1g/Fluconazole 150mg/Secnidazole 1g', 'AZFLOSEC KIT', 1, 325, 325.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(212, '1', 'Ciprofloxacin 500mg/Tinidazole 600mg', 'CIPRO-T, Tablets', 1, 150, 150.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(213, '1', 'Cefalexin 500mg', 'Felaxin 500 Capsules', 1, 6.8, 6.80, 15, 1, 'active', '2025-09-04 14:52:46'),
+(214, '1', 'Tramadol 50mg', 'Metadol Capsules', 100, 350, 3.50, 10, 33, 'active', '2025-09-04 14:52:46'),
+(215, '1', 'Cefadroxil 500mg', 'DROX 500', 1, 183.6, 183.60, 400, 1, 'active', '2025-09-04 14:52:46'),
+(216, '1', 'Pregnancy Test Strip', 'Pregnancy Test Strip', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(217, '1', 'Metformin HCl 500mg', 'Glucophage 500 Tablets', 90, 395, 4.39, 8, 30, 'active', '2025-09-04 14:52:46'),
+(218, '1', 'Metformin HCl 850mg', 'Glucophage 850 Tablets', 60, 564, 9.40, 15, 20, 'active', '2025-09-04 14:52:46'),
+(219, '1', 'Norethisterone 5mg', 'Primolut N Tablets', 30, 940, 31.33, 45, 10, 'active', '2025-09-04 14:52:46'),
+(220, '1', 'Clomifene 50mg', 'Clophene 50mg, Tablets', 30, 379, 12.63, 50, 10, 'active', '2025-09-04 14:52:46'),
+(221, '1', 'Fluconazole 150mg/Azithromycin 1g/Secnidazole 1g', 'VDM KIT, Tablets', 1, 645, 645.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(222, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 28s Tablets', 28, 145, 5.18, 7, 9, 'active', '2025-09-04 14:52:46'),
+(223, '1', 'Metformin 500mg', 'Sukarmin 500mg Tablets', 100, 85, 0.85, 5, 33, 'active', '2025-09-04 14:52:46'),
+(224, '1', 'Amlodipine 5mg', 'Varinil 5 Tablets', 28, 155, 5.54, 10, 9, 'active', '2025-09-04 14:52:46'),
+(225, '1', 'Hydrochlorothiazide 50mg', 'HYMET Tablets', 100, 75, 0.75, 4, 33, 'active', '2025-09-04 14:52:46'),
+(226, '1', 'Acetylsalicylic Acid 75mg', 'Ascard 75 Tablets', 30, 105, 3.50, 150, 10, 'active', '2025-09-04 14:52:46'),
+(227, '1', 'Metformin HCl 850mg', 'Glucomet 850 Tablets', 56, 420, 7.50, 15, 19, 'active', '2025-09-04 14:52:46'),
+(228, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 112s Tablets', 112, 495, 4.42, 7, 37, 'active', '2025-09-04 14:52:46'),
+(229, '1', 'Anusol', 'Anusol Suppositories', 12, 700, 58.33, 80, 4, 'active', '2025-09-04 14:52:46'),
+(230, '1', 'Atenolol 50mg', 'Cardinol 50 Tablets, 28s', 28, 125, 4.46, 8, 9, 'active', '2025-09-04 14:52:46'),
+(231, '1', 'Losartan 50mg', 'Amlozaar 50 Tablets', 30, 950, 31.67, 45, 10, 'active', '2025-09-04 14:52:46'),
+(232, '1', 'Carvedilol 12.5mg', 'Vidol 12.5 Tablets', 28, 410, 14.64, 20, 9, 'active', '2025-09-04 14:52:46'),
+(233, '1', 'Carvedilol 6.25mg', 'Vidol 6.25 Tablets', 28, 285, 10.18, 15, 9, 'active', '2025-09-04 14:52:46'),
+(234, '1', 'Nifedipine 20mg', 'Nicardin-SR Tablets', 100, 80, 0.80, 5, 33, 'active', '2025-09-04 14:52:46'),
+(235, '1', 'Losartan 50mg', 'Angilock 50 Tablets', 30, 131.75, 4.39, 8, 10, 'active', '2025-09-04 14:52:46'),
+(236, '1', 'Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Angilock-Plus 50/12.5 Tablets', 30, 170, 5.67, 10, 10, 'active', '2025-09-04 14:52:46'),
+(237, '1', 'Atenolol 50mg', 'Lonet 50 Tablets', 100, 337, 3.37, 5, 33, 'active', '2025-09-04 14:52:46'),
+(238, '1', 'Atorvastatin 20mg ', 'Avastatin 20 Tablets', 28, 304, 10.86, 20, 9, 'active', '2025-09-04 14:52:46'),
+(239, '1', 'Atorvastatin 20mg ', 'Atsta*20 Tablets', 30, 170, 5.67, 15, 10, 'active', '2025-09-04 14:52:46'),
+(240, '1', 'Enalapril 10mg', 'Dawapril 10 Tablet', 100, 113, 1.13, 5, 33, 'active', '2025-09-04 14:52:46'),
+(241, '1', 'Enalapril 5mg', 'Dawapril 5 Tablet', 100, 123, 1.23, 5, 33, 'active', '2025-09-04 14:52:46'),
+(242, '1', 'Co-trimoxazole 480mg Tablets', 'CO-TRI 480 Tablets', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
+(243, '1', 'Co-trimoxazole 960mg Tablets', 'Co-trimoxazole 960 Tablets', 100, 485, 4.85, 10, 33, 'active', '2025-09-04 14:52:46'),
+(244, '1', 'Blood Lancets', 'Blood Lancets Pieces', 100, 174, 1.74, 300, 33, 'active', '2025-09-04 14:52:46'),
+(245, '1', 'Benzyl Benzoate Application 25%', 'Scabees Application, 100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(246, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 75MG', 1, 120, 120.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(247, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 150MG', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(248, '1', 'Calcium Antiacids', 'ENO Tablets (Pairs)', 100, 595, 5.95, 20, 33, 'active', '2025-09-04 14:52:46'),
+(249, '1', 'Touch ang Go', 'Touch and Go', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(250, '1', 'Hydrocortisone Ointment 1% w/w', 'ELYCORT 15G OINTMENT', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(251, '1', 'Hydrocortisone Cream 1% w/w', 'ELYCORT 15G CREAM', 1, 66, 66.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(252, '1', 'Neomycin 5mg/Bacitracin 2.5mg/Gramicidin 0.5mg Powder', 'GRABACIN POWDER 10GM', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(253, '1', 'Neomycin 5mg/Bacitracin 250 IU', 'NEBANOL POWDER 5MG', 1, 59, 59.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(254, '1', 'Neomycin 3.5mg/Bacitracin 5000 units/Bacitracin 500 units', 'GRABACIN 3 Ointment', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(255, '1', 'Hydrocortisone Ointment 1% w/w', 'HYDROTOPIC Ointment 15g Tube', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(256, '1', 'Condoms', 'Kiss Classic Condoms, 3s', 24, 627, 26.13, 50, 8, 'active', '2025-09-04 14:52:46'),
+(257, '1', 'Condoms', 'Kiss Strawberry Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
+(258, '1', 'Condoms', 'Kiss Studded Condoms, 3s', 24, 892, 37.17, 100, 8, 'active', '2025-09-04 14:52:46'),
+(259, '1', 'Condoms', 'Kiss Chocolate Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
+(260, '1', 'Condoms', 'Durex Fetherlite Ultra, 3s', 1, 337, 337.00, 550, 1, 'active', '2025-09-04 14:52:46'),
+(261, '1', 'Condoms', 'Durex Extra Safe, 3s', 1, 302, 302.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(262, '1', 'Condoms', 'TRUST RIBBED, 3s', 24, 920, 38.33, 100, 8, 'active', '2025-09-04 14:52:46'),
+(263, '1', 'Condoms', 'TRUST CLASSIC, 3s', 24, 600, 25.00, 50, 8, 'active', '2025-09-04 14:52:46'),
+(264, '1', 'Condoms', 'TRUST STUDDED, 3s', 24, 900, 37.50, 100, 8, 'active', '2025-09-04 14:52:46'),
+(265, '1', 'Bandages', 'Crepe Bandage Spandex 5cm', 1, 18, 18.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(266, '1', 'Bandages', 'Crepe Bandage Spandex 7.5cm', 1, 29, 29.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(267, '1', 'Bandages', 'Crepe Bandage Spandex 15cm', 1, 49, 49.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(268, '1', 'Bandages', 'Crepe Bandage Spandex 10cm', 1, 46, 46.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(269, '1', 'Diclofenac Gel 1%', 'DICLOGEN 1% GEL', 1, 19, 19.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(270, '1', 'Clotrimazole 1% w/w/Beclomethasone Dipropionate 0.025% w/w', 'Bulkot-B Cream', 1, 51, 51.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(271, '1', 'Betamethasone Dipropionate, Gentamicin & Clotrimazole  Cream', 'Xtraderm Cream', 1, 126, 126.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(272, '1', 'Clotrimazole 10.0% w/w/Betamethasone 0.5mg', 'Clozole-B Cream', 1, 72, 72.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(273, '1', 'Clotrimazole 1.0% w/w', 'Clozole Cream', 1, 28, 28.00, 70, 1, 'active', '2025-09-04 14:52:46'),
+(274, '1', 'Hydrocortisone Cream 1% w/w', 'OLCORT 15G Cream', 1, 28, 28.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(275, '1', 'Beclomethasone 0.025%, Miconazole 2%, Neomycin Sulphate 0.5% Chlorocresol 0.25%', 'Beclomin Ointment 15g', 1, 150, 150.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(276, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Ointment 15g', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(277, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Cream 15g', 1, 45, 45.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(278, '1', 'Betamethasone Valerate 0.1% w/w/Salicylic acid 3% w/w', 'MEDIVEN-S Ointment 15g', 1, 180, 180.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(279, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 15g', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(280, '1', 'Calamine Lotion', 'COVIGEN Calamine Lotion, 100mL', 1, 29, 29.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(281, '1', 'Surgical Spirit 70% v/v', 'COVIGEN Surgical Spirit, 50mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(282, '1', 'Povidone-Iodine USP 10% w/v', 'FAHOLO POVIDONE IODINE, 50mL', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(283, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 100g', 1, 169, 169.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(284, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 250g', 1, 308, 308.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(285, '1', 'Chlorine 3.5% w/v', 'FAHOLO Sodium Hypochlorite 3.5% w/v', 1, 300, 300.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(286, '1', 'Sterile Paraffin Dressing ', 'Sterifin Dressing Gauze, 10x10', 10, 287, 28.70, 50, 3, 'active', '2025-09-04 14:52:46'),
+(287, '1', 'Sodium Bicarbonate 300mg ', 'SodaMint Tablets', 100, 87, 0.87, 5, 33, 'active', '2025-09-04 14:52:46'),
+(288, '1', 'Indomethacin 25mg', 'Caredomet 25mg Capsules, Indocid', 100, 80, 0.80, 3, 33, 'active', '2025-09-04 14:52:46'),
+(289, '1', 'Esomeprazole 20mg', 'ESOMAC 20', 28, 789, 28.18, 35, 9, 'active', '2025-09-04 14:52:46'),
+(290, '1', 'Esomeprazole 20mg', 'ESOMAC 40', 14, 745, 53.21, 70, 5, 'active', '2025-09-04 14:52:46'),
+(291, '1', 'Albendazole 400mg', 'Zentel 400 Tablet', 1, 190, 190.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(292, '1', 'Ketoconazole 2% w/v', 'Hitoral  Shampoo, 100mL', 1, 316, 316.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(293, '1', 'Ivermectin BP 6mg', 'Iverkot-6', 10, 2100, 210.00, 250, 3, 'active', '2025-09-04 14:52:46'),
+(294, '1', 'Lidocaine HCl/Cetylpyridinium', 'Dentinox 10g', 2, 646, 323.00, 900, 1, 'active', '2025-09-04 14:52:46'),
+(295, '1', 'Trimetabol', 'Trimetabol Solution', 1, 750, 750.00, 1100, 1, 'active', '2025-09-04 14:52:46'),
+(296, '1', 'Diclofenac/Linseed/Methyl Salicylate/Racementhol/Benzyl Alcohol', 'VOLINI GEL, 100MG', 1, 218, 218.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(297, '1', 'Good Morning Lung Tonic', 'Good Morning, 60mL', 1, 76, 76.00, 130, 1, 'active', '2025-09-04 14:52:46'),
+(298, '1', 'Kofgon Red', 'KOFGON Syr, 60mL', 1, 25, 25.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(299, '1', 'Tricohist ', 'Tricohist, 100mL', 1, 108, 108.00, 180, 1, 'active', '2025-09-04 14:52:46'),
+(300, '1', 'Tricohist ', 'Tricohist, 60mL', 1, 95, 95.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(301, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg', 'Tripozed, Expectorant, 100mL', 1, 41, 41.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(302, '1', 'Diclofenac Sodium Slow Release 100mg', 'Diclomol SR 100mg, Tablets', 100, 435, 4.35, 10, 33, 'active', '2025-09-04 14:52:46'),
+(303, '1', 'Tretinoine 0.05% w/w', 'Acnesol Cream, 25g', 1, 153, 153.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(304, '1', 'Telmisartan 80mg/Amlodipine 5mg', 'AMTEL 80/5 Tabs', 30, 2000, 66.67, 80, 10, 'active', '2025-09-04 14:52:46'),
+(305, '1', 'Sulfadoxine/Pyrimethamine', 'Malodar Tbalets, 3s', 1, 40, 40.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(306, '1', 'Flucloxacillin/Amoxicillin 250mg/5mL', 'MoxaForte Suspension, 100mL', 1, 265, 265.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(307, '1', 'Sensodyne Toothpaste', 'Sensodyne Multicare, 40mL', 1, 241, 241.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(308, '1', 'Sildenafil 100mg/5g', 'KAMAGRA ORAL JELLY 100MG', 1, 660, 660.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(309, '1', 'aceclofenac/Paracetamol/Chlorzoxazone', 'ACETAL MR Tablets', 10, 519, 51.90, 15, 3, 'active', '2025-09-04 14:52:46'),
+(310, '1', 'Canullas G22 (Blue)', 'Canullas G22 (Blue)', 1, 13, 13.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(311, '1', 'Canullas G24(Yellow)', 'Canullas G24(Yellow)', 1, 14, 14.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(312, '1', 'FloraNorm Satchets', 'FloraNorm Satchets', 10, 870, 87.00, 130, 3, 'active', '2025-09-04 14:52:46'),
+(313, '1', 'Amoxicillin 1g/Clavulanate 200mg', 'GAMOK Injection, Vial', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(314, '1', 'Insulin Syringes, 0.5mL', 'Insulin Syringes, 0.5mL', 10, 205, 20.50, 30, 3, 'active', '2025-09-04 14:52:46'),
+(315, '1', 'Insulin Syringes, 1mL', 'Insulin Syringes, 1mL', 10, 200, 20.00, 30, 3, 'active', '2025-09-04 14:52:46'),
+(316, '1', 'Diclofenac/Paracetamol/Chlorzoxazone', 'LOBAK Tablets, 100s', 100, 969, 9.69, 15, 33, 'active', '2025-09-04 14:52:46'),
+(317, '1', 'Tranexamic Acid 500mg/5mL', 'MENOZIP INJ, 500mg/5mL', 5, 461, 92.20, 150, 2, 'active', '2025-09-04 14:52:46'),
+(318, '1', 'Carbocisteine 100mg', 'NASITHIOL INFANT, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(319, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 100mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(320, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(321, '1', 'Needle G21', 'Needle G21', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
+(322, '1', 'Needle G23', 'Needle G23', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
+(323, '1', 'Omeprazole Inj 40mg', 'Ompac 40mg', 1, 60, 60.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(324, '1', 'Ondasetron 4mg/2mL', 'ONDEX 4MG', 5, 431, 86.20, 150, 2, 'active', '2025-09-04 14:52:46'),
+(325, '1', 'Dihydroartemisinin 40mg/Piperaquine 320mg', 'P-ALAXIN 9S', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(326, '1', 'Paracetamol/Codeine Phosphate/Doxylamine, Caffeine', 'TAMEPYN, 20S', 20, 215, 10.75, 15, 7, 'active', '2025-09-04 14:52:46'),
+(327, '1', 'Lubricating Jelly', 'Veri-Lube, 42g', 1, 117, 117.00, 280, 1, 'active', '2025-09-04 14:52:46'),
+(328, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'Vithiol Syrup, 125mg', 1, 130, 130.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(329, '1', 'Timolol Eye Drops 0.5%', 'TIMOGLAX EYE DROPS, 5mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(330, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, LEMON', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
+(331, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, ORANGE', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
+(332, '1', 'Miconazole Nitrate 2%w/w', 'MUCOBEN CREAM', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(333, '1', 'Medicated Soap', 'TETMOSOL Medicated Soap', 1, 95, 95.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(334, '1', 'Strepsils', 'Strepsils Soothing, Honey & Lemon', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
+(335, '1', 'Strepsils', 'Strepsils Regular', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
+(336, '1', 'Mupirocin Ointment 2%', 'Zupricin Ointment, 15g', 1, 505.5, 505.50, 750, 1, 'active', '2025-09-04 14:52:46'),
+(337, '1', 'Mupirocin 2%/Betamethasone 0.5% Ointment', 'Zupricin B Ointment, 15g', 1, 625.5, 625.50, 850, 1, 'active', '2025-09-04 14:52:46'),
+(338, '1', 'Anti-Rabies Vaccine', 'Anti-Rabies Vaccine, Vial', 3, 800, 266.67, 1200, 1, 'active', '2025-09-04 14:52:46'),
+(339, '1', 'Vitamin B Complex', 'Neurobion Forte Tablets', 1, 3, 3.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(340, '1', 'Insulin 70/30', 'Mixtard 30, Vial', 1, 500, 500.00, 700, 1, 'active', '2025-09-04 14:52:46'),
+(341, '1', 'Bisacodyl 5mg', 'Bicolex 5, Tablets', 100, 187, 1.87, 5, 33, 'active', '2025-09-04 14:52:46'),
+(342, '1', 'Clindamycin 300mg', 'Clindacin-300 Capsules', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(343, '1', 'Diloxanide 250mg/Metronidazole 200mg/Dicyclomine 10mg', 'Entamaxin Capsules,', 1, 190, 190.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(344, '1', 'Fluconazole 200mg ', 'Diconazol 200mg Tablets', 100, 1086, 10.86, 15, 33, 'active', '2025-09-04 14:52:46'),
+(345, '1', 'Crotamiton+Sulphur', 'Scabion Cream, 20g', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, 3.00, 10, 17, 'active', '2025-09-04 14:52:46'),
+(347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, 41.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, 18.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(1, '1', 'Ibuprofen Tablet BP 400mg', 'Gesic 400 ADL Brufen', 100, 125, 1.25, 3, 33, 'active', '2025-09-04 14:52:46'),
+(2, '1', 'Paracetamol Tablet BP 500mg', 'Cetamol 500mg', 100, 60, 0.60, 2, 33, 'active', '2025-09-04 14:52:46'),
+(3, '1', 'Piroxicam Capsules USP', 'Roxicam 20mg', 100, 65, 0.65, 5, 33, 'active', '2025-09-04 14:52:46'),
+(4, '1', 'Meloxicam Tablet 7.5mg BP', 'Melostar 7.5mg', 100, 161, 1.61, 5, 33, 'active', '2025-09-04 14:52:46'),
+(5, '1', 'Soluble Paracetamol BP 1000mg', 'PARA NOVA ', 8, 185, 23.13, 40, 3, 'active', '2025-09-04 14:52:46'),
+(6, '1', 'Ibuprofen 400mg/Paracetamol 325mg BP', 'Brustan Tablets', 10, 99, 9.90, 20, 3, 'active', '2025-09-04 14:52:46'),
+(7, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'ACEPAR-MR Caplets', 10, 260, 26.00, 35, 3, 'active', '2025-09-04 14:52:46'),
+(8, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'Rilif - MR Tablets', 20, 495, 24.75, 35, 7, 'active', '2025-09-04 14:52:46'),
+(9, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 500mg', 'Zyrtal - MR Tablets', 20, 685, 34.25, 50, 7, 'active', '2025-09-04 14:52:46'),
+(10, '1', 'Diclofenac 50mg/Paracetamol 500mg/Chlorzoxazone 250mg', 'DOLOACT - MR Tablets', 100, 1807, 18.07, 25, 33, 'active', '2025-09-04 14:52:46'),
+(11, '1', 'Paracetamol Tablet BP 500mg/Caffeine 65mg', 'Panadol Extra Tablets (Pairs)', 50, 396, 7.92, 20, 17, 'active', '2025-09-04 14:52:46'),
+(12, '1', 'Paracetamol Tablet BP 500mg', 'Panadol Advance Tablets (Pairs)', 50, 396, 7.92, 15, 17, 'active', '2025-09-04 14:52:46'),
+(13, '1', 'Etoricoxib Tablet 60mg', 'Tory 60 Tablet', 30, 830, 27.67, 40, 10, 'active', '2025-09-04 14:52:46'),
+(14, '1', 'Etoricoxib Tablet 90mg', 'Tory 90 Tablet', 30, 877, 29.23, 45, 10, 'active', '2025-09-04 14:52:46'),
+(15, '1', 'Etoricoxib Tablet 120mg', 'Tory 120 Tablet', 30, 1066, 35.53, 50, 10, 'active', '2025-09-04 14:52:46'),
+(16, '1', 'Paracetamol Tablet BP 500mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg', 'Panadol Cold&Flu Tablets', 24, 320, 13.33, 20, 8, 'active', '2025-09-04 14:52:46'),
+(17, '1', 'Paracetamol Tablet BP 300mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg/Caffeine 30mg', 'FLU-GONE Capsules', 1, 115, 115.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(18, '1', 'Paracetamol Tablet BP 650mg/Phenylephrine Hydrochloride 5mg/Chlorpheniramine Maleate 2mg', 'CONTUS-650 Tablet', 1, 99, 99.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(19, '1', 'Cetirizine Hydrochloride Tablet 10mg', 'CACHCET Tablet', 100, 78, 0.78, 5, 33, 'active', '2025-09-04 14:52:46'),
+(20, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Montallerg Tablets', 20, 1000, 50.00, 70, 7, 'active', '2025-09-04 14:52:46'),
+(21, '1', 'Montelukast 10mg', 'Montana 10mg', 14, 740, 52.86, 75, 5, 'active', '2025-09-04 14:52:46'),
+(22, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Motechest', 30, 409, 13.63, 40, 10, 'active', '2025-09-04 14:52:46'),
+(23, '1', 'Ephedrine 12mg/Theophyline 120mg', 'F-Tab (Franol) Tablet', 100, 179, 1.79, 5, 33, 'active', '2025-09-04 14:52:46'),
+(24, '1', 'Salbutamol Inhaler 100mcg', 'Medisalant 100mcg', 1, 165, 165.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(25, '1', 'Betamethasone 0.25mg/Dexchlorpheniramine Maleate BP 2mg', 'Celestinac Tablet', 30, 149, 4.97, 15, 10, 'active', '2025-09-04 14:52:46'),
+(26, '1', 'Paracetamol 500mg/Chlorzoxazone 250mg', 'Myospaz Tablet', 100, 1595, 15.95, 25, 33, 'active', '2025-09-04 14:52:46'),
+(27, '1', 'Diclofenac 100mg', 'ZOFENAC 100', 100, 75, 0.75, 10, 33, 'active', '2025-09-04 14:52:46'),
+(28, '1', 'Predinsolone 5mg', 'Olsolone Tablets', 100, 68, 0.68, 3, 33, 'active', '2025-09-04 14:52:46'),
+(29, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Duxscospan Plus (Buscopan Plus Generic)', 20, 338, 16.90, 25, 7, 'active', '2025-09-04 14:52:46'),
+(30, '1', 'Doxylamine Succ. 10mg/Pyridoxine 10mg ', 'NOSIC ', 20, 385, 19.25, 25, 7, 'active', '2025-09-04 14:52:46'),
+(31, '1', 'Metoclopramide 10mg', 'Emeton 10mg Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
+(32, '1', 'Meloxicam EP Tablet 7.5mg', 'Melcam 7.5mg Tablet', 100, 331.5, 3.32, 5, 33, 'active', '2025-09-04 14:52:46'),
+(33, '1', 'Meloxicam EP Tablet 15mg', 'Melcam 15mg Tablet', 50, 306, 6.12, 10, 17, 'active', '2025-09-04 14:52:46'),
+(34, '1', 'Metoclopramide 10mg', 'Melasil - 10 Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
+(35, '1', 'Promethazine 25mg', 'Promethazine Tablet', 100, 55, 0.55, 5, 33, 'active', '2025-09-04 14:52:46'),
+(36, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 60mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(37, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 100mL', 1, 47, 47.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(38, '1', 'Paracetamol 120mg/5ml', 'Calpol Suspension 60mL', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(39, '1', 'Ibuprofen 100mg/5ml', 'Triofen 60mL', 1, 21, 21.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(40, '1', 'Ibuprofen 100mg/5ml', 'Triofen 100mL', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(41, '1', 'Paracetamol 120mg/5ml', 'Panadol Baby&Infant 100mL', 1, 343, 343.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(42, '1', 'Ibuprofen 100mg/Paracetamol 125mg BP', 'Brustan Suspension', 1, 235, 235.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(43, '1', 'Soluble Paracetamol BP 1000mg', 'Parafast ET 1000 Tablet', 8, 380, 47.50, 50, 3, 'active', '2025-09-04 14:52:46'),
+(44, '1', 'Loratidine USP 10mg', 'Loratin Fast', 100, 850, 8.50, 15, 33, 'active', '2025-09-04 14:52:46'),
+(45, '1', 'Hyoscine - N- Butylbromide 10mg', 'HYCIN 10 Tablets (Buscopan Generic)', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(46, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Hismopan Plus Tablets (Buscopan Plus Generic)', 100, 600, 6.00, 15, 33, 'active', '2025-09-04 14:52:46'),
+(47, '1', 'Metronidazole 400mg', 'Tricozole - 400mg Tablet', 100, 120, 1.20, 5, 33, 'active', '2025-09-04 14:52:46'),
+(48, '1', 'Tetracycline Eye Ointment USP', 'Metacycline', 1, 33, 33.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(49, '1', 'Betamethasone 0.1% w/v/Neomycin 0.5 %w/v', 'Probeta-N', 1, 105, 105.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(50, '1', 'Ciprofloxacin/Dexamethasone Eye/Ear Drops', 'Ciploglax-D Eye Drops', 1, 149, 149.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(51, '1', 'Ciprofloxacin 0.3% USP', 'Ciproken', 1, 102, 102.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(52, '1', 'Dextran 70 USP 1mg/Hypromellose USP 3mg', 'Lubtear', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(53, '1', 'Ciprofloxacin 0.3%/Beclomethasone 0.025%/Clotrimazole 1%/Lignocaine 2% Ear Drops', 'Otobiotic', 1, 228, 228.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(54, '1', 'fluticasone propionate ', 'Flonaspray', 1, 680, 680.00, 950, 1, 'active', '2025-09-04 14:52:46'),
+(55, '1', 'Esomeprazole', 'Protas 40 Tablets', 100, 1190, 11.90, 30, 33, 'active', '2025-09-04 14:52:46'),
+(56, '1', 'Esomeprazole', 'Nexium 20', 14, 550, 39.29, 70, 5, 'active', '2025-09-04 14:52:46'),
+(57, '1', 'Omeprazole Satchets', 'Risek insta', 10, 331, 33.10, 50, 3, 'active', '2025-09-04 14:52:46'),
+(58, '1', 'Omeprazole ', 'Omecos 20 Capsules', 100, 105, 1.05, 5, 33, 'active', '2025-09-04 14:52:46'),
+(59, '1', 'Pantoprazole Delayed Release', 'Pantakind 40', 60, 1440, 24.00, 35, 20, 'active', '2025-09-04 14:52:46'),
+(60, '1', 'Clotrimazole Vaginal Tablets 200mg', 'Canazol Vaginal Tablet, 3s', 1, 46, 46.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(61, '1', 'Ketocozole 200mg  BP', 'Hitoral 200mg Tablet', 100, 340, 3.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(62, '1', 'Amoxicllin 125mg/5mL', 'ELYMOX Suspension 100mL', 1, 43, 43.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(63, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 100mL', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(64, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 50mL', 1, 30, 30.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(65, '1', 'Ampicillin/Cloxacillin 250mg/5mL', 'Ampiclo-Dawa Suspension', 1, 68, 68.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(66, '1', 'Ampicillin/Cloxacillin 250mg/250mg', 'Ampiclo-Dawa 500 Capsule', 100, 400, 4.00, 10, 33, 'active', '2025-09-04 14:52:46'),
+(67, '1', 'Flucloxacillin 125mg/5mL', 'ELYFLOX 100mL Suspension', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(68, '1', 'Azithromycin Oral Suspension 200mg', 'IzziThree 15mg', 1, 39, 39.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(69, '1', 'Vitamin B Complex', 'Neuro-Forte', 20, 270, 13.50, 20, 7, 'active', '2025-09-04 14:52:46'),
+(70, '1', 'Levocetirizine 5mg', 'VIVACET L 5', 10, 55, 5.50, 20, 3, 'active', '2025-09-04 14:52:46'),
+(71, '1', 'Maternity Pads', 'Medimax', 1, 97, 97.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(72, '1', 'Maternity Pads', 'Medicott', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(73, '1', 'Absorbent Cotton Wool 400mg', 'Velvex', 1, 250, 250.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(74, '1', 'Adult Diapers XL', 'MY A+ XLARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
+(75, '1', 'Adult Diapers L', 'MY A+ LARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
+(76, '1', 'Adult Pants L', 'ADFIT  PANTS LARGE', 30, 100, 3.33, 5, 10, 'active', '2025-09-04 14:52:46'),
+(77, '1', 'Sulphadoxine 500mg/Pyrimethamine 25mg', 'FANLAR Tablets', 25, 30, 1.20, 50, 8, 'active', '2025-09-04 14:52:46'),
+(78, '1', 'Terbinafine 250mg', 'Terbinaforce 250 Tablets', 30, 953, 31.77, 50, 10, 'active', '2025-09-04 14:52:46'),
+(79, '1', 'Fluconazole 150mg', 'NOCANZ 150 Tablet', 1, 15, 15.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(80, '1', 'Griseofulvin 250mg', 'Grisolab-250 Tablet', 100, 520, 5.20, 10, 33, 'active', '2025-09-04 14:52:46'),
+(81, '1', 'Griseofulvin 125mg', 'Biofulvin 125 Tablet', 100, 390, 3.90, 10, 33, 'active', '2025-09-04 14:52:46'),
+(82, '1', 'Artemether 20mg/Lumefantrine 120mg', 'LONART Tablet, 24s', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(83, '1', 'Artemether 20mg/Lumefantrine 120mg', 'PANAART 20/120, 24s', 1, 0, 0.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(84, '1', 'Povidone-Iodine USP 1%', 'Peardine Mouth Wash, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(85, '1', 'Povidone-Iodine USP 1%', 'Rexe-Dine Mouth Wash', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(86, '1', 'Amoxicillin 500mg', 'AMOXIMED 500 Capsule', 100, 320, 3.20, 6.6, 33, 'active', '2025-09-04 14:52:46'),
+(87, '1', 'Cefuroxime 500mg USP', 'Theoroxime 500 Tablets', 1, 165, 165.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(88, '1', 'Cefixime 400mg USP', 'Theofix - 400 Tablets', 10, 170, 17.00, 350, 3, 'active', '2025-09-04 14:52:46'),
+(89, '1', 'Azithromycin 500mg USP', 'AGYCIN-500 Tablet, 3s', 1, 55, 55.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(90, '1', 'Nitrofurantoin 100mg', 'NIFURAN', 100, 200, 2.00, 10, 33, 'active', '2025-09-04 14:52:46'),
+(91, '1', 'Tinidazole 500mg', 'Tinizol 500 Tablets,4s', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(92, '1', 'Amoxicillin 250mg', 'SPASMOX 250 Capsule', 100, 195, 1.95, 3.3, 33, 'active', '2025-09-04 14:52:46'),
+(93, '1', 'Doxycycline 100mg', 'XYCYCLINE 100 Capsule', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
+(94, '1', 'Secnidazole 1g', 'Secnida Forte Tablets, 2s', 1, 25, 25.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(95, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Microgynon Fe Tablets', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(96, '1', 'Sildenafil 50mg ', 'MTM-50 Tablet', 4, 36, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(97, '1', 'Sildenafil 100mg ', 'MTM-100 Tablet', 4, 46, 11.50, 50, 1, 'active', '2025-09-04 14:52:46'),
+(98, '1', 'Sildenafil 100mg ', 'Nelgra-100 Tablet', 4, 43, 10.75, 50, 1, 'active', '2025-09-04 14:52:46'),
+(99, '1', 'Sildenafil 100mg ', 'VEGA-100 Tablet', 4, 41, 10.25, 50, 1, 'active', '2025-09-04 14:52:46'),
+(100, '1', 'Levonogestrel 0.75mg', 'Postinor-2 Tablets, 2s', 1, 143, 143.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(101, '1', 'levonogestrel 0.75mg', 'Safe-72 Tablets,2s', 1, 20, 20.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(102, '1', 'Betamethasone Sodium Phosphate 2mg/ml/Betamethasone Dipropionate 5mg/ml Suspension for Inj,2ml', 'KRIDOFOS Injection', 1, 675, 675.00, 900, 1, 'active', '2025-09-04 14:52:46'),
+(103, '1', 'Medroxyprogesterone Injection 150mg/mL', 'Lydia Contraceptive Injection', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(104, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Femiplan Tablets', 1, 85, 85.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(105, '1', 'Diclofenac 75mg Injection', 'CAREFENAC Injection', 10, 45, 4.50, 20, 3, 'active', '2025-09-04 14:52:46'),
+(106, '1', 'Carbamazepine 200mg BP', 'Carbamazepine 200mg Tablets', 100, 369, 3.69, 5, 33, 'active', '2025-09-04 14:52:46'),
+(107, '1', 'Amitriptyline 25mg', 'Amitiptyline Tablets, Cosmos', 100, 252, 2.52, 5, 33, 'active', '2025-09-04 14:52:46'),
+(108, '1', 'Phenobarbital 30mg', 'Phenobarbital Tablets, Cosmos', 100, 235, 2.35, 5, 33, 'active', '2025-09-04 14:52:46'),
+(109, '1', 'Diazepam 5mg', 'Cozepam Tablets', 100, 302, 3.02, 5, 33, 'active', '2025-09-04 14:52:46'),
+(110, '1', 'Maternity Pants', 'Dafi Maternity Pants, M-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
+(111, '1', 'Maternity Pants', 'Dafi Maternity Pants, S-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
+(112, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'Augmentin 457 Suspension', 1, 990, 990.00, 1200, 1, 'active', '2025-09-04 14:52:46'),
+(113, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Augmentin 228 Suspension', 1, 635, 635.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(114, '1', 'Tamsulosin 0.4mg', 'Tamsolin Capsules', 10, 770, 77.00, 100, 3, 'active', '2025-09-04 14:52:46'),
+(115, '1', 'Amoxicillin/Clavulanate 625mg', 'Labclav 625 Tablets', 1, 115, 115.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(116, '1', 'Amoxicillin/Clavulanate 1000mg', 'Acinet 1000 Tablets', 1, 275, 275.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(117, '1', 'Amoxicillin/Clavulanate 375mg', 'Acinet 375 Tablets', 1, 171, 171.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(118, '1', 'Ciprofloxacin 500mg USP', 'Ciproglax 500mg Tablets', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
+(119, '1', 'Finasteride 5mg/Tamsulosin 400mcg', 'FINOSIN Tablets', 30, 1750, 58.33, 75, 10, 'active', '2025-09-04 14:52:46'),
+(120, '1', 'Flucloxacillin Injection 500mg Vial', 'Flupene Injection', 1, 38, 38.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(121, '1', 'HydrocortisoneInjection 100mg', 'OCORTIN 100 Injection', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(122, '1', 'Lidocaine Injection 20mg/mL, 30mL', 'LIDOCAINE 2% Injection', 1, 36, 36.00, 60, 1, 'active', '2025-09-04 14:52:46'),
+(123, '1', 'Cefuroxime 125mg/5mL', 'Evorox, 50mL Suspension', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(124, '1', 'Cefalexin 125mh/5mL', 'Leocef, 100mL Suspension', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(125, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Labclav 228 Suspension', 1, 102, 102.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(126, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'ACINET DRY SYRUP 457', 1, 260, 260.00, 380, 1, 'active', '2025-09-04 14:52:46'),
+(127, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Neonatal Ampiclox Drops', 1, 345, 345.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(128, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Ampliclo-Dawa (Neonata Amplicox Gen)', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(129, '1', 'Amlodipine 5mg/Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Amlozaar-H Tablet', 30, 1400, 46.67, 70, 10, 'active', '2025-09-04 14:52:46'),
+(130, '1', 'Flucloxacillin 250mg/Amoxicillin 250mg', 'MoxaForte 500 Capsules, 20s', 1, 354, 354.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(131, '1', 'Ceftriaxone 1g', '\'GALAXY\'S SEFIN Injection', 1, 32, 32.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(132, '1', 'Urine Bag', 'Urine Collection Bag, 2000mL', 1, 48, 48.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(133, '1', 'Zinc Sulfate DT 20mg', 'Junior Zinc Tablets', 100, 89, 0.89, 5, 33, 'active', '2025-09-04 14:52:46'),
+(134, '1', 'Normal Saline Nasal Drops', 'Nosfree Saline Drops', 1, 17, 17.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(135, '1', 'Hyoscine - N- Butylbromide 5mg/5mL', 'Hycin Syrup, 60mL', 1, 62, 62.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(136, '1', 'Orals Rehydration Salts', 'ORASOL, ORS', 1, 8, 8.00, 20, 1, 'active', '2025-09-04 14:52:46'),
+(137, '1', 'Ondasetron 2mg/5mL', 'EMITOSS Oral Solution, 30mL', 1, 270, 270.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(138, '1', 'Zinc Sulfate 20mg Syrup', 'TOTO-ZincOD Syrup', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(139, '1', 'Nystatin 100,000 units', 'NYSTAL Suspension', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(140, '1', 'Glucosamine/Chondroitin/Cod Liver/Omega 3', 'Cartil Omega Softgel Capsules', 30, 1758, 58.60, 75, 10, 'active', '2025-09-04 14:52:46'),
+(141, '1', 'Calcium/Magnesium/Vitamin D', 'Osteocare Tablets', 30, 620, 20.67, 30, 10, 'active', '2025-09-04 14:52:46'),
+(142, '1', 'Calcium 320mg/Phosphorus 137.5mg', 'Purecal Chewable Tablets', 30, 750, 25.00, 35, 10, 'active', '2025-09-04 14:52:46'),
+(143, '1', 'Calcium/Magnesium/Vitamin D', 'Zedcal Oral Suspension, 200mL', 1, 549, 549.00, 750, 1, 'active', '2025-09-04 14:52:46'),
+(144, '1', 'Lansoprazole/Tinidazole/Clarithromycin', 'Sure Kit, H. Pylori Kit', 1, 698, 698.00, 1000, 1, 'active', '2025-09-04 14:52:46'),
+(145, '1', 'Amoxicillin,clarithromycin,Esomeprazole', 'Esofag kit,H.Pylori kit', 1, 950, 950.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
+(146, '1', 'lansoprazole/Amoxicilin/Clarithromycin', 'Pylotrip,H.Pylori Kit', 1, 890, 890.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
+(147, '1', 'syringe 10cc', 'Syringe 10cc', 1, 450, 450.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(148, '1', 'Syringe 5cc', 'Syringe 5cc', 1, 270, 270.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(149, '1', 'Lactulose solution', 'Osmolax Suspension', 1, 340, 340.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(150, '1', 'magaldrate and simethicone 200ml', 'Maganta Suspension', 1, 361.25, 361.25, 500, 1, 'active', '2025-09-04 14:52:46'),
+(151, '1', 'Sodium alginate 500mg/sodium bicarbonate/calcium carbonate', ' Asynta Max 200mL', 1, 467.5, 467.50, 700, 1, 'active', '2025-09-04 14:52:46'),
+(152, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 180mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(153, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 100mL', 1, 247, 247.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(154, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Alugel Suspension, 100mL', 1, 81, 81.00, 120, 1, 'active', '2025-09-04 14:52:46'),
+(155, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 200mL Suspension', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(156, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 100mL Suspension', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(157, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Gocid 100mL Suspension', 1, 35, 35.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(158, '1', 'Alginic Acid Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone ', 'ULGICID Suspension 200mL', 1, 285, 285.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(159, '1', 'Sucralfate/Oxetacaine', 'Sucrafil O Gel Suspension, 100mL', 1, 280, 280.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(160, '1', 'Aluminium Hydroxide 300mg/magnesium hydroxyde 150mg/simethicone 100mg', 'Benagas Gel, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(161, '1', 'Aluminium Hydroxide 150mg/Magnesium Trisilicate 250mg', 'Tryactin Suspension, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(162, '1', 'Magaldrate 480mg and simethicone 20mg', 'Magnacid Gel 100mL', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(163, '1', 'Ferric Ammonium Citrate 200mg/Folic 1.5mg/Cyanocobalamin 50mcg/Ethanol', 'Ranferon 12 Suspension, 200mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(164, '1', 'Dried Ferrous Sulphate 200mg/Folic Acid 0.4mg', 'Ferrolic-LF Tablets, IFAS', 100, 133, 1.33, 5, 33, 'active', '2025-09-04 14:52:46'),
+(165, '1', 'Ferrous Fumarate 305mg/Folic Acid 0.75mg/Cyanocobalamin 5mcg/Ascorbic Acid 75mg/Zinc Sulphate 5mg', 'Ranferon Capsules', 30, 286, 9.53, 20, 10, 'active', '2025-09-04 14:52:46'),
+(166, '1', 'Iron 50mg/Manganese 1.33mg/Copper 0.70mg', '\'Tot\'Hema Ampoules\'', 20, 860, 43.00, 80, 7, 'active', '2025-09-04 14:52:46'),
+(167, '1', 'Diloxanide Furoate 250mg/Metronidazole 200mg/Dicyclomine 10mg/5mL', 'Entamaxin Oral Suspension, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(168, '1', 'Metronidazole 200mg/5mL', 'Amizole Oral Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(169, '1', 'Metronidazole Benzoate 200mg/5mL', 'Tricozole - 200mg Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(170, '1', 'Multivitamin Syrup', 'Filwel Kids, 100mL', 1, 204, 204.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(171, '1', 'Secnidazole 750mg/15mL', 'Secnida for Children, 15mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(172, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Tablets', 30, 360, 12.00, 15, 10, 'active', '2025-09-04 14:52:46'),
+(173, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Syrup, 200mL', 30, 320, 10.67, 450, 10, 'active', '2025-09-04 14:52:46'),
+(174, '1', 'Cyproheptadine 2mg/ B Vitamins/Minerals', 'Cypro B Plus Syrup, 200mL', 1, 235, 235.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(175, '1', 'Cyproheptadine 2mg/ Tricholine Citrate 275mg', 'Cypon Syrup,100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(176, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Ambroxol Expectorant Syrup, 100mL', 1, 178.4, 178.40, 250, 1, 'active', '2025-09-04 14:52:46'),
+(177, '1', 'Adovas Syrup', 'Adovas Syrup, 100mL', 1, 204, 204.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(178, '1', 'Sulbutamol 1mg/Bromhexine 2mg/Guaifenesin 50mg', 'Cadistin Plus, 100mL', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(179, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadiphen Syrup, 100mL', 1, 140, 140.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(180, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg', 'Flu-Gone DM, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
+(181, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg/Paracetamol', 'Flu-Gone P+, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
+(182, '1', 'Promethazine 2.5mg/Diphenhydramine 5mg/Ammonium Cl 90mg/Sodium Citrate 45mg/Ephedrine Hcl 7.5mg', 'Tridex Cough Mixture,100mL', 1, 58, 58.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(183, '1', 'Dextromethorphan 10mg/Cetirizine 5mg/Phenylephrine Hcl 5mg', 'Zefcolin Dry Cough Formula Syrup, 100mL', 1, 229, 229.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(184, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 100mL', 1, 214.4, 214.40, 300, 1, 'active', '2025-09-04 14:52:46'),
+(185, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 200mL', 1, 375.4, 375.40, 500, 1, 'active', '2025-09-04 14:52:46'),
+(186, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadistin Expectorant, 100mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(187, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 10mg/Paracetamol 120mg', 'Coldcap Syrup, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(188, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 60mL', 1, 36, 36.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(189, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 100mL', 1, 53, 53.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(190, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Guaifenesin 100mg', 'Trimex Diabetic', 1, 215, 215.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(191, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Mucosolvan Syrup,100mL', 1, 590, 590.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(192, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Sodium Citrate 44mg/Dextromethorphan 10mg/Menthol 1mg', 'Coscof-DM Linctus,100mL', 1, 155, 155.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(193, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Original, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
+(194, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Orange Flavour, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
+(195, '1', 'Bonnisan', 'Bonnisan, 120mL, Syrup', 1, 385, 385.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(196, '1', 'Sodium Bicarbonate 50mg/Terpeneless Dillseed Oil 2.15mg', 'Gripe Water', 1, 92, 92.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(197, '1', 'Levosalbutamol 1mg/5mg', 'Levostar, 100mL Syrup', 1, 216, 216.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(198, '1', 'Levocetirizine 2.5mg', 'ALERFREE Syrup,60mL', 1, 123, 123.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(199, '1', 'Desloratidine 2.5mg/5mL', 'DESOSTAR Syrup, 60mL', 1, 266, 266.00, 380, 1, 'active', '2025-09-04 14:52:46'),
+(200, '1', 'Loratidine USP 5mg/5mL', 'Lorhistina Syrup,  60mL', 1, 179, 179.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(201, '1', 'Predinsolone 5mg/5mL', 'Olsolone Syrup, 50mL', 1, 100, 100.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(202, '1', 'Promethazine Hcl, 5mg/5mL', 'Largan, Syrup', 1, 19, 19.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(203, '1', 'Chlorpheniramine Maleate 4mg', 'Dawa-CPM Tablets, 4mg', 100, 31, 0.31, 2, 33, 'active', '2025-09-04 14:52:46'),
+(204, '1', 'Chlorpheniramine Maleate 2mg/5mL', 'Dawa-CPM Syrup, 60mL', 1, 22, 22.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(205, '1', 'Cetirizine HCL 5mg/5mL', 'CetriPlain, 60mL Syrup', 1, 20, 20.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(206, '1', 'Sodium Lactate IV Infusion', 'Ringer - Lactate, 500mL,IV Infusion', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(207, '1', 'Sodium Chloride, 0.9%', 'VIDASAL, 500mL, IV Infusion (Normal Saline)', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(208, '1', 'Erythromycin 125mg/5mL', 'Erythrox 100mL', 1, 78, 78.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(209, '1', 'Clarithromycin 500mg', 'Aziclar-500 Tablets', 1, 229, 229.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(210, '1', 'Diloxanide Furoate 500mg/Metronidazole 400mg', 'Diracip-MDS, Tablets,15s', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(211, '1', 'Azithromycin 1g/Fluconazole 150mg/Secnidazole 1g', 'AZFLOSEC KIT', 1, 325, 325.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(212, '1', 'Ciprofloxacin 500mg/Tinidazole 600mg', 'CIPRO-T, Tablets', 1, 150, 150.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(213, '1', 'Cefalexin 500mg', 'Felaxin 500 Capsules', 1, 6.8, 6.80, 15, 1, 'active', '2025-09-04 14:52:46'),
+(214, '1', 'Tramadol 50mg', 'Metadol Capsules', 100, 350, 3.50, 10, 33, 'active', '2025-09-04 14:52:46'),
+(215, '1', 'Cefadroxil 500mg', 'DROX 500', 1, 183.6, 183.60, 400, 1, 'active', '2025-09-04 14:52:46'),
+(216, '1', 'Pregnancy Test Strip', 'Pregnancy Test Strip', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(217, '1', 'Metformin HCl 500mg', 'Glucophage 500 Tablets', 90, 395, 4.39, 8, 30, 'active', '2025-09-04 14:52:46'),
+(218, '1', 'Metformin HCl 850mg', 'Glucophage 850 Tablets', 60, 564, 9.40, 15, 20, 'active', '2025-09-04 14:52:46'),
+(219, '1', 'Norethisterone 5mg', 'Primolut N Tablets', 30, 940, 31.33, 45, 10, 'active', '2025-09-04 14:52:46'),
+(220, '1', 'Clomifene 50mg', 'Clophene 50mg, Tablets', 30, 379, 12.63, 50, 10, 'active', '2025-09-04 14:52:46'),
+(221, '1', 'Fluconazole 150mg/Azithromycin 1g/Secnidazole 1g', 'VDM KIT, Tablets', 1, 645, 645.00, 850, 1, 'active', '2025-09-04 14:52:46'),
+(222, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 28s Tablets', 28, 145, 5.18, 7, 9, 'active', '2025-09-04 14:52:46'),
+(223, '1', 'Metformin 500mg', 'Sukarmin 500mg Tablets', 100, 85, 0.85, 5, 33, 'active', '2025-09-04 14:52:46'),
+(224, '1', 'Amlodipine 5mg', 'Varinil 5 Tablets', 28, 155, 5.54, 10, 9, 'active', '2025-09-04 14:52:46'),
+(225, '1', 'Hydrochlorothiazide 50mg', 'HYMET Tablets', 100, 75, 0.75, 4, 33, 'active', '2025-09-04 14:52:46'),
+(226, '1', 'Acetylsalicylic Acid 75mg', 'Ascard 75 Tablets', 30, 105, 3.50, 150, 10, 'active', '2025-09-04 14:52:46'),
+(227, '1', 'Metformin HCl 850mg', 'Glucomet 850 Tablets', 56, 420, 7.50, 15, 19, 'active', '2025-09-04 14:52:46'),
+(228, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 112s Tablets', 112, 495, 4.42, 7, 37, 'active', '2025-09-04 14:52:46'),
+(229, '1', 'Anusol', 'Anusol Suppositories', 12, 700, 58.33, 80, 4, 'active', '2025-09-04 14:52:46'),
+(230, '1', 'Atenolol 50mg', 'Cardinol 50 Tablets, 28s', 28, 125, 4.46, 8, 9, 'active', '2025-09-04 14:52:46'),
+(231, '1', 'Losartan 50mg', 'Amlozaar 50 Tablets', 30, 950, 31.67, 45, 10, 'active', '2025-09-04 14:52:46'),
+(232, '1', 'Carvedilol 12.5mg', 'Vidol 12.5 Tablets', 28, 410, 14.64, 20, 9, 'active', '2025-09-04 14:52:46'),
+(233, '1', 'Carvedilol 6.25mg', 'Vidol 6.25 Tablets', 28, 285, 10.18, 15, 9, 'active', '2025-09-04 14:52:46'),
+(234, '1', 'Nifedipine 20mg', 'Nicardin-SR Tablets', 100, 80, 0.80, 5, 33, 'active', '2025-09-04 14:52:46'),
+(235, '1', 'Losartan 50mg', 'Angilock 50 Tablets', 30, 131.75, 4.39, 8, 10, 'active', '2025-09-04 14:52:46'),
+(236, '1', 'Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Angilock-Plus 50/12.5 Tablets', 30, 170, 5.67, 10, 10, 'active', '2025-09-04 14:52:46'),
+(237, '1', 'Atenolol 50mg', 'Lonet 50 Tablets', 100, 337, 3.37, 5, 33, 'active', '2025-09-04 14:52:46'),
+(238, '1', 'Atorvastatin 20mg ', 'Avastatin 20 Tablets', 28, 304, 10.86, 20, 9, 'active', '2025-09-04 14:52:46'),
+(239, '1', 'Atorvastatin 20mg ', 'Atsta*20 Tablets', 30, 170, 5.67, 15, 10, 'active', '2025-09-04 14:52:46'),
+(240, '1', 'Enalapril 10mg', 'Dawapril 10 Tablet', 100, 113, 1.13, 5, 33, 'active', '2025-09-04 14:52:46'),
+(241, '1', 'Enalapril 5mg', 'Dawapril 5 Tablet', 100, 123, 1.23, 5, 33, 'active', '2025-09-04 14:52:46'),
+(242, '1', 'Co-trimoxazole 480mg Tablets', 'CO-TRI 480 Tablets', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
+(243, '1', 'Co-trimoxazole 960mg Tablets', 'Co-trimoxazole 960 Tablets', 100, 485, 4.85, 10, 33, 'active', '2025-09-04 14:52:46'),
+(244, '1', 'Blood Lancets', 'Blood Lancets Pieces', 100, 174, 1.74, 300, 33, 'active', '2025-09-04 14:52:46'),
+(245, '1', 'Benzyl Benzoate Application 25%', 'Scabees Application, 100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(246, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 75MG', 1, 120, 120.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(247, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 150MG', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(248, '1', 'Calcium Antiacids', 'ENO Tablets (Pairs)', 100, 595, 5.95, 20, 33, 'active', '2025-09-04 14:52:46'),
+(249, '1', 'Touch ang Go', 'Touch and Go', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(250, '1', 'Hydrocortisone Ointment 1% w/w', 'ELYCORT 15G OINTMENT', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(251, '1', 'Hydrocortisone Cream 1% w/w', 'ELYCORT 15G CREAM', 1, 66, 66.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(252, '1', 'Neomycin 5mg/Bacitracin 2.5mg/Gramicidin 0.5mg Powder', 'GRABACIN POWDER 10GM', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(253, '1', 'Neomycin 5mg/Bacitracin 250 IU', 'NEBANOL POWDER 5MG', 1, 59, 59.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(254, '1', 'Neomycin 3.5mg/Bacitracin 5000 units/Bacitracin 500 units', 'GRABACIN 3 Ointment', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(255, '1', 'Hydrocortisone Ointment 1% w/w', 'HYDROTOPIC Ointment 15g Tube', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(256, '1', 'Condoms', 'Kiss Classic Condoms, 3s', 24, 627, 26.13, 50, 8, 'active', '2025-09-04 14:52:46'),
+(257, '1', 'Condoms', 'Kiss Strawberry Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
+(258, '1', 'Condoms', 'Kiss Studded Condoms, 3s', 24, 892, 37.17, 100, 8, 'active', '2025-09-04 14:52:46'),
+(259, '1', 'Condoms', 'Kiss Chocolate Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
+(260, '1', 'Condoms', 'Durex Fetherlite Ultra, 3s', 1, 337, 337.00, 550, 1, 'active', '2025-09-04 14:52:46'),
+(261, '1', 'Condoms', 'Durex Extra Safe, 3s', 1, 302, 302.00, 400, 1, 'active', '2025-09-04 14:52:46'),
+(262, '1', 'Condoms', 'TRUST RIBBED, 3s', 24, 920, 38.33, 100, 8, 'active', '2025-09-04 14:52:46'),
+(263, '1', 'Condoms', 'TRUST CLASSIC, 3s', 24, 600, 25.00, 50, 8, 'active', '2025-09-04 14:52:46'),
+(264, '1', 'Condoms', 'TRUST STUDDED, 3s', 24, 900, 37.50, 100, 8, 'active', '2025-09-04 14:52:46'),
+(265, '1', 'Bandages', 'Crepe Bandage Spandex 5cm', 1, 18, 18.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(266, '1', 'Bandages', 'Crepe Bandage Spandex 7.5cm', 1, 29, 29.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(267, '1', 'Bandages', 'Crepe Bandage Spandex 15cm', 1, 49, 49.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(268, '1', 'Bandages', 'Crepe Bandage Spandex 10cm', 1, 46, 46.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(269, '1', 'Diclofenac Gel 1%', 'DICLOGEN 1% GEL', 1, 19, 19.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(270, '1', 'Clotrimazole 1% w/w/Beclomethasone Dipropionate 0.025% w/w', 'Bulkot-B Cream', 1, 51, 51.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(271, '1', 'Betamethasone Dipropionate, Gentamicin & Clotrimazole  Cream', 'Xtraderm Cream', 1, 126, 126.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(272, '1', 'Clotrimazole 10.0% w/w/Betamethasone 0.5mg', 'Clozole-B Cream', 1, 72, 72.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(273, '1', 'Clotrimazole 1.0% w/w', 'Clozole Cream', 1, 28, 28.00, 70, 1, 'active', '2025-09-04 14:52:46'),
+(274, '1', 'Hydrocortisone Cream 1% w/w', 'OLCORT 15G Cream', 1, 28, 28.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(275, '1', 'Beclomethasone 0.025%, Miconazole 2%, Neomycin Sulphate 0.5% Chlorocresol 0.25%', 'Beclomin Ointment 15g', 1, 150, 150.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(276, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Ointment 15g', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(277, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Cream 15g', 1, 45, 45.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(278, '1', 'Betamethasone Valerate 0.1% w/w/Salicylic acid 3% w/w', 'MEDIVEN-S Ointment 15g', 1, 180, 180.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(279, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 15g', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(280, '1', 'Calamine Lotion', 'COVIGEN Calamine Lotion, 100mL', 1, 29, 29.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(281, '1', 'Surgical Spirit 70% v/v', 'COVIGEN Surgical Spirit, 50mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(282, '1', 'Povidone-Iodine USP 10% w/v', 'FAHOLO POVIDONE IODINE, 50mL', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(283, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 100g', 1, 169, 169.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(284, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 250g', 1, 308, 308.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(285, '1', 'Chlorine 3.5% w/v', 'FAHOLO Sodium Hypochlorite 3.5% w/v', 1, 300, 300.00, 450, 1, 'active', '2025-09-04 14:52:46'),
+(286, '1', 'Sterile Paraffin Dressing ', 'Sterifin Dressing Gauze, 10x10', 10, 287, 28.70, 50, 3, 'active', '2025-09-04 14:52:46'),
+(287, '1', 'Sodium Bicarbonate 300mg ', 'SodaMint Tablets', 100, 87, 0.87, 5, 33, 'active', '2025-09-04 14:52:46'),
+(288, '1', 'Indomethacin 25mg', 'Caredomet 25mg Capsules, Indocid', 100, 80, 0.80, 3, 33, 'active', '2025-09-04 14:52:46'),
+(289, '1', 'Esomeprazole 20mg', 'ESOMAC 20', 28, 789, 28.18, 35, 9, 'active', '2025-09-04 14:52:46'),
+(290, '1', 'Esomeprazole 20mg', 'ESOMAC 40', 14, 745, 53.21, 70, 5, 'active', '2025-09-04 14:52:46'),
+(291, '1', 'Albendazole 400mg', 'Zentel 400 Tablet', 1, 190, 190.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(292, '1', 'Ketoconazole 2% w/v', 'Hitoral  Shampoo, 100mL', 1, 316, 316.00, 500, 1, 'active', '2025-09-04 14:52:46'),
+(293, '1', 'Ivermectin BP 6mg', 'Iverkot-6', 10, 2100, 210.00, 250, 3, 'active', '2025-09-04 14:52:46'),
+(294, '1', 'Lidocaine HCl/Cetylpyridinium', 'Dentinox 10g', 2, 646, 323.00, 900, 1, 'active', '2025-09-04 14:52:46'),
+(295, '1', 'Trimetabol', 'Trimetabol Solution', 1, 750, 750.00, 1100, 1, 'active', '2025-09-04 14:52:46'),
+(296, '1', 'Diclofenac/Linseed/Methyl Salicylate/Racementhol/Benzyl Alcohol', 'VOLINI GEL, 100MG', 1, 218, 218.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(297, '1', 'Good Morning Lung Tonic', 'Good Morning, 60mL', 1, 76, 76.00, 130, 1, 'active', '2025-09-04 14:52:46'),
+(298, '1', 'Kofgon Red', 'KOFGON Syr, 60mL', 1, 25, 25.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(299, '1', 'Tricohist ', 'Tricohist, 100mL', 1, 108, 108.00, 180, 1, 'active', '2025-09-04 14:52:46'),
+(300, '1', 'Tricohist ', 'Tricohist, 60mL', 1, 95, 95.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(301, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg', 'Tripozed, Expectorant, 100mL', 1, 41, 41.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(302, '1', 'Diclofenac Sodium Slow Release 100mg', 'Diclomol SR 100mg, Tablets', 100, 435, 4.35, 10, 33, 'active', '2025-09-04 14:52:46'),
+(303, '1', 'Tretinoine 0.05% w/w', 'Acnesol Cream, 25g', 1, 153, 153.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(304, '1', 'Telmisartan 80mg/Amlodipine 5mg', 'AMTEL 80/5 Tabs', 30, 2000, 66.67, 80, 10, 'active', '2025-09-04 14:52:46'),
+(305, '1', 'Sulfadoxine/Pyrimethamine', 'Malodar Tbalets, 3s', 1, 40, 40.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(306, '1', 'Flucloxacillin/Amoxicillin 250mg/5mL', 'MoxaForte Suspension, 100mL', 1, 265, 265.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(307, '1', 'Sensodyne Toothpaste', 'Sensodyne Multicare, 40mL', 1, 241, 241.00, 350, 1, 'active', '2025-09-04 14:52:46'),
+(308, '1', 'Sildenafil 100mg/5g', 'KAMAGRA ORAL JELLY 100MG', 1, 660, 660.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(309, '1', 'aceclofenac/Paracetamol/Chlorzoxazone', 'ACETAL MR Tablets', 10, 519, 51.90, 15, 3, 'active', '2025-09-04 14:52:46'),
+(310, '1', 'Canullas G22 (Blue)', 'Canullas G22 (Blue)', 1, 13, 13.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(311, '1', 'Canullas G24(Yellow)', 'Canullas G24(Yellow)', 1, 14, 14.00, 30, 1, 'active', '2025-09-04 14:52:46'),
+(312, '1', 'FloraNorm Satchets', 'FloraNorm Satchets', 10, 870, 87.00, 130, 3, 'active', '2025-09-04 14:52:46'),
+(313, '1', 'Amoxicillin 1g/Clavulanate 200mg', 'GAMOK Injection, Vial', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(314, '1', 'Insulin Syringes, 0.5mL', 'Insulin Syringes, 0.5mL', 10, 205, 20.50, 30, 3, 'active', '2025-09-04 14:52:46'),
+(315, '1', 'Insulin Syringes, 1mL', 'Insulin Syringes, 1mL', 10, 200, 20.00, 30, 3, 'active', '2025-09-04 14:52:46'),
+(316, '1', 'Diclofenac/Paracetamol/Chlorzoxazone', 'LOBAK Tablets, 100s', 100, 969, 9.69, 15, 33, 'active', '2025-09-04 14:52:46'),
+(317, '1', 'Tranexamic Acid 500mg/5mL', 'MENOZIP INJ, 500mg/5mL', 5, 461, 92.20, 150, 2, 'active', '2025-09-04 14:52:46'),
+(318, '1', 'Carbocisteine 100mg', 'NASITHIOL INFANT, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(319, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 100mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(320, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(321, '1', 'Needle G21', 'Needle G21', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
+(322, '1', 'Needle G23', 'Needle G23', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
+(323, '1', 'Omeprazole Inj 40mg', 'Ompac 40mg', 1, 60, 60.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(324, '1', 'Ondasetron 4mg/2mL', 'ONDEX 4MG', 5, 431, 86.20, 150, 2, 'active', '2025-09-04 14:52:46'),
+(325, '1', 'Dihydroartemisinin 40mg/Piperaquine 320mg', 'P-ALAXIN 9S', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(326, '1', 'Paracetamol/Codeine Phosphate/Doxylamine, Caffeine', 'TAMEPYN, 20S', 20, 215, 10.75, 15, 7, 'active', '2025-09-04 14:52:46'),
+(327, '1', 'Lubricating Jelly', 'Veri-Lube, 42g', 1, 117, 117.00, 280, 1, 'active', '2025-09-04 14:52:46'),
+(328, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'Vithiol Syrup, 125mg', 1, 130, 130.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(329, '1', 'Timolol Eye Drops 0.5%', 'TIMOGLAX EYE DROPS, 5mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
+(330, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, LEMON', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
+(331, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, ORANGE', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
+(332, '1', 'Miconazole Nitrate 2%w/w', 'MUCOBEN CREAM', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
+(333, '1', 'Medicated Soap', 'TETMOSOL Medicated Soap', 1, 95, 95.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(334, '1', 'Strepsils', 'Strepsils Soothing, Honey & Lemon', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
+(335, '1', 'Strepsils', 'Strepsils Regular', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
+(336, '1', 'Mupirocin Ointment 2%', 'Zupricin Ointment, 15g', 1, 505.5, 505.50, 750, 1, 'active', '2025-09-04 14:52:46'),
+(337, '1', 'Mupirocin 2%/Betamethasone 0.5% Ointment', 'Zupricin B Ointment, 15g', 1, 625.5, 625.50, 850, 1, 'active', '2025-09-04 14:52:46'),
+(338, '1', 'Anti-Rabies Vaccine', 'Anti-Rabies Vaccine, Vial', 3, 800, 266.67, 1200, 1, 'active', '2025-09-04 14:52:46'),
+(339, '1', 'Vitamin B Complex', 'Neurobion Forte Tablets', 1, 3, 3.00, 10, 1, 'active', '2025-09-04 14:52:46'),
+(340, '1', 'Insulin 70/30', 'Mixtard 30, Vial', 1, 500, 500.00, 700, 1, 'active', '2025-09-04 14:52:46'),
+(341, '1', 'Bisacodyl 5mg', 'Bicolex 5, Tablets', 100, 187, 1.87, 5, 33, 'active', '2025-09-04 14:52:46'),
+(342, '1', 'Clindamycin 300mg', 'Clindacin-300 Capsules', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
+(343, '1', 'Diloxanide 250mg/Metronidazole 200mg/Dicyclomine 10mg', 'Entamaxin Capsules,', 1, 190, 190.00, 300, 1, 'active', '2025-09-04 14:52:46'),
+(344, '1', 'Fluconazole 200mg ', 'Diconazol 200mg Tablets', 100, 1086, 10.86, 15, 33, 'active', '2025-09-04 14:52:46'),
+(345, '1', 'Crotamiton+Sulphur', 'Scabion Cream, 20g', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
+(346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, 3.00, 10, 17, 'active', '2025-09-04 14:52:46'),
+(347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, 41.00, 80, 1, 'active', '2025-09-04 14:52:46'),
+(348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
+(349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, 18.00, 50, 1, 'active', '2025-09-04 14:52:46');
 
 -- --------------------------------------------------------
 
@@ -6306,7 +6378,7 @@ INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `pa
 -- Table structure for table `psychiatric_encounters`
 --
 
-CREATE TABLE `psychiatric_encounters` (
+CREATE TABLE IF NOT EXISTS `psychiatric_encounters` (
   `id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6357,22 +6429,10 @@ CREATE TABLE `psychiatric_encounters` (
 -- Table structure for table `psychiatric_rx_problems`
 --
 
-CREATE TABLE `psychiatric_rx_problems` (
+CREATE TABLE IF NOT EXISTS `psychiatric_rx_problems` (
   `problem_id` int NOT NULL,
   `problem_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `psychiatric_rx_problems`
---
-
-INSERT IGNORE INTO `psychiatric_rx_problems` (`problem_id`, `problem_name`) VALUES
-(1, 'Drug use'),
-(2, 'Psychological'),
-(3, 'Health'),
-(4, 'Legal problem'),
-(5, 'Physical health'),
-(6, 'Social functioning');
 
 -- --------------------------------------------------------
 
@@ -6380,31 +6440,38 @@ INSERT IGNORE INTO `psychiatric_rx_problems` (`problem_id`, `problem_name`) VALU
 -- Table structure for table `psychodar`
 --
 
-CREATE TABLE `psychodar` (
+CREATE TABLE IF NOT EXISTS `psychodar` (
   `dar_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
+  `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `dob` date NOT NULL,
   `age` int DEFAULT NULL,
   `sex` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `marital_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `living_arrangements` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `hotspot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `accomodation` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `drugname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `dosage` int NOT NULL,
+  `living_conditions` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `accommodation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `employment_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `rx_stage` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `treatment_stage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `rx_stage` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `psycho_issues` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `psycho_interventions` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `reintegration_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `legal_issues` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gbv_screen` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gbv_support` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `linkage` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `therapist_initials` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `linkage` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `therapists_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `therapists_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `next_appointment` date NOT NULL,
-  `appointment_status` enum('scheduled','done') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'scheduled'
+  `appointment_status` enum('scheduled','done') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'scheduled',
+  `referral_linkage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -6413,7 +6480,7 @@ CREATE TABLE `psychodar` (
 -- Table structure for table `psychosocial_intake_form_1a`
 --
 
-CREATE TABLE `psychosocial_intake_form_1a` (
+CREATE TABLE IF NOT EXISTS `psychosocial_intake_form_1a` (
   `id` int NOT NULL,
   `visitDate` date DEFAULT NULL,
   `visit_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6482,23 +6549,10 @@ CREATE TABLE `psychosocial_intake_form_1a` (
 -- Table structure for table `psychosocial_interventions`
 --
 
-CREATE TABLE `psychosocial_interventions` (
+CREATE TABLE IF NOT EXISTS `psychosocial_interventions` (
   `intervention_id` int NOT NULL,
   `intervention_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `psychosocial_interventions`
---
-
-INSERT IGNORE INTO `psychosocial_interventions` (`intervention_id`, `intervention_name`) VALUES
-(1, 'Individual Therapy'),
-(2, 'Couple Therapy'),
-(3, 'Group Therapy'),
-(4, 'Family Therapy'),
-(5, 'Psycho Education'),
-(6, 'Crisis/Conflict Management'),
-(7, 'None');
 
 -- --------------------------------------------------------
 
@@ -6506,22 +6560,10 @@ INSERT IGNORE INTO `psychosocial_interventions` (`intervention_id`, `interventio
 -- Table structure for table `psychosocial_outcomes`
 --
 
-CREATE TABLE `psychosocial_outcomes` (
+CREATE TABLE IF NOT EXISTS `psychosocial_outcomes` (
   `psyc_outcome_id` int NOT NULL,
   `outcome_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `psychosocial_outcomes`
---
-
-INSERT IGNORE INTO `psychosocial_outcomes` (`psyc_outcome_id`, `outcome_name`) VALUES
-(1, 'Reintegration'),
-(2, 'Stable accomodation'),
-(3, 'GBV'),
-(4, 'Employment'),
-(5, 'Legal problems'),
-(6, 'Other outcomes');
 
 -- --------------------------------------------------------
 
@@ -6529,27 +6571,10 @@ INSERT IGNORE INTO `psychosocial_outcomes` (`psyc_outcome_id`, `outcome_name`) V
 -- Table structure for table `psycho_followup_visits`
 --
 
-CREATE TABLE `psycho_followup_visits` (
+CREATE TABLE IF NOT EXISTS `psycho_followup_visits` (
   `visit_id` int NOT NULL,
   `followup_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `psycho_followup_visits`
---
-
-INSERT IGNORE INTO `psycho_followup_visits` (`visit_id`, `followup_name`) VALUES
-(1, 'Initial visit'),
-(2, 'Followup visit 1'),
-(3, 'Followup visit 2'),
-(4, 'Followup visit 3'),
-(5, 'Followup visit 4'),
-(6, 'Followup visit 5'),
-(7, 'Followup visit 6'),
-(8, 'Followup visit 7'),
-(9, 'Followup visit 8'),
-(10, 'Followup visit 9'),
-(11, 'Followup visit -other ');
 
 -- --------------------------------------------------------
 
@@ -6557,7 +6582,7 @@ INSERT IGNORE INTO `psycho_followup_visits` (`visit_id`, `followup_name`) VALUES
 -- Table structure for table `pump_calibration`
 --
 
-CREATE TABLE `pump_calibration` (
+CREATE TABLE IF NOT EXISTS `pump_calibration` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `calibration_factor` decimal(10,2) NOT NULL,
@@ -6570,7 +6595,7 @@ CREATE TABLE `pump_calibration` (
   `temperature_celsius` decimal(5,2) NOT NULL DEFAULT '20.00' COMMENT 'Ambient/solution temperature at time of calibration (°C). Used for viscosity correction.',
   `density_g_per_ml` decimal(6,4) NOT NULL DEFAULT '1.0200' COMMENT 'Solution density (g/mL). Methadone 5 mg/mL ≈ 1.02 g/mL. Recorded for traceability.',
   `tube_inner_diameter_mm` decimal(5,2) DEFAULT NULL COMMENT 'Peristaltic tubing inner diameter in mm (e.g. L/S-14 = 1.60 mm). NULL = not recorded.',
-  `tube_type_code` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Masterflex L/S tubing size code, e.g. LS-14, LS-16, LS-25.',
+  `tube_type_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Masterflex L/S tubing size code, e.g. LS-14, LS-16, LS-25.',
   `calibration_volume_ml` decimal(8,4) NOT NULL DEFAULT '10.0000' COMMENT 'Target volume used for this calibration run (always 10 mL for this system).',
   `measured_volume_ml` decimal(8,4) DEFAULT NULL COMMENT 'Actual volume measured in graduated cylinder after calibration dispense.',
   `volume_correction` decimal(10,6) DEFAULT NULL COMMENT 'Ratio: target_ml / measured_ml. Values > 1 mean pump under-delivered.',
@@ -6578,37 +6603,21 @@ CREATE TABLE `pump_calibration` (
   `previous_factor` decimal(10,4) DEFAULT NULL COMMENT 'Calibration factor that was active before this record was created.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `pump_calibration`
---
-
-INSERT IGNORE INTO `pump_calibration` (`id`, `pump_id`, `calibration_factor`, `concentration_mg_per_ml`, `tubing_type`, `calibrated_by`, `calibrated_at`, `notes`, `is_active`, `temperature_celsius`, `density_g_per_ml`, `tube_inner_diameter_mm`, `tube_type_code`, `calibration_volume_ml`, `measured_volume_ml`, `volume_correction`, `temp_correction`, `previous_factor`) VALUES
-(9, 2, '470.59', '5.00', NULL, 'sysadmin', '2026-06-24 08:24:47', 'Calibration after priming', 0, '20.00', '1.0200', NULL, '', '10.0000', '8.5000', '1.176471', '1.000000', '400.0000'),
-(10, 2, '1176.48', '5.00', NULL, 'sysadmin', '2026-06-24 08:36:27', 'Calibration after priming', 0, '20.00', '1.0200', NULL, '', '10.0000', '4.0000', '2.500000', '1.000000', '470.5900'),
-(11, 2, '1384.09', '5.00', NULL, 'sysadmin', '2026-06-24 10:06:09', 'Calibration after priming', 1, '20.00', '1.0200', NULL, '', '10.0000', '8.5000', '1.176471', '1.000000', '1176.4800');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `pump_devices`
 --
 
-CREATE TABLE `pump_devices` (
+CREATE TABLE IF NOT EXISTS `pump_devices` (
   `id` int NOT NULL,
   `label` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `port` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `pump_host` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'localhost' COMMENT 'IP/hostname of computer this pump is connected to. Use "localhost" for the server machine.',
+  `pump_host` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'localhost' COMMENT 'IP/hostname of computer this pump is connected to. Use "localhost" for the server machine.',
   `is_reversed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 = pump motor runs in reverse; command direction will be inverted',
-  `api_secret` varchar(64) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'Shared secret for the local pump API on client machines'
+  `api_secret` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'Shared secret for the local pump API on client machines'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `pump_devices`
---
-
-INSERT IGNORE INTO `pump_devices` (`id`, `label`, `port`, `created_at`, `pump_host`, `is_reversed`, `api_secret`) VALUES
-(2, 'Pump A', 'COM12', '2026-05-27 11:06:39', 'localhost', 0, '');
 
 -- --------------------------------------------------------
 
@@ -6616,7 +6625,7 @@ INSERT IGNORE INTO `pump_devices` (`id`, `label`, `port`, `created_at`, `pump_ho
 -- Table structure for table `pump_reservoir_history`
 --
 
-CREATE TABLE `pump_reservoir_history` (
+CREATE TABLE IF NOT EXISTS `pump_reservoir_history` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `milligrams` decimal(10,2) NOT NULL,
@@ -6626,21 +6635,13 @@ CREATE TABLE `pump_reservoir_history` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `pump_reservoir_history`
---
-
-INSERT IGNORE INTO `pump_reservoir_history` (`id`, `pump_id`, `milligrams`, `new_milligrams`, `topup_from`, `topup_to`, `created_at`) VALUES
-(1, 2, '5000.00', '5000.00', '2026-05-27 14:08:07', '2026-06-20 12:18:47', '2026-05-27 11:08:07'),
-(4, 2, '5000.00', '10000.00', '2026-06-20 12:18:47', NULL, '2026-06-20 09:18:47');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `referral`
 --
 
-CREATE TABLE `referral` (
+CREATE TABLE IF NOT EXISTS `referral` (
   `referral_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6664,32 +6665,10 @@ CREATE TABLE `referral` (
 -- Table structure for table `referral_linkage_services`
 --
 
-CREATE TABLE `referral_linkage_services` (
+CREATE TABLE IF NOT EXISTS `referral_linkage_services` (
   `ref_id` int NOT NULL,
   `ref_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `referral_linkage_services`
---
-
-INSERT IGNORE INTO `referral_linkage_services` (`ref_id`, `ref_name`) VALUES
-(1, 'Education Programs'),
-(2, 'Legal Support'),
-(3, 'Community Networks Support'),
-(4, 'Peer Support Networks'),
-(5, 'Family Support Services'),
-(6, 'Rehabilitation'),
-(7, 'Mental Health'),
-(8, 'Medical services'),
-(9, 'HIV services'),
-(10, 'GBV Services'),
-(11, 'None'),
-(12, 'Primary'),
-(13, 'Secondary'),
-(14, 'Post-secondary'),
-(15, 'Others'),
-(16, 'None');
 
 -- --------------------------------------------------------
 
@@ -6697,7 +6676,7 @@ INSERT IGNORE INTO `referral_linkage_services` (`ref_id`, `ref_name`) VALUES
 -- Table structure for table `regimens`
 --
 
-CREATE TABLE `regimens` (
+CREATE TABLE IF NOT EXISTS `regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -6722,7 +6701,7 @@ INSERT IGNORE INTO `regimens` (`regimen_id`, `regimen_name`, `date_created`) VAL
 -- Table structure for table `regimen_type`
 --
 
-CREATE TABLE `regimen_type` (
+CREATE TABLE IF NOT EXISTS `regimen_type` (
   `regimen_id` int NOT NULL,
   `regimen_type_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -6748,7 +6727,7 @@ INSERT IGNORE INTO `regimen_type` (`regimen_id`, `regimen_type_name`, `date_crea
 -- Table structure for table `reintegration_status`
 --
 
-CREATE TABLE `reintegration_status` (
+CREATE TABLE IF NOT EXISTS `reintegration_status` (
   `reint_id` int NOT NULL,
   `reint_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -6775,7 +6754,7 @@ INSERT IGNORE INTO `reintegration_status` (`reint_id`, `reint_name`) VALUES
 -- Table structure for table `religion`
 --
 
-CREATE TABLE `religion` (
+CREATE TABLE IF NOT EXISTS `religion` (
   `id` int NOT NULL,
   `religion_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6785,12 +6764,58 @@ CREATE TABLE `religion` (
 --
 
 INSERT IGNORE INTO `religion` (`id`, `religion_name`) VALUES
-(1, 'Islam'),
-(2, 'Christian'),
+(1, 'Muslim'),
+(2, 'Christiam'),
 (3, 'Hindu'),
-(4, 'Buddhist'),
-(5, 'Atheist'),
-(6, 'Other');
+(4, 'Other');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seq_0_to_30`
+--
+
+CREATE TABLE IF NOT EXISTS `seq_0_to_30` (
+  `seq` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `seq_0_to_30`
+--
+
+INSERT IGNORE INTO `seq_0_to_30` (`seq`) VALUES
+(0),
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9),
+(10),
+(11),
+(12),
+(13),
+(14),
+(15),
+(16),
+(17),
+(18),
+(19),
+(20),
+(21),
+(22),
+(23),
+(24),
+(25),
+(26),
+(27),
+(28),
+(29),
+(30),
+(31);
 
 -- --------------------------------------------------------
 
@@ -6798,7 +6823,7 @@ INSERT IGNORE INTO `religion` (`id`, `religion_name`) VALUES
 -- Table structure for table `status`
 --
 
-CREATE TABLE `status` (
+CREATE TABLE IF NOT EXISTS `status` (
   `status_id` int NOT NULL,
   `status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6827,7 +6852,7 @@ INSERT IGNORE INTO `status` (`status_id`, `status_name`, `descr`, `date_created`
 -- Table structure for table `statushistory`
 --
 
-CREATE TABLE `statushistory` (
+CREATE TABLE IF NOT EXISTS `statushistory` (
   `status_id` int NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `sex` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6845,7 +6870,7 @@ CREATE TABLE `statushistory` (
 -- Table structure for table `stocks`
 --
 
-CREATE TABLE `stocks` (
+CREATE TABLE IF NOT EXISTS `stocks` (
   `stockID` int NOT NULL,
   `drugID` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6870,7 +6895,7 @@ CREATE TABLE `stocks` (
 -- Table structure for table `stock_movements`
 --
 
-CREATE TABLE `stock_movements` (
+CREATE TABLE IF NOT EXISTS `stock_movements` (
   `trans_id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `drugID` int NOT NULL,
@@ -6883,17 +6908,8 @@ CREATE TABLE `stock_movements` (
   `expiry_date` date NOT NULL,
   `received_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `total_qty` double DEFAULT NULL,
-  `trans_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Active'
+  `trans_date` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `stock_movements`
---
-
-INSERT IGNORE INTO `stock_movements` (`trans_id`, `transactionType`, `drugID`, `drugname`, `opening_bal`, `qty_in`, `received_from`, `qty_out`, `batch_number`, `expiry_date`, `received_by`, `total_qty`, `trans_date`, `status`) VALUES
-(1, 'Receiving', 2, 'Methadone', 0, 20000, 'KEMSA', 0, 'TEST-BATCH', '2028-06-20', 'Lyani Sitti', 19500, '2026-06-20 12:18:38', 'Active'),
-(2, NULL, 2, 'Methadone', 19500, 120, 'Dose deleted (Reversed)', NULL, 'TEST-BATCH', '2028-06-20', 'Lyani Sitti', 18820, '2026-06-20 19:35:39', 'Active');
 
 --
 -- Triggers `stock_movements`
@@ -6910,7 +6926,7 @@ CREATE TRIGGER `trg_sync_stores_balance` AFTER INSERT ON `stock_movements` FOR E
     IF inventory_exists > 0 THEN
         -- If it exists, update the stores_balance with the latest total_qty
         UPDATE stores_inventory
-        SET
+        SET 
             stores_balance = NEW.total_qty,
             -- Optionally update non-balance fields with the latest movement info
             supplier_name = NEW.received_from,
@@ -6919,22 +6935,22 @@ CREATE TRIGGER `trg_sync_stores_balance` AFTER INSERT ON `stock_movements` FOR E
     ELSE
         -- If it does not exist, insert a new record
         INSERT IGNORE INTO stores_inventory (
-            drugID,
-            drugname,
+            drugID, 
+            drugname, 
             stores_balance,
-            supplier_name,
-            from_supplier,
-            received_by_full_name,
-            to_dispensing
+            supplier_name,          
+            from_supplier,          
+            received_by_full_name,  
+            to_dispensing           
         )
         VALUES (
-            NEW.drugID,
-            NEW.drugName,
-            NEW.total_qty,
-            NEW.received_from,
-            NEW.qty_in,
+            NEW.drugID, 
+            NEW.drugName, 
+            NEW.total_qty, 
+            NEW.received_from,      
+            NEW.qty_in,             
             NEW.received_by,
-            0
+            0                      
         );
     END IF;
 END
@@ -6947,7 +6963,7 @@ DELIMITER ;
 -- Table structure for table `stores_inventory`
 --
 
-CREATE TABLE `stores_inventory` (
+CREATE TABLE IF NOT EXISTS `stores_inventory` (
   `inventory_id` int NOT NULL,
   `drugID` int DEFAULT NULL,
   `drugname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6960,21 +6976,13 @@ CREATE TABLE `stores_inventory` (
   `issued_to_full_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Issuer'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `stores_inventory`
---
-
-INSERT IGNORE INTO `stores_inventory` (`inventory_id`, `drugID`, `drugname`, `from_supplier`, `supplier_name`, `to_dispensing`, `stores_balance`, `transaction_date`, `received_by_full_name`, `issued_to_full_name`) VALUES
-(1, 1, 'Methadone', 10000, 'Supplier', 0, 100000, '2026-06-16 11:44:20', 'admin', NULL),
-(2, 2, 'Methadone', 20000, 'Dose deleted (Reversed)', 0, 19620, '2026-06-20 12:18:38', 'Lyani Sitti', NULL);
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `sub_counties`
 --
 
-CREATE TABLE `sub_counties` (
+CREATE TABLE IF NOT EXISTS `sub_counties` (
   `sub_county_id` int NOT NULL,
   `sub_county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7286,8 +7294,7 @@ INSERT IGNORE INTO `sub_counties` (`sub_county_id`, `sub_county_name`, `county_n
 (298, 'Central Pokot', 'West Pokot', '2025-01-10 00:00:00'),
 (299, 'North Pokot', 'West Pokot', '2025-01-10 00:00:00'),
 (300, 'Pokot South', 'West Pokot', '2025-01-10 00:00:00'),
-(301, 'West Pokot', 'West Pokot', '2025-01-10 00:00:00'),
-(302, 'LVCT Health Sub County', 'LVCT Health County', '2025-10-10 19:39:33');
+(301, 'West Pokot', 'West Pokot', '2025-01-10 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -7295,7 +7302,7 @@ INSERT IGNORE INTO `sub_counties` (`sub_county_id`, `sub_county_name`, `county_n
 -- Table structure for table `suppliers`
 --
 
-CREATE TABLE `suppliers` (
+CREATE TABLE IF NOT EXISTS `suppliers` (
   `supplier_id` int NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `contact_person` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7320,7 +7327,7 @@ INSERT IGNORE INTO `suppliers` (`supplier_id`, `name`, `contact_person`, `phone`
 -- Table structure for table `table_image`
 --
 
-CREATE TABLE `table_image` (
+CREATE TABLE IF NOT EXISTS `table_image` (
   `photo_id` int NOT NULL,
   `photo_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7334,7 +7341,7 @@ CREATE TABLE `table_image` (
 -- Table structure for table `tblaccompanment`
 --
 
-CREATE TABLE `tblaccompanment` (
+CREATE TABLE IF NOT EXISTS `tblaccompanment` (
   `accompanmentID` int NOT NULL,
   `accompanmentType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7358,34 +7365,6 @@ INSERT IGNORE INTO `tblaccompanment` (`accompanmentID`, `accompanmentType`, `dat
 (4, 'Outreach worker', '2024-04-09 19:19:02'),
 (5, 'Other', '2024-04-09 19:19:14'),
 (6, 'None', '2024-04-13 17:56:29'),
-(7, 'Prison Warden', '2024-04-14 08:24:37'),
-(1, 'Parent', '2024-04-09 19:18:26'),
-(2, 'Partner', '2024-04-09 19:18:37'),
-(3, 'Friend', '2024-04-09 19:18:47'),
-(4, 'Outreach worker', '2024-04-09 19:19:02'),
-(5, 'Other', '2024-04-09 19:19:14'),
-(6, 'None', '2024-04-13 17:56:29'),
-(7, 'Prison Warden', '2024-04-14 08:24:37'),
-(1, 'Parent', '2024-04-09 19:18:26'),
-(2, 'Partner', '2024-04-09 19:18:37'),
-(3, 'Friend', '2024-04-09 19:18:47'),
-(4, 'Outreach worker', '2024-04-09 19:19:02'),
-(5, 'Other', '2024-04-09 19:19:14'),
-(6, 'None', '2024-04-13 17:56:29'),
-(7, 'Prison Warden', '2024-04-14 08:24:37'),
-(1, 'Parent', '2024-04-09 19:18:26'),
-(2, 'Partner', '2024-04-09 19:18:37'),
-(3, 'Friend', '2024-04-09 19:18:47'),
-(4, 'Outreach worker', '2024-04-09 19:19:02'),
-(5, 'Other', '2024-04-09 19:19:14'),
-(6, 'None', '2024-04-13 17:56:29'),
-(7, 'Prison Warden', '2024-04-14 08:24:37'),
-(1, 'Parent', '2024-04-09 19:18:26'),
-(2, 'Partner', '2024-04-09 19:18:37'),
-(3, 'Friend', '2024-04-09 19:18:47'),
-(4, 'Outreach worker', '2024-04-09 19:19:02'),
-(5, 'Other', '2024-04-09 19:19:14'),
-(6, 'None', '2024-04-13 17:56:29'),
 (7, 'Prison Warden', '2024-04-14 08:24:37');
 
 -- --------------------------------------------------------
@@ -7394,7 +7373,7 @@ INSERT IGNORE INTO `tblaccompanment` (`accompanmentID`, `accompanmentType`, `dat
 -- Table structure for table `tblcso`
 --
 
-CREATE TABLE `tblcso` (
+CREATE TABLE IF NOT EXISTS `tblcso` (
   `cso_id` int NOT NULL,
   `cso_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7420,7 +7399,7 @@ INSERT IGNORE INTO `tblcso` (`cso_id`, `cso_name`, `description`, `date_created`
 -- Table structure for table `tblgender`
 --
 
-CREATE TABLE `tblgender` (
+CREATE TABLE IF NOT EXISTS `tblgender` (
   `gender_id` int NOT NULL,
   `gender_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7439,7 +7418,7 @@ INSERT IGNORE INTO `tblgender` (`gender_id`, `gender_name`) VALUES
 -- Table structure for table `tblreferral`
 --
 
-CREATE TABLE `tblreferral` (
+CREATE TABLE IF NOT EXISTS `tblreferral` (
   `referralID` int NOT NULL,
   `referralType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7464,7 +7443,7 @@ INSERT IGNORE INTO `tblreferral` (`referralID`, `referralType`, `date_created`) 
 -- Table structure for table `tblusers`
 --
 
-CREATE TABLE `tblusers` (
+CREATE TABLE IF NOT EXISTS `tblusers` (
   `user_id` int NOT NULL,
   `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7476,17 +7455,17 @@ CREATE TABLE `tblusers` (
   `photo` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `userrole` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `full_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci GENERATED ALWAYS AS (concat(`first_name`,_utf8mb4' ',`last_name`)) STORED,
-  `last_activity` datetime DEFAULT NULL
+  `full_name` varchar(100),
+  `must_change_password` tinyint(1) NOT NULL DEFAULT '0',
+  `is_demo` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblusers`
 --
 
-INSERT IGNORE INTO `tblusers` (`user_id`, `username`, `first_name`, `last_name`, `email`, `password`, `gender`, `mobile`, `photo`, `userrole`, `date_created`, `last_activity`) VALUES
-(1, 'sysadmin', 'Lyani', 'Sitti', 'superuser@gmail.com', '$2y$10$Tnm/JhHrNQzocLZT7GplVePbDEHXpFDxmnopF6zKjVczMALvT07Q.', 'Male', '0722427721', NULL, 'Admin', '2026-01-21 17:10:44', '2026-06-26 10:32:00'),
-(2, 'admin', 'Admin', 'User', 'adminuser@gmail.com', '$2y$10$5nknuA80KQ5tFFLHTtOX3.0DF9Ke5qIkjbBrZCNyNjGjJZoEOwvSu', 'Male', '0333444444', NULL, 'Admin', '2026-03-23 14:46:46', NULL);
+INSERT IGNORE INTO `tblusers` (`user_id`, `username`, `first_name`, `last_name`, `email`, `password`, `gender`, `mobile`, `photo`, `userrole`, `date_created`, `must_change_password`, `is_demo`) VALUES
+(56, 'sysadmin', 'Lyani', 'Sitti', 'lyani.sitti@lvcthealth.org', '$2a$12$C9EijEgdHdJWRCaGdjQ0XuRBrJNbOosXTJKPukGQkt/ywixd8yZHm', 'Male', '0722427721', '', 'Admin', '2026-09-14 10:10:42', 0, 0);
 
 --
 -- Triggers `tblusers`
@@ -7503,6 +7482,12 @@ CREATE TRIGGER `trg_populate_full_name_insert` BEFORE INSERT ON `tblusers` FOR E
 END
 $$
 DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_populate_full_name_update` BEFORE UPDATE ON `tblusers` FOR EACH ROW BEGIN
+    SET NEW.full_name = CONCAT(NEW.first_name, ' ', NEW.last_name);
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -7510,7 +7495,7 @@ DELIMITER ;
 -- Table structure for table `tbl_hiv_status`
 --
 
-CREATE TABLE `tbl_hiv_status` (
+CREATE TABLE IF NOT EXISTS `tbl_hiv_status` (
   `status_id` int NOT NULL,
   `hiv_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7524,6 +7509,9 @@ CREATE TABLE `tbl_hiv_status` (
 INSERT IGNORE INTO `tbl_hiv_status` (`status_id`, `hiv_status_name`, `description`, `date_created`) VALUES
 (1, 'Positive', 'Patients who test positive for antibody or antigen test', '2024-04-14 19:13:05'),
 (2, 'Negative', 'Patients who tested negative for serology test algorithym', '2024-04-14 19:13:50'),
+(3, 'Unknown', 'Patients who have not tested for HIV serology', '2024-04-14 19:14:31'),
+(1, 'Positive', 'Patients who test positive for antibody or antigen test', '2024-04-14 19:13:05'),
+(2, 'Negative', 'Patients who tested negative for serology test algorithym', '2024-04-14 19:13:50'),
 (3, 'Unknown', 'Patients who have not tested for HIV serology', '2024-04-14 19:14:31');
 
 -- --------------------------------------------------------
@@ -7532,7 +7520,7 @@ INSERT IGNORE INTO `tbl_hiv_status` (`status_id`, `hiv_status_name`, `descriptio
 -- Table structure for table `tb_regimens`
 --
 
-CREATE TABLE `tb_regimens` (
+CREATE TABLE IF NOT EXISTS `tb_regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7547,7 +7535,8 @@ INSERT IGNORE INTO `tb_regimens` (`regimen_id`, `regimen_name`) VALUES
 (3, '10 RH'),
 (4, '4 Km/Mfx/Pto/Cfz/H-Inh/Z/E'),
 (5, '5 Mfx/Cfz//Z/E'),
-(6, '15 R/Z/Lfx');
+(6, '15 R/Z/Lfx'),
+(7, '4 RHZE');
 
 -- --------------------------------------------------------
 
@@ -7555,7 +7544,7 @@ INSERT IGNORE INTO `tb_regimens` (`regimen_id`, `regimen_name`) VALUES
 -- Table structure for table `tb_status`
 --
 
-CREATE TABLE `tb_status` (
+CREATE TABLE IF NOT EXISTS `tb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7568,6 +7557,9 @@ CREATE TABLE `tb_status` (
 INSERT IGNORE INTO `tb_status` (`status_id`, `status_name`, `date_created`) VALUES
 (1, 'Positive', '2024-04-14 19:44:15'),
 (2, 'Negative', '2024-04-14 19:44:21'),
+(3, 'Unknown', '2024-04-14 19:44:30'),
+(1, 'Positive', '2024-04-14 19:44:15'),
+(2, 'Negative', '2024-04-14 19:44:21'),
 (3, 'Unknown', '2024-04-14 19:44:30');
 
 -- --------------------------------------------------------
@@ -7576,7 +7568,7 @@ INSERT IGNORE INTO `tb_status` (`status_id`, `status_name`, `date_created`) VALU
 -- Table structure for table `temp_updates`
 --
 
-CREATE TABLE `temp_updates` (
+CREATE TABLE IF NOT EXISTS `temp_updates` (
   `p_id` int NOT NULL,
   `new_clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7587,9 +7579,9 @@ CREATE TABLE `temp_updates` (
 -- Table structure for table `toxicology_results`
 --
 
-CREATE TABLE `toxicology_results` (
+CREATE TABLE IF NOT EXISTS `toxicology_results` (
   `tox_id` int NOT NULL,
-  `visitDate` date NOT NULL,
+  `visitDate` datetime NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mode_drug_use` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7628,7 +7620,7 @@ CREATE TABLE `toxicology_results` (
 -- Table structure for table `tpt_regimens`
 --
 
-CREATE TABLE `tpt_regimens` (
+CREATE TABLE IF NOT EXISTS `tpt_regimens` (
   `tpt_id` int NOT NULL,
   `tpt_regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7649,7 +7641,7 @@ INSERT IGNORE INTO `tpt_regimens` (`tpt_id`, `tpt_regimen_name`) VALUES
 -- Table structure for table `transaction_types`
 --
 
-CREATE TABLE `transaction_types` (
+CREATE TABLE IF NOT EXISTS `transaction_types` (
   `id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7671,7 +7663,7 @@ INSERT IGNORE INTO `transaction_types` (`id`, `transactionType`) VALUES
 -- Table structure for table `transfer_forms`
 --
 
-CREATE TABLE `transfer_forms` (
+CREATE TABLE IF NOT EXISTS `transfer_forms` (
   `id` int NOT NULL,
   `p_id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7719,7 +7711,7 @@ CREATE TABLE `transfer_forms` (
 -- Table structure for table `treatment_stage`
 --
 
-CREATE TABLE `treatment_stage` (
+CREATE TABLE IF NOT EXISTS `treatment_stage` (
   `stage_id` int NOT NULL,
   `stage_of_rx_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7729,12 +7721,13 @@ CREATE TABLE `treatment_stage` (
 --
 
 INSERT IGNORE INTO `treatment_stage` (`stage_id`, `stage_of_rx_name`) VALUES
-(1, 'Induction'),
-(2, 'Reinduction'),
+(1, 'Induction New'),
+(2, 'Re-induction'),
 (3, 'Stabilization'),
 (4, 'Maintenance'),
 (5, 'Cessation'),
-(6, 'Other');
+(6, 'Weaned off'),
+(7, 'None');
 
 -- --------------------------------------------------------
 
@@ -7742,40 +7735,40 @@ INSERT IGNORE INTO `treatment_stage` (`stage_id`, `stage_of_rx_name`) VALUES
 -- Table structure for table `triage_services`
 --
 
-CREATE TABLE `triage_services` (
+CREATE TABLE IF NOT EXISTS `triage_services` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `clinician_id` int NOT NULL,
-  `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mfl_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `county` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sub_county` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `mfl_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `county` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `sub_county` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `enrolment_date` date DEFAULT NULL,
   `enrolment_time` time DEFAULT NULL,
-  `visit_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nickname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mat_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sex` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `presenting_complaints` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `visit_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `nickname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `mat_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `sex` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `presenting_complaints` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `pulse` int DEFAULT NULL,
   `oxygen_saturation` int DEFAULT NULL,
-  `blood_pressure` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `blood_pressure` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `temperature` decimal(4,2) DEFAULT NULL,
   `respiratory_rate` int DEFAULT NULL,
   `height` decimal(5,2) DEFAULT NULL,
   `weight` decimal(5,2) DEFAULT NULL,
   `bmi` decimal(4,2) DEFAULT NULL,
-  `bmi_interpretation` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cows_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `bmi_interpretation` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cows_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `cows_date` date DEFAULT NULL,
-  `cows_scores` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `cows_totals` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `cows_interpretations` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `status` enum('incomplete','complete') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'incomplete',
+  `cows_scores` json DEFAULT NULL,
+  `cows_totals` json DEFAULT NULL,
+  `cows_interpretations` json DEFAULT NULL,
+  `status` enum('incomplete','complete') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'incomplete',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -7783,7 +7776,7 @@ CREATE TABLE `triage_services` (
 -- Table structure for table `userroles`
 --
 
-CREATE TABLE `userroles` (
+CREATE TABLE IF NOT EXISTS `userroles` (
   `id` int NOT NULL,
   `role` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -7806,7 +7799,7 @@ INSERT IGNORE INTO `userroles` (`id`, `role`, `descr`) VALUES
 (10, 'Data Manager', 'Data Manager'),
 (11, 'Guest', 'Guest'),
 (12, 'Super Admin', 'Administrator of everything'),
-(13, 'Nursing', 'Nursing services');
+(13, 'Demo', 'Demo/evaluation user — full read access to explore the system');
 
 -- --------------------------------------------------------
 
@@ -7814,7 +7807,7 @@ INSERT IGNORE INTO `userroles` (`id`, `role`, `descr`) VALUES
 -- Table structure for table `viral_load`
 --
 
-CREATE TABLE `viral_load` (
+CREATE TABLE IF NOT EXISTS `viral_load` (
   `vl_id` int NOT NULL,
   `mat_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7832,21 +7825,13 @@ CREATE TABLE `viral_load` (
   `comp_date` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `viral_load`
---
-
-INSERT IGNORE INTO `viral_load` (`vl_id`, `mat_id`, `clientName`, `dob`, `reg_date`, `sex`, `hiv_status`, `art_regimen`, `regimen_type`, `clinical_notes`, `last_vlDate`, `results`, `clinician_name`, `next_appointment`, `comp_date`) VALUES
-(1, '11094MAT0002', 'RICHARD KINUTHIA', '1990-01-04', '2023-09-13', 'Male', 'Positive', 'AF2E - TDF + 3TC + DTG', 'First Line', 'testing', '', '', 'Lyani Sitti', '2025-09-22', '2026-06-15 00:00:00'),
-(2, '11094MAT0002', 'RICHARD KINUTHIA', '1990-01-04', '2023-09-13', 'Male', 'Positive', 'AF2E - TDF + 3TC + DTG', 'First Line', 'Testing server', NULL, '', 'Lyani Sitti', '2025-09-22', '2026-06-16 00:38:46');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `voluntary_discontinuation`
 --
 
-CREATE TABLE `voluntary_discontinuation` (
+CREATE TABLE IF NOT EXISTS `voluntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7875,7 +7860,7 @@ CREATE TABLE `voluntary_discontinuation` (
 -- Table structure for table `yellow_card_visits`
 --
 
-CREATE TABLE `yellow_card_visits` (
+CREATE TABLE IF NOT EXISTS `yellow_card_visits` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `consultation_date` date NOT NULL,
@@ -7996,6 +7981,12 @@ ALTER TABLE `counties`
   ADD UNIQUE KEY `county_name` (`county_name`);
 
 --
+-- Indexes for table `countries`
+--
+ALTER TABLE `countries`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `daily_report_comments`
 --
 ALTER TABLE `daily_report_comments`
@@ -8016,6 +8007,12 @@ ALTER TABLE `deleted_prescriptions`
   ADD PRIMARY KEY (`del_id`);
 
 --
+-- Indexes for table `demo_requests`
+--
+ALTER TABLE `demo_requests`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `dispensing_comments`
 --
 ALTER TABLE `dispensing_comments`
@@ -8027,9 +8024,7 @@ ALTER TABLE `dispensing_comments`
 -- Indexes for table `dose_schedules`
 --
 ALTER TABLE `dose_schedules`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_mat_date` (`mat_id`,`start_date`,`end_date`),
-  ADD KEY `idx_active` (`mat_id`,`status`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `dosing`
@@ -8085,12 +8080,6 @@ ALTER TABLE `enrolment_status`
   ADD UNIQUE KEY `enrolment_status_name` (`enrolment_status_name`);
 
 --
--- Indexes for table `facerecognitionnodes`
---
-ALTER TABLE `facerecognitionnodes`
-  ADD PRIMARY KEY (`Id`);
-
---
 -- Indexes for table `facilities`
 --
 ALTER TABLE `facilities`
@@ -8133,12 +8122,6 @@ ALTER TABLE `formulation`
   ADD PRIMARY KEY (`formID`);
 
 --
--- Indexes for table `gad7_assessments`
---
-ALTER TABLE `gad7_assessments`
-  ADD PRIMARY KEY (`assessment_id`);
-
---
 -- Indexes for table `hepb_status`
 --
 ALTER TABLE `hepb_status`
@@ -8151,27 +8134,11 @@ ALTER TABLE `hepc_status`
   ADD PRIMARY KEY (`status_id`);
 
 --
--- Indexes for table `initial_psychiatric_form`
---
-ALTER TABLE `initial_psychiatric_form`
-  ADD PRIMARY KEY (`psy_id`),
-  ADD KEY `mat_id` (`mat_id`);
-
---
 -- Indexes for table `integration_status`
 --
 ALTER TABLE `integration_status`
   ADD PRIMARY KEY (`integration_id`),
   ADD UNIQUE KEY `integration_name` (`integration_name`);
-
---
--- Indexes for table `involuntary_discontinuation`
---
-ALTER TABLE `involuntary_discontinuation`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_mat_id` (`mat_id`),
-  ADD KEY `idx_client_name` (`client_name`),
-  ADD KEY `idx_discontinue_date` (`discontinue_date`);
 
 --
 -- Indexes for table `laboratory`
@@ -8186,6 +8153,15 @@ ALTER TABLE `laboratory`
 ALTER TABLE `living_conditions`
   ADD PRIMARY KEY (`cond_id`),
   ADD UNIQUE KEY `condition_name` (`condition_name`);
+
+--
+-- Indexes for table `login_logs`
+--
+ALTER TABLE `login_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_user` (`user_id`),
+  ADD KEY `idx_time` (`login_time`),
+  ADD KEY `idx_demo` (`is_demo`);
 
 --
 -- Indexes for table `marital_status`
@@ -8239,24 +8215,11 @@ ALTER TABLE `other_status`
   ADD PRIMARY KEY (`status_id`);
 
 --
--- Indexes for table `patientfingerprints`
---
-ALTER TABLE `patientfingerprints`
-  ADD PRIMARY KEY (`Id`);
-
---
 -- Indexes for table `patients`
 --
 ALTER TABLE `patients`
   ADD PRIMARY KEY (`p_id`),
   ADD UNIQUE KEY `mat_id` (`mat_id`);
-
---
--- Indexes for table `patient_checkins`
---
-ALTER TABLE `patient_checkins`
-  ADD PRIMARY KEY (`checkin_id`),
-  ADD KEY `patient_id` (`patient_id`);
 
 --
 -- Indexes for table `patient_drug_histories`
@@ -8270,7 +8233,10 @@ ALTER TABLE `patient_drug_histories`
 --
 ALTER TABLE `pharmacy`
   ADD PRIMARY KEY (`disp_id`),
-  ADD KEY `pharmacy_pump_link` (`pump_id`);
+  ADD KEY `pharmacy_pump_link` (`pump_id`),
+  ADD KEY `idx_pharmacy_mat_dispdate` (`mat_id`,`dispDate`),
+  ADD KEY `idx_pharmacy_pump_dispdate` (`pump_id`,`dispDate`),
+  ADD KEY `idx_pharmacy_dispdate` (`dispDate`);
 
 --
 -- Indexes for table `photos`
@@ -8278,12 +8244,6 @@ ALTER TABLE `pharmacy`
 ALTER TABLE `photos`
   ADD PRIMARY KEY (`photo_id`),
   ADD UNIQUE KEY `mat_id` (`mat_id`);
-
---
--- Indexes for table `phq9_assessments`
---
-ALTER TABLE `phq9_assessments`
-  ADD PRIMARY KEY (`assessment_id`);
 
 --
 -- Indexes for table `prescription_drugs`
@@ -8296,10 +8256,7 @@ ALTER TABLE `prescription_drugs`
 -- Indexes for table `psychiatric_encounters`
 --
 ALTER TABLE `psychiatric_encounters`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_mat_id` (`mat_id`),
-  ADD KEY `idx_visitDate` (`visitDate`),
-  ADD KEY `idx_created_at` (`created_at`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `psychiatric_rx_problems`
@@ -8312,12 +8269,6 @@ ALTER TABLE `psychiatric_rx_problems`
 --
 ALTER TABLE `psychodar`
   ADD PRIMARY KEY (`dar_id`);
-
---
--- Indexes for table `psychosocial_intake_form_1a`
---
-ALTER TABLE `psychosocial_intake_form_1a`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `psychosocial_interventions`
@@ -8341,8 +8292,7 @@ ALTER TABLE `psycho_followup_visits`
 -- Indexes for table `pump_calibration`
 --
 ALTER TABLE `pump_calibration`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_pump_active` (`pump_id`,`is_active`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `pump_devices`
@@ -8387,6 +8337,12 @@ ALTER TABLE `reintegration_status`
 --
 ALTER TABLE `religion`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `seq_0_to_30`
+--
+ALTER TABLE `seq_0_to_30`
+  ADD PRIMARY KEY (`seq`);
 
 --
 -- Indexes for table `status`
@@ -8439,16 +8395,24 @@ ALTER TABLE `tblcso`
   ADD PRIMARY KEY (`cso_id`);
 
 --
+-- Indexes for table `tblgender`
+--
+ALTER TABLE `tblgender`
+  ADD PRIMARY KEY (`gender_id`);
+
+--
+-- Indexes for table `tblreferral`
+--
+ALTER TABLE `tblreferral`
+  ADD PRIMARY KEY (`referralID`);
+
+--
 -- Indexes for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- Indexes for table `tbl_hiv_status`
---
-ALTER TABLE `tbl_hiv_status`
-  ADD PRIMARY KEY (`status_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `tb_regimens`
@@ -8475,6 +8439,12 @@ ALTER TABLE `tpt_regimens`
   ADD PRIMARY KEY (`tpt_id`);
 
 --
+-- Indexes for table `transaction_types`
+--
+ALTER TABLE `transaction_types`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `treatment_stage`
 --
 ALTER TABLE `treatment_stage`
@@ -8484,9 +8454,7 @@ ALTER TABLE `treatment_stage`
 -- Indexes for table `triage_services`
 --
 ALTER TABLE `triage_services`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `patient_id` (`patient_id`),
-  ADD KEY `clinician_id` (`clinician_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `userroles`
@@ -8505,20 +8473,13 @@ ALTER TABLE `viral_load`
 -- Indexes for table `voluntary_discontinuation`
 --
 ALTER TABLE `voluntary_discontinuation`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_mat_id` (`mat_id`),
-  ADD KEY `idx_client_name` (`client_name`),
-  ADD KEY `idx_discontinue_date` (`discontinue_date`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `yellow_card_visits`
 --
 ALTER TABLE `yellow_card_visits`
-  ADD PRIMARY KEY (`visit_id`),
-  ADD KEY `idx_mat_id` (`mat_id`),
-  ADD KEY `idx_consultation_date` (`consultation_date`),
-  ADD KEY `idx_next_visit_date` (`next_visit_date`),
-  ADD KEY `idx_created_at` (`created_at`);
+  ADD PRIMARY KEY (`visit_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -8543,12 +8504,6 @@ ALTER TABLE `categories`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `client_consents`
---
-ALTER TABLE `client_consents`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
 -- AUTO_INCREMENT for table `clinical_encounters`
 --
 ALTER TABLE `clinical_encounters`
@@ -8561,16 +8516,16 @@ ALTER TABLE `clinical_encounter_drafts`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `consents`
---
-ALTER TABLE `consents`
-  MODIFY `consent_id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `counties`
 --
 ALTER TABLE `counties`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `countries`
+--
+ALTER TABLE `countries`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
 
 --
 -- AUTO_INCREMENT for table `daily_report_comments`
@@ -8582,13 +8537,19 @@ ALTER TABLE `daily_report_comments`
 -- AUTO_INCREMENT for table `deleted_patients`
 --
 ALTER TABLE `deleted_patients`
-  MODIFY `p_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1448;
+  MODIFY `p_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `deleted_prescriptions`
 --
 ALTER TABLE `deleted_prescriptions`
-  MODIFY `del_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `del_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `demo_requests`
+--
+ALTER TABLE `demo_requests`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `dispensing_comments`
@@ -8600,7 +8561,7 @@ ALTER TABLE `dispensing_comments`
 -- AUTO_INCREMENT for table `dose_schedules`
 --
 ALTER TABLE `dose_schedules`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `dosing`
@@ -8612,7 +8573,7 @@ ALTER TABLE `dosing`
 -- AUTO_INCREMENT for table `drug`
 --
 ALTER TABLE `drug`
-  MODIFY `drugID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1034;
+  MODIFY `drugID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1046;
 
 --
 -- AUTO_INCREMENT for table `drugcategory`
@@ -8636,49 +8597,25 @@ ALTER TABLE `durationunits`
 -- AUTO_INCREMENT for table `education_level`
 --
 ALTER TABLE `education_level`
-  MODIFY `edu_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `employment_status`
---
-ALTER TABLE `employment_status`
-  MODIFY `emp_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `enrolment_status`
---
-ALTER TABLE `enrolment_status`
-  MODIFY `enrolment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `facerecognitionnodes`
---
-ALTER TABLE `facerecognitionnodes`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `edu_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3725;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3722;
 
 --
 -- AUTO_INCREMENT for table `facility_settings`
 --
 ALTER TABLE `facility_settings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `fingerprints`
 --
 ALTER TABLE `fingerprints`
-  MODIFY `print_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `fingerprint_audit`
---
-ALTER TABLE `fingerprint_audit`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `print_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `followup_psychiatric_form`
@@ -8693,12 +8630,6 @@ ALTER TABLE `formulation`
   MODIFY `formID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `gad7_assessments`
---
-ALTER TABLE `gad7_assessments`
-  MODIFY `assessment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT for table `hepb_status`
 --
 ALTER TABLE `hepb_status`
@@ -8711,40 +8642,34 @@ ALTER TABLE `hepc_status`
   MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `initial_psychiatric_form`
---
-ALTER TABLE `initial_psychiatric_form`
-  MODIFY `psy_id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `integration_status`
 --
 ALTER TABLE `integration_status`
-  MODIFY `integration_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `involuntary_discontinuation`
---
-ALTER TABLE `involuntary_discontinuation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `integration_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `laboratory`
 --
 ALTER TABLE `laboratory`
-  MODIFY `lab_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `lab_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `living_conditions`
 --
 ALTER TABLE `living_conditions`
-  MODIFY `cond_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cond_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `login_logs`
+--
+ALTER TABLE `login_logs`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `marital_status`
 --
 ALTER TABLE `marital_status`
-  MODIFY `mar_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `mar_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `medical_history`
@@ -8756,7 +8681,7 @@ ALTER TABLE `medical_history`
 -- AUTO_INCREMENT for table `medical_history_new`
 --
 ALTER TABLE `medical_history_new`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `nursing_history`
@@ -8768,13 +8693,13 @@ ALTER TABLE `nursing_history`
 -- AUTO_INCREMENT for table `nursing_services`
 --
 ALTER TABLE `nursing_services`
-  MODIFY `nursing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `nursing_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `offences`
 --
 ALTER TABLE `offences`
-  MODIFY `offense_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `offense_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `other_prescriptions`
@@ -8795,12 +8720,6 @@ ALTER TABLE `patients`
   MODIFY `p_id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `patient_checkins`
---
-ALTER TABLE `patient_checkins`
-  MODIFY `checkin_id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `patient_drug_histories`
 --
 ALTER TABLE `patient_drug_histories`
@@ -8816,103 +8735,67 @@ ALTER TABLE `pharmacy`
 -- AUTO_INCREMENT for table `photos`
 --
 ALTER TABLE `photos`
-  MODIFY `photo_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `phq9_assessments`
---
-ALTER TABLE `phq9_assessments`
-  MODIFY `assessment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `photo_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescription_drugs`
 --
 ALTER TABLE `prescription_drugs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `psychiatric_encounters`
---
-ALTER TABLE `psychiatric_encounters`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `psychiatric_rx_problems`
 --
 ALTER TABLE `psychiatric_rx_problems`
-  MODIFY `problem_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `psychodar`
---
-ALTER TABLE `psychodar`
-  MODIFY `dar_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `psychosocial_intake_form_1a`
---
-ALTER TABLE `psychosocial_intake_form_1a`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `problem_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `psychosocial_interventions`
 --
 ALTER TABLE `psychosocial_interventions`
-  MODIFY `intervention_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `intervention_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `psychosocial_outcomes`
 --
 ALTER TABLE `psychosocial_outcomes`
-  MODIFY `psyc_outcome_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `psyc_outcome_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `psycho_followup_visits`
 --
 ALTER TABLE `psycho_followup_visits`
-  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pump_calibration`
 --
 ALTER TABLE `pump_calibration`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pump_devices`
 --
 ALTER TABLE `pump_devices`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pump_reservoir_history`
 --
 ALTER TABLE `pump_reservoir_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `referral`
 --
 ALTER TABLE `referral`
-  MODIFY `referral_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `referral_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `referral_linkage_services`
 --
 ALTER TABLE `referral_linkage_services`
-  MODIFY `ref_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `reintegration_status`
---
-ALTER TABLE `reintegration_status`
-  MODIFY `reint_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `religion`
---
-ALTER TABLE `religion`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ref_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `status`
@@ -8936,25 +8819,19 @@ ALTER TABLE `stocks`
 -- AUTO_INCREMENT for table `stock_movements`
 --
 ALTER TABLE `stock_movements`
-  MODIFY `trans_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `trans_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stores_inventory`
 --
 ALTER TABLE `stores_inventory`
-  MODIFY `inventory_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `inventory_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sub_counties`
 --
 ALTER TABLE `sub_counties`
-  MODIFY `sub_county_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
-
---
--- AUTO_INCREMENT for table `suppliers`
---
-ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sub_county_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
 -- AUTO_INCREMENT for table `tblcso`
@@ -8966,37 +8843,25 @@ ALTER TABLE `tblcso`
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
-
---
--- AUTO_INCREMENT for table `tbl_hiv_status`
---
-ALTER TABLE `tbl_hiv_status`
-  MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `tb_regimens`
 --
 ALTER TABLE `tb_regimens`
-  MODIFY `regimen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `regimen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `toxicology_results`
 --
 ALTER TABLE `toxicology_results`
-  MODIFY `tox_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `tox_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tpt_regimens`
 --
 ALTER TABLE `tpt_regimens`
   MODIFY `tpt_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `treatment_stage`
---
-ALTER TABLE `treatment_stage`
-  MODIFY `stage_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `triage_services`
@@ -9008,25 +8873,19 @@ ALTER TABLE `triage_services`
 -- AUTO_INCREMENT for table `userroles`
 --
 ALTER TABLE `userroles`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `viral_load`
---
-ALTER TABLE `viral_load`
-  MODIFY `vl_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `voluntary_discontinuation`
 --
 ALTER TABLE `voluntary_discontinuation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `yellow_card_visits`
 --
 ALTER TABLE `yellow_card_visits`
-  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -9070,22 +8929,10 @@ ALTER TABLE `followup_psychiatric_form`
   ADD CONSTRAINT `followup_psychiatric_form_ibfk_1` FOREIGN KEY (`mat_id`) REFERENCES `patients` (`mat_id`);
 
 --
--- Constraints for table `initial_psychiatric_form`
---
-ALTER TABLE `initial_psychiatric_form`
-  ADD CONSTRAINT `initial_psychiatric_form_ibfk_1` FOREIGN KEY (`mat_id`) REFERENCES `patients` (`mat_id`);
-
---
 -- Constraints for table `laboratory`
 --
 ALTER TABLE `laboratory`
   ADD CONSTRAINT `fk_mat_id` FOREIGN KEY (`mat_id`) REFERENCES `patients` (`mat_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `patient_checkins`
---
-ALTER TABLE `patient_checkins`
-  ADD CONSTRAINT `patient_checkins_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`p_id`);
 
 --
 -- Constraints for table `patient_drug_histories`
@@ -9110,60 +8957,6 @@ ALTER TABLE `photos`
 --
 ALTER TABLE `prescription_drugs`
   ADD CONSTRAINT `prescription_drugs_ibfk_1` FOREIGN KEY (`prescription_id`) REFERENCES `other_prescriptions` (`prescription_id`);
-
---
--- Constraints for table `psychiatric_encounters`
---
-ALTER TABLE `psychiatric_encounters`
-  ADD CONSTRAINT `psychiatric_encounters_ibfk_1` FOREIGN KEY (`mat_id`) REFERENCES `patients` (`mat_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `pump_calibration`
---
-ALTER TABLE `pump_calibration`
-  ADD CONSTRAINT `pump_calibration_ibfk_1` FOREIGN KEY (`pump_id`) REFERENCES `pump_devices` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `pump_reservoir_history`
---
-ALTER TABLE `pump_reservoir_history`
-  ADD CONSTRAINT `pump_history_link` FOREIGN KEY (`pump_id`) REFERENCES `pump_devices` (`id`);
-
---
--- Constraints for table `triage_services`
---
-ALTER TABLE `triage_services`
-  ADD CONSTRAINT `triage_services_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`p_id`),
-  ADD CONSTRAINT `triage_services_ibfk_2` FOREIGN KEY (`clinician_id`) REFERENCES `tblusers` (`user_id`);
-
---
--- Constraints for table `yellow_card_visits`
---
-ALTER TABLE `yellow_card_visits`
-  ADD CONSTRAINT `yellow_card_visits_ibfk_1` FOREIGN KEY (`mat_id`) REFERENCES `patients` (`mat_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-DELIMITER $$
---
--- Events
---
-CREATE DEFINER=`root`@`localhost` EVENT `dose_sync_event` ON SCHEDULE EVERY 1 MINUTE STARTS '2026-06-16 01:11:58' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
-    -- Update patients.dosage to the dose_mg from the active dose_schedule
-    -- whose window covers today.
-    UPDATE patients p
-    JOIN (
-        SELECT mat_id, dose_mg, drugname
-        FROM dose_schedules
-        WHERE status = 'active'
-          AND start_date <= CURDATE()
-          AND (end_date IS NULL OR end_date >= CURDATE())
-        ORDER BY start_date DESC
-    ) ds ON ds.mat_id = p.mat_id
-    SET p.dosage   = ds.dose_mg,
-        p.drugname = ds.drugname
-    WHERE p.current_status = 'Active';
-  END$$
-
-DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
