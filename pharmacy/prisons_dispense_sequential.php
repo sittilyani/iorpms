@@ -60,7 +60,7 @@ if ($step >= $totalDates) {
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Prison Dispensing Complete</title>
+        <title>Bulk Dispensing Complete</title>
         <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
         <style>
             body { background:#f4f7fb; font-family:"Segoe UI",Arial,sans-serif; }
@@ -204,7 +204,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Prison Sequential Dispensing – <?= htmlspecialchars($patient['clientName']) ?></title>
+    <title>Bulk Sequential Dispensing – <?= htmlspecialchars($patient['clientName']) ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <style>
         * { box-sizing: border-box; }
@@ -295,7 +295,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 </head>
 <body>
 <div class="container">
-    <h2>Prison Sequential Dispensing</h2>
+    <h2>Bulk Sequential Dispensing</h2>
 
     <?php if ($skipped): ?>
         <div class="alert alert-warning alert-dismissible">
@@ -347,8 +347,8 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
         <input type="hidden" name="step"       value="<?= $step ?>">
         <input type="hidden" name="total_dates" value="<?= $totalDates ?>">
         <input type="hidden" name="mat_id"     value="<?= htmlspecialchars($mat_id) ?>">
-        <input type="hidden" name="daysToNextAppointment" value="999"><!-- skip appt check for prison -->
-        <input type="hidden" name="isMissed" value="false"><!-- skip missed check for prison -->
+        <input type="hidden" name="daysToNextAppointment" value="999"><!-- skip appt check for bulk -->
+        <input type="hidden" name="isMissed" value="false"><!-- skip missed check for bulk -->
 
         <div class="form-container">
 
@@ -483,7 +483,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 
     <div style="margin-top:15px; text-align:center;">
         <a href="prisons_module.php?start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>"
-           style="color:#6c757d; font-size:.9rem;">← Back to Prison List</a>
+           style="color:#6c757d; font-size:.9rem;">← Back to bulk dispensing list</a>
         &nbsp;|&nbsp;
         <a href="prisons_dispense_sequential.php?mat_id=<?= urlencode($mat_id) ?>&start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>&step=<?= $nextStep ?>&skipped=1"
            style="color:#dc3545; font-size:.9rem;">Skip this date →</a>

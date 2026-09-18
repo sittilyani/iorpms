@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($insertQuery);
 
-                        $drugname = 'Methadone'; // Default drug for prison module
-                        $reasons = 'Prison bulk dispensing';
+                        $drugname = 'Methadone'; // Default drug for bulk module
+                        $reasons = 'Bulk dispensing';
 
                         $stmt->bind_param('ssssssssssssss',
                             $date,
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Prison Module - Bulk Dispensing</title>
+    <title>Bulk Dispensing</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <script src="../assets/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css" type="text/css">
@@ -243,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
     <?php endif; ?>
 </head>
 <body>
-    <h2 style="color: #2C3162;">Prison Module - Bulk Dispensing</h2>
+    <h2 style="color: #2C3162;">Bulk Dispensing</h2>
 
     <div class="date-range-form">
         <form method="GET" action="">

@@ -2,7 +2,7 @@
 /**
  * prisons_dispense_pump.php
  * ==========================
- * Prison-specific pump processor for sequential date-by-date dispensing.
+ * Bulk-specific pump processor for sequential date-by-date dispensing.
  *
  * Differences from the standard dispensing-pump.php:
  *  - Duplicate check uses the POSTed visitDate (not CURDATE()) so past/future dates work.
