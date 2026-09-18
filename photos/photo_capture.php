@@ -241,6 +241,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <h2>Client Photo <?php echo ucfirst($action); ?> Form</h2>
 
+<div id="insecure-context-warning" class="action-info" style="display:none; background-color:#f8d7da; border-color:#f5c6cb; color:#721c24;">
+    <strong>Camera may be blocked on this device.</strong>
+    You're viewing this page over a plain <code>http://</code> IP address. Phone browsers (and modern desktop
+    browsers) only allow camera access on a secure (<code>https://</code>) page or on <code>localhost</code>.
+    Ask your administrator to enable HTTPS for this server (e.g. Laragon's "Auto create certificate" feature),
+    or open this page via a trusted HTTPS URL, to use the camera from a phone.
+</div>
+
 <div id="error-message"></div>
 <div id="webcam-status" class="webcam-status"></div>
 
@@ -295,6 +303,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="button" id="capture-button">Capture</button>
                 <button type="button" id="retake-button">Retake</button>
             </div>
+            <button type="button" id="switch-camera-button" style="margin-top:8px; display:none; width:100%; background-color:#6c757d; color:white; border:none; border-radius:5px; height:30px; cursor:pointer;">
+                Switch Camera (Front/Back)
+            </button>
         </div>
 
         <div class="grid-item">
@@ -321,6 +332,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     var form = document.getElementById('photo-form');
     var errorMessage = document.getElementById('error-message');
     var webcamStatus = document.getElementById('webcam-status');
+    var switchCameraButton = document.getElementById('switch-camera-button');
+    var insecureWarning = document.getElementById('insecure-context-warning');
+    var currentStream = null;
+    // Default to the rear ("environment") camera — on a phone this is what
+    // you want for photographing a client, not the front-facing selfie camera.
+    var currentFacingMode = 'environment';
+
+    // Camera access requires a secure context (HTTPS) on every modern mobile
+    // browser, except on localhost. Accessing this page over a plain
+    // http://<ip-address> URL from a phone will silently fail getUserMedia,
+    // so warn upfront instead of leaving the pharmacist guessing why the
+    // camera never starts.
+    if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) {
+        insecureWarning.style.display = 'block';
+    }
 
     // Function to update status message
     function updateStatus(message, isError) {
@@ -341,7 +367,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Initialize webcam
-    function initWebcam() {
+    function initWebcam(facingMode) {
         // Check if browser supports mediaDevices
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             showError('Your browser does not support webcam access. Please try using Chrome, Firefox, or Edge.');
@@ -349,16 +375,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             return false;
         }
 
+        if (currentStream) {
+            currentStream.getTracks().forEach(function(track) { track.stop(); });
+        }
+
         // Get webcam stream with better error handling
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: { ideal: 320 },
                 height: { ideal: 240 },
-                facingMode: 'user' // Use front camera
+                facingMode: { ideal: facingMode || currentFacingMode }
             },
             audio: false
         })
         .then(function(stream) {
+            currentStream = stream;
+            currentFacingMode = facingMode || currentFacingMode;
             video.srcObject = stream;
             captureButton.disabled = false;
             updateStatus('Webcam connected successfully. You can now capture a photo.', false);
@@ -374,6 +406,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 showError('Video error: ' + e.message);
                 updateStatus('Video error occurred', true);
             });
+
+            // Only offer the switch button if the device actually reports
+            // more than one camera (most phones do: front + back).
+            navigator.mediaDevices.enumerateDevices().then(function(deviceList) {
+                var cameraCount = deviceList.filter(function(d) { return d.kind === 'videoinput'; }).length;
+                switchCameraButton.style.display = cameraCount > 1 ? 'block' : 'none';
+            }).catch(function() { /* enumerateDevices not critical */ });
         })
         .catch(function(error) {
             console.error('Error accessing webcam:', error);
@@ -391,12 +430,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 errorMsg += error.message;
             }
 
+            if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) {
+                errorMsg += ' This page is not served over HTTPS, which blocks camera access on most phones — see the warning above.';
+            }
+
             showError(errorMsg);
             updateStatus('Webcam access failed', true);
         });
 
         return true;
     }
+
+    // Toggle between front ("user") and back ("environment") cameras.
+    switchCameraButton.addEventListener('click', function() {
+        var nextFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+        initWebcam(nextFacingMode);
+    });
 
     // Capture photo from webcam
     captureButton.addEventListener('click', function() {

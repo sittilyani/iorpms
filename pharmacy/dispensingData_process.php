@@ -174,6 +174,7 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
             $co_drug    = trim($cmed['drugname'] ?? '');
             $co_dosage  = (float)($cmed['dosage'] ?? 1);
             $co_reasons = trim($cmed['reasons']  ?? 'Auto-dispensed with MAT drug');
+            $co_prescription_drug_id = !empty($cmed['prescription_drug_id']) ? (int)$cmed['prescription_drug_id'] : null;
 
             if (!$co_drug) continue;
 
@@ -226,6 +227,41 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
                     $coUpd->bind_param('ds', $co_dosage, $co_drug);
                     $coUpd->execute();
                     $coUpd->close();
+                }
+
+                // DOT drugs are also tracked in prescription_drugs (total dosage
+                // prescribed vs. dispensed so far) — keep that running balance in
+                // sync now that this dose has actually gone out via the co-meds panel.
+                if ($co_prescription_drug_id) {
+                    $dotFetch = $conn->prepare("SELECT prescription_id, total_dosage, total_dispensed FROM prescription_drugs WHERE id = ?");
+                    $dotFetch->bind_param('i', $co_prescription_drug_id);
+                    $dotFetch->execute();
+                    $dotRow = $dotFetch->get_result()->fetch_assoc();
+                    $dotFetch->close();
+
+                    if ($dotRow) {
+                        $dotRemainingBefore = (float)$dotRow['total_dosage'] - (float)$dotRow['total_dispensed'];
+                        $dotDispenseNow     = min($co_dosage, $dotRemainingBefore);
+                        $dotNewRemaining    = $dotRemainingBefore - $dotDispenseNow;
+                        $dotStatus          = ($dotNewRemaining <= 0) ? 'dispensed and closed' : 'partially dispensed';
+
+                        $dotUpd = $conn->prepare(
+                            "UPDATE prescription_drugs SET total_dispensed = total_dispensed + ?, remaining_balance = total_dosage - total_dispensed - ?, prescr_status = ? WHERE id = ?"
+                        );
+                        $dotUpd->bind_param('ddsi', $dotDispenseNow, $dotDispenseNow, $dotStatus, $co_prescription_drug_id);
+                        $dotUpd->execute();
+                        $dotUpd->close();
+
+                        if ($dotNewRemaining <= 0) {
+                            $dotPrescrUpd = $conn->prepare(
+                                "UPDATE other_prescriptions SET prescr_status = 'dispensed' WHERE prescription_id = ?
+                                 AND NOT EXISTS (SELECT 1 FROM prescription_drugs WHERE prescription_id = ? AND (total_dosage - total_dispensed) > 0)"
+                            );
+                            $dotPrescrUpd->bind_param('ss', $dotRow['prescription_id'], $dotRow['prescription_id']);
+                            $dotPrescrUpd->execute();
+                            $dotPrescrUpd->close();
+                        }
+                    }
                 }
 
                 $conn->commit();

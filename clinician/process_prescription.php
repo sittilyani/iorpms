@@ -29,12 +29,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $frequencies = $_POST['frequencies'];
         $days = $_POST['days'];
         $total_dosages = $_POST['total_dosages'];
+        $is_dot = $_POST['is_dot'] ?? [];
 
-        $stmt = $conn->prepare("INSERT INTO prescription_drugs (prescription_id, drug_name, dosing, frequency, days, total_dosage) VALUES (?, ?, ?, ?, ?, ?)");
+        // Falls back to the pre-DOT insert if `is_dot` hasn't been added yet
+        // (see tableupdates/add_is_dot_column.sql) — the checkbox just won't
+        // persist on that database until the migration is run.
+        $stmt = $conn->prepare("INSERT INTO prescription_drugs (prescription_id, drug_name, dosing, frequency, days, total_dosage, is_dot) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $hasIsDotColumn = ($stmt !== false);
+        if (!$hasIsDotColumn) {
+            $stmt = $conn->prepare("INSERT INTO prescription_drugs (prescription_id, drug_name, dosing, frequency, days, total_dosage) VALUES (?, ?, ?, ?, ?, ?)");
+        }
 
         for ($i = 0; $i < count($drug); $i++) {
-            // Corrected line: Add the frequency variable to the bind_param
-            $stmt->bind_param("sssiis", $prescription_id, $drug[$i], $dosings[$i], $frequencies[$i], $days[$i], $total_dosages[$i]);
+            if ($hasIsDotColumn) {
+                $dot_flag = (!empty($is_dot[$i]) && $is_dot[$i] == '1') ? 1 : 0;
+                $stmt->bind_param("sssiisi", $prescription_id, $drug[$i], $dosings[$i], $frequencies[$i], $days[$i], $total_dosages[$i], $dot_flag);
+            } else {
+                $stmt->bind_param("sssiis", $prescription_id, $drug[$i], $dosings[$i], $frequencies[$i], $days[$i], $total_dosages[$i]);
+            }
             $stmt->execute();
         }
 

@@ -383,15 +383,32 @@ if ($mat_id) {
         $placeholders = implode(',', array_fill(0, count($groupedPrescriptions), '?'));
         $prescriptionIds = array_keys($groupedPrescriptions);
 
+        // Exclude is_dot=1 drugs here — they're shown (and dispensed) exclusively
+        // via the co-medications panel below, to avoid double-dispensing the same
+        // drug from two different checkboxes on this page.
         $drugsQuery = "
             SELECT
                 *
             FROM prescription_drugs
             WHERE prescription_id IN ({$placeholders})
+              AND is_dot = 0
             ORDER BY prescription_id, drug_name
         ";
 
         $drugsStmt = $conn->prepare($drugsQuery);
+        if (!$drugsStmt) {
+            // `is_dot` column not present yet (database hasn't run
+            // tableupdates/add_is_dot_column.sql) — fall back to the
+            // pre-DOT query so this table still works.
+            $drugsQuery = "
+                SELECT
+                    *
+                FROM prescription_drugs
+                WHERE prescription_id IN ({$placeholders})
+                ORDER BY prescription_id, drug_name
+            ";
+            $drugsStmt = $conn->prepare($drugsQuery);
+        }
         if ($drugsStmt) {
             // Bind the prescription IDs dynamically (all are strings 's')
             $types = str_repeat('s', count($prescriptionIds));
@@ -486,6 +503,46 @@ if ($mat_id) {
             'note'     => 'Ends ' . ($regimenData['tpt_end_date'] ?? ''),
             'reasons'  => 'TPT auto-dispensed with ' . $mainDrugName,
         ];
+    }
+
+    // DOT (Directly Observed Therapy) — other-prescription drugs flagged
+    // is_dot=1 by the clinician always appear here, alongside ARV/TB/TPT,
+    // so they get co-dispensed with the MAT drug instead of relying on the
+    // dispenser to remember to tick them in the "Other Prescriptions" table.
+    $dotStmt = $conn->prepare(
+        "SELECT pd.id, pd.drug_name, pd.dosing, pd.total_dosage, pd.total_dispensed, pd.prescription_id
+         FROM prescription_drugs pd
+         JOIN other_prescriptions op ON op.prescription_id = pd.prescription_id
+         WHERE op.mat_id = ? AND pd.is_dot = 1
+           AND op.prescr_status = 'submitted'
+           AND pd.prescr_status NOT IN ('dispensed and closed', 'deleted')
+           AND (pd.total_dosage - pd.total_dispensed) > 0"
+    );
+    if ($dotStmt) {
+        $dotStmt->bind_param('s', $mat_id);
+        $dotStmt->execute();
+        $dotRows = $dotStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $dotStmt->close();
+
+        foreach ($dotRows as $dotRow) {
+            $dotDrug = $dotRow['drug_name'];
+            $chkDot  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+            $chkDot->bind_param('sss', $mat_id, $dotDrug, $today);
+            $chkDot->execute();
+            $dotDone = (int)$chkDot->get_result()->fetch_assoc()['cnt'] > 0;
+            $chkDot->close();
+
+            $coMeds[] = [
+                'type'                => 'DOT',  'icon' => '👁️', 'label' => 'DOT',
+                'badge'               => 'info',
+                'drugname'            => $dotDrug,
+                'dosage'              => is_numeric($dotRow['dosing']) ? (float)$dotRow['dosing'] : 1,
+                'done'                => $dotDone,
+                'note'                => 'Prescription ' . $dotRow['prescription_id'],
+                'reasons'             => 'DOT auto-dispensed with ' . $mainDrugName,
+                'prescription_drug_id'=> $dotRow['id'],
+            ];
+        }
     }
 }
 // ***************************************************************
@@ -646,6 +703,7 @@ if (isset($_SESSION['dispensing_successes'])) {
         .co-badge-danger  { background:#ffe0e0; color:#c00; }
         .co-badge-warning { background:#fff3cd; color:#7a5c00; }
         .co-badge-success { background:#e8f5e9; color:#2e7d32; }
+        .co-badge-info    { background:#e3f2fd; color:#1565c0; }
         .co-done { color:#388e3c; font-weight:bold; font-size:.82rem; }
         .custom-alert { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: yellow; color: red; border: 2px solid red; padding: 20px; width: 300px; text-align: center; z-index: 1000; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .custom-alert button { margin-top: 10px; padding: 8px 16px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer; }
@@ -1055,6 +1113,9 @@ if (isset($_SESSION['dispensing_successes'])) {
                                     <input type="hidden" name="co_meds[<?= $ci ?>][dosage]"   value="<?= (int)$cm['dosage'] ?>">
                                     <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars($cm['reasons']) ?>">
                                     <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars($cm['type']) ?>">
+                                    <?php if (!empty($cm['prescription_drug_id'])): ?>
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][prescription_drug_id]" value="<?= (int)$cm['prescription_drug_id'] ?>">
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="co-badge co-badge-<?= $cm['badge'] ?>">

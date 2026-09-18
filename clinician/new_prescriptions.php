@@ -121,12 +121,18 @@ while ($row = $result->fetch_assoc()) {
                         <th>Frequency</th>
                         <th>Days</th>
                         <th>Total Dosage</th>
+                        <th>DOT</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
+            <p class="text-muted" style="font-size: .85rem;">
+                <strong>DOT</strong> (Directly Observed Therapy): check this for drugs that must always be
+                co-dispensed alongside the client's methadone/buprenorphine dose — they will automatically
+                appear on the pharmacy dispensing page, just like ARV/anti-TB medication.
+            </p>
             <button type="button" class="btn btn-add-line" id="addDrugLine">Add Drug</button>
             <button type="submit" class="btn btn-primary float-right">Save Prescription</button>
         </form>
@@ -156,6 +162,10 @@ while ($row = $result->fetch_assoc()) {
                     <td><input type="number" class="form-control frequency-input" name="frequencies[]" min="1" required></td>
                     <td><input type="number" class="form-control days-input" name="days[]" min="1" required></td>
                     <td><input type="text" class="form-control total-dosage-input" name="total_dosages[]" readonly></td>
+                    <td class="text-center">
+                        <input type="hidden" class="dot-hidden-input" name="is_dot[]" value="0">
+                        <input type="checkbox" class="dot-checkbox" title="Directly Observed Therapy — always co-dispensed with MAT drug">
+                    </td>
                     <td><button type="button" class="btn btn-remove-line btn-sm">Remove</button></td>
                 `;
 
@@ -167,6 +177,15 @@ while ($row = $result->fetch_assoc()) {
                 // Attach a single update function to all relevant inputs
                 const inputs = [dosingInput, frequencyInput, daysInput];
                 inputs.forEach(input => input.addEventListener('input', updateDosage));
+
+                // DOT checkbox mirrors its state into the hidden input so the
+                // submitted is_dot[] array always has one entry per row,
+                // correctly positioned regardless of which boxes are checked.
+                const dotCheckbox = newRow.querySelector('.dot-checkbox');
+                const dotHidden = newRow.querySelector('.dot-hidden-input');
+                dotCheckbox.addEventListener('change', function() {
+                    dotHidden.value = dotCheckbox.checked ? '1' : '0';
+                });
 
                 const removeButton = newRow.querySelector('.btn-remove-line');
                 removeButton.addEventListener('click', function() {

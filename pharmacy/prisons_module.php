@@ -24,6 +24,34 @@ $userId = isset($_GET['mat_id']) ? $_GET['mat_id'] : null;
 // Variable to track if we should redirect
 $shouldRedirect = false;
 
+// ── Patient search / add-to-list ────────────────────────────────────────────
+// The bulk list defaults to inmates (p_address LIKE '%inmate%'), but staff can
+// search for and add ANY patient (e.g. one held elsewhere, or on Buprenorphine
+// rather than Methadone). Added patients are carried across "Generate List"
+// submissions via the extra_ids GET param — the date-range/generation logic
+// itself is unchanged.
+$extraIds = [];
+if (isset($_GET['extra_ids']) && $_GET['extra_ids'] !== '') {
+    $extraIds = array_values(array_unique(array_filter(array_map('trim', explode(',', $_GET['extra_ids'])))));
+}
+$searchTerm = isset($_GET['search_patient']) ? trim($_GET['search_patient']) : '';
+$searchResults = [];
+if ($searchTerm !== '') {
+    $like = '%' . $searchTerm . '%';
+    $searchStmt = $conn->prepare(
+        "SELECT mat_id, mat_number, clientName, sex, p_address, drugname, current_status
+         FROM patients
+         WHERE (mat_id LIKE ? OR clientName LIKE ? OR mat_number LIKE ?)
+           AND current_status IN ('Active', 'LTFU', 'Defaulted')
+         ORDER BY clientName ASC
+         LIMIT 25"
+    );
+    $searchStmt->bind_param('sss', $like, $like, $like);
+    $searchStmt->execute();
+    $searchResults = $searchStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $searchStmt->close();
+}
+
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing'])) {
     $errorMessages = [];
@@ -74,7 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($insertQuery);
 
-                        $drugname = 'Methadone'; // Default drug for bulk module
+                        // Use the patient's actual prescribed drug (Methadone or
+                        // Buprenorphine) rather than always recording Methadone —
+                        // this list can now include Buprenorphine patients found
+                        // via search, and hardcoding the drug name here would
+                        // silently mislabel their dispensing record.
+                        $drugname = !empty($patient['drugname']) ? $patient['drugname'] : 'Methadone';
                         $reasons = 'Bulk dispensing';
 
                         $stmt->bind_param('ssssssssssssss',
@@ -247,6 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
 
     <div class="date-range-form">
         <form method="GET" action="">
+            <input type="hidden" name="extra_ids" value="<?php echo htmlspecialchars(implode(',', $extraIds)); ?>">
             <div class="form-group">
                 <label for="start_date">Start Date:</label>
                 <input type="date" id="start_date" name="start_date" required
@@ -259,6 +293,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                 <button type="submit" class="submit-btn" style="margin-left: 20px;">Generate List</button>
             </div>
         </form>
+    </div>
+
+    <div class="search-form" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <form method="GET" action="">
+            <input type="hidden" name="start_date" value="<?php echo htmlspecialchars(isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d')); ?>">
+            <input type="hidden" name="end_date" value="<?php echo htmlspecialchars(isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d', strtotime('+6 days'))); ?>">
+            <input type="hidden" name="extra_ids" value="<?php echo htmlspecialchars(implode(',', $extraIds)); ?>">
+            <label for="search_patient">Search Patient (MAT ID, MAT Number or Name):</label>
+            <input type="text" id="search_patient" name="search_patient" style="margin-left: 10px; margin-right: 10px; width: 260px;"
+                   value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="e.g. 11094MAT0002 or client name">
+            <button type="submit" class="submit-btn" style="margin-left: 0;">Search</button>
+        </form>
+
+        <?php if ($searchTerm !== ''): ?>
+            <?php if (empty($searchResults)): ?>
+                <div class="alert alert-info" style="margin-top: 15px;">No matching patients found.</div>
+            <?php else: ?>
+                <table class="prison-table" style="margin-top: 15px;">
+                    <thead>
+                        <tr>
+                            <th>MAT ID</th>
+                            <th>MAT Number</th>
+                            <th>Client Name</th>
+                            <th>Sex</th>
+                            <th>Physical Address</th>
+                            <th>Drug</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($searchResults as $sr): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($sr['mat_id']); ?></td>
+                                <td><?php echo htmlspecialchars($sr['mat_number']); ?></td>
+                                <td><?php echo htmlspecialchars($sr['clientName']); ?></td>
+                                <td><?php echo htmlspecialchars($sr['sex']); ?></td>
+                                <td><?php echo htmlspecialchars($sr['p_address']); ?></td>
+                                <td><?php echo htmlspecialchars($sr['drugname'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($sr['current_status']); ?></td>
+                                <td>
+                                    <?php if (in_array($sr['mat_id'], $extraIds, true)): ?>
+                                        <span style="color:green;">✓ In list below</span>
+                                    <?php else: ?>
+                                        <?php
+                                            $newExtraIds = implode(',', array_merge($extraIds, [$sr['mat_id']]));
+                                        ?>
+                                        <a href="?start_date=<?php echo urlencode($_GET['start_date'] ?? date('Y-m-d')); ?>&end_date=<?php echo urlencode($_GET['end_date'] ?? date('Y-m-d', strtotime('+6 days'))); ?>&extra_ids=<?php echo urlencode($newExtraIds); ?>&search_patient=<?php echo urlencode($searchTerm); ?>"
+                                           class="submit-btn" style="padding: 4px 10px; font-size: 13px; text-decoration:none;">Add to list</a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <?php
@@ -280,9 +371,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                 $currentDate->modify('+1 day');
             }
 
-            // Get all inmates
-            $inmatesQuery = "SELECT * FROM patients WHERE p_address LIKE '%inmate%' AND current_status IN ('Active', 'LTFU', 'Defaulted')";
-            $inmatesResult = $conn->query($inmatesQuery);
+            // Get all inmates, plus any patients added via search (extra_ids)
+            if (!empty($extraIds)) {
+                $extraPlaceholders = implode(',', array_fill(0, count($extraIds), '?'));
+                $inmatesQuery = "SELECT * FROM patients
+                                  WHERE (p_address LIKE '%inmate%' OR mat_id IN ($extraPlaceholders))
+                                    AND current_status IN ('Active', 'LTFU', 'Defaulted')";
+                $inmatesStmt = $conn->prepare($inmatesQuery);
+                $extraTypes = str_repeat('s', count($extraIds));
+                $inmatesStmt->bind_param($extraTypes, ...$extraIds);
+                $inmatesStmt->execute();
+                $inmatesResult = $inmatesStmt->get_result();
+            } else {
+                $inmatesQuery = "SELECT * FROM patients WHERE p_address LIKE '%inmate%' AND current_status IN ('Active', 'LTFU', 'Defaulted')";
+                $inmatesResult = $conn->query($inmatesQuery);
+            }
 
             if ($inmatesResult && $inmatesResult->num_rows > 0) {
                 echo '<form method="POST" action="">';

@@ -372,6 +372,195 @@ try {
 
     $conn->commit();
 
+    // ===========================================================================
+    // CO-MEDICATIONS — ARV / Anti-TB / TPT / DOT
+    // Mirrors pharmacy/dispensingData_process.php so the pump-based dispensing
+    // path co-dispenses the same items the non-pump (syringe) path does.
+    // Runs only after the main pump drug was successfully dispensed.
+    // ===========================================================================
+    if (isset($_POST['co_meds']) && is_array($_POST['co_meds'])) {
+        foreach ($_POST['co_meds'] as $ci => $cmed) {
+            if (empty($cmed['dispense']) || $cmed['dispense'] !== '1') continue;
+
+            $co_drug    = trim($cmed['drugname'] ?? '');
+            $co_dosage  = (float)($cmed['dosage'] ?? 1);
+            $co_reasons = trim($cmed['reasons']  ?? 'Auto-dispensed with MAT drug');
+            $co_prescription_drug_id = !empty($cmed['prescription_drug_id']) ? (int)$cmed['prescription_drug_id'] : null;
+
+            if (!$co_drug) continue;
+
+            $coDupStmt = $conn->prepare(
+                "SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = CURDATE()"
+            );
+            $coDupStmt->bind_param('ss', $mat_id, $co_drug);
+            $coDupStmt->execute();
+            $coDup = (int)$coDupStmt->get_result()->fetch_assoc()['cnt'];
+            $coDupStmt->close();
+
+            if ($coDup > 0) {
+                $successMessages[] = "ℹ {$co_drug} already recorded for today — skipped.";
+                continue;
+            }
+
+            $conn->begin_transaction();
+            try {
+                $coIns = $conn->prepare(
+                    "INSERT INTO pharmacy
+                         (visitDate, mat_id, mat_number, clientName, nickName, age, sex,
+                          p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
+                     VALUES (CURDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                $coIns->bind_param(
+                    'sssssssssdsss',
+                    $mat_id, $mat_number, $clientName, $nickName,
+                    $age, $sex, $p_address, $cso,
+                    $co_drug, $co_dosage, $co_reasons, $current_status, $pharm_officer_name
+                );
+                if (!$coIns->execute()) throw new Exception($coIns->error);
+                $coIns->close();
+
+                $coStockChk = $conn->prepare("SELECT COUNT(*) AS cnt FROM stock_movements WHERE drugname = ?");
+                $coStockChk->bind_param('s', $co_drug);
+                $coStockChk->execute();
+                $hasStock = (int)$coStockChk->get_result()->fetch_assoc()['cnt'] > 0;
+                $coStockChk->close();
+
+                if ($hasStock) {
+                    $coUpd = $conn->prepare(
+                        "UPDATE stock_movements SET total_qty = total_qty - ?
+                         WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1"
+                    );
+                    $coUpd->bind_param('ds', $co_dosage, $co_drug);
+                    $coUpd->execute();
+                    $coUpd->close();
+                }
+
+                // DOT drugs are also tracked in prescription_drugs — keep the
+                // running total_dispensed/remaining_balance in sync.
+                if ($co_prescription_drug_id) {
+                    $dotFetch = $conn->prepare("SELECT prescription_id, total_dosage, total_dispensed FROM prescription_drugs WHERE id = ?");
+                    $dotFetch->bind_param('i', $co_prescription_drug_id);
+                    $dotFetch->execute();
+                    $dotRow = $dotFetch->get_result()->fetch_assoc();
+                    $dotFetch->close();
+
+                    if ($dotRow) {
+                        $dotRemainingBefore = (float)$dotRow['total_dosage'] - (float)$dotRow['total_dispensed'];
+                        $dotDispenseNow     = min($co_dosage, $dotRemainingBefore);
+                        $dotNewRemaining    = $dotRemainingBefore - $dotDispenseNow;
+                        $dotStatus          = ($dotNewRemaining <= 0) ? 'dispensed and closed' : 'partially dispensed';
+
+                        $dotUpd = $conn->prepare(
+                            "UPDATE prescription_drugs SET total_dispensed = total_dispensed + ?, remaining_balance = total_dosage - total_dispensed - ?, prescr_status = ? WHERE id = ?"
+                        );
+                        $dotUpd->bind_param('ddsi', $dotDispenseNow, $dotDispenseNow, $dotStatus, $co_prescription_drug_id);
+                        $dotUpd->execute();
+                        $dotUpd->close();
+
+                        if ($dotNewRemaining <= 0) {
+                            $dotPrescrUpd = $conn->prepare(
+                                "UPDATE other_prescriptions SET prescr_status = 'dispensed' WHERE prescription_id = ?
+                                 AND NOT EXISTS (SELECT 1 FROM prescription_drugs WHERE prescription_id = ? AND (total_dosage - total_dispensed) > 0)"
+                            );
+                            $dotPrescrUpd->bind_param('ss', $dotRow['prescription_id'], $dotRow['prescription_id']);
+                            $dotPrescrUpd->execute();
+                            $dotPrescrUpd->close();
+                        }
+                    }
+                }
+
+                $conn->commit();
+                $successMessages[] = "✓ {$co_drug} dispensed automatically.";
+
+            } catch (Exception $coEx) {
+                $conn->rollback();
+                $successMessages[] = "⚠ Co-medication error ({$co_drug}): " . htmlspecialchars($coEx->getMessage());
+            }
+        }
+    }
+
+    // ===========================================================================
+    // OTHER PRESCRIPTIONS DISPENSING — mirrors pharmacy/dispensingData_process.php
+    // ===========================================================================
+    if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['quantity']) && is_array($_POST['quantity'])) {
+        $prescriptionsToProcess = [];
+        $dispensedCount = 0;
+
+        foreach ($_POST['dispense'] as $drug_id_from_form => $prescription_id) {
+            $dispense_id = (int)$drug_id_from_form;
+            $quantity = (float)($_POST['quantity'][$dispense_id] ?? 0);
+            if ($quantity > 0) {
+                $prescriptionsToProcess[$prescription_id][] = ['drug_id' => $dispense_id, 'quantity' => $quantity];
+                $dispensedCount++;
+            }
+        }
+
+        if ($dispensedCount > 0) {
+            $conn->begin_transaction();
+            try {
+                $stmt_fetch_drug   = $conn->prepare("SELECT total_dosage, total_dispensed, drug_name FROM prescription_drugs WHERE id = ?");
+                $stmt_update_drug  = $conn->prepare("UPDATE prescription_drugs SET total_dispensed = total_dispensed + ?, remaining_balance = total_dosage - total_dispensed - ?, prescr_status = ? WHERE id = ?");
+                $stmt_update_stock = $conn->prepare("UPDATE stock_movements SET total_qty = total_qty - ? WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1");
+                $stmt_update_prescr = $conn->prepare("UPDATE other_prescriptions SET prescr_status = ? WHERE prescription_id = ?");
+
+                $uniquePrescriptionsDispensed = 0;
+
+                foreach ($prescriptionsToProcess as $prescription_id => $drugs) {
+                    $isPrescriptionComplete = true;
+
+                    foreach ($drugs as $drug) {
+                        $drug_id = $drug['drug_id'];
+                        $dispensed_amount = $drug['quantity'];
+
+                        $stmt_fetch_drug->bind_param("i", $drug_id);
+                        $stmt_fetch_drug->execute();
+                        $current_drug_data = $stmt_fetch_drug->get_result()->fetch_assoc();
+                        if (!$current_drug_data) {
+                            throw new Exception("Drug ID $drug_id not found in prescription_drugs.");
+                        }
+
+                        $total_dosage_pd  = (float)$current_drug_data['total_dosage'];
+                        $current_dispensed = (float)$current_drug_data['total_dispensed'];
+                        $drug_name_pd = $current_drug_data['drug_name'];
+                        $remaining_before = $total_dosage_pd - $current_dispensed;
+
+                        if ($dispensed_amount > $remaining_before) {
+                            throw new Exception("Dispensed amount ($dispensed_amount) for **$drug_name_pd** cannot be greater than the remaining balance ($remaining_before).");
+                        }
+
+                        $new_remaining = $remaining_before - $dispensed_amount;
+                        $drug_status = ($new_remaining <= 0) ? 'dispensed and closed' : 'partially dispensed';
+
+                        $stmt_update_drug->bind_param("ddsi", $dispensed_amount, $dispensed_amount, $drug_status, $drug_id);
+                        $stmt_update_drug->execute();
+
+                        if ($new_remaining > 0) $isPrescriptionComplete = false;
+
+                        $stmt_update_stock->bind_param("ds", $dispensed_amount, $drug_name_pd);
+                        $stmt_update_stock->execute();
+                    }
+
+                    $new_prescr_status = $isPrescriptionComplete ? 'dispensed' : 'partially dispensed';
+                    $stmt_update_prescr->bind_param("ss", $new_prescr_status, $prescription_id);
+                    $stmt_update_prescr->execute();
+
+                    $uniquePrescriptionsDispensed++;
+                }
+
+                $conn->commit();
+                $successMessages[] = "Other Prescriptions Dispensing Successful! **$uniquePrescriptionsDispensed** unique prescriptions updated with **$dispensedCount** drug items dispensed.";
+
+                $stmt_fetch_drug->close();
+                $stmt_update_drug->close();
+                $stmt_update_stock->close();
+                $stmt_update_prescr->close();
+            } catch (Exception $e) {
+                $conn->rollback();
+                $successMessages[] = "⚠ Other Prescriptions Dispensing Failed: " . htmlspecialchars($e->getMessage());
+            }
+        }
+    }
+
     $_SESSION['successMessages'] = $successMessages;
     header("Location: pharmacy/dispensingData_pump.php?mat_id=" . urlencode($mat_id));
     exit;

@@ -200,15 +200,32 @@ if ($mat_id) {
         $placeholders = implode(',', array_fill(0, count($groupedPrescriptions), '?'));
         $prescriptionIds = array_keys($groupedPrescriptions);
 
+        // Exclude is_dot=1 drugs here — they're shown (and dispensed) exclusively
+        // via the co-medications panel below, to avoid double-dispensing the same
+        // drug from two different checkboxes on this page.
         $drugsQuery = "
             SELECT
                 *
             FROM prescription_drugs
             WHERE prescription_id IN ({$placeholders})
+              AND is_dot = 0
             ORDER BY prescription_id, drug_name
         ";
 
         $drugsStmt = $conn->prepare($drugsQuery);
+        if (!$drugsStmt) {
+            // `is_dot` column not present yet (database hasn't run
+            // tableupdates/add_is_dot_column.sql) — fall back to the
+            // pre-DOT query so this table still works.
+            $drugsQuery = "
+                SELECT
+                    *
+                FROM prescription_drugs
+                WHERE prescription_id IN ({$placeholders})
+                ORDER BY prescription_id, drug_name
+            ";
+            $drugsStmt = $conn->prepare($drugsQuery);
+        }
         if ($drugsStmt) {
             // Bind the prescription IDs dynamically (all are strings 's')
             $types = str_repeat('s', count($prescriptionIds));
@@ -351,6 +368,111 @@ if ($userId) {
         $doseExpireMsg = "⚠ WARNING: This patient's current dose ({$activeDose['dose_mg']} mg) expires tomorrow ($tomorrow). Please ask the clinician to set a new dose period.";
     }
 }
+
+// ***************************************************************
+// CO-MEDICATIONS: ARV / Anti-TB / TPT / DOT — auto-dispensed with main drug
+// Mirrors dispensingData.php so pump-based dispensing gets the same
+// co-medication panel as the non-pump (syringe) dispensing page.
+// ***************************************************************
+$coMeds = [];
+if ($mat_id) {
+    $mainDrugName = $currentSettings['drugname'] ?? 'MAT drug';
+
+    // ARV (HIV positive patients)
+    if (!empty($vlData['hiv_status']) && strtolower($vlData['hiv_status']) === 'positive'
+        && !empty($vlData['art_regimen'])) {
+        $artDrug = $vlData['art_regimen'];
+        $chkArv  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkArv->bind_param('sss', $mat_id, $artDrug, $today);
+        $chkArv->execute();
+        $arvDone = (int)$chkArv->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkArv->close();
+        $coMeds[] = [
+            'type'     => 'ARV',   'icon' => '💊', 'label' => 'HIV+ ARV',
+            'badge'    => 'danger',
+            'drugname' => $artDrug, 'dosage' => 1,  'done' => $arvDone,
+            'note'     => '',
+            'reasons'  => 'ARV auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+
+    // Anti-TB (active TB treatment)
+    if (!empty($showTB) && !empty($regimenData['tb_regimen'])) {
+        $tbDrug = $regimenData['tb_regimen'];
+        $chkTb  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkTb->bind_param('sss', $mat_id, $tbDrug, $today);
+        $chkTb->execute();
+        $tbDone = (int)$chkTb->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkTb->close();
+        $coMeds[] = [
+            'type'     => 'TB',    'icon' => '🫁', 'label' => 'Anti-TB',
+            'badge'    => 'warning',
+            'drugname' => $tbDrug,  'dosage' => 1,  'done' => $tbDone,
+            'note'     => 'Ends ' . ($regimenData['tb_end_date'] ?? ''),
+            'reasons'  => 'Anti-TB auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+
+    // TPT (active preventive TB therapy)
+    if (!empty($showTPT) && !empty($regimenData['tpt_regimen'])) {
+        $tptDrug = $regimenData['tpt_regimen'];
+        $chkTpt  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+        $chkTpt->bind_param('sss', $mat_id, $tptDrug, $today);
+        $chkTpt->execute();
+        $tptDone = (int)$chkTpt->get_result()->fetch_assoc()['cnt'] > 0;
+        $chkTpt->close();
+        $coMeds[] = [
+            'type'     => 'TPT',   'icon' => '💉', 'label' => 'TPT',
+            'badge'    => 'success',
+            'drugname' => $tptDrug, 'dosage' => 1,  'done' => $tptDone,
+            'note'     => 'Ends ' . ($regimenData['tpt_end_date'] ?? ''),
+            'reasons'  => 'TPT auto-dispensed with ' . $mainDrugName,
+        ];
+    }
+
+    // DOT (Directly Observed Therapy) — other-prescription drugs flagged
+    // is_dot=1 by the clinician always appear here, so they get co-dispensed
+    // with the MAT drug instead of relying on the dispenser to remember to
+    // tick them in the "Other Prescriptions" table.
+    $dotStmt = $conn->prepare(
+        "SELECT pd.id, pd.drug_name, pd.dosing, pd.total_dosage, pd.total_dispensed, pd.prescription_id
+         FROM prescription_drugs pd
+         JOIN other_prescriptions op ON op.prescription_id = pd.prescription_id
+         WHERE op.mat_id = ? AND pd.is_dot = 1
+           AND op.prescr_status = 'submitted'
+           AND pd.prescr_status NOT IN ('dispensed and closed', 'deleted')
+           AND (pd.total_dosage - pd.total_dispensed) > 0"
+    );
+    if ($dotStmt) {
+        $dotStmt->bind_param('s', $mat_id);
+        $dotStmt->execute();
+        $dotRows = $dotStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $dotStmt->close();
+
+        foreach ($dotRows as $dotRow) {
+            $dotDrug = $dotRow['drug_name'];
+            $chkDot  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
+            $chkDot->bind_param('sss', $mat_id, $dotDrug, $today);
+            $chkDot->execute();
+            $dotDone = (int)$chkDot->get_result()->fetch_assoc()['cnt'] > 0;
+            $chkDot->close();
+
+            $coMeds[] = [
+                'type'                => 'DOT',  'icon' => '👁️', 'label' => 'DOT',
+                'badge'               => 'info',
+                'drugname'            => $dotDrug,
+                'dosage'              => is_numeric($dotRow['dosing']) ? (float)$dotRow['dosing'] : 1,
+                'done'                => $dotDone,
+                'note'                => 'Prescription ' . $dotRow['prescription_id'],
+                'reasons'             => 'DOT auto-dispensed with ' . $mainDrugName,
+                'prescription_drug_id'=> $dotRow['id'],
+            ];
+        }
+    }
+}
+// ***************************************************************
+// END CO-MEDICATIONS
+// ***************************************************************
 
 // Fetch status names from the status table for the dropdown
 $statusOptions = '';
@@ -635,6 +757,24 @@ h2{
     border-bottom:1px solid #ddd;
 }
 
+.prescriptions-table input[type="number"]{width:80px;padding:5px;}
+.prescriptions-table input[type="checkbox"]{transform:scale(1.2);}
+
+/* Co-medications panel */
+.co-meds-section{background:#fff;border:2px solid #2C3162;border-radius:8px;padding:14px 18px;margin-bottom:14px;}
+.co-meds-section h4{color:#2C3162;margin:0 0 10px;font-size:1rem;}
+.co-meds-table{width:100%;border-collapse:collapse;}
+.co-meds-table th{background:#2C3162;color:#fff;padding:8px 10px;font-size:.85rem;text-align:left;}
+.co-meds-table td{padding:8px 10px;border-bottom:1px solid #e0e0e0;font-size:.88rem;vertical-align:middle;}
+.co-meds-table tr:last-child td{border-bottom:none;}
+.co-meds-table input[type=checkbox]{transform:scale(1.3);cursor:pointer;}
+.co-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:700;}
+.co-badge-danger{background:#ffe0e0;color:#c00;}
+.co-badge-warning{background:#fff3cd;color:#7a5c00;}
+.co-badge-success{background:#e8f5e9;color:#2e7d32;}
+.co-badge-info{background:#e3f2fd;color:#1565c0;}
+.co-done{color:#388e3c;font-weight:bold;font-size:.82rem;}
+
 /* Button full width below everything */
 .submit-btn{
     grid-column:1 / -1;
@@ -913,10 +1053,116 @@ h2{
                 <input type="hidden" name="daysToNextAppointment" value="<?php echo $daysToAppointment; ?>">
                 <input type="hidden" name="isMissed" value="<?php echo $isMissed ? 'true' : 'false'; ?>">
                 <input type="hidden" name="mat_id" value="<?php echo $userId; ?>">
-                <div class="form-group" style="visibility: hidden;"><label></label><input type="text"></div>
-                <div class="form-group" style="visibility: hidden;"><label></label><input type="text"></div>
+                <button type="submit" class="submit-btn">Dispense</button>
             </div>
 
+            <div class="dispensing">
+                <span class="stat-value"><?php include 'view_missed_fivedays.php'; ?></span>
+            </div>
+
+            <div class="full-width-section">
+                <?php if (!empty($otherPrescriptions)): ?>
+                <div class="prescriptions-container">
+                    <h3>Other Prescriptions (<?php echo $prescriptionCount; ?> Pending)</h3>
+                    <table class="prescriptions-table">
+                        <thead>
+                            <tr>
+                                <th>Prescription ID</th>
+                                <th>Drug Name</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Days</th>
+                                <th>Total Dose</th>
+                                <th>Status</th>
+                                <th>Quantity</th>
+                                <th>Dispense</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $prev_prescription_id = '';
+                                foreach ($otherPrescriptions as $index => $drug):
+                                    $current_prescription_id = htmlspecialchars($drug['prescription_id']);
+                                    $is_new_prescription = ($current_prescription_id !== $prev_prescription_id);
+                                    $prev_prescription_id = $current_prescription_id;
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php if ($is_new_prescription): ?>
+                                        <a href="view_prescription_details.php?id=<?php echo $current_prescription_id; ?>" class="btn btn-sm btn-info" style="font-size: 10px;"><?php echo $current_prescription_id; ?></a>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($drug['drugName']); ?></td>
+                                <td><?php echo htmlspecialchars($drug['dosage']); ?></td>
+                                <td><?php echo htmlspecialchars($drug['routetype']); ?></td>
+                                <td><?php echo htmlspecialchars($drug['duration']); ?></td>
+                                <td><?php echo htmlspecialchars($drug['totalDose']); ?></td>
+                                <td><?php echo htmlspecialchars($drug['prescr_status']); ?></td>
+                                <td><input type="number" name="quantity[<?php echo $drug['id']; ?>]" min="0" value="0"></td>
+                                <td>
+                                    <input type="checkbox" name="dispense[<?php echo $drug['id']; ?>]" value="<?php echo $current_prescription_id; ?>">
+                                    <input type="hidden" name="prescription_drug_id[]" value="<?php echo $drug['id']; ?>">
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+
+                <?php if (!empty($coMeds)): ?>
+                <div class="co-meds-section">
+                    <h4>🔄 Co-medications — auto-dispensed with today's dose</h4>
+                    <table class="co-meds-table">
+                        <thead>
+                            <tr>
+                                <th style="width:60px">Dispense</th>
+                                <th>Type</th>
+                                <th>Drug / Regimen</th>
+                                <th>Daily Dose</th>
+                                <th>Notes</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($coMeds as $ci => $cm): ?>
+                            <tr<?= $cm['done'] ? ' style="opacity:.55"' : '' ?>>
+                                <td style="text-align:center">
+                                    <?php if ($cm['done']): ?>
+                                        <span class="co-done">✓</span>
+                                    <?php else: ?>
+                                        <input type="checkbox" name="co_meds[<?= $ci ?>][dispense]" value="1" checked>
+                                    <?php endif; ?>
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars($cm['drugname']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][dosage]"   value="<?= (int)$cm['dosage'] ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars($cm['reasons']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars($cm['type']) ?>">
+                                    <?php if (!empty($cm['prescription_drug_id'])): ?>
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][prescription_drug_id]" value="<?= (int)$cm['prescription_drug_id'] ?>">
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="co-badge co-badge-<?= $cm['badge'] ?>">
+                                        <?= $cm['icon'] ?> <?= $cm['label'] ?>
+                                    </span>
+                                </td>
+                                <td><strong><?= htmlspecialchars($cm['drugname']) ?></strong></td>
+                                <td>1 daily dose</td>
+                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars($cm['note'] ?? '') ?></td>
+                                <td>
+                                    <?php if ($cm['done']): ?>
+                                        <span class="co-done">✓ Already dispensed today</span>
+                                    <?php else: ?>
+                                        <span style="color:#2C3162;font-size:.82rem">Will be dispensed</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+            </div>
 
             <div class="photo-container">
                 <?php if ($photoPath && file_exists($photoPath)): ?>
@@ -970,15 +1216,6 @@ h2{
                         </div>
                     <?php endif; ?>
                 </div><!-- /.regimens -->
-                    </div>
-                <div>    
-                <!-- Five-day dispensing status -->
-                <div class="fiveday-section">
-                    <span class="stat-value"><?php include 'view_missed_fivedays.php'; ?></span>
-                </div>
-
-                <!-- Dispense button inside photo column -->
-                <input type="submit" class="submit-btn" value="Dispense">
             </div><!-- /.photo-container -->
         </div><!-- /.form-container -->
         </form>

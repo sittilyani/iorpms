@@ -20,21 +20,48 @@ echo "</style>";
 $today = date('Y-m-d');
 $dateFrom = isset($_GET['dateFrom']) ? $_GET['dateFrom'] : $today;
 $dateTo = isset($_GET['dateTo']) ? $_GET['dateTo'] : $today;
+$drugCategory = isset($_GET['drugCategory']) ? $_GET['drugCategory'] : 'all';
 
-// Construct the query based on the date range
-$query = "SELECT * FROM pharmacy WHERE visitDate BETWEEN '$dateFrom' AND '$dateTo' ORDER BY visitDate DESC";
+// Construct the query based on the date range and drug category
+$query = "SELECT * FROM pharmacy WHERE visitDate BETWEEN ? AND ?";
+$params = [$dateFrom, $dateTo];
+$types = 'ss';
 
-// Execute the query
-$result = $conn->query($query);
+if ($drugCategory === 'controlled') {
+    // Controlled drugs = Methadone and any Buprenorphine formulation (2mg/4mg/8mg)
+    $query .= " AND (drugname LIKE ? OR drugname LIKE ?)";
+    $params[] = 'Methadone%';
+    $params[] = '%Buprenorphine%';
+    $types .= 'ss';
+} elseif ($drugCategory === 'other') {
+    $query .= " AND drugname NOT LIKE ? AND drugname NOT LIKE ?";
+    $params[] = 'Methadone%';
+    $params[] = '%Buprenorphine%';
+    $types .= 'ss';
+}
+
+$query .= " ORDER BY visitDate DESC";
+
+// Execute the query using a prepared statement
+$stmt = $conn->prepare($query);
+$stmt->bind_param($types, ...$params);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Display the search filter with the H3 heading
 echo "<div class='filter-form-container'  width: 90%;'>";
 echo "<h3 style='color: #1a5276; margin-bottom: 10px;'>Drugs Dispensed By Date</h3>";
 echo "<form method='get' style='padding: 15px; border-radius: 5px;'>";
 echo "<label for='dateFrom'>Date From:</label>";
-echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateFrom' value='$dateFrom'>";
+echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateFrom' value='" . htmlspecialchars($dateFrom) . "'>";
 echo "<label for='dateTo'>Date To:</label>";
-echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateTo' value='$dateTo'>";
+echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateTo' value='" . htmlspecialchars($dateTo) . "'>";
+echo "<label for='drugCategory'>Drugs Category:</label>";
+echo "<select style='margin-left: 10px; margin-right: 10px; padding: 6px;' name='drugCategory' id='drugCategory'>";
+echo "<option value='all'" . ($drugCategory === 'all' ? ' selected' : '') . ">All Drugs</option>";
+echo "<option value='controlled'" . ($drugCategory === 'controlled' ? ' selected' : '') . ">Controlled (Methadone &amp; Buprenorphine)</option>";
+echo "<option value='other'" . ($drugCategory === 'other' ? ' selected' : '') . ">Other Drugs</option>";
+echo "</select>";
 echo "<input type='submit' value='Filter' style='background-color: #abebc6; color: black; margin-left: 20px; border-radius: 5px; border: none; padding: 8px 16px; cursor: pointer;'>";
 
 // Buttons for printing and exporting to Excel

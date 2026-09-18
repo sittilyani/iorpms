@@ -136,6 +136,13 @@ if (!$patient) {
     die("Patient not found: " . htmlspecialchars($mat_id));
 }
 
+// ── Route by drug: Methadone is liquid, dispensed via pump. Buprenorphine
+//    (and anything else) is tablets, dispensed as a plain count/record —
+//    never through the pump's mg→mL calculation, which only makes sense
+//    for the liquid concentration Methadone is mixed at.
+$mainDrug    = $patient['drugname'] ?? 'Methadone';
+$isMethadone = (stripos($mainDrug, 'methadone') !== false);
+
 // ── Photo ─────────────────────────────────────────────────────────────────────
 $photoStmt = $conn->prepare("SELECT image FROM photos WHERE mat_id = ? ORDER BY visitDate DESC LIMIT 1");
 $photoStmt->bind_param('s', $mat_id);
@@ -149,24 +156,27 @@ if ($photoRow && !empty($photoRow['image'])) {
     if (file_exists($candidate)) $photoPath = $candidate;
 }
 
-// ── Pump devices ──────────────────────────────────────────────────────────────
-$devStmt = $conn->prepare("SELECT * FROM pump_devices");
-$devStmt->execute();
-$devices = $devStmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$devStmt->close();
-
-// Persist last used pump device
+// ── Pump devices (Methadone only) ──────────────────────────────────────────────
+$devices = [];
 $savedPumpId = null;
-if (count($devices) === 1) {
-    $savedPumpId = $devices[0]['id'];
-} elseif (!empty($_SESSION['pump_device_id'])) {
-    $savedPumpId = (int)$_SESSION['pump_device_id'];
-} else {
-    $rcStmt = $conn->prepare("SELECT pump_id FROM pump_calibration WHERE is_active = 1 ORDER BY calibrated_at DESC LIMIT 1");
-    $rcStmt->execute();
-    $rcRow = $rcStmt->get_result()->fetch_assoc();
-    $rcStmt->close();
-    if ($rcRow) $savedPumpId = (int)$rcRow['pump_id'];
+if ($isMethadone) {
+    $devStmt = $conn->prepare("SELECT * FROM pump_devices");
+    $devStmt->execute();
+    $devices = $devStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $devStmt->close();
+
+    // Persist last used pump device
+    if (count($devices) === 1) {
+        $savedPumpId = $devices[0]['id'];
+    } elseif (!empty($_SESSION['pump_device_id'])) {
+        $savedPumpId = (int)$_SESSION['pump_device_id'];
+    } else {
+        $rcStmt = $conn->prepare("SELECT pump_id FROM pump_calibration WHERE is_active = 1 ORDER BY calibrated_at DESC LIMIT 1");
+        $rcStmt->execute();
+        $rcRow = $rcStmt->get_result()->fetch_assoc();
+        $rcStmt->close();
+        if ($rcRow) $savedPumpId = (int)$rcRow['pump_id'];
+    }
 }
 
 // ── Logged-in pharmacist name ─────────────────────────────────────────────────
@@ -180,9 +190,9 @@ if (isset($_SESSION['user_id'])) {
     if ($uRow) $pharmName = $uRow['first_name'] . ' ' . $uRow['last_name'];
 }
 
-// ── mL calculation ────────────────────────────────────────────────────────────
+// ── mL calculation (Methadone only — Buprenorphine is dosed in tablets/mg) ────
 $mlsValue = '';
-if (isset($patient['dosage']) && is_numeric($patient['dosage'])) {
+if ($isMethadone && isset($patient['dosage']) && is_numeric($patient['dosage'])) {
     $mlsValue = number_format(floatval($patient['dosage']) / 5, 2);
 }
 
@@ -339,7 +349,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
     </div>
 
     <!-- Dispensing form -->
-    <form id="dispenseForm" action="prisons_dispense_pump.php" method="POST" onsubmit="return validateForm()">
+    <form id="dispenseForm" action="<?= $isMethadone ? 'prisons_dispense_pump.php' : 'prisons_dispense_tablet.php' ?>" method="POST" onsubmit="return validateForm()">
 
         <!-- Hidden sequencing fields -->
         <input type="hidden" name="start_date" value="<?= htmlspecialchars($start_date) ?>">
@@ -414,7 +424,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                            value="<?= htmlspecialchars($patient['drugname'] ?? 'Methadone') ?>">
                 </div>
                 <div class="form-group">
-                    <label>Dosage (mg)</label>
+                    <label>Dosage (mg)<?= $isMethadone ? '' : ' — tablet total' ?></label>
                     <input type="number" name="dosage" class="readonly-input"
                            value="<?= htmlspecialchars($patient['dosage'] ?? '') ?>"
                            min="0" step="0.5">
@@ -438,6 +448,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                     <input type="text" name="pharm_officer_name" class="readonly-input"
                            value="<?= htmlspecialchars($pharmName) ?>">
                 </div>
+                <?php if ($isMethadone): ?>
                 <div class="form-group" style="margin-bottom:8px;">
                     <input type="text" class="mls-display" readonly
                            value="<?= htmlspecialchars($mlsValue) ?>" title="mL to dispense">
@@ -457,6 +468,14 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <?php else: ?>
+                <div class="form-group">
+                    <div style="background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:10px;color:#7a5c00;font-size:.85rem;">
+                        <strong><?= htmlspecialchars($mainDrug) ?></strong> is dispensed as a tablet count —
+                        no pump is used for this drug.
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
 
             <!-- Photo column -->
@@ -496,8 +515,8 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 function validateForm() {
     var vd = document.querySelector('[name="visitDate"]').value;
     if (!vd) { alert('Visit date is required.'); return false; }
-    var pump = document.querySelector('[name="pump_device"]').value;
-    if (!pump) { alert('Please select a pump device.'); return false; }
+    var pumpEl = document.querySelector('[name="pump_device"]');
+    if (pumpEl && !pumpEl.value) { alert('Please select a pump device.'); return false; }
     return true;
 }
 </script>
