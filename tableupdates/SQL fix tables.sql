@@ -432,6 +432,10 @@ CREATE TABLE IF NOT EXISTS `dose_schedules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+ALTER TABLE `prescription_drugs`
+    ADD COLUMN `is_dot` TINYINT(1) NOT NULL DEFAULT 0
+    COMMENT 'Directly Observed Therapy: always co-dispensed with the MAT drug'
+    AFTER `prescr_status`;
 -- ==========================================
 -- 2. ALTER EXISTING TABLES (PRIMARY KEYS & AUTO INCREMENT)
 -- ==========================================

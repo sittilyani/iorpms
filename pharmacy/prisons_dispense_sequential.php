@@ -87,14 +87,14 @@ if ($step >= $totalDates) {
                 (<?= htmlspecialchars($start_date) ?> – <?= htmlspecialchars($end_date) ?>)
             </p>
             <p id="countdown" style="color:#888; font-size:.9rem;">Returning to dispensing list in <strong id="secs">3</strong>s…</p>
-            <button class="btn-home" onclick="window.location='dispensing_pump.php'">Go to Dispensing List</button>
+            <button class="btn-home" onclick="window.location='prisons_module.php'">Search for Other patient</button>
         </div>
         <script>
             var s = 3;
             var el = document.getElementById('secs');
             var t = setInterval(function() {
                 s--; el.textContent = s;
-                if (s <= 0) { clearInterval(t); window.location = 'dispensing_pump.php'; }
+                if (s <= 0) { clearInterval(t); window.location = 'prisons_module.php'; }
             }, 1000);
         </script>
     </body>
