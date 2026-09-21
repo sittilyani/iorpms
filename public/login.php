@@ -102,6 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Regenerate session ID for security
                 session_regenerate_id(true);
 
+                // First login of the day refreshes client ages/statuses
+                require_once '../includes/daily_status_update.php';
+                runPatientStatusUpdateOncePerDay($conn);
+
                 // Redirect to dashboard (no role-based redirection)
                 header("Location: ../dashboard/dashboard.php");
                 exit();
