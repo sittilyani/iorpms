@@ -136,7 +136,7 @@ if (isset($_GET['message'])) {
                     <td>" . $row['drugname'] . "</td>
                     <td>" . $row['dosage'] . "</td>
                     <td>" . $row['current_status'] . "</td>
-                   <td>" . (!empty($row['compDate']) ? htmlspecialchars($row['compDate']) :  "No visit Date") . "</td>
+                   <td>" . (!empty($row['dispDate']) ? htmlspecialchars($row['dispDate']) :  "No visit Date") . "</td>
                     <td>
                         <a href='../patients/view_patient.php?p_id=" . $row['p_id'] . "'>View</a> &#124; |
                         <a href='../patients/update.php?p_id=" . $row['p_id'] . "'>Update</a> &#124;    |
