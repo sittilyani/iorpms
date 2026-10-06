@@ -369,9 +369,14 @@ function formatFileSize($bytes) {
 <div class="main-content">
     <div class="page-header">
         <h2><i class="bi bi-database" style="margin-right: 10px; color: #4361ee;"></i> Database Backups</h2>
-        <a href="backup.php" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Create New Backup
-        </a>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="#" class="btn btn-primary js-gdrive-send" data-file="">
+                <i class="bi bi-cloud-upload"></i> Backup &amp; Send to Drive
+            </a>
+            <a href="backup.php" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Backup
+            </a>
+        </div>
     </div>
 
     <!-- Stats Cards -->
@@ -518,10 +523,9 @@ function formatFileSize($bytes) {
                                     <a href="<?php echo $backup['path']; ?>" class="btn-action btn-download" download>
                                         <i class="bi bi-download"></i> Download
                                     </a>
-                                    <a href="?email=1&file=<?php echo urlencode($backup['filename']); ?><?php echo $filterApplied ? "&start_date=$startDate&end_date=$endDate" : ""; ?>"
-                                       class="btn-action btn-email"
-                                       onclick="return confirm('Send this backup to sittilyani@gmail.com?')">
-                                        <i class="bi bi-envelope"></i> Email
+                                    <a href="#" class="btn-action btn-email js-gdrive-send"
+                                       data-file="<?php echo htmlspecialchars($backup['filename']); ?>">
+                                        <i class="bi bi-cloud-upload"></i> Send to Drive
                                     </a>
                                     <a href="?delete=1&file=<?php echo urlencode($backup['filename']); ?><?php echo $filterApplied ? "&start_date=$startDate&end_date=$endDate" : ""; ?>"
                                        class="btn-action btn-delete"
@@ -560,6 +564,59 @@ function formatFileSize($bytes) {
 
         endDate.addEventListener('change', validateDates);
     });
+</script>
+<script>
+// Send to Google Drive (endpoint: gdrive_send.php -> shared _shared/gdrive_backup library)
+(function () {
+    function notify(ok, text, link) {
+        var box = document.getElementById('gdrive-alert');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'gdrive-alert';
+            box.style.cssText = 'position:fixed;top:20px;right:20px;z-index:2000;max-width:420px;box-shadow:0 4px 16px rgba(0,0,0,.25)';
+            document.body.appendChild(box);
+        }
+        box.className = 'alert ' + (ok ? 'alert-success' : 'alert-danger');
+        box.textContent = (ok ? '✔ ' : '✖ ') + text;
+        if (ok && link) {
+            var a = document.createElement('a');
+            a.href = link; a.target = '_blank'; a.rel = 'noopener';
+            a.textContent = ' Open in Drive';
+            box.appendChild(a);
+        }
+        box.style.display = 'block';
+        clearTimeout(box._t);
+        box._t = setTimeout(function () { box.style.display = 'none'; }, ok ? 8000 : 15000);
+    }
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.js-gdrive-send');
+        if (!btn) return;
+        e.preventDefault();
+        if (btn.dataset.busy) return;
+
+        var html = btn.innerHTML;
+        btn.dataset.busy = '1';
+        btn.style.opacity = '.6';
+        btn.textContent = 'Sending to Drive...';
+
+        var body = new URLSearchParams();
+        if (btn.dataset.file) body.set('file', btn.dataset.file);
+
+        fetch('gdrive_send.php', { method: 'POST', body: body, credentials: 'same-origin' })
+            .then(function (r) { return r.json().catch(function () { return { status: 'error', message: 'Unexpected response from the server.' }; }); })
+            .then(function (d) {
+                notify(d.status === 'success', d.message, d.link);
+                if (d.status === 'success' && d.created) setTimeout(function () { location.reload(); }, 2500);
+            })
+            .catch(function () { notify(false, 'Could not reach the server. Check your connection and try again.'); })
+            .finally(function () {
+                btn.innerHTML = html;
+                btn.style.opacity = '';
+                delete btn.dataset.busy;
+            });
+    });
+})();
 </script>
 </body>
 </html>
