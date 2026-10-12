@@ -194,6 +194,19 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
 
             $conn->begin_transaction();
             try {
+                // Stock validation — a co-medication that is not in stock is not dispensed
+                $coStockQ = $conn->prepare(
+                    "SELECT total_qty FROM stock_movements WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1"
+                );
+                $coStockQ->bind_param('s', $co_drug);
+                $coStockQ->execute();
+                $coStockRow = $coStockQ->get_result()->fetch_assoc();
+                $coStockQ->close();
+
+                if (!$coStockRow || (float)$coStockRow['total_qty'] < $co_dosage) {
+                    throw new Exception("{$co_drug} is OUT OF STOCK or insufficient — not dispensed.");
+                }
+
                 // Insert pharmacy record for co-medication
                 $coIns = $conn->prepare(
                     "INSERT INTO pharmacy
@@ -319,6 +332,30 @@ if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['q
             $stmt_update_drug = $conn->prepare("UPDATE prescription_drugs SET total_dispensed = total_dispensed + ?, remaining_balance = total_dosage - total_dispensed - ?, prescr_status = ? WHERE id = ?");
             $stmt_update_stock = $conn->prepare("UPDATE stock_movements SET total_qty = total_qty - ? WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1");
             $stmt_update_prescr = $conn->prepare("UPDATE other_prescriptions SET prescr_status = ? WHERE prescription_id = ?");
+            $stmt_stock_check = $conn->prepare("SELECT total_qty FROM stock_movements WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1");
+            $stmt_insert_pharm = $conn->prepare(
+                "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
+                 VALUES (CURDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            // Patient details for the pharmacy (dispensing) records — taken from
+            // the patients table so they don't depend on form fields being posted.
+            $patRow = [];
+            $patStmt = $conn->prepare("SELECT * FROM patients WHERE mat_id = ? LIMIT 1");
+            $patStmt->bind_param('s', $mat_id);
+            $patStmt->execute();
+            $patRow = $patStmt->get_result()->fetch_assoc() ?: [];
+            $patStmt->close();
+
+            $op_mat_number = (string)($patRow['mat_number'] ?? ($_POST['mat_number'] ?? ''));
+            $op_clientName = (string)($patRow['clientName'] ?? ($_POST['clientName'] ?? ''));
+            $op_nickName   = (string)($patRow['nickName']   ?? ($_POST['nickName']   ?? ''));
+            $op_age        = (string)($_POST['age'] ?? ($patRow['age'] ?? ''));
+            $op_sex        = (string)($patRow['sex']        ?? ($_POST['sex']        ?? ''));
+            $op_address    = (string)($patRow['p_address']  ?? ($_POST['p_address']  ?? ''));
+            $op_cso        = (string)($patRow['cso']        ?? ($_POST['cso']        ?? ''));
+            $op_status     = (string)($patRow['current_status'] ?? ($_POST['current_status'] ?? ''));
+            $op_officer    = (string)($_POST['pharm_officer_name'] ?? ($_SESSION['username'] ?? ''));
 
             $uniquePrescriptionsDispensed = 0;
 
@@ -361,9 +398,34 @@ if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['q
                         $isPrescriptionComplete = false; // Mark prescription as partially complete
                     }
 
-                    // D. Update Stock
+                    // D. Stock validation — nothing is dispensed if the drug is not in stock
+                    $stmt_stock_check->bind_param("s", $drug_name);
+                    $stmt_stock_check->execute();
+                    $stockRowOp = $stmt_stock_check->get_result()->fetch_assoc();
+                    $availableOp = $stockRowOp ? (float)$stockRowOp['total_qty'] : 0;
+
+                    if (!$stockRowOp || $availableOp <= 0) {
+                        throw new Exception("**$drug_name** is OUT OF STOCK (not found in stock). Nothing was dispensed.");
+                    }
+                    if ($availableOp < $dispensed_amount) {
+                        throw new Exception("Insufficient stock for **$drug_name** (Available: $availableOp, Required: $dispensed_amount). Nothing was dispensed.");
+                    }
+
+                    // E. Update Stock
                     $stmt_update_stock->bind_param("ds", $dispensed_amount, $drug_name);
                     $stmt_update_stock->execute();
+
+                    // F. Record the dispensing in the pharmacy table (like routine drugs)
+                    $op_reason = "Other prescription: " . $prescription_id;
+                    $stmt_insert_pharm->bind_param(
+                        "sssssssssdsss",
+                        $mat_id, $op_mat_number, $op_clientName, $op_nickName, $op_age,
+                        $op_sex, $op_address, $op_cso, $drug_name, $dispensed_amount,
+                        $op_reason, $op_status, $op_officer
+                    );
+                    if (!$stmt_insert_pharm->execute()) {
+                        throw new Exception("Could not record dispensing for $drug_name: " . $stmt_insert_pharm->error);
+                    }
                 }
 
                 // E. Update other_prescriptions status after processing all drugs for this prescription
@@ -388,6 +450,8 @@ if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['q
             $stmt_update_drug->close();
             $stmt_update_stock->close();
             $stmt_update_prescr->close();
+            if (isset($stmt_stock_check)) $stmt_stock_check->close();
+            if (isset($stmt_insert_pharm)) $stmt_insert_pharm->close();
         }
     }
 

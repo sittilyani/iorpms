@@ -290,7 +290,7 @@ $conn->close();
 
             <div class="flex justify-end mt-6">
                 <button type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
+                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-400"
                         id="submit-button">
                     Submit Adjustments
                 </button>

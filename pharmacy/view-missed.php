@@ -94,6 +94,15 @@ function displayMissingDates($conn, $mat_id) {
     $missing_dates = $adherence['missed_dates'];
     $off_pattern_dates = array_keys(array_filter($adherence['days'], fn($status) => $status === 'off_pattern'));
 
+    // Nothing dispensed and no dose schedule covering this month: adherence
+    // cannot be assessed, so don't claim "Excellent adherence".
+    $no_schedule_days = count(array_filter($adherence['days'], fn($status) => $status === 'no_schedule'));
+    if ($adherence['dispensed_count'] === 0 && $adherence['due_count'] === 0 && $no_schedule_days > 0) {
+        echo "<p style='margin-left: 20px;'><strong>List of missed Dates this month:</strong>"
+           . "<span style='color: #c0392b;'> Cannot be assessed — no dispensing this month and no active dose schedule covers it ($no_schedule_days days unscheduled).</span></p>";
+        return;
+    }
+
     // Display missing dates
     if (empty($missing_dates)) {
         echo "<p style='margin-left: 20px;'><strong>List of missed Dates this month:</strong><span style='color: green;'> No missing dates - Excellent adherence!</span></p>";

@@ -27,7 +27,20 @@ $query = "SELECT * FROM pharmacy WHERE visitDate BETWEEN ? AND ?";
 $params = [$dateFrom, $dateTo];
 $types = 'ss';
 
-if ($drugCategory === 'controlled') {
+// Individual controlled drug selections (whitelisted, matched on exact drug name)
+$singleDrugs = [
+    'methadone'   => 'Methadone',
+    'bup8'        => 'Buprenorphine 8mg',
+    'bup4'        => 'Buprenorphine 4mg',
+    'bup2'        => 'Buprenorphine 2mg',
+];
+
+if (isset($singleDrugs[$drugCategory])) {
+    // Methadone has no strength suffix; Buprenorphine strengths are matched exactly
+    $query .= " AND TRIM(drugname) = ?";
+    $params[] = $singleDrugs[$drugCategory];
+    $types .= 's';
+} elseif ($drugCategory === 'controlled') {
     // Controlled drugs = Methadone and any Buprenorphine formulation (2mg/4mg/8mg)
     $query .= " AND (drugname LIKE ? OR drugname LIKE ?)";
     $params[] = 'Methadone%';
@@ -60,6 +73,10 @@ echo "<label for='drugCategory'>Drugs Category:</label>";
 echo "<select style='margin-left: 10px; margin-right: 10px; padding: 6px;' name='drugCategory' id='drugCategory'>";
 echo "<option value='all'" . ($drugCategory === 'all' ? ' selected' : '') . ">All Drugs</option>";
 echo "<option value='controlled'" . ($drugCategory === 'controlled' ? ' selected' : '') . ">Controlled (Methadone &amp; Buprenorphine)</option>";
+echo "<option value='methadone'" . ($drugCategory === 'methadone' ? ' selected' : '') . ">Methadone</option>";
+echo "<option value='bup8'" . ($drugCategory === 'bup8' ? ' selected' : '') . ">Buprenorphine 8mg</option>";
+echo "<option value='bup4'" . ($drugCategory === 'bup4' ? ' selected' : '') . ">Buprenorphine 4mg</option>";
+echo "<option value='bup2'" . ($drugCategory === 'bup2' ? ' selected' : '') . ">Buprenorphine 2mg</option>";
 echo "<option value='other'" . ($drugCategory === 'other' ? ' selected' : '') . ">Other Drugs</option>";
 echo "</select>";
 echo "<input type='submit' value='Filter' style='background-color: #abebc6; color: black; margin-left: 20px; border-radius: 5px; border: none; padding: 8px 16px; cursor: pointer;'>";
