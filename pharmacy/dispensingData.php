@@ -278,7 +278,7 @@ if ($photo && !empty($photo['image'])) {
 }
 
 // Fetch the last visit date for the specific mat_id
-$lastVisitQuery = "SELECT dispDate FROM pharmacy WHERE mat_id = ? ORDER BY dispDate DESC LIMIT 1";
+$lastVisitQuery = "SELECT dispDate FROM pharmacy WHERE mat_id = ? AND (drugname = 'Methadone' OR drugname LIKE 'Buprenorphine%') ORDER BY dispDate DESC LIMIT 1";
 $lastVisitStmt = $conn->prepare($lastVisitQuery);
 $lastVisitStmt->bind_param('s', $userId);
 $lastVisitStmt->execute();
@@ -1029,6 +1029,14 @@ if (isset($_SESSION['dispensing_successes'])) {
                 <input type="hidden" name="isMissed" value="<?php echo $isMissed ? 'true' : 'false'; ?>">
                 <input type="hidden" name="appointmentType" value="<?php echo htmlspecialchars($appointmentInfo['appointmentType']); ?>">
                 <input type="hidden" name="referTo" value="<?php echo htmlspecialchars($appointmentInfo['referTo']); ?>">
+                <div class="form-group">
+                    <input type="hidden" name="dispense_mat" value="0">
+                    <label style="display:flex;gap:8px;align-items:center;">
+                        <input type="checkbox" id="dispense_mat" name="dispense_mat" value="1" checked
+                               onchange="var p=document.getElementById('pump_device'); if(p){p.required=this.checked;}">
+                        Dispense routine drug today (untick to dispense only the other prescriptions below)
+                    </label>
+                </div>
                 <button type="submit" class="submit-btn">Dispense</button>
             </div>
 

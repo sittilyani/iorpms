@@ -22,7 +22,7 @@ if (isset($_GET['mat_id'])) {
     $current_status = strtolower(trim($row_patient['current_status']));
 
     // Fetch the last visitDate/ dispensing date (dispDate) for the patient from the pharmacy table
-    $query_last_visit = "SELECT MAX(dispDate) AS last_comp_date FROM pharmacy WHERE mat_id = ?";
+    $query_last_visit = "SELECT MAX(dispDate) AS last_comp_date FROM pharmacy WHERE mat_id = ? AND dosage > 0 AND (drugname = 'Methadone' OR drugname LIKE 'Buprenorphine%')";
     $stmt_last_visit = $conn->prepare($query_last_visit);
     $stmt_last_visit->bind_param("s", $mat_id);
     $stmt_last_visit->execute();

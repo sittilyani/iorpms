@@ -47,7 +47,9 @@ function displayMessagesAndRedirect($conn, $successes, $errors, $mat_id) {
 // Executed only if mat_id and drugname are set (assumes primary MAT drug)
 // ==============================================================================
 
-if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
+$dispenseMat = (($_POST['dispense_mat'] ?? '1') !== '0');
+
+if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
 
     $routineErrors = []; // Local error store for this transaction
     $conn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE); // Start transaction for Part 1
@@ -76,22 +78,26 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
             ? (int)$_POST['pump_device']
             : null;
 
-        // 1. Restrict submission if `current_status` is not "Active"
+        // 1. Duplicate Entry Check — routine drug already dispensed today.
+        // Scoped to the routine drug so that other prescriptions dispensed
+        // earlier today (which are also recorded in pharmacy) don't block it.
+        // This is a skip, not an error: other prescriptions still go through.
+        $checkQuery = "SELECT 1 FROM pharmacy WHERE mat_id = ? AND drugname = ? AND DATE(visitDate) = CURDATE() LIMIT 1";
+        $checkStmt = $conn->prepare($checkQuery);
+        $checkStmt->bind_param('ss', $mat_id, $drugname);
+        $checkStmt->execute();
+        $alreadyDispensedToday = $checkStmt->get_result()->num_rows > 0;
+        $checkStmt->close();
+
+        if ($alreadyDispensedToday) {
+            $conn->rollback();
+            $successMessages[] = "ℹ Routine drug ($drugname) was already dispensed today — skipped.";
+        } else {
+
+        // 2. Restrict submission if `current_status` is not "Active"
         if ($current_status !== "Active") {
             $routineErrors[] = "Routine Dispensing Failed: Client status is not 'Active'.";
         }
-
-        // 2. Duplicate Entry Check (Dispensing today)
-        $checkQuery = "SELECT * FROM pharmacy WHERE mat_id = ? AND visitDate = CURDATE()";
-        $checkStmt = $conn->prepare($checkQuery);
-        $checkStmt->bind_param('s', $mat_id);
-        $checkStmt->execute();
-        $checkResult = $checkStmt->get_result();
-
-        if ($checkResult->num_rows > 0) {
-            $routineErrors[] = "Routine Dispensing Failed: Client with mat_id **$mat_id** already dispensed today.";
-        }
-        $checkStmt->close();
 
         // 3. Missed Appointment Check - Updated with appointment type
         if ($isMissed || $DaysToNextAppointment == 0) {
@@ -156,6 +162,7 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
              // Rollback if there were logical errors
              $conn->rollback();
         }
+        } // end: not already dispensed today
     } catch (Exception $e) {
         $conn->rollback();
         $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars($e->getMessage());
