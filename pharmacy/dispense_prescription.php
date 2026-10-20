@@ -91,10 +91,10 @@ $stmt->close();
                                 <input type="hidden" name="total_dosage[]" value="<?php echo htmlspecialchars($drug['total_dosage']); ?>">
                             </td>
                             <td>
-                                <input type="number" class="form-control total-dispensed-input" name="total_dispensed[]" value="0" min="0" max="<?php echo htmlspecialchars($drug['total_dosage']); ?>" step="any" required>
+                                <input type="number" class="form-control total-dispensed-input" name="total_dispensed[]" value="0" min="0" max="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" step="any" required>
                             </td>
                             <td>
-                                <input type="number" class="form-control remaining-balance-input" name="remaining_balance[]" value="<?php echo htmlspecialchars($drug['remaining_balance']); ?>" readonly>
+                                <input type="number" class="form-control remaining-balance-input" name="remaining_balance[]" data-before="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" value="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" readonly>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -110,11 +110,11 @@ $stmt->close();
             dispenseInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     const row = this.closest('tr');
-                    const totalDosage = parseFloat(row.querySelector('.total-dosage-input').value) || 0;
-                    const totalDispensed = parseFloat(this.value) || 0;
                     const remainingBalanceInput = row.querySelector('.remaining-balance-input');
+                    const before = parseFloat(remainingBalanceInput.dataset.before) || 0;
+                    const totalDispensed = parseFloat(this.value) || 0;
 
-                    const remaining = totalDosage - totalDispensed;
+                    const remaining = before - totalDispensed;
                     remainingBalanceInput.value = remaining >= 0 ? remaining : 0;
                 });
             });

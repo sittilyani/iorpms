@@ -24,7 +24,8 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">All Active Patients List</h2>
+    <h2 style="color: #2C3162; ">Active Patients on Methadone / Buprenorphine</h2>
+    <p><a href="view_active_other_meds.php">View clients active on other medications &rarr;</a></p>
 
     <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
     <div class="header">
@@ -74,7 +75,7 @@ if (isset($_GET['message'])) {
 
     <!-- Display Data -->
     <?php
-    $search = isset($_GET['search']) ? $_GET['search'] : '';
+    $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
     $sql = "SELECT * FROM patients
             WHERE (mat_id LIKE '%$search%' OR mat_number LIKE '%$search%' OR clientName LIKE '%$search%' OR nickName LIKE '%$search%' OR dob LIKE '%$search%' OR age LIKE '%$search%' OR sex LIKE '%$search%' OR p_address LIKE '%$search%' OR peer_edu_name LIKE '%$search%' OR peer_edu_phone LIKE '%$search%' OR cso LIKE '%$search%' OR dosage LIKE '%$search%')
             AND current_status IN ('active', 'defaulted') LIMIT 10";
@@ -98,6 +99,7 @@ if (isset($_GET['message'])) {
         OR cso LIKE '%$search%'
         OR dosage LIKE '%$search%')
         AND current_status IN ('defaulted', 'active')
+        AND (drugname LIKE '%Methadone%' OR drugname LIKE '%Buprenorphine%')
 ";
 
     $result = $conn->query($sql);

@@ -16,7 +16,7 @@ include '../includes/header.php';
 $rolePermissions = [
     'admin' => [
         'cards' => [
-            'Administrator'         => '../admin/sidenav.php',
+            'Administrator'         => '../admin/index.php',
             'BackUp and Refresh'        => '../backup/sidenav.php',
             'Patient Management'        => '../patients/sidenav.php',
             'Dispensing Pharmacy'       => '../pharmacy/sidenav.php',
@@ -39,7 +39,7 @@ $rolePermissions = [
     // in admin/sidenav.php's sub-pages, not by hiding this card.
     'demo' => [
         'cards' => [
-            'Administrator'         => '../admin/sidenav.php',
+            'Administrator'         => '../admin/index.php',
             'BackUp and Refresh'        => '../backup/sidenav.php',
             'Patient Management'        => '../patients/sidenav.php',
             'Dispensing Pharmacy'       => '../pharmacy/sidenav.php',
@@ -234,7 +234,7 @@ $allCards = [
     'Administrator' => [
         'label' => t('administrator'),
         'icon'  => 'fa fa-gear',
-        'link'  => '../admin/sidenav.php',
+        'link'  => '../admin/index.php',
         'color' => 'purple',
     ],
     'BackUp and Refresh' => [
@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function startSessionKeepAlive() {
             // Send keep-alive request every 5 minutes
             sessionKeepAlive = setInterval(() => {
-                fetch('../includes/keepalive.php')
+                fetch('../public/keepalive.php')
                     .then(response => response.text())
                     .then(data => {
                         console.log('Session kept alive');
@@ -692,7 +692,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
             document.addEventListener(event, function() {
                 // Send activity ping
-                fetch('../includes/keepalive.php?activity=1')
+                fetch('../public/keepalive.php?activity=1')
                     .then(response => response.text())
                     .then(data => {
                         console.log('Activity recorded');

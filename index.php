@@ -8,6 +8,13 @@
  */
 session_start();
 
+// Landing here after an inactivity timeout: make sure the session is really gone
+$timedOut = isset($_GET['timeout']);
+if ($timedOut) {
+    $_SESSION = [];
+    session_destroy();
+}
+
 // ── Load countries for the demo form dropdown (from the `countries` table) ──
 $landingCountries = [];
 try {
@@ -248,6 +255,12 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 </style>
 </head>
 <body>
+<?php if ($timedOut): ?>
+<div id="timeoutNotice" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#fff3cd;color:#664d03;padding:12px 20px;text-align:center;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.2);">
+  You were logged out because of inactivity. Please log in again to continue.
+  <button onclick="document.getElementById('timeoutNotice').remove()" style="margin-left:14px;border:0;background:#664d03;color:#fff;border-radius:4px;padding:2px 10px;cursor:pointer;">OK</button>
+</div>
+<?php endif; ?>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">

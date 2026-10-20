@@ -1,7 +1,7 @@
 <?php
 /**
  * Patient age + status refresh (Active / Defaulted / LTFU), shared by
- * pharmacy/updatecurrent_status.php (manual run) and the login flow
+ * admin/update_patient_status.php (manual run) and the login flow
  * (automatic, once per calendar day).
  */
 

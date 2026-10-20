@@ -332,6 +332,14 @@ $full_name = getUserFullName();
         <i class="fa fa-share-square-o"></i><span data-i18n="view_referrals">View Referrals</span></a>
     <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
         <i class="fa fa-file-text-o"></i><span data-i18n="view_prescriptions">View Prescriptions</span></a>
+    <a href="../pharmacy/bup_bin_card.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-th-list"></i><span>Buprenorphine Bin Card</span></a>
+    <?php if (in_array($userrole, ['Admin', 'Super Admin'])) : ?>
+    <a href="../pharmacy/view_deleted_prescriptions.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-trash-o"></i><span>View Deleted Prescriptions</span></a>
+    <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-check-square-o"></i><span>View Closed Prescriptions</span></a>
+    <?php endif; ?>
     <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background: #9EFF9E; color: #000000; margin-top: 10px;">
         <i class="fa fa-calendar-check-o"></i><span data-i18n="update_appointments">Update Appointments</span></a>
 </div>
@@ -440,7 +448,7 @@ $full_name = getUserFullName();
 <script>
     // Session timeout tracking
     let timeoutTimer, countdownInterval;
-    const TIMEOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+    const TIMEOUT_DURATION = 10 * 60 * 1000; // 10 minutes - matches the server session timeout
     const WARNING_BEFORE  = 60 * 1000;        // warn 60 s before expiry
 
     function resetTimer() {
@@ -459,14 +467,14 @@ $full_name = getUserFullName();
             document.getElementById('countdown').textContent = secondsLeft;
             if (secondsLeft <= 0) {
                 clearInterval(countdownInterval);
-                window.location.href = '../public/login.php';
+                window.location.href = '../public/signout.php?timeout=1';
             }
         }, 1000);
     }
 
     function continueSession() {
         resetTimer();
-        fetch('../includes/keepalive.php').catch(() => {});
+        fetch('../public/keepalive.php').catch(() => {});
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -528,5 +536,6 @@ $full_name = getUserFullName();
         resetTimer();
     });
 </script>
+<script src="../assets/js/idle_bridge.js"></script>
 </body>
 </html>

@@ -5,3 +5,12 @@
 
 # Production secrets (never commit the real file)
 includes/config-iorpms.php
+
+# Runtime / patient data - never commit (clinic data, photos, backups, dumps)
+/clientPhotos/*
+/photos/users/*
+/backup/database/*
+/backup/update_rollback/
+/cache/update_tmp_*
+/updates/last_update.json
+*.Rhistory

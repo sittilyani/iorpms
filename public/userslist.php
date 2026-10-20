@@ -229,7 +229,10 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
 </head>
 <body>
     <div class="users">
-        <h4><i class="fas fa-users"></i>&nbsp;&nbsp;&nbsp;Authorized Users </h4>
+        <h4><i class="fas fa-users"></i>&nbsp;&nbsp;&nbsp;Authorized Users
+            <a href="user_registration.php" class="btn btn-success btn-sm" style="float:right;">
+                <i class="fas fa-user-plus"></i> Register New User</a>
+        </h4>
 
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success" role="alert">

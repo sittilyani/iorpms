@@ -43,6 +43,9 @@ $sex = $conn->real_escape_string($pharmacy_data['sex']);
 $drugname = $conn->real_escape_string($pharmacy_data['drugname']);
 // Use the original dosage for stock reversal
 $dosage = floatval($pharmacy_data['dosage']);
+// Stock for tablet-dispensed drugs (Buprenorphine) is counted in tablets, not mg
+$stockQty = (isset($pharmacy_data['conversion_unit']) && $pharmacy_data['conversion_unit'] === 'tablets' && $pharmacy_data['conversion'] !== null)
+    ? floatval($pharmacy_data['conversion']) : $dosage;
 $pharm_officer_name = $conn->real_escape_string($pharmacy_data['pharm_officer_name']);
 $dispDate = $conn->real_escape_string($pharmacy_data['dispDate']);
 
@@ -71,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
 
         if ($stock_result && $stock_result->num_rows > 0) {
             $stock_data = $stock_result->fetch_assoc();
-            $new_total_qty = $stock_data['total_qty'] + $dosage;
+            $new_total_qty = $stock_data['total_qty'] + $stockQty;
 
             // Insert a new stock movement record to reverse the dispense
             $insert_stock_query = "INSERT INTO stock_movements (
@@ -81,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
                                     '" . $stock_data['drugID'] . "',
                                     '$drugname',
                                     '" . $stock_data['total_qty'] . "',
-                                    '$dosage',
+                                    '$stockQty',
                                     'Dose deleted (Reversed)',
                                     '" . $stock_data['batch_number'] . "',
                                     '" . $stock_data['expiry_date'] . "',
@@ -94,6 +97,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
                 $success = false;
                 $message = "Error updating stock movements: " . $conn->error;
                 throw new Exception($message);
+            }
+
+            // Buprenorphine: show the reversal on the bin card too
+            if ($stockQty !== $dosage || stripos($drugname, 'buprenorphine') !== false) {
+                $bcTable = $conn->query("SHOW TABLES LIKE 'bin_card_entries'");
+                if ($bcTable && $bcTable->num_rows > 0 && stripos($drugname, 'buprenorphine') !== false) {
+                    $bcMat = $conn->real_escape_string($pharmacy_data['mat_number'] ?? '');
+                    $bcBatch = $conn->real_escape_string($stock_data['batch_number'] ?? '');
+                    $conn->query("INSERT INTO bin_card_entries (trans_date, drugID, drugname, mat_id, mat_number, batch_number, received_from, opening_balance, qty_in, stock_balance, disp_id, issued_by)
+                                  VALUES (NOW(), '" . (int)$stock_data['drugID'] . "', '$drugname', '$mat_id', '$bcMat', '$bcBatch', 'Dose deleted (Reversed)', '" . floatval($stock_data['total_qty']) . "', '$stockQty', '$new_total_qty', " . (int)$disp_id . ", '$deleted_by_name')");
+                }
             }
         } else {
             // No stock data is a warning, not a blocker for logging/deletion

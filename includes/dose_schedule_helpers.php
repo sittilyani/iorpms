@@ -195,3 +195,26 @@ if (!function_exists('computeDoseAdherence')) {
         return $result;
     }
 }
+
+if (!function_exists('dsh_active_schedule_on_date')) {
+    /**
+     * The prescription (dose_schedules row) in place for a client on a given
+     * date, or null when there is none. Used to refuse dispensing - including
+     * bulk/retrospective dispensing - for dates with no prescription.
+     */
+    function dsh_active_schedule_on_date(mysqli $conn, string $mat_id, string $date): ?array
+    {
+        $stmt = $conn->prepare(
+            "SELECT id, dose_mg, start_date, end_date, skip_dates, dosing_interval_days
+             FROM dose_schedules
+             WHERE mat_id = ? AND status = 'active'
+               AND start_date <= ? AND (end_date IS NULL OR end_date >= ?)
+             ORDER BY start_date DESC, id DESC LIMIT 1"
+        );
+        $stmt->bind_param('sss', $mat_id, $date, $date);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $row ?: null;
+    }
+}

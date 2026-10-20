@@ -11,6 +11,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Administrators only
+if (!in_array($loggedInUserRole, ['Admin', 'Super Admin'], true)) {
+    http_response_code(403);
+    exit('Only an Administrator can view closed prescriptions.');
+}
+
 $message = '';
 if (isset($_GET['success']) && $_GET['success'] == 1) {
     $message = "Prescription updated successfully!";

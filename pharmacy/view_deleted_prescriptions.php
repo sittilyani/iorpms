@@ -1,13 +1,20 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 include '../includes/config.php';
+
+// Administrators only
+if (!in_array($_SESSION['userrole'] ?? '', ['Admin', 'Super Admin'], true)) {
+    http_response_code(403);
+    exit('Only an Administrator can view deleted prescriptions.');
+}
 
 $results_per_page = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $results_per_page;
 
-$dateFrom = isset($_GET['dateFrom']) ? $_GET['dateFrom'] : '';
-$dateTo = isset($_GET['dateTo']) ? $_GET['dateTo'] : '';
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$dateFrom = isset($_GET['dateFrom']) ? $conn->real_escape_string($_GET['dateFrom']) : '';
+$dateTo = isset($_GET['dateTo']) ? $conn->real_escape_string($_GET['dateTo']) : '';
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // Base query
 $query = "SELECT * FROM deleted_prescriptions WHERE 1=1";

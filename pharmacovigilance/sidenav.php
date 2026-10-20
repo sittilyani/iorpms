@@ -207,14 +207,14 @@ $full_name = getUserFullName();
 
                     if (seconds <= 0) {
                         clearInterval(countdownInterval);
-                        window.location.href = '../public/login.php?timeout=1';
+                        window.location.href = '../public/signout.php?timeout=1';
                     }
                 }, 1000);
             }
 
             // Set final logout timeout
             timeout = setTimeout(() => {
-                window.location.href = '../public/login.php?timeout=1';
+                window.location.href = '../public/signout.php?timeout=1';
             }, warningTime * 1000);
         }
     }
@@ -230,7 +230,7 @@ $full_name = getUserFullName();
         resetTimer();
 
         // Send a request to the server to keep the session alive
-        fetch('../includes/keepalive.php')
+        fetch('../public/keepalive.php')
             .then(response => response.text())
             .then(data => {
                 console.log('Session extended');
@@ -256,7 +256,7 @@ $full_name = getUserFullName();
             function startSessionKeepAlive() {
                 // Send keep-alive request every 5 minutes
                 sessionKeepAlive = setInterval(() => {
-                    fetch('../includes/keepalive.php')
+                    fetch('../public/keepalive.php')
                         .then(response => response.text())
                         .then(data => {
                             console.log('Session kept alive');
@@ -287,7 +287,7 @@ $full_name = getUserFullName();
             ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
                 document.addEventListener(event, function() {
                     // Send activity ping
-                    fetch('../includes/keepalive.php?activity=1')
+                    fetch('../public/keepalive.php?activity=1')
                         .then(response => response.text())
                         .then(data => {
                             console.log('Activity recorded');
@@ -296,5 +296,6 @@ $full_name = getUserFullName();
             });
     </script>
 
+<script src="../assets/js/idle_bridge.js"></script>
 </body>
 </html>

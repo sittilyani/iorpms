@@ -11,6 +11,13 @@ include "../includes/languages.php";
 $userrole = getUserRole();
 $user_id = getUserId();
 $full_name = getUserFullName();
+
+// Page to open in the workspace on arrival (set by the admin landing page).
+// Only same-site relative .php paths are accepted.
+$openUrl = '';
+if (isset($_GET['open']) && preg_match('#^\.\./[A-Za-z0-9_\-/]+\.php(\?[A-Za-z0-9_=&\-]*)?$#', $_GET['open'])) {
+    $openUrl = $_GET['open'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -53,8 +60,11 @@ $full_name = getUserFullName();
     <a href="../dashboard/dashboard.php" class="home-link">
         <i class="fa fa-home"></i>Home
     </a>
-    <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
-        <i class="fa fa-pump-medical"></i>Dashboard</a>
+    <a href="../admin/index.php" class="home-link">
+        <i class="fa fa-th-large"></i>Admin Home</a>
+
+    <a href="../admin/system_settings.php" target="contentFrame" class="nav-link" style="background: #82b543; color: #000000; margin-top: 10px;">
+        <i class="fa fa-sliders"></i>System Settings</a>
 
     <a href="../backup/backup.php" class="home-link">
         <i class="fa fa-database"></i> Backup System</a>
@@ -62,26 +72,26 @@ $full_name = getUserFullName();
     <a href="../backup/view_backups.php" target="contentFrame" class="nav-link">
         <i class="fa fa-eye"></i>View Backups</a>
 
-    <a href="../public/user_registration.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-user-plus"></i> Add users</a>
-
     <a href="../public/userslist.php" target="contentFrame" class="nav-link">
         <i class="fa fa-users"></i> View users</a>
-    <a href="../admin/initialsettings.php" class="nav-link">
+    <a href="../admin/initialsettings.php"  target="contentFrame"  class="nav-link">
         <i class="fa fa-wrench"></i> Facility Setup</a>
     <a href="../admin/add_facility.php" target="contentFrame" class="nav-link">
         <i class="fa fa-plus-circle"></i> Add New Facility</a>
+    <?php /* View referrals removed: every user already has access to their own referrals.
     <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
             <i class="fa fa-stethoscope"></i>View referrals</a>
+    */ ?>
+    <a href="../admin/update_patient_status.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-user-circle"></i>Update Patients Status</a>
+    <a href="../admin/update_center.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-refresh"></i>Update Center</a>
     <a href="../public/reset_user_password.php" target="contentFrame" class="nav-link">
             <i class="fa fa-unlock-alt"></i>Default Password Reset</a>
     <a href="../superadmin/demo_analytics.php" target="contentFrame" class="nav-link">
-            <i class="fa fa-chart-line"></i>Demo Analytics</a>
-    <a href="../pharmacy/view_deleted_prescriptions.php" target="contentFrame" class="nav-link">
-            <i class="fa fa-calendar-check-o"></i>View Deleted prescriptions</a>
-    <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">
-            <i class="fa fa-check-square-o"></i>View Closed Prescriptions</a>
-    
+            <i class="fa fa-chart-line"></i>Demo Requests</a>
+    <?php /* Deleted / Closed prescriptions now live under Dispensing Pharmacy (Admin only). */ ?>
+
 </div>
 
 <div class="main">
@@ -191,6 +201,15 @@ $full_name = getUserFullName();
         // Show welcome message initially
         contentFrame.style.display = 'none';
         welcomeMessage.style.display = 'block';
+
+        // Opened from the admin landing page: go straight to the chosen page
+        const openUrl = <?php echo json_encode($openUrl); ?>;
+        if (openUrl) {
+            loadContent(openUrl);
+            navLinks.forEach(l => {
+                if (l.getAttribute('href') === openUrl) l.classList.add('active');
+            });
+        }
     });
 
     // Auto logout after inactivity
@@ -229,14 +248,14 @@ $full_name = getUserFullName();
 
                     if (seconds <= 0) {
                         clearInterval(countdownInterval);
-                        window.location.href = '../public/login.php?timeout=1';
+                        window.location.href = '../public/signout.php?timeout=1';
                     }
                 }, 1000);
             }
 
             // Set final logout timeout
             timeout = setTimeout(() => {
-                window.location.href = '../public/login.php?timeout=1';
+                window.location.href = '../public/signout.php?timeout=1';
             }, warningTime * 1000);
         }
     }
@@ -252,7 +271,7 @@ $full_name = getUserFullName();
         resetTimer();
 
         // Send a request to the server to keep the session alive
-        fetch('../includes/keepalive.php')
+        fetch('../public/keepalive.php')
             .then(response => response.text())
             .then(data => {
                 console.log('Session extended');
@@ -278,7 +297,7 @@ $full_name = getUserFullName();
         function startSessionKeepAlive() {
             // Send keep-alive request every 5 minutes
             sessionKeepAlive = setInterval(() => {
-                fetch('../includes/keepalive.php')
+                fetch('../public/keepalive.php')
                     .then(response => response.text())
                     .then(data => {
                         console.log('Session kept alive');
@@ -309,7 +328,7 @@ $full_name = getUserFullName();
         ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
             document.addEventListener(event, function() {
                 // Send activity ping
-                fetch('../includes/keepalive.php?activity=1')
+                fetch('../public/keepalive.php?activity=1')
                     .then(response => response.text())
                     .then(data => {
                         console.log('Activity recorded');
@@ -318,5 +337,6 @@ $full_name = getUserFullName();
         });
     </script>
 
+<script src="../assets/js/idle_bridge.js"></script>
 </body>
 </html>

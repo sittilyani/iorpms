@@ -77,7 +77,13 @@ if (!function_exists('session_manager_started')) {
 
     // Auto-check session timeout on every page load
     if (isUserLoggedIn() && !checkSessionTimeout()) {
-        header("Location: ../public/login.php?timeout=1");
+        // Inactivity timeout: send the WHOLE window (not just an iframe) to the landing page
+        $__docroot = str_replace(DIRECTORY_SEPARATOR, '/', realpath($_SERVER['DOCUMENT_ROOT']));
+        $__root = substr(str_replace(DIRECTORY_SEPARATOR, '/', realpath(__DIR__ . '/..')), strlen($__docroot));
+        $__url  = $__root . '/index.php?timeout=1';
+        header('Content-Type: text/html; charset=utf-8');
+        echo '<!DOCTYPE html><html><body><script>(window.top||window).location.replace(' . json_encode($__url) . ');</script>'
+           . '<noscript><a href="' . htmlspecialchars($__url) . '">Session expired - continue</a></noscript></body></html>';
         exit();
     }
 

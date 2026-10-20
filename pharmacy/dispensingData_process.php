@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../includes/config.php';
+require_once '../includes/pharmacy_helpers.php';
 
 // Ensure $conn is a mysqli object
 if (!isset($conn) || !($conn instanceof mysqli)) {
@@ -82,9 +83,12 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
         // Scoped to the routine drug so that other prescriptions dispensed
         // earlier today (which are also recorded in pharmacy) don't block it.
         // This is a skip, not an error: other prescriptions still go through.
-        $checkQuery = "SELECT 1 FROM pharmacy WHERE mat_id = ? AND drugname = ? AND DATE(visitDate) = CURDATE() LIMIT 1";
+        // Buprenorphine is recorded per tablet strength, so any strength counts.
+        $isBup = ph_is_buprenorphine($drugname);
+        $dupDrugPattern = $isBup ? 'Buprenorphine%' : $drugname;
+        $checkQuery = "SELECT 1 FROM pharmacy WHERE mat_id = ? AND drugname LIKE ? AND DATE(visitDate) = CURDATE() LIMIT 1";
         $checkStmt = $conn->prepare($checkQuery);
-        $checkStmt->bind_param('ss', $mat_id, $drugname);
+        $checkStmt->bind_param('ss', $mat_id, $dupDrugPattern);
         $checkStmt->execute();
         $alreadyDispensedToday = $checkStmt->get_result()->num_rows > 0;
         $checkStmt->close();
@@ -112,7 +116,19 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
             $routineErrors[] = "Routine Dispensing Failed: Can't dispense 0 or negative doses for **$drugname**.";
         }
 
-        // 5. Stock Validation
+        // 5a. Buprenorphine: the dispenser chooses which tablet strengths make up the dose
+        $bupStrengths = [];
+        $bupComponents = [];
+        if ($isBup) {
+            $bupStrengths  = bup_strengths($conn);
+            $bupComponents = bup_parse_post($_POST, $bupStrengths);
+            $bupErr = bup_validate($bupComponents, $dosage, $bupStrengths);
+            if ($bupErr) {
+                $routineErrors[] = "Routine Dispensing Failed: $bupErr";
+            }
+        }
+
+        // 5. Stock Validation (Buprenorphine stock is checked per strength in bup_dispense)
         $stockQuery = "SELECT total_qty FROM stock_movements WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1";
         $stockStmt = $conn->prepare($stockQuery);
         $stockStmt->bind_param('s', $drugname);
@@ -125,16 +141,35 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
         }
         $stockStmt->close();
 
-        if ($currentStock < $dosage) {
+        if (!$isBup && $currentStock < $dosage) {
             $routineErrors[] = "Routine Dispensing Failed: **$drugname** is **OUT OF STOCK** (Current: $currentStock, Required: $dosage).";
         }
 
         // If no errors, proceed with insertion and update
-        if (empty($routineErrors)) {
-            $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, pump_id)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        if (empty($routineErrors) && $isBup) {
+            $detail = bup_dispense($conn, [
+                'visitDate' => $visitDate, 'mat_id' => $mat_id, 'mat_number' => $mat_number,
+                'clientName' => $clientName, 'nickName' => $nickName, 'age' => $age, 'sex' => $sex,
+                'p_address' => $p_address, 'cso' => $cso, 'reasons' => $reasons,
+                'current_status' => $current_status, 'pharm_officer_name' => $pharm_officer_name,
+            ], $bupComponents, $bupStrengths);
+            // Remember the strengths so they are pre-selected next visit
+            bup_save($conn, $mat_id, $bupComponents, $dosage);
+
+            $updateStatusStmt = $conn->prepare("UPDATE patients SET current_status = 'Active' WHERE mat_id = ?");
+            $updateStatusStmt->bind_param('s', $mat_id);
+            $updateStatusStmt->execute();
+            $updateStatusStmt->close();
+
+            $conn->commit();
+            $routineDispenseSuccess = true;
+            $successMessages[] = "Buprenorphine dispensed successfully! ({$dosage} mg = {$detail})";
+        } elseif (empty($routineErrors)) {
+            [$conversion, $conversionUnit] = ph_conversion($drugname, $dosage);
+            $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, pump_id, conversion, conversion_unit)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param('ssssssssssssssi', $visitDate, $mat_id, $mat_number, $clientName, $nickName, $age, $sex, $p_address, $cso, $drugname, $dosage, $reasons, $current_status, $pharm_officer_name, $pump_device);
+            $stmt->bind_param('ssssssssssssssids', $visitDate, $mat_id, $mat_number, $clientName, $nickName, $age, $sex, $p_address, $cso, $drugname, $dosage, $reasons, $current_status, $pharm_officer_name, $pump_device, $conversion, $conversionUnit);
 
             if ($stmt->execute()) {
                 // Update stock quantity

@@ -18,6 +18,8 @@
 
 session_start();
 include '../includes/config.php';
+require_once '../includes/dose_schedule_helpers.php';
+require_once '../includes/pharmacy_helpers.php';
 
 if (!isset($conn) || !($conn instanceof mysqli)) {
     die("Database connection failed.");
@@ -158,6 +160,11 @@ try {
     }
     $dupStmt->close();
 
+    // 2b. A prescription (active dose schedule) must cover this date.
+    if (!dsh_active_schedule_on_date($conn, $mat_id, $visitDate)) {
+        throw new Exception("No prescription (active dose schedule) in place for $visitDate - not dispensed.");
+    }
+
     // 3. Fetch pump device details
     // NOTE: the reservoir "remaining" subtraction is joined to
     // pump_reservoir_history (h) rather than nested 3 levels deep as a
@@ -221,18 +228,21 @@ try {
         prisonPumpRemote($pump_host, $pump_port, $pump_cmd, $api_secret);
     }
 
-    // 6. Record in DB
+    // 6. Record in DB (conversion = mL, calculated before insert)
+    [$conversion, $conversionUnit] = ph_conversion($drugname, $dosage, PRISON_CONCENTRATION);
     $iStmt = $conn->prepare(
         "INSERT INTO pharmacy
              (visitDate, mat_id, mat_number, clientName, nickName, age, sex,
-              p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, pump_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+              p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, pump_id,
+              conversion, conversion_unit)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
     $iStmt->bind_param(
-        'ssssssssssdsssi',
+        'ssssssssssdsssids',
         $visitDate, $mat_id, $mat_number, $clientName, $nickName,
         $age, $sex, $p_address, $cso, $drugname,
-        $dosage, $reasons, $current_status, $pharm_officer_name, $pump_device
+        $dosage, $reasons, $current_status, $pharm_officer_name, $pump_device,
+        $conversion, $conversionUnit
     );
     if (!$iStmt->execute()) throw new Exception("DB insert error: " . $iStmt->error);
     $iStmt->close();

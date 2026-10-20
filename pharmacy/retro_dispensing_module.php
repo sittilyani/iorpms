@@ -1,6 +1,8 @@
 <?php
 session_start();
 include '../includes/config.php';
+require_once '../includes/dose_schedule_helpers.php';
+require_once '../includes/pharmacy_helpers.php';
 
 $page_title = 'Rouetro Dispensing';
 
@@ -65,16 +67,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                     $checkStmt->execute();
                     $checkResult = $checkStmt->get_result();
 
-                    if ($checkResult->num_rows === 0) {
+                    if ($checkResult->num_rows === 0 && !dsh_active_schedule_on_date($conn, $mat_id, $date)) {
+                        $errorMessages[] = "{$patient['clientName']} (MAT ID: $mat_id) has no prescription (active dose schedule) in place for $date - not dispensed";
+                    } elseif ($checkResult->num_rows === 0) {
                         // Insert dispensing record
-                        $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
-                                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                        $stmt = $conn->prepare($insertQuery);
-
                         $drugname = 'Methadone'; // Default drug for prison module
                         $reasons = 'Prison bulk dispensing';
+                        [$conversion, $conversionUnit] = ph_conversion($drugname, $dosage);
 
-                        $stmt->bind_param('ssssssssssssss',
+                        $insertQuery = "INSERT INTO pharmacy (visitDate, mat_id, mat_number, clientName, nickName, age, sex, p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name, conversion, conversion_unit)
+                                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $stmt = $conn->prepare($insertQuery);
+
+                        $stmt->bind_param('ssssssssssdsssds',
                             $date,
                             $mat_id,
                             $patient['mat_number'],
@@ -88,7 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
                             $dosage,
                             $reasons,
                             $patient['current_status'],
-                            $pharm_officer_name);
+                            $pharm_officer_name,
+                            $conversion,
+                            $conversionUnit);
 
                         if ($stmt->execute()) {
                             // Update stock

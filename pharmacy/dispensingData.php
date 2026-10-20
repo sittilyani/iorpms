@@ -1007,6 +1007,12 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars($mlsValue); ?>">
                 </div>
 
+                <?php if (!empty($currentSettings['drugname']) && stripos($currentSettings['drugname'], 'buprenorphine') !== false):
+                    $bup_mat_id = $currentSettings['mat_id'];
+                    $bup_dose_mg = (float)($currentSettings['dosage'] ?? 0);
+                    include '../includes/bup_selector.php';
+                endif; ?>
+
                 <?php if (isset($currentSettings['drugname']) && strtolower($currentSettings['drugname']) === 'methadone'): ?>
                 <div class="form-group">
                     <label for="pump_device">Reservoir Used (syringe draw — for stock tracking)</label>
@@ -1268,6 +1274,9 @@ if (isset($_SESSION['dispensing_successes'])) {
             const currentStatus = document.getElementById('current_status').value;
             if (currentStatus !== 'Active') {
                 document.getElementById('customAlert').style.display = 'block';
+                return false;
+            }
+            if (typeof bupSelectorValid === 'function' && !bupSelectorValid()) {
                 return false;
             }
             return true;

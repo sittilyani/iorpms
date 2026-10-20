@@ -364,7 +364,7 @@ if ($isLoggedIn) {
 
                         if (seconds <= 0) {
                             clearInterval(countdownInterval);
-                            window.location.href = '../public/login.php?timeout=1';
+                            window.location.href = '../public/signout.php?timeout=1';
                         }
                     }, 1000);
                 }
@@ -382,7 +382,7 @@ if ($isLoggedIn) {
             resetInactivityTimer();
 
             // Send a request to keep session alive
-            fetch('../includes/keepalive.php')
+            fetch('../public/keepalive.php')
                 .then(response => response.text())
                 .then(data => console.log('Session extended'))
                 .catch(error => console.error('Error extending session:', error));

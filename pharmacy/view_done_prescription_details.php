@@ -60,7 +60,7 @@ $date_of_printing = date('Y-m-d H:i:s');
 <body>
     <div class="container print-container">
         <div class="print-header">
-            <h4>Prescription</h4> <img src="../assets/images/iorpmsLogo-removebg-preview.png" width="66" height="60" alt="">
+            <h4>Prescription</h4> <img src="../assets/images/Government of Kenya.png" width="100" height="80" alt="">
         </div>
 
         <div class="card mb-4">

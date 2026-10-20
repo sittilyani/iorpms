@@ -19,6 +19,8 @@
 
 session_start();
 include '../includes/config.php';
+require_once '../includes/dose_schedule_helpers.php';
+require_once '../includes/pharmacy_helpers.php';
 
 if (!isset($conn) || !($conn instanceof mysqli)) {
     die("Database connection failed.");
@@ -91,6 +93,39 @@ try {
     }
     $dupStmt->close();
 
+    // A prescription (active dose schedule) must cover this date.
+    if (!dsh_active_schedule_on_date($conn, $mat_id, $visitDate)) {
+        throw new Exception("No prescription (active dose schedule) in place for $visitDate - not dispensed.");
+    }
+
+    // Buprenorphine: issue the strengths the dispenser selected, per-strength
+    // stock deduction + bin card entries.
+    if (ph_is_buprenorphine($drugname)) {
+        $bupStrengths  = bup_strengths($conn);
+        $bupComponents = bup_parse_post($_POST, $bupStrengths);
+        if ($err = bup_validate($bupComponents, $dosage, $bupStrengths)) {
+            throw new Exception($err);
+        }
+        $detail = bup_dispense($conn, [
+            'visitDate' => $visitDate, 'mat_id' => $mat_id, 'mat_number' => $mat_number,
+            'clientName' => $clientName, 'nickName' => $nickName, 'age' => $age, 'sex' => $sex,
+            'p_address' => $p_address, 'cso' => $cso, 'reasons' => $reasons,
+            'current_status' => $current_status, 'pharm_officer_name' => $pharm_officer_name,
+        ], $bupComponents, $bupStrengths);
+        bup_save($conn, $mat_id, $bupComponents, $dosage);
+
+        $aStmt = $conn->prepare("UPDATE patients SET current_status = 'Active' WHERE mat_id = ?");
+        $aStmt->bind_param('s', $mat_id);
+        $aStmt->execute();
+        $aStmt->close();
+
+        $conn->commit();
+        $_SESSION['prison_dispensed_count'] = ($step + 1);
+        $_SESSION['prison_step_success'] = "✓ Dispensed {$dosage} mg Buprenorphine ($detail) for $visitDate.";
+        header("Location: " . prisonTabletReturnUrl($mat_id, $start_date, $end_date, $next_step));
+        exit;
+    }
+
     // Stock check
     $sStmt = $conn->prepare("SELECT total_qty FROM stock_movements WHERE drugname = ? ORDER BY trans_date DESC LIMIT 1");
     $sStmt->bind_param('s', $drugname);
@@ -103,17 +138,20 @@ try {
     }
 
     // Record in DB — no pump_id, no pump command.
+    [$conversion, $conversionUnit] = ph_conversion($drugname, $dosage);
     $iStmt = $conn->prepare(
         "INSERT INTO pharmacy
              (visitDate, mat_id, mat_number, clientName, nickName, age, sex,
-              p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+              p_address, cso, drugname, dosage, reasons, current_status, pharm_officer_name,
+              conversion, conversion_unit)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
     $iStmt->bind_param(
-        'ssssssssssdsss',
+        'ssssssssssdsssds',
         $visitDate, $mat_id, $mat_number, $clientName, $nickName,
         $age, $sex, $p_address, $cso, $drugname,
-        $dosage, $reasons, $current_status, $pharm_officer_name
+        $dosage, $reasons, $current_status, $pharm_officer_name,
+        $conversion, $conversionUnit
     );
     if (!$iStmt->execute()) throw new Exception("DB insert error: " . $iStmt->error);
     $iStmt->close();

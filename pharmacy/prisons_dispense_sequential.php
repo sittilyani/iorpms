@@ -19,6 +19,8 @@
 
 session_start();
 include '../includes/config.php';
+require_once '../includes/dose_schedule_helpers.php';
+require_once '../includes/pharmacy_helpers.php';
 
 if (!isset($conn) || !($conn instanceof mysqli)) {
     die("Database connection failed.");
@@ -135,6 +137,43 @@ $patStmt->close();
 if (!$patient) {
     die("Patient not found: " . htmlspecialchars($mat_id));
 }
+
+// ── A prescription must be in place for this date ─────────────────────────────
+// Bulk dispensing is refused for any date the client has no active dose
+// schedule (prescription) covering it. The dose for the date comes from that
+// prescription, and dates on which no dose is due (alternate-day dosing,
+// explicit skip dates) are skipped automatically.
+$schedule = dsh_active_schedule_on_date($conn, $mat_id, $currentDate);
+if (!$schedule) {
+    $skipUrl = "prisons_dispense_sequential.php?mat_id=" . urlencode($mat_id)
+             . "&start_date=" . urlencode($start_date)
+             . "&end_date="   . urlencode($end_date)
+             . "&step="       . $nextStep . "&skipped=1";
+    ?>
+    <!DOCTYPE html>
+    <html lang="en"><head><meta charset="UTF-8"><title>No prescription</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css"></head>
+    <body style="background:#f4f7fb;font-family:'Segoe UI',Arial,sans-serif;">
+    <div style="max-width:560px;margin:80px auto;background:#fff;border-radius:14px;padding:34px;box-shadow:0 8px 30px rgba(0,0,0,.12);text-align:center;">
+        <div style="font-size:54px;color:#dc3545;">&#9888;</div>
+        <h3 style="color:#2C3162;">No prescription in place</h3>
+        <p><strong><?= htmlspecialchars($patient['clientName']) ?></strong> (<?= htmlspecialchars($mat_id) ?>)
+           has no active dose schedule covering <strong><?= htmlspecialchars(date('d M Y', strtotime($currentDate))) ?></strong>,
+           so nothing can be dispensed for this date.</p>
+        <p style="color:#666;font-size:.9rem;">Ask the clinician to set a dose period that covers it, then dispense again.</p>
+        <a class="btn btn-secondary" href="prisons_module.php?mat_id=<?= urlencode($mat_id) ?>&start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>">Back</a>
+        <a class="btn btn-warning" href="<?= htmlspecialchars($skipUrl) ?>">Skip this date &rarr;</a>
+    </div></body></html>
+    <?php
+    exit;
+}
+if (!isDoseDueOnDate($schedule, $currentDate)) {
+    header("Location: prisons_dispense_sequential.php?mat_id=" . urlencode($mat_id)
+         . "&start_date=" . urlencode($start_date) . "&end_date=" . urlencode($end_date)
+         . "&step=" . $nextStep . "&skipped=1");
+    exit;
+}
+$patient['dosage'] = $schedule['dose_mg'];
 
 // ── Route by drug: Methadone is liquid, dispensed via pump. Buprenorphine
 //    (and anything else) is tablets, dispensed as a plain count/record —
@@ -475,6 +514,11 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                         no pump is used for this drug.
                     </div>
                 </div>
+                <?php if (ph_is_buprenorphine($mainDrug)):
+                    $bup_mat_id  = $mat_id;
+                    $bup_dose_mg = (float)$patient['dosage'];
+                    include '../includes/bup_selector.php';
+                endif; ?>
                 <?php endif; ?>
             </div>
 
@@ -517,6 +561,7 @@ function validateForm() {
     if (!vd) { alert('Visit date is required.'); return false; }
     var pumpEl = document.querySelector('[name="pump_device"]');
     if (pumpEl && !pumpEl.value) { alert('Please select a pump device.'); return false; }
+    if (typeof bupSelectorValid === 'function' && !bupSelectorValid()) return false;
     return true;
 }
 </script>
