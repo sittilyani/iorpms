@@ -41,6 +41,7 @@ const UPD_EXCLUDE_PREFIXES = [
     'blankDB/',
     'cache/',
     'upload/',
+    'SOPS/', 'polo-shirt-designs/', 'training materials/',   // large documents, not needed to run the system
     '.git/', '.claude/', 'vendor/', 'node_modules/',
 ];
 
@@ -163,7 +164,7 @@ function upd_rmdir(string $dir): void
 }
 
 /** POST one report to the administrator's server. Returns true when accepted. */
-function upd_post_report(array $payload): bool
+function upd_post_report(array $payload, &$err = null): bool
 {
     $url = defined('UPDATE_REPORT_URL') ? UPDATE_REPORT_URL : UPD_DEFAULT_REPORT_URL;
     $ch = curl_init($url);
@@ -178,10 +179,15 @@ function upd_post_report(array $payload): bool
     curl_setopt_array($ch, $opts);
     $body = curl_exec($ch);
     $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
     curl_close($ch);
-    if ($body === false || $code !== 200) return false;
+    if ($body === false) { $err = "could not connect to $url ($cerr)"; return false; }
     $j = json_decode($body, true);
-    return !empty($j['ok']);
+    if ($code !== 200 || empty($j['ok'])) {
+        $err = "the administrator's server answered HTTP $code" . (!empty($j['error']) ? ' - ' . $j['error'] : '');
+        return false;
+    }
+    return true;
 }
 
 /** Send any reports that could not be delivered earlier (clinic was offline). */
@@ -252,7 +258,7 @@ function upd_run(string $root, mysqli $conn, bool $dryRun, bool $doBackup = true
     global $UPD;
     $report = ['ok' => false, 'done' => false, 'commit' => '', 'updated' => [], 'added' => [], 'failed' => [],
                'migrations' => [], 'migration_error' => null, 'repeatable' => [], 'message' => '',
-               'rollback' => '', 'notified' => null, 'dry' => $dryRun, 'backup_file' => ''];
+               'rollback' => '', 'notified' => null, 'notify_error' => '', 'dry' => $dryRun, 'backup_file' => ''];
     $pendingFile = $root . '/updates/pending_reports.json';
     $t0 = time();
     $UPD = ['started' => $t0, 'done' => false, 'percent' => 0, 'phase' => 'start', 'message' => 'Starting...', 'steps' => []];
@@ -301,43 +307,78 @@ function upd_run(string $root, mysqli $conn, bool $dryRun, bool $doBackup = true
             return $report;
         }
 
-        // Download
+        // Download (file by file with retries; anything still missing comes from the zip package)
         $downloaded = [];
+        $reasons = [];
         $n = count($todo);
-        if ($n > UPD_MAX_SINGLE_DOWNLOADS) {
-            upd_status(32, 'download', "Downloading the update package ($n files)...");
-            $tmp = $root . '/cache/update_tmp_' . date('YmdHis');
-            @mkdir($tmp, 0777, true);
-            $zipFile = $tmp . '/repo.zip';
-            file_put_contents($zipFile, upd_http('https://codeload.github.com/' . UPD_OWNER . '/' . UPD_REPO . '/zip/' . $commit, false, 900));
-            $zip = new ZipArchive();
-            if ($zip->open($zipFile) !== true) throw new Exception('Downloaded update package could not be opened.');
-            $top = explode('/', $zip->getNameIndex(0))[0];
-            foreach ($todo as $path => $meta) {
-                $data = $zip->getFromName($top . '/' . $path);
-                if ($data === false || upd_blob_sha($data) !== $meta['sha']) { $report['failed'][] = $path; continue; }
-                $downloaded[$path] = $data;
-            }
-            $zip->close();
-            upd_rmdir($tmp);
-            upd_status(75, 'download', 'Update package verified.');
-        } else {
+        if ($n <= UPD_MAX_SINGLE_DOWNLOADS) {
             $k = 0;
             foreach ($todo as $path => $meta) {
                 $k++;
-                upd_status(30 + (int)(45 * $k / max(1, $n)), 'download', "Downloading $k of $n: $path");
+                upd_status(30 + (int)(35 * $k / max(1, $n)), 'download', "Downloading $k of $n: $path");
                 $url = 'https://raw.githubusercontent.com/' . UPD_OWNER . '/' . UPD_REPO . '/' . $commit . '/' . implode('/', array_map('rawurlencode', explode('/', $path)));
-                try {
-                    $data = upd_http($url, false, 180);
-                    if (upd_blob_sha($data) !== $meta['sha']) throw new Exception('checksum mismatch');
-                    $downloaded[$path] = $data;
-                } catch (Exception $e) {
-                    $report['failed'][] = $path;
+                for ($try = 1; $try <= 3; $try++) {
+                    try {
+                        $data = upd_http($url, false, 180);
+                        if (upd_blob_sha($data) !== $meta['sha']) throw new Exception('checksum mismatch');
+                        $downloaded[$path] = $data;
+                        unset($reasons[$path]);
+                        break;
+                    } catch (Exception $e) {
+                        $reasons[$path] = $e->getMessage();
+                        if ($try < 3) usleep(500000 * $try);
+                    }
                 }
             }
+            $missing = array_diff_key($todo, $downloaded);
+        } else {
+            $missing = $todo;
         }
+
+        if ($missing) {
+            upd_status(66, 'download', 'Downloading the update package (' . count($missing) . ' file(s))...');
+            $tmp = $root . '/cache/update_tmp_' . date('YmdHis');
+            @mkdir($tmp, 0777, true);
+            $zipFile = $tmp . '/repo.zip';
+            try {
+                file_put_contents($zipFile, upd_http('https://codeload.github.com/' . UPD_OWNER . '/' . UPD_REPO . '/zip/' . $commit, false, 900));
+                $zip = new ZipArchive();
+                if ($zip->open($zipFile) !== true) throw new Exception('the downloaded package could not be opened');
+                $top = explode('/', $zip->getNameIndex(0))[0];
+                $index = [];
+                for ($zi = 0; $zi < $zip->numFiles; $zi++) {
+                    $zn = $zip->getNameIndex($zi);
+                    $index[$zn] = $zi;
+                    if (function_exists('iconv')) {
+                        $alt = @iconv('CP437', 'UTF-8//IGNORE', $zn);   // names stored without the UTF-8 flag
+                        if ($alt !== false && $alt !== '') $index[$alt] = $zi;
+                    }
+                }
+                foreach ($missing as $path => $meta) {
+                    $zi = $index[$top . '/' . $path] ?? null;
+                    $data = ($zi === null) ? false : $zip->getFromIndex($zi);
+                    if ($data !== false && upd_blob_sha($data) === $meta['sha']) {
+                        $downloaded[$path] = $data;
+                        unset($reasons[$path]);
+                    } else {
+                        $reasons[$path] = ($zi === null ? 'not found in the update package' : 'checksum mismatch in the update package');
+                    }
+                }
+                $zip->close();
+            } catch (Throwable $e) {
+                foreach ($missing as $path => $meta) {
+                    if (!isset($reasons[$path])) $reasons[$path] = $e->getMessage();
+                }
+            }
+            upd_rmdir($tmp);
+        }
+        upd_status(75, 'download', 'Downloads verified.');
+
+        $report['failed'] = array_keys(array_diff_key($todo, $downloaded));
         if ($report['failed']) {
-            throw new Exception(count($report['failed']) . ' file(s) could not be downloaded, so nothing was changed. Check the internet connection and try again.');
+            $sample = [];
+            foreach (array_slice($report['failed'], 0, 4) as $f) $sample[] = $f . ' (' . ($reasons[$f] ?? 'unknown') . ')';
+            throw new Exception(count($report['failed']) . ' file(s) could not be downloaded, so nothing was changed. First failures: ' . implode('; ', $sample));
         }
 
         // Apply
@@ -403,11 +444,12 @@ function upd_run(string $root, mysqli $conn, bool $dryRun, bool $doBackup = true
                 'details' => ['updated' => $report['updated'], 'added' => $report['added'], 'migrations' => $report['migrations'], 'error' => $report['migration_error']],
                 'applied_at' => date('c'),
             ];
-            if (upd_post_report($payload)) {
+            if (upd_post_report($payload, $notifyErr)) {
                 $report['notified'] = true;
                 upd_flush_pending($pendingFile);
             } else {
                 $report['notified'] = false;
+                $report['notify_error'] = $notifyErr;
                 $q = is_file($pendingFile) ? (json_decode(file_get_contents($pendingFile), true) ?: []) : [];
                 $q[] = $payload;
                 @file_put_contents($pendingFile, json_encode($q));
@@ -522,7 +564,7 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
     if(r.backup_file) h += '<p>Database backup: <a href="update.php?download='+encodeURIComponent(r.backup_file)+q+'">download <code>'+esc(r.backup_file)+'</code> again</a> (also kept in <code>backup/database</code>).</p>';
     if(r.rollback) h += '<p>Previous versions of replaced files were saved in <code>'+esc(r.rollback)+'</code>.</p>';
     if(r.notified===true) h += '<p class="ok">The administrator has been notified that this update is done.</p>';
-    if(r.notified===false) h += '<p>No internet connection to the administrator\'s server right now - the notice is saved and will be sent automatically next time.</p>';
+    if(r.notified===false) h += '<p>The update notice could not be delivered to the administrator right now ('+esc(r.notify_error||'no connection')+'). It is saved on this computer and will be sent automatically next time.</p>';
     h += list('Files added', r.added) + list('Files replaced', r.updated) + list('Database changes applied', r.migrations);
     h += '<a class="btn" href="dashboard/dashboard.php">Continue to the system</a>';
     $('result').innerHTML=h; $('result').style.display='block';
