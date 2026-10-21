@@ -107,7 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       . '<p><a href="' . $linkUrl . '" style="background:#2C3162;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;">Run the update</a><br><small>' . $linkUrl . '</small></p>'
                       . '<p>Client photos and your data are not changed or removed. When it finishes, the administrator is notified automatically.</p>'
                       . '<p>Thank you.</p>';
-                $r = sendAppMail($t['email'], $t['contact_name'], 'System update available - ' . $t['facility_name'], $body);
+                // SMTP only: the mail() fallback in sendAppMail reports success on a PC without a mail server although nothing is delivered.
+                $r = trySendViaPHPMailer($t['email'], $t['contact_name'], 'System update available - ' . $t['facility_name'], $body);
+                mailHelperLog(($r['success'] ? 'OK  ' : 'FAIL ') . 'to=' . $t['email'] . ' update-link via SMTP ' . ($r['error'] ?? ''));
                 if (!empty($r['success'])) {
                     $sent++;
                     $u = $conn->prepare("UPDATE update_contacts SET last_link_sent = NOW() WHERE id = ?");

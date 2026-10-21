@@ -101,6 +101,6 @@ defined('SMTP_PORT')   || define('SMTP_PORT',   465);
 defined('SMTP_SECURE') || define('SMTP_SECURE', 'ssl');
 defined('SMTP_AUTH')   || define('SMTP_AUTH',   true);
 defined('SMTP_USER')   || define('SMTP_USER',   'sittilyani@gmail.com');
-defined('SMTP_PASS')   || define('SMTP_PASS',   'rjprxqmanyajelvf');
+defined('SMTP_PASS')   || define('SMTP_PASS',   'bazpatvobxfztcgw');
 defined('MAIL_FROM')      || define('MAIL_FROM',      'sittilyani@gmail.com');
 defined('MAIL_FROM_NAME') || define('MAIL_FROM_NAME', 'EasyFlow Admin');
