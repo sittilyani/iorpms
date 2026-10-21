@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `administrationroutes`
 --
 
-CREATE TABLE `administrationroutes` (
+CREATE TABLE IF NOT EXISTS `administrationroutes` (
   `route_id` int NOT NULL,
   `routetype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -52,7 +52,7 @@ INSERT IGNORE INTO `administrationroutes` (`route_id`, `routetype`, `date_create
 -- Table structure for table `backup_log`
 --
 
-CREATE TABLE `backup_log` (
+CREATE TABLE IF NOT EXISTS `backup_log` (
   `id` int NOT NULL,
   `backup_date` date NOT NULL,
   `backup_type` enum('morning','midday') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `backup_log` (
 -- Table structure for table `bin_card_entries`
 --
 
-CREATE TABLE `bin_card_entries` (
+CREATE TABLE IF NOT EXISTS `bin_card_entries` (
   `entry_id` int NOT NULL,
   `trans_date` datetime NOT NULL,
   `drugID` int DEFAULT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE `bin_card_entries` (
 -- Table structure for table `categories`
 --
 
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` int NOT NULL,
   `name` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -114,7 +114,7 @@ INSERT IGNORE INTO `categories` (`id`, `name`, `description`, `photo`) VALUES
 -- Table structure for table `client_consents`
 --
 
-CREATE TABLE `client_consents` (
+CREATE TABLE IF NOT EXISTS `client_consents` (
   `id` int NOT NULL,
   `p_id` int NOT NULL COMMENT 'ID from the patients table',
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE `client_consents` (
 -- Table structure for table `clinical_encounters`
 --
 
-CREATE TABLE `clinical_encounters` (
+CREATE TABLE IF NOT EXISTS `clinical_encounters` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -245,7 +245,7 @@ CREATE TABLE `clinical_encounters` (
 -- Table structure for table `clinical_encounter_drafts`
 --
 
-CREATE TABLE `clinical_encounter_drafts` (
+CREATE TABLE IF NOT EXISTS `clinical_encounter_drafts` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `form_data` json NOT NULL,
@@ -261,7 +261,7 @@ CREATE TABLE `clinical_encounter_drafts` (
 -- Table structure for table `clinic_visits`
 --
 
-CREATE TABLE `clinic_visits` (
+CREATE TABLE IF NOT EXISTS `clinic_visits` (
   `clinic_id` int NOT NULL,
   `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -290,7 +290,7 @@ INSERT IGNORE INTO `clinic_visits` (`clinic_id`, `visit_name`) VALUES
 -- Table structure for table `consents`
 --
 
-CREATE TABLE `consents` (
+CREATE TABLE IF NOT EXISTS `consents` (
   `consent_id` int NOT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -306,7 +306,7 @@ CREATE TABLE `consents` (
 -- Table structure for table `counties`
 --
 
-CREATE TABLE `counties` (
+CREATE TABLE IF NOT EXISTS `counties` (
   `id` int NOT NULL,
   `county_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -374,7 +374,7 @@ INSERT IGNORE INTO `counties` (`id`, `county_code`, `county_name`, `region`, `da
 -- Table structure for table `countries`
 --
 
-CREATE TABLE `countries` (
+CREATE TABLE IF NOT EXISTS `countries` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `iso2` char(2) NOT NULL DEFAULT '',
@@ -558,7 +558,7 @@ INSERT IGNORE INTO `countries` (`id`, `name`, `iso2`, `region`, `sort_order`) VA
 -- Table structure for table `daily_report_comments`
 --
 
-CREATE TABLE `daily_report_comments` (
+CREATE TABLE IF NOT EXISTS `daily_report_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -571,7 +571,7 @@ CREATE TABLE `daily_report_comments` (
 -- Table structure for table `deleted_patients`
 --
 
-CREATE TABLE `deleted_patients` (
+CREATE TABLE IF NOT EXISTS `deleted_patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -1278,7 +1278,7 @@ INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `count
 -- Table structure for table `deleted_prescriptions`
 --
 
-CREATE TABLE `deleted_prescriptions` (
+CREATE TABLE IF NOT EXISTS `deleted_prescriptions` (
   `del_id` int NOT NULL,
   `disp_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1299,7 +1299,7 @@ CREATE TABLE `deleted_prescriptions` (
 -- Table structure for table `demo_requests`
 --
 
-CREATE TABLE `demo_requests` (
+CREATE TABLE IF NOT EXISTS `demo_requests` (
   `id` int NOT NULL,
   `first_name` varchar(80) NOT NULL,
   `last_name` varchar(80) NOT NULL,
@@ -1321,7 +1321,7 @@ CREATE TABLE `demo_requests` (
 -- Table structure for table `dispensing_comments`
 --
 
-CREATE TABLE `dispensing_comments` (
+CREATE TABLE IF NOT EXISTS `dispensing_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -1334,7 +1334,7 @@ CREATE TABLE `dispensing_comments` (
 -- Table structure for table `dose_schedules`
 --
 
-CREATE TABLE `dose_schedules` (
+CREATE TABLE IF NOT EXISTS `dose_schedules` (
   `id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drugname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -1355,7 +1355,7 @@ CREATE TABLE `dose_schedules` (
 -- Table structure for table `dosing`
 --
 
-CREATE TABLE `dosing` (
+CREATE TABLE IF NOT EXISTS `dosing` (
   `id` int NOT NULL,
   `dosage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1378,7 +1378,7 @@ INSERT IGNORE INTO `dosing` (`id`, `dosage`) VALUES
 -- Table structure for table `drug`
 --
 
-CREATE TABLE `drug` (
+CREATE TABLE IF NOT EXISTS `drug` (
   `drugID` int NOT NULL,
   `drugName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drugCategory` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1710,7 +1710,7 @@ INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, 
 -- Table structure for table `drugcategory`
 --
 
-CREATE TABLE `drugcategory` (
+CREATE TABLE IF NOT EXISTS `drugcategory` (
   `id` int NOT NULL,
   `catname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
@@ -1738,7 +1738,7 @@ INSERT IGNORE INTO `drugcategory` (`id`, `catname`, `description`) VALUES
 -- Table structure for table `drug_sources`
 --
 
-CREATE TABLE `drug_sources` (
+CREATE TABLE IF NOT EXISTS `drug_sources` (
   `source_id` int NOT NULL,
   `source_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -1759,7 +1759,7 @@ INSERT IGNORE INTO `drug_sources` (`source_id`, `source_name`, `date_created`) V
 -- Table structure for table `durationunits`
 --
 
-CREATE TABLE `durationunits` (
+CREATE TABLE IF NOT EXISTS `durationunits` (
   `unit_id` int NOT NULL,
   `duration` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -1781,7 +1781,7 @@ INSERT IGNORE INTO `durationunits` (`unit_id`, `duration`, `date_created`) VALUE
 -- Table structure for table `education_level`
 --
 
-CREATE TABLE `education_level` (
+CREATE TABLE IF NOT EXISTS `education_level` (
   `edu_id` int NOT NULL,
   `edu_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1803,7 +1803,7 @@ INSERT IGNORE INTO `education_level` (`edu_id`, `edu_name`) VALUES
 -- Table structure for table `employment_status`
 --
 
-CREATE TABLE `employment_status` (
+CREATE TABLE IF NOT EXISTS `employment_status` (
   `emp_id` int NOT NULL,
   `emp_status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1824,7 +1824,7 @@ INSERT IGNORE INTO `employment_status` (`emp_id`, `emp_status_name`) VALUES
 -- Table structure for table `enrolment_status`
 --
 
-CREATE TABLE `enrolment_status` (
+CREATE TABLE IF NOT EXISTS `enrolment_status` (
   `enrolment_id` int NOT NULL,
   `enrolment_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `decsription` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1847,7 +1847,7 @@ INSERT IGNORE INTO `enrolment_status` (`enrolment_id`, `enrolment_status_name`, 
 -- Table structure for table `facilities`
 --
 
-CREATE TABLE `facilities` (
+CREATE TABLE IF NOT EXISTS `facilities` (
   `id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5612,7 +5612,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 -- Table structure for table `facility_settings`
 --
 
-CREATE TABLE `facility_settings` (
+CREATE TABLE IF NOT EXISTS `facility_settings` (
   `id` int NOT NULL,
   `facility_id` int DEFAULT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5631,7 +5631,7 @@ CREATE TABLE `facility_settings` (
 -- Table structure for table `fingerprints`
 --
 
-CREATE TABLE `fingerprints` (
+CREATE TABLE IF NOT EXISTS `fingerprints` (
   `print_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5648,7 +5648,7 @@ CREATE TABLE `fingerprints` (
 -- Table structure for table `fingerprint_audit`
 --
 
-CREATE TABLE `fingerprint_audit` (
+CREATE TABLE IF NOT EXISTS `fingerprint_audit` (
   `id` int NOT NULL,
   `fingerprint_id` int DEFAULT NULL,
   `mat_id` varchar(50) DEFAULT NULL,
@@ -5664,7 +5664,7 @@ CREATE TABLE `fingerprint_audit` (
 -- Table structure for table `followup_psychiatric_form`
 --
 
-CREATE TABLE `followup_psychiatric_form` (
+CREATE TABLE IF NOT EXISTS `followup_psychiatric_form` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5681,7 +5681,7 @@ CREATE TABLE `followup_psychiatric_form` (
 -- Table structure for table `formulation`
 --
 
-CREATE TABLE `formulation` (
+CREATE TABLE IF NOT EXISTS `formulation` (
   `formID` int NOT NULL,
   `fname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
@@ -5704,7 +5704,7 @@ INSERT IGNORE INTO `formulation` (`formID`, `fname`, `description`) VALUES
 -- Table structure for table `gad7_assessments`
 --
 
-CREATE TABLE `gad7_assessments` (
+CREATE TABLE IF NOT EXISTS `gad7_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5729,7 +5729,7 @@ CREATE TABLE `gad7_assessments` (
 -- Table structure for table `hepb_status`
 --
 
-CREATE TABLE `hepb_status` (
+CREATE TABLE IF NOT EXISTS `hepb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5750,7 +5750,7 @@ INSERT IGNORE INTO `hepb_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `hepc_status`
 --
 
-CREATE TABLE `hepc_status` (
+CREATE TABLE IF NOT EXISTS `hepc_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5771,7 +5771,7 @@ INSERT IGNORE INTO `hepc_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `initial_psychiatric_form`
 --
 
-CREATE TABLE `initial_psychiatric_form` (
+CREATE TABLE IF NOT EXISTS `initial_psychiatric_form` (
   `psy_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `occupation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5805,7 +5805,7 @@ CREATE TABLE `initial_psychiatric_form` (
 -- Table structure for table `integration_status`
 --
 
-CREATE TABLE `integration_status` (
+CREATE TABLE IF NOT EXISTS `integration_status` (
   `integration_id` int NOT NULL,
   `integration_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5833,7 +5833,7 @@ INSERT IGNORE INTO `integration_status` (`integration_id`, `integration_name`) V
 -- Table structure for table `involuntary_discontinuation`
 --
 
-CREATE TABLE `involuntary_discontinuation` (
+CREATE TABLE IF NOT EXISTS `involuntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5865,7 +5865,7 @@ CREATE TABLE `involuntary_discontinuation` (
 -- Table structure for table `laboratory`
 --
 
-CREATE TABLE `laboratory` (
+CREATE TABLE IF NOT EXISTS `laboratory` (
   `lab_id` int NOT NULL,
   `visitDate` date NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5892,7 +5892,7 @@ CREATE TABLE `laboratory` (
 -- Table structure for table `living_conditions`
 --
 
-CREATE TABLE `living_conditions` (
+CREATE TABLE IF NOT EXISTS `living_conditions` (
   `cond_id` int NOT NULL,
   `condition_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5927,7 +5927,7 @@ INSERT IGNORE INTO `living_conditions` (`cond_id`, `condition_name`) VALUES
 -- Table structure for table `login_logs`
 --
 
-CREATE TABLE `login_logs` (
+CREATE TABLE IF NOT EXISTS `login_logs` (
   `id` int NOT NULL,
   `user_id` int DEFAULT NULL,
   `username` varchar(100) DEFAULT NULL,
@@ -5946,7 +5946,7 @@ CREATE TABLE `login_logs` (
 -- Table structure for table `marital_status`
 --
 
-CREATE TABLE `marital_status` (
+CREATE TABLE IF NOT EXISTS `marital_status` (
   `mar_id` int NOT NULL,
   `marital_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5973,7 +5973,7 @@ INSERT IGNORE INTO `marital_status` (`mar_id`, `marital_status_name`, `date_crea
 -- Table structure for table `medical_history`
 --
 
-CREATE TABLE `medical_history` (
+CREATE TABLE IF NOT EXISTS `medical_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6020,7 +6020,7 @@ DELIMITER ;
 -- Table structure for table `medical_history_new`
 --
 
-CREATE TABLE `medical_history_new` (
+CREATE TABLE IF NOT EXISTS `medical_history_new` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6059,7 +6059,7 @@ CREATE TABLE `medical_history_new` (
 -- Table structure for table `nursing_history`
 --
 
-CREATE TABLE `nursing_history` (
+CREATE TABLE IF NOT EXISTS `nursing_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6092,7 +6092,7 @@ CREATE TABLE `nursing_history` (
 -- Table structure for table `nursing_services`
 --
 
-CREATE TABLE `nursing_services` (
+CREATE TABLE IF NOT EXISTS `nursing_services` (
   `nursing_id` int NOT NULL,
   `nurising_service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6111,7 +6111,7 @@ INSERT IGNORE INTO `nursing_services` (`nursing_id`, `nurising_service_name`) VA
 -- Table structure for table `offences`
 --
 
-CREATE TABLE `offences` (
+CREATE TABLE IF NOT EXISTS `offences` (
   `offense_id` int NOT NULL,
   `offense_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6148,7 +6148,7 @@ INSERT IGNORE INTO `offences` (`offense_id`, `offense_name`) VALUES
 -- Table structure for table `other_prescriptions`
 --
 
-CREATE TABLE `other_prescriptions` (
+CREATE TABLE IF NOT EXISTS `other_prescriptions` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6167,7 +6167,7 @@ CREATE TABLE `other_prescriptions` (
 -- Table structure for table `other_status`
 --
 
-CREATE TABLE `other_status` (
+CREATE TABLE IF NOT EXISTS `other_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -6192,7 +6192,7 @@ INSERT IGNORE INTO `other_status` (`status_id`, `status_name`, `date_created`) V
 -- Table structure for table `patientfingerprints`
 --
 
-CREATE TABLE `patientfingerprints` (
+CREATE TABLE IF NOT EXISTS `patientfingerprints` (
   `Id` int NOT NULL,
   `Template` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6203,7 +6203,7 @@ CREATE TABLE `patientfingerprints` (
 -- Table structure for table `patients`
 --
 
-CREATE TABLE `patients` (
+CREATE TABLE IF NOT EXISTS `patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6287,7 +6287,7 @@ DELIMITER ;
 -- Table structure for table `patientsignatures`
 --
 
-CREATE TABLE `patientsignatures` (
+CREATE TABLE IF NOT EXISTS `patientsignatures` (
   `SessionId` int NOT NULL,
   `ImageData` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6298,7 +6298,7 @@ CREATE TABLE `patientsignatures` (
 -- Table structure for table `patient_bup_formulation`
 --
 
-CREATE TABLE `patient_bup_formulation` (
+CREATE TABLE IF NOT EXISTS `patient_bup_formulation` (
   `mat_id` varchar(50) NOT NULL,
   `components` text NOT NULL COMMENT 'JSON {drugname: tablets}',
   `dose_mg` decimal(10,2) NOT NULL,
@@ -6311,7 +6311,7 @@ CREATE TABLE `patient_bup_formulation` (
 -- Table structure for table `patient_checkins`
 --
 
-CREATE TABLE `patient_checkins` (
+CREATE TABLE IF NOT EXISTS `patient_checkins` (
   `checkin_id` int NOT NULL,
   `patient_id` int DEFAULT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6327,7 +6327,7 @@ CREATE TABLE `patient_checkins` (
 -- Table structure for table `patient_drug_histories`
 --
 
-CREATE TABLE `patient_drug_histories` (
+CREATE TABLE IF NOT EXISTS `patient_drug_histories` (
   `id` int NOT NULL,
   `encounter_id` int NOT NULL,
   `drug_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6345,7 +6345,7 @@ CREATE TABLE `patient_drug_histories` (
 -- Table structure for table `pharmacy`
 --
 
-CREATE TABLE `pharmacy` (
+CREATE TABLE IF NOT EXISTS `pharmacy` (
   `disp_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6375,7 +6375,7 @@ CREATE TABLE `pharmacy` (
 -- Table structure for table `photos`
 --
 
-CREATE TABLE `photos` (
+CREATE TABLE IF NOT EXISTS `photos` (
   `photo_id` int NOT NULL,
   `visitDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6390,7 +6390,7 @@ CREATE TABLE `photos` (
 -- Table structure for table `phq9_assessments`
 --
 
-CREATE TABLE `phq9_assessments` (
+CREATE TABLE IF NOT EXISTS `phq9_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6417,7 +6417,7 @@ CREATE TABLE `phq9_assessments` (
 -- Table structure for table `prescription_drugs`
 --
 
-CREATE TABLE `prescription_drugs` (
+CREATE TABLE IF NOT EXISTS `prescription_drugs` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drug_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6437,7 +6437,7 @@ CREATE TABLE `prescription_drugs` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
   `id` int NOT NULL,
   `category` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `productname` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6812,7 +6812,7 @@ INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `pa
 -- Table structure for table `psychiatric_encounters`
 --
 
-CREATE TABLE `psychiatric_encounters` (
+CREATE TABLE IF NOT EXISTS `psychiatric_encounters` (
   `id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6863,7 +6863,7 @@ CREATE TABLE `psychiatric_encounters` (
 -- Table structure for table `psychiatric_rx_problems`
 --
 
-CREATE TABLE `psychiatric_rx_problems` (
+CREATE TABLE IF NOT EXISTS `psychiatric_rx_problems` (
   `problem_id` int NOT NULL,
   `problem_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6903,7 +6903,7 @@ INSERT IGNORE INTO `psychiatric_rx_problems` (`problem_id`, `problem_name`) VALU
 -- Table structure for table `psychodar`
 --
 
-CREATE TABLE `psychodar` (
+CREATE TABLE IF NOT EXISTS `psychodar` (
   `dar_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6943,7 +6943,7 @@ CREATE TABLE `psychodar` (
 -- Table structure for table `psychosocial_intake_form_1a`
 --
 
-CREATE TABLE `psychosocial_intake_form_1a` (
+CREATE TABLE IF NOT EXISTS `psychosocial_intake_form_1a` (
   `id` int NOT NULL,
   `visitDate` date DEFAULT NULL,
   `visit_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7012,7 +7012,7 @@ CREATE TABLE `psychosocial_intake_form_1a` (
 -- Table structure for table `psychosocial_interventions`
 --
 
-CREATE TABLE `psychosocial_interventions` (
+CREATE TABLE IF NOT EXISTS `psychosocial_interventions` (
   `intervention_id` int NOT NULL,
   `intervention_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7051,7 +7051,7 @@ INSERT IGNORE INTO `psychosocial_interventions` (`intervention_id`, `interventio
 -- Table structure for table `psychosocial_outcomes`
 --
 
-CREATE TABLE `psychosocial_outcomes` (
+CREATE TABLE IF NOT EXISTS `psychosocial_outcomes` (
   `psyc_outcome_id` int NOT NULL,
   `outcome_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7079,7 +7079,7 @@ INSERT IGNORE INTO `psychosocial_outcomes` (`psyc_outcome_id`, `outcome_name`) V
 -- Table structure for table `psycho_followup_visits`
 --
 
-CREATE TABLE `psycho_followup_visits` (
+CREATE TABLE IF NOT EXISTS `psycho_followup_visits` (
   `visit_id` int NOT NULL,
   `followup_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7107,7 +7107,7 @@ INSERT IGNORE INTO `psycho_followup_visits` (`visit_id`, `followup_name`) VALUES
 -- Table structure for table `pump_calibration`
 --
 
-CREATE TABLE `pump_calibration` (
+CREATE TABLE IF NOT EXISTS `pump_calibration` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `calibration_factor` decimal(10,2) NOT NULL,
@@ -7134,7 +7134,7 @@ CREATE TABLE `pump_calibration` (
 -- Table structure for table `pump_devices`
 --
 
-CREATE TABLE `pump_devices` (
+CREATE TABLE IF NOT EXISTS `pump_devices` (
   `id` int NOT NULL,
   `label` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `port` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7157,7 +7157,7 @@ INSERT IGNORE INTO `pump_devices` (`id`, `label`, `port`, `created_at`, `pump_ho
 -- Table structure for table `pump_reservoir_history`
 --
 
-CREATE TABLE `pump_reservoir_history` (
+CREATE TABLE IF NOT EXISTS `pump_reservoir_history` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `milligrams` decimal(10,2) NOT NULL,
@@ -7173,7 +7173,7 @@ CREATE TABLE `pump_reservoir_history` (
 -- Table structure for table `referral`
 --
 
-CREATE TABLE `referral` (
+CREATE TABLE IF NOT EXISTS `referral` (
   `referral_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7197,7 +7197,7 @@ CREATE TABLE `referral` (
 -- Table structure for table `referral_linkage_services`
 --
 
-CREATE TABLE `referral_linkage_services` (
+CREATE TABLE IF NOT EXISTS `referral_linkage_services` (
   `ref_id` int NOT NULL,
   `ref_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7236,7 +7236,7 @@ INSERT IGNORE INTO `referral_linkage_services` (`ref_id`, `ref_name`) VALUES
 -- Table structure for table `regimens`
 --
 
-CREATE TABLE `regimens` (
+CREATE TABLE IF NOT EXISTS `regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7261,7 +7261,7 @@ INSERT IGNORE INTO `regimens` (`regimen_id`, `regimen_name`, `date_created`) VAL
 -- Table structure for table `regimen_type`
 --
 
-CREATE TABLE `regimen_type` (
+CREATE TABLE IF NOT EXISTS `regimen_type` (
   `regimen_id` int NOT NULL,
   `regimen_type_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7283,7 +7283,7 @@ INSERT IGNORE INTO `regimen_type` (`regimen_id`, `regimen_type_name`, `date_crea
 -- Table structure for table `reintegration_status`
 --
 
-CREATE TABLE `reintegration_status` (
+CREATE TABLE IF NOT EXISTS `reintegration_status` (
   `reint_id` int NOT NULL,
   `reint_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -7310,7 +7310,7 @@ INSERT IGNORE INTO `reintegration_status` (`reint_id`, `reint_name`) VALUES
 -- Table structure for table `religion`
 --
 
-CREATE TABLE `religion` (
+CREATE TABLE IF NOT EXISTS `religion` (
   `id` int NOT NULL,
   `religion_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7332,7 +7332,7 @@ INSERT IGNORE INTO `religion` (`id`, `religion_name`) VALUES
 -- Table structure for table `schema_migrations`
 --
 
-CREATE TABLE `schema_migrations` (
+CREATE TABLE IF NOT EXISTS `schema_migrations` (
   `id` int NOT NULL,
   `migration` varchar(190) NOT NULL,
   `applied_at` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7349,59 +7349,9 @@ INSERT IGNORE INTO `schema_migrations` (`id`, `migration`, `applied_at`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `seq_0_to_30`
---
 
-CREATE TABLE `seq_0_to_30` (
-  `seq` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `seq_0_to_30`
---
-
-INSERT IGNORE INTO `seq_0_to_30` (`seq`) VALUES
-(0),
-(1),
-(2),
-(3),
-(4),
-(5),
-(6),
-(7),
-(8),
-(9),
-(10),
-(11),
-(12),
-(13),
-(14),
-(15),
-(16),
-(17),
-(18),
-(19),
-(20),
-(21),
-(22),
-(23),
-(24),
-(25),
-(26),
-(27),
-(28),
-(29),
-(30),
-(31);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `status`
---
-
-CREATE TABLE `status` (
+CREATE TABLE IF NOT EXISTS `status` (
   `status_id` int NOT NULL,
   `status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7430,7 +7380,7 @@ INSERT IGNORE INTO `status` (`status_id`, `status_name`, `descr`, `date_created`
 -- Table structure for table `statushistory`
 --
 
-CREATE TABLE `statushistory` (
+CREATE TABLE IF NOT EXISTS `statushistory` (
   `status_id` int NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `sex` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7448,7 +7398,7 @@ CREATE TABLE `statushistory` (
 -- Table structure for table `stocks`
 --
 
-CREATE TABLE `stocks` (
+CREATE TABLE IF NOT EXISTS `stocks` (
   `stockID` int NOT NULL,
   `drugID` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7473,7 +7423,7 @@ CREATE TABLE `stocks` (
 -- Table structure for table `stock_movements`
 --
 
-CREATE TABLE `stock_movements` (
+CREATE TABLE IF NOT EXISTS `stock_movements` (
   `trans_id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `drugID` int NOT NULL,
@@ -7541,7 +7491,7 @@ DELIMITER ;
 -- Table structure for table `stores_inventory`
 --
 
-CREATE TABLE `stores_inventory` (
+CREATE TABLE IF NOT EXISTS `stores_inventory` (
   `inventory_id` int NOT NULL,
   `drugID` int DEFAULT NULL,
   `drugname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7560,7 +7510,7 @@ CREATE TABLE `stores_inventory` (
 -- Table structure for table `sub_counties`
 --
 
-CREATE TABLE `sub_counties` (
+CREATE TABLE IF NOT EXISTS `sub_counties` (
   `sub_county_id` int NOT NULL,
   `sub_county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7881,7 +7831,7 @@ INSERT IGNORE INTO `sub_counties` (`sub_county_id`, `sub_county_name`, `county_n
 -- Table structure for table `suppliers`
 --
 
-CREATE TABLE `suppliers` (
+CREATE TABLE IF NOT EXISTS `suppliers` (
   `supplier_id` int NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `contact_person` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7906,7 +7856,7 @@ INSERT IGNORE INTO `suppliers` (`supplier_id`, `name`, `contact_person`, `phone`
 -- Table structure for table `table_image`
 --
 
-CREATE TABLE `table_image` (
+CREATE TABLE IF NOT EXISTS `table_image` (
   `photo_id` int NOT NULL,
   `photo_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7920,7 +7870,7 @@ CREATE TABLE `table_image` (
 -- Table structure for table `tblaccompanment`
 --
 
-CREATE TABLE `tblaccompanment` (
+CREATE TABLE IF NOT EXISTS `tblaccompanment` (
   `accompanmentID` int NOT NULL,
   `accompanmentType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7945,7 +7895,7 @@ INSERT IGNORE INTO `tblaccompanment` (`accompanmentID`, `accompanmentType`, `dat
 -- Table structure for table `tblcso`
 --
 
-CREATE TABLE `tblcso` (
+CREATE TABLE IF NOT EXISTS `tblcso` (
   `cso_id` int NOT NULL,
   `cso_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7971,7 +7921,7 @@ INSERT IGNORE INTO `tblcso` (`cso_id`, `cso_name`, `description`, `date_created`
 -- Table structure for table `tblgender`
 --
 
-CREATE TABLE `tblgender` (
+CREATE TABLE IF NOT EXISTS `tblgender` (
   `gender_id` int NOT NULL,
   `gender_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7990,7 +7940,7 @@ INSERT IGNORE INTO `tblgender` (`gender_id`, `gender_name`) VALUES
 -- Table structure for table `tblreferral`
 --
 
-CREATE TABLE `tblreferral` (
+CREATE TABLE IF NOT EXISTS `tblreferral` (
   `referralID` int NOT NULL,
   `referralType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -8015,7 +7965,7 @@ INSERT IGNORE INTO `tblreferral` (`referralID`, `referralType`, `date_created`) 
 -- Table structure for table `tblusers`
 --
 
-CREATE TABLE `tblusers` (
+CREATE TABLE IF NOT EXISTS `tblusers` (
   `user_id` int NOT NULL,
   `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8067,7 +8017,7 @@ DELIMITER ;
 -- Table structure for table `tbl_hiv_status`
 --
 
-CREATE TABLE `tbl_hiv_status` (
+CREATE TABLE IF NOT EXISTS `tbl_hiv_status` (
   `status_id` int NOT NULL,
   `hiv_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8089,7 +8039,7 @@ INSERT IGNORE INTO `tbl_hiv_status` (`status_id`, `hiv_status_name`, `descriptio
 -- Table structure for table `tb_regimens`
 --
 
-CREATE TABLE `tb_regimens` (
+CREATE TABLE IF NOT EXISTS `tb_regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -8114,7 +8064,7 @@ INSERT IGNORE INTO `tb_regimens` (`regimen_id`, `regimen_name`) VALUES
 -- Table structure for table `tb_status`
 --
 
-CREATE TABLE `tb_status` (
+CREATE TABLE IF NOT EXISTS `tb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -8135,7 +8085,7 @@ INSERT IGNORE INTO `tb_status` (`status_id`, `status_name`, `date_created`) VALU
 -- Table structure for table `temp_updates`
 --
 
-CREATE TABLE `temp_updates` (
+CREATE TABLE IF NOT EXISTS `temp_updates` (
   `p_id` int NOT NULL,
   `new_clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -8146,7 +8096,7 @@ CREATE TABLE `temp_updates` (
 -- Table structure for table `toxicology_results`
 --
 
-CREATE TABLE `toxicology_results` (
+CREATE TABLE IF NOT EXISTS `toxicology_results` (
   `tox_id` int NOT NULL,
   `visitDate` datetime NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8187,7 +8137,7 @@ CREATE TABLE `toxicology_results` (
 -- Table structure for table `tpt_regimens`
 --
 
-CREATE TABLE `tpt_regimens` (
+CREATE TABLE IF NOT EXISTS `tpt_regimens` (
   `tpt_id` int NOT NULL,
   `tpt_regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -8208,7 +8158,7 @@ INSERT IGNORE INTO `tpt_regimens` (`tpt_id`, `tpt_regimen_name`) VALUES
 -- Table structure for table `transaction_types`
 --
 
-CREATE TABLE `transaction_types` (
+CREATE TABLE IF NOT EXISTS `transaction_types` (
   `id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -8230,7 +8180,7 @@ INSERT IGNORE INTO `transaction_types` (`id`, `transactionType`) VALUES
 -- Table structure for table `transfer_forms`
 --
 
-CREATE TABLE `transfer_forms` (
+CREATE TABLE IF NOT EXISTS `transfer_forms` (
   `id` int NOT NULL,
   `p_id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8278,7 +8228,7 @@ CREATE TABLE `transfer_forms` (
 -- Table structure for table `treatment_stage`
 --
 
-CREATE TABLE `treatment_stage` (
+CREATE TABLE IF NOT EXISTS `treatment_stage` (
   `stage_id` int NOT NULL,
   `stage_of_rx_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -8302,7 +8252,7 @@ INSERT IGNORE INTO `treatment_stage` (`stage_id`, `stage_of_rx_name`) VALUES
 -- Table structure for table `triage_services`
 --
 
-CREATE TABLE `triage_services` (
+CREATE TABLE IF NOT EXISTS `triage_services` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `clinician_id` int NOT NULL,
@@ -8343,7 +8293,7 @@ CREATE TABLE `triage_services` (
 -- Table structure for table `update_contacts`
 --
 
-CREATE TABLE `update_contacts` (
+CREATE TABLE IF NOT EXISTS `update_contacts` (
   `id` int NOT NULL,
   `facility_id` int DEFAULT NULL,
   `facility_name` varchar(255) NOT NULL,
@@ -8371,7 +8321,7 @@ INSERT IGNORE INTO `update_contacts` (`id`, `facility_id`, `facility_name`, `mfl
 -- Table structure for table `update_reports`
 --
 
-CREATE TABLE `update_reports` (
+CREATE TABLE IF NOT EXISTS `update_reports` (
   `id` int NOT NULL,
   `mflcode` varchar(100) NOT NULL,
   `facility_name` varchar(255) NOT NULL,
@@ -8392,7 +8342,7 @@ CREATE TABLE `update_reports` (
 -- Table structure for table `userroles`
 --
 
-CREATE TABLE `userroles` (
+CREATE TABLE IF NOT EXISTS `userroles` (
   `id` int NOT NULL,
   `role` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -8423,7 +8373,7 @@ INSERT IGNORE INTO `userroles` (`id`, `role`, `descr`) VALUES
 -- Table structure for table `viral_load`
 --
 
-CREATE TABLE `viral_load` (
+CREATE TABLE IF NOT EXISTS `viral_load` (
   `vl_id` int NOT NULL,
   `mat_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8447,7 +8397,7 @@ CREATE TABLE `viral_load` (
 -- Table structure for table `voluntary_discontinuation`
 --
 
-CREATE TABLE `voluntary_discontinuation` (
+CREATE TABLE IF NOT EXISTS `voluntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -8476,7 +8426,7 @@ CREATE TABLE `voluntary_discontinuation` (
 -- Table structure for table `yellow_card_visits`
 --
 
-CREATE TABLE `yellow_card_visits` (
+CREATE TABLE IF NOT EXISTS `yellow_card_visits` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `consultation_date` date NOT NULL,
