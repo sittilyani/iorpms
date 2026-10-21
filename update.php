@@ -86,6 +86,21 @@ if (isset($_GET['status'])) {
     exit;
 }
 
+// ── Download a pre-update backup to the user's computer ─────────────────────
+if (isset($_GET['download'])) {
+    $f = basename((string)$_GET['download']);
+    $path = $root . '/backup/database/' . $f;
+    if (!preg_match('/^pre_update_[A-Za-z0-9_\-]+\.sql$/', $f) || !is_file($path)) {
+        http_response_code(404);
+        exit('Backup not found.');
+    }
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . $f . '"');
+    header('Content-Length: ' . filesize($path));
+    readfile($path);
+    exit;
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function upd_status(int $percent, string $phase, string $msg, array $extra = []): void
 {
@@ -179,13 +194,65 @@ function upd_flush_pending(string $file): void
     if ($left) file_put_contents($file, json_encode($left)); else @unlink($file);
 }
 
+/** Full database dump (tables + data) streamed to a file. Returns the file name. */
+function upd_backup_database(mysqli $conn, string $root): string
+{
+    $dir = $root . '/backup/database';
+    if (!is_dir($dir)) @mkdir($dir, 0777, true);
+    $db   = defined('DB_NAME') ? DB_NAME : 'database';
+    $name = 'pre_update_' . preg_replace('/[^A-Za-z0-9_]/', '', $db) . '_' . date('Y-m-d_H-i-s') . '.sql';
+    $fh = fopen($dir . '/' . $name, 'wb');
+    if (!$fh) throw new Exception('Could not create the backup file in backup/database - check folder permissions.');
+
+    fwrite($fh, "-- Pre-update backup | DB: $db | " . date('Y-m-d H:i:s') . "
+SET FOREIGN_KEY_CHECKS=0;
+SET NAMES utf8mb4;
+
+");
+    $tables = [];
+    $r = $conn->query('SHOW FULL TABLES WHERE Table_type = "BASE TABLE"');
+    while ($r && ($row = $r->fetch_row())) $tables[] = $row[0];
+    $total = max(1, count($tables));
+
+    foreach ($tables as $i => $t) {
+        upd_status(1 + (int)(3 * $i / $total), 'backup', 'Backing up the database: table ' . ($i + 1) . " of $total ($t)...");
+        $c = $conn->query("SHOW CREATE TABLE `$t`")->fetch_row();
+        fwrite($fh, "DROP TABLE IF EXISTS `$t`;
+" . $c[1] . ";
+
+");
+        $res = $conn->query("SELECT * FROM `$t`", MYSQLI_USE_RESULT);
+        if (!$res) continue;
+        $batch = [];
+        while ($row = $res->fetch_row()) {
+            $vals = [];
+            foreach ($row as $v) $vals[] = ($v === null) ? 'NULL' : "'" . $conn->real_escape_string($v) . "'";
+            $batch[] = '(' . implode(',', $vals) . ')';
+            if (count($batch) >= 200) {
+                fwrite($fh, "INSERT INTO `$t` VALUES " . implode(',', $batch) . ";
+");
+                $batch = [];
+            }
+        }
+        $res->free();
+        if ($batch) fwrite($fh, "INSERT INTO `$t` VALUES " . implode(',', $batch) . ";
+");
+        fwrite($fh, "
+");
+    }
+    fwrite($fh, "SET FOREIGN_KEY_CHECKS=1;
+");
+    fclose($fh);
+    return $name;
+}
+
 // ── The update itself ────────────────────────────────────────────────────────
-function upd_run(string $root, mysqli $conn, bool $dryRun): array
+function upd_run(string $root, mysqli $conn, bool $dryRun, bool $doBackup = true): array
 {
     global $UPD;
     $report = ['ok' => false, 'done' => false, 'commit' => '', 'updated' => [], 'added' => [], 'failed' => [],
                'migrations' => [], 'migration_error' => null, 'repeatable' => [], 'message' => '',
-               'rollback' => '', 'notified' => null, 'dry' => $dryRun];
+               'rollback' => '', 'notified' => null, 'dry' => $dryRun, 'backup_file' => ''];
     $pendingFile = $root . '/updates/pending_reports.json';
     $t0 = time();
     $UPD = ['started' => $t0, 'done' => false, 'percent' => 0, 'phase' => 'start', 'message' => 'Starting...', 'steps' => []];
@@ -193,13 +260,19 @@ function upd_run(string $root, mysqli $conn, bool $dryRun): array
     try {
         if (!function_exists('curl_init')) throw new Exception('The PHP curl extension is not enabled.');
 
-        upd_status(2, 'check', 'Checking GitHub for the latest version...');
+        if ($doBackup && !$dryRun) {
+            upd_status(1, 'backup', 'Backing up the database...');
+            $report['backup_file'] = upd_backup_database($conn, $root);
+            upd_status(4, 'backup', 'Database backup created: ' . $report['backup_file'], ['backup_file' => $report['backup_file']]);
+        }
+
+        upd_status(5, 'check', 'Checking GitHub for the latest version...');
         $ref    = upd_http('https://api.github.com/repos/' . UPD_OWNER . '/' . UPD_REPO . '/git/ref/heads/' . UPD_BRANCH, true);
         $commit = $ref['object']['sha'] ?? '';
         if (!$commit) throw new Exception('Could not read the latest version from GitHub.');
         $report['commit'] = $commit;
 
-        upd_status(5, 'check', 'Reading the GitHub file list...');
+        upd_status(6, 'check', 'Reading the GitHub file list...');
         $tree = upd_http('https://api.github.com/repos/' . UPD_OWNER . '/' . UPD_REPO . '/git/trees/' . $commit . '?recursive=1', true, 180);
         if (empty($tree['tree'])) throw new Exception('GitHub returned an empty file list.');
         if (!empty($tree['truncated'])) throw new Exception('GitHub file list was truncated; contact the system administrator.');
@@ -356,7 +429,7 @@ if (isset($_GET['run'])) {
         echo json_encode(['ok' => false, 'done' => true, 'message' => 'An update is already running on this computer.']);
         exit;
     }
-    $rep = upd_run($root, $conn, $dryRun);
+    $rep = upd_run($root, $conn, $dryRun, ($_GET['backup'] ?? '1') !== '0');
     flock($lock, LOCK_UN);
     echo json_encode($rep);
     exit;
@@ -398,11 +471,18 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
     <strong><?= htmlspecialchars($current ? substr($current['commit'], 0, 8) : 'not recorded yet') ?></strong>.
     Client photos are never touched. Please keep this page open until it finishes.</div>
 
+  <div id="opts" style="margin-bottom:14px;">
+    <label style="cursor:pointer;"><input type="checkbox" id="doBackup" checked>
+      Back up the database first and download a copy to this computer (recommended)</label><br>
+    <button id="startBtn" style="margin-top:10px;background:#2C3162;color:#fff;border:0;border-radius:8px;padding:10px 24px;cursor:pointer;font-size:1rem;">Start update</button>
+    <small style="display:block;color:#889;margin-top:6px;">Database backups already in backup/database are never replaced by an update.</small>
+  </div>
   <div class="bar"><div class="fill" id="fill"></div><div class="pct" id="pct">0%</div></div>
   <div class="msg" id="msg">Starting...</div>
   <div class="time">Elapsed: <span id="elapsed">0:00</span></div>
 
   <ol class="steps" id="steps">
+    <li data-p="backup">Back up the database (and download a copy)</li>
     <li data-p="check">Check GitHub for the latest version</li>
     <li data-p="compare">Compare this computer's files with GitHub</li>
     <li data-p="download">Download new and changed files</li>
@@ -415,7 +495,7 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
 </div>
 <script>
 (function () {
-  var order = ['check','compare','download','apply','database','notify','done'];
+  var order = ['backup','check','compare','download','apply','database','notify','done'];
   var t0 = Date.now(), finished = false;
   var q = <?= json_encode($dryRun ? '&dry=1' : '') ?> + <?= json_encode(($_GET['force'] ?? '') === '1' ? '&force=1' : '') ?>;
   function $(id){return document.getElementById(id);}
@@ -444,6 +524,7 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
     h += '<p><span class="pill">'+(r.updated||[]).length+' file(s) replaced</span><span class="pill">'+(r.added||[]).length+' file(s) added</span>'
        + '<span class="pill">'+(r.migrations||[]).length+' database change(s)</span><span class="pill">client photos: untouched</span></p>';
     if(r.migration_error) h += '<p class="bad">Database update stopped at: '+esc(r.migration_error)+'<br>Open this page again after it is fixed; files are already updated.</p>';
+    if(r.backup_file) h += '<p>Database backup: <a href="update.php?download='+encodeURIComponent(r.backup_file)+q+'">download <code>'+esc(r.backup_file)+'</code> again</a> (also kept in <code>backup/database</code>).</p>';
     if(r.rollback) h += '<p>Previous versions of replaced files were saved in <code>'+esc(r.rollback)+'</code>.</p>';
     if(r.notified===true) h += '<p class="ok">The administrator has been notified that this update is done.</p>';
     if(r.notified===false) h += '<p>No internet connection to the administrator\'s server right now - the notice is saved and will be sent automatically next time.</p>';
@@ -454,12 +535,25 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
   function poll(){
     if(finished) return;
     fetch('update.php?status=1'+q,{cache:'no-store'}).then(function(r){return r.json();}).then(function(st){
-      if(st && st.phase){ if(st.done && st.report) show(st.report); else setProgress(st); }
+      if(st && st.phase){ if(st.backup_file) offerBackup(st.backup_file); if(st.done && st.report) show(st.report); else setProgress(st); }
     }).catch(function(){}).then(function(){ if(!finished) setTimeout(poll,700); });
   }
-  fetch('update.php?run=1'+q,{cache:'no-store'}).then(function(r){return r.json();}).then(show)
-    .catch(function(){ /* connection dropped - the status poll will deliver the result */ });
-  setTimeout(poll,500);
+  var downloaded = false;
+  function offerBackup(f){
+    if(!f || downloaded) return; downloaded = true;
+    var a = document.createElement('a'); a.href='update.php?download='+encodeURIComponent(f)+q; a.download=f; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    window.__backupFile = f;
+  }
+  function start(){
+    var wantBackup = $('doBackup').checked;
+    $('opts').style.display='none'; t0 = Date.now();
+    fetch('update.php?run=1'+(wantBackup?'':'&backup=0')+q,{cache:'no-store'}).then(function(r){return r.json();}).then(show)
+      .catch(function(){ /* connection dropped - the status poll will deliver the result */ });
+    setTimeout(poll,500);
+  }
+  $('startBtn').addEventListener('click', start);
+  if (<?= json_encode(($_GET['auto'] ?? '') === '1') ?>) start();
 })();
 </script>
 </body>
