@@ -471,12 +471,7 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
     <strong><?= htmlspecialchars($current ? substr($current['commit'], 0, 8) : 'not recorded yet') ?></strong>.
     Client photos are never touched. Please keep this page open until it finishes.</div>
 
-  <div id="opts" style="margin-bottom:14px;">
-    <label style="cursor:pointer;"><input type="checkbox" id="doBackup" checked>
-      Back up the database first and download a copy to this computer (recommended)</label><br>
-    <button id="startBtn" style="margin-top:10px;background:#2C3162;color:#fff;border:0;border-radius:8px;padding:10px 24px;cursor:pointer;font-size:1rem;">Start update</button>
-    <small style="display:block;color:#889;margin-top:6px;">Database backups already in backup/database are never replaced by an update.</small>
-  </div>
+  <small style="display:block;color:#889;margin-bottom:10px;">The database is backed up first and a copy is downloaded to this computer. Existing backups in backup/database are never replaced.</small>
   <div class="bar"><div class="fill" id="fill"></div><div class="pct" id="pct">0%</div></div>
   <div class="msg" id="msg">Starting...</div>
   <div class="time">Elapsed: <span id="elapsed">0:00</span></div>
@@ -546,14 +541,12 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
     window.__backupFile = f;
   }
   function start(){
-    var wantBackup = $('doBackup').checked;
-    $('opts').style.display='none'; t0 = Date.now();
-    fetch('update.php?run=1'+(wantBackup?'':'&backup=0')+q,{cache:'no-store'}).then(function(r){return r.json();}).then(show)
+    t0 = Date.now();
+    fetch('update.php?run=1'+q,{cache:'no-store'}).then(function(r){return r.json();}).then(show)
       .catch(function(){ /* connection dropped - the status poll will deliver the result */ });
     setTimeout(poll,500);
   }
-  $('startBtn').addEventListener('click', start);
-  if (<?= json_encode(($_GET['auto'] ?? '') === '1') ?>) start();
+  start();   // starts by itself - no click needed
 })();
 </script>
 </body>
