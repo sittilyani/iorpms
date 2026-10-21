@@ -51,7 +51,7 @@ function upd_excluded(string $path): bool
         if (strpos($path, $p) === 0) return true;
     }
     $base = basename($path);
-    if (strpos($path, 'includes/config-') === 0) return true;
+    if (strpos($path, 'includes/config-') === 0 || $base === 'config-easyflow.php') return true;
     if (preg_match('/\.(sql|zip|rar|tar|gz|7z|log)$/i', $base) && strpos($path, 'updates/') !== 0) return true;
     if (substr($base, 0, 1) === '.' && $base !== '.htaccess') return true;
     return false;

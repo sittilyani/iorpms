@@ -33,23 +33,38 @@ if (!defined('APP_ENV')) {
     define('APP_ENV', $isLocal ? 'offline' : 'online');
 }
 
-// ── Load production secrets if available ─────────────────────────────────────
-// Place config-iorpms.php in THIS folder (includes/ — protected from browser
-// access by includes/.htaccess). It can override any of the constants below
-// (DB, SMTP, etc.) — anything it defines wins, and the defaults below only
-// fill in what's missing (all defines are guarded).
+// ── Load production secrets (never stored in this repository) ────────────────
+// ONLINE: credentials live in config-easyflow.php, kept OUTSIDE public_html
+// (e.g. /home/<cpanel-user>/config-easyflow.php) so it cannot be served by the
+// web server and is never pushed to GitHub. Copy includes/config-easyflow.example.php
+// there and fill in the real values. It may define DB_*, SMTP_*, MAIL_FROM, etc.
+// - anything it defines wins; the defaults below only fill in what is missing.
+$_easyflow_config = null;
+foreach (array_filter([
+    !empty($_SERVER['DOCUMENT_ROOT']) ? dirname(rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/')) . '/config-easyflow.php' : null,   // parent of public_html
+    dirname(__DIR__, 3) . '/config-easyflow.php',                                                                               // public_html/iorpms/includes -> home folder
+]) as $_cand) {
+    if (is_file($_cand)) { $_easyflow_config = $_cand; break; }
+}
+if ($_easyflow_config) {
+    require_once $_easyflow_config;
+}
+// Legacy / local override (git-ignored, inside includes/, blocked from the browser by includes/.htaccess)
 $_iorpms_config = __DIR__ . '/config-iorpms.php';
 if (file_exists($_iorpms_config)) {
     require_once $_iorpms_config;
 }
-
+if (APP_ENV === 'online' && !defined('DB_PASS')) {
+    error_log('[online] config-easyflow.php not found outside public_html');
+    die('<div style="font-family:sans-serif;padding:40px;text-align:center;">
+            <h2 style="color:#c53030">Configuration Error</h2>
+            <p>The server configuration file <code>config-easyflow.php</code> was not found.
+               Create it outside <code>public_html</code> (see <code>includes/config-easyflow.example.php</code>).</p>
+         </div>');
+}
 // ── Database credentials per environment ─────────────────────
 if (APP_ENV === 'online') {
-    // ── ONLINE (production — sitti.site) ──
-    defined('DB_HOST') || define('DB_HOST', 'localhost');
-    defined('DB_USER') || define('DB_USER', 'sittkelw');
-    defined('DB_PASS') || define('DB_PASS', 'D1@nah1984+');
-    defined('DB_NAME') || define('DB_NAME', 'sittkelw_methadone');
+    // ── ONLINE: credentials come from config-easyflow.php (outside public_html) - none are kept in the repository ──
 } else {
     // ── OFFLINE (local Laragon dev) ──
     defined('DB_HOST') || define('DB_HOST', 'localhost');
@@ -93,14 +108,14 @@ $conn->set_charset('utf8mb4');
 date_default_timezone_set('Africa/Nairobi');
 
 // ── Mail settings ────────────────────────────────────────────
-// These are LOCAL/OFFLINE fallbacks only. In production, includes/
-// config-iorpms.php overrides these with authenticated SMTP for the real
+// These are LOCAL/OFFLINE fallbacks only. In production, config-easyflow.php
+// (outside public_html) overrides these with authenticated SMTP for the real
 // mailbox.
 defined('SMTP_HOST')   || define('SMTP_HOST',   'smtp.gmail.com');
 defined('SMTP_PORT')   || define('SMTP_PORT',   465);
 defined('SMTP_SECURE') || define('SMTP_SECURE', 'ssl');
 defined('SMTP_AUTH')   || define('SMTP_AUTH',   true);
 defined('SMTP_USER')   || define('SMTP_USER',   'sittilyani@gmail.com');
-defined('SMTP_PASS')   || define('SMTP_PASS',   'bazpatvobxfztcgw');
+defined('SMTP_PASS')   || define('SMTP_PASS',   '');   // real password: config-easyflow.php (online) or includes/config-iorpms.php (local)
 defined('MAIL_FROM')      || define('MAIL_FROM',      'sittilyani@gmail.com');
 defined('MAIL_FROM_NAME') || define('MAIL_FROM_NAME', 'EasyFlow Admin');

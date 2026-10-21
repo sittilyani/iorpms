@@ -14,3 +14,7 @@ includes/config-iorpms.php
 /cache/update_tmp_*
 /updates/last_update.json
 *.Rhistory
+
+# Production secrets kept outside public_html - never commit
+config-easyflow.php
+**/config-easyflow.php
