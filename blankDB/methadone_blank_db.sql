@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 15, 2026 at 01:29 PM
+-- Generation Time: Oct 21, 2026 at 09:13 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.33
 
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `administrationroutes`
 --
 
-CREATE TABLE IF NOT EXISTS `administrationroutes` (
+CREATE TABLE `administrationroutes` (
   `route_id` int NOT NULL,
   `routetype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -52,7 +52,7 @@ INSERT IGNORE INTO `administrationroutes` (`route_id`, `routetype`, `date_create
 -- Table structure for table `backup_log`
 --
 
-CREATE TABLE IF NOT EXISTS `backup_log` (
+CREATE TABLE `backup_log` (
   `id` int NOT NULL,
   `backup_date` date NOT NULL,
   `backup_type` enum('morning','midday') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -63,10 +63,35 @@ CREATE TABLE IF NOT EXISTS `backup_log` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bin_card_entries`
+--
+
+CREATE TABLE `bin_card_entries` (
+  `entry_id` int NOT NULL,
+  `trans_date` datetime NOT NULL,
+  `drugID` int DEFAULT NULL,
+  `drugname` varchar(100) NOT NULL,
+  `mat_id` varchar(50) DEFAULT NULL,
+  `mat_number` varchar(50) DEFAULT NULL,
+  `batch_number` varchar(50) DEFAULT NULL,
+  `received_from` varchar(100) NOT NULL DEFAULT '',
+  `opening_balance` double DEFAULT NULL,
+  `qty_in` double DEFAULT NULL,
+  `qty_out_tablets` double DEFAULT NULL,
+  `qty_out_mg` double DEFAULT NULL,
+  `stock_balance` double DEFAULT NULL,
+  `disp_id` int DEFAULT NULL,
+  `issued_by` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `categories`
 --
 
-CREATE TABLE IF NOT EXISTS `categories` (
+CREATE TABLE `categories` (
   `id` int NOT NULL,
   `name` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -89,7 +114,7 @@ INSERT IGNORE INTO `categories` (`id`, `name`, `description`, `photo`) VALUES
 -- Table structure for table `client_consents`
 --
 
-CREATE TABLE IF NOT EXISTS `client_consents` (
+CREATE TABLE `client_consents` (
   `id` int NOT NULL,
   `p_id` int NOT NULL COMMENT 'ID from the patients table',
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -123,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `client_consents` (
 -- Table structure for table `clinical_encounters`
 --
 
-CREATE TABLE IF NOT EXISTS `clinical_encounters` (
+CREATE TABLE `clinical_encounters` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `facility_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -220,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `clinical_encounters` (
 -- Table structure for table `clinical_encounter_drafts`
 --
 
-CREATE TABLE IF NOT EXISTS `clinical_encounter_drafts` (
+CREATE TABLE `clinical_encounter_drafts` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `form_data` json NOT NULL,
@@ -236,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `clinical_encounter_drafts` (
 -- Table structure for table `clinic_visits`
 --
 
-CREATE TABLE IF NOT EXISTS `clinic_visits` (
+CREATE TABLE `clinic_visits` (
   `clinic_id` int NOT NULL,
   `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -265,7 +290,7 @@ INSERT IGNORE INTO `clinic_visits` (`clinic_id`, `visit_name`) VALUES
 -- Table structure for table `consents`
 --
 
-CREATE TABLE IF NOT EXISTS `consents` (
+CREATE TABLE `consents` (
   `consent_id` int NOT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -281,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `consents` (
 -- Table structure for table `counties`
 --
 
-CREATE TABLE IF NOT EXISTS `counties` (
+CREATE TABLE `counties` (
   `id` int NOT NULL,
   `county_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -340,7 +365,8 @@ INSERT IGNORE INTO `counties` (`id`, `county_code`, `county_name`, `region`, `da
 (44, '044', 'Migori', 'Nyanza', '2025-01-10 00:00:00'),
 (45, '045', 'Kisii', 'Nyanza', '2025-01-10 00:00:00'),
 (46, '046', 'Nyamira', 'Nyanza', '2025-01-10 00:00:00'),
-(47, '047', 'Nairobi (County)', 'Nairobi (City)', '2025-01-10 00:00:00');
+(47, '047', 'Nairobi (County)', 'Nairobi (City)', '2025-01-10 00:00:00'),
+(48, '048', 'LVCT Health County', 'LVCT Health Region', '2025-10-10 19:37:01');
 
 -- --------------------------------------------------------
 
@@ -348,7 +374,7 @@ INSERT IGNORE INTO `counties` (`id`, `county_code`, `county_name`, `region`, `da
 -- Table structure for table `countries`
 --
 
-CREATE TABLE IF NOT EXISTS `countries` (
+CREATE TABLE `countries` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `iso2` char(2) NOT NULL DEFAULT '',
@@ -532,7 +558,7 @@ INSERT IGNORE INTO `countries` (`id`, `name`, `iso2`, `region`, `sort_order`) VA
 -- Table structure for table `daily_report_comments`
 --
 
-CREATE TABLE IF NOT EXISTS `daily_report_comments` (
+CREATE TABLE `daily_report_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -545,7 +571,7 @@ CREATE TABLE IF NOT EXISTS `daily_report_comments` (
 -- Table structure for table `deleted_patients`
 --
 
-CREATE TABLE IF NOT EXISTS `deleted_patients` (
+CREATE TABLE `deleted_patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -597,13 +623,662 @@ CREATE TABLE IF NOT EXISTS `deleted_patients` (
   `occupation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `deleted_patients`
+--
+
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(1762, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0001', '1', 'DENNIS GITAU WAMBUI', '', '', '', '1988-04-09', '38', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-08-15 00:00:00', '', '', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', '2022-08-15', NULL, NULL),
+(1763, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0002', '2', 'DANIEL WAITHAKA NJERI', '', '', '', '2002-03-15', '24', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2024-04-01 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1764, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0003', '3', 'JOSEPH MUCHUMI MICHUKI', '', '', '', '1999-05-04', '27', 'Male', '', 'Ruiru', 'Inmate', '', 'New', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Lyani', '2025-09-22 00:00:00', '', '', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', '2026-11-26', NULL, NULL),
+(1765, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0004', '4', 'AMOS NGOTHO NDUATI', '', '', '', '1996-03-03', '30', 'Male', '', 'Nairobi County', 'KASARANI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-07-31 00:00:00', '', '', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', '2024-07-31', NULL, NULL),
+(1766, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0005', '5', 'JOSEPH MWANGI KARIUKI', '', '', '', '1998-12-13', '27', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'LTFU', 'Relapse', 'PETER', '2024-11-02 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1767, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0006', '6', 'CHARLES NJUGUNA WANJA', '', '', '', '1997-12-03', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-09-21 00:00:00', '', '', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', '2023-09-21', NULL, NULL),
+(1768, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0007', '7', 'FRANCIS KAMAU MAINA', '', '', '', '1994-04-19', '32', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-02-10 00:00:00', '', '', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', '2024-02-10', NULL, NULL),
+(1769, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0008', '8', 'VINCENT MACHARIA WANJIRU', '', '', '', '1983-04-14', '43', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-02-23 00:00:00', '', '', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', NULL, NULL),
+(1770, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0009', '9', 'KELVIN WANGI WAMBUI', '', '', '', '1996-06-14', '30', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-09-08 00:00:00', '', '', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', '2023-09-08', NULL, NULL),
+(1771, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0010', '10', 'PAUL KINYANJUI WANJIRU', '', '', '', '1999-10-18', '27', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(1772, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0011', '11', 'CHARLES NGANGA GITONGA', '', '', '', '2000-07-08', '26', 'Male', '', 'Nairobi County', 'SOWETO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 17.50, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(1773, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0012', '12', 'MONICAH WANJIRU WAWERU', '', '', '', '1993-07-07', '33', 'Female', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2022-07-20 00:00:00', '', '', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', NULL, NULL),
+(1774, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0013', '13', 'KENNEDY MBURU GICHEHA', '', '', '', '1997-06-12', '29', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(1775, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0014', '14', 'PATRICK NJOROGE MBURU', '', '', '', '1998-09-06', '28', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-06-21 00:00:00', '', '', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', '2022-06-21', NULL, NULL),
+(1776, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0015', '15', 'MARGARET WANGARI MURIGI', '', '', '', '1995-01-24', '31', 'Female', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Mercy', '2023-01-17 00:00:00', '', '', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', NULL, NULL),
+(1777, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0016', '16', 'GEORGE KARIUKI MUTHONI', '', '', '', '1988-06-06', '38', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-04-09 00:00:00', '', '', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', '2024-04-09', NULL, NULL),
+(1778, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0017', '17', 'PATRICK MWAURA NJUGUNA', '', '', '', '1998-04-28', '28', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Voluntary Discontinuation', 'GRACE', '2025-02-12 00:00:00', '', '', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', '2056-10-03', NULL, NULL),
+(1779, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0018', '18', 'ERICK MWAI WANJIKU', '', '', '', '1998-07-11', '28', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-01 00:00:00', '', '', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', '2023-05-01', NULL, NULL),
+(1780, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0019', '19', 'ANNA NDUKU WAMBUA', '', '', '', '1988-07-27', '38', 'Female', '', 'Githunguri', 'NGEWA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1781, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0020', '20', 'MICHAEL NJAU NJOKI', '', '', '', '1998-09-08', '28', 'Male', '', 'Githunguri', 'NGEWA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-05-15 00:00:00', '', '', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', NULL, NULL),
+(1782, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0021', '21', 'PETER MUITA WANJAU', '', '', '', '1995-05-27', '31', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-07-16 00:00:00', '', '', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', '2023-07-16', NULL, NULL),
+(1783, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0022', '22', 'ISAACK GITAHI NYAMURA', '', '', '', '1996-12-14', '29', 'Male', '', 'Nairobi County', 'MARURUI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-20 00:00:00', '', '', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', NULL, NULL),
+(1784, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0023', '23', 'PAUL MUIGAI WANJIKU', '', '', '', '1987-07-06', '39', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2023-10-14 00:00:00', '', '', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', NULL, NULL),
+(1785, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-31 00:00:00', '10973MAT0024', '24', 'EDWIN KARIUKI WAKIBIA', '', '', '', '1998-05-26', '28', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-08-23 00:00:00', '', '', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', NULL, NULL),
+(1786, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-01 00:00:00', '10973MAT0025', '25', 'CHARLES MAINA WANJIKU', '', '', '', '1998-02-26', '28', 'Male', '', 'Nairobi County', 'Inmate', '', 'New', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Lyani', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1787, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-01 00:00:00', '10973MAT0026', '26', 'DENNIS KAMAU NJERI', '', '', '', '1990-09-17', '36', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-10-21 00:00:00', '', '', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', '2023-10-21', NULL, NULL),
+(1788, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-01 00:00:00', '10973MAT0027', '27', 'PETER MWANIKI MURIGI', '', '', '', '1991-12-24', '34', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-03 00:00:00', '', '', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', NULL, NULL),
+(1789, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-02 00:00:00', '10973MAT0028', '28', 'KENNETH KARANJA KIMANI', '', '', '', '2001-05-01', '25', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2025-01-16 00:00:00', '', '', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', '2025-01-16', NULL, NULL),
+(1790, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-03 00:00:00', '10973MAT0029', '29', 'MARTIN OBANGO KINYANJUI', '', '', '', '1999-12-25', '26', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-10-14 00:00:00', '', '', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', '2024-10-14', NULL, NULL),
+(1791, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-03 00:00:00', '10973MAT0030', '30', 'KELVIN NGUGI MWAURA', '', '', '', '1996-03-13', '30', 'Male', '', 'Nairobi County', 'RUAKA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-06-21 00:00:00', '', '', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', '2024-06-21', NULL, NULL),
+(1792, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-06 00:00:00', '10973MAT0031', '31', 'MATHEW MAINGI MULINGE', '', '', '', '2000-12-14', '25', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2023-07-08 00:00:00', '', '', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', '2023-07-08', NULL, NULL),
+(1793, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-06 00:00:00', '10973MAT0032', '32', 'JOSEPH KACHILI MANYORO', '', '', '', '1999-10-11', '27', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1794, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-06 00:00:00', '10973MAT0033', '33', 'HASSAN MUGENDI MWANIKI', '', '', '', '1988-04-24', '38', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 60.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1795, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-06 00:00:00', '10973MAT0034', '34', 'JOSEPH KARANJA GAKUO', '', '', '', '1997-10-10', '29', 'Male', '', 'Githunguri', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Brian', '2022-06-07 00:00:00', '', '', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', '2022-06-07', NULL, NULL),
+(1796, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-07 00:00:00', '10973MAT0035', '35', 'HARRISON MWANGI KARUGA', '', '', '', '1991-08-15', '35', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1797, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-07 00:00:00', '10973MAT0036', '36', 'MICHAEL THONGORI KIANIA', '', '', '', '2001-11-15', '24', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-03-27 00:00:00', '', '', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', '2025-03-27', NULL, NULL),
+(1798, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-24 00:00:00', '10973MAT0037', '37', 'ANTHONY NGUGI GICHANGA', '', '', '', '2001-04-25', '25', 'Male', '', 'Ruiru', 'KIMBO', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-09-10 00:00:00', '', '', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', '2023-09-10', NULL, NULL),
+(1799, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-07 00:00:00', '10973MAT0038', '38', 'JOHN MUIRURI MURIGI', '', '', '', '1986-08-14', '40', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-10-02 00:00:00', '', '', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', '2023-10-02', NULL, NULL),
+(1800, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-07 00:00:00', '10973MAT0039', '39', 'JOHN MUGO', '', '', '', '1992-12-08', '33', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-03-24 00:00:00', '', '', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', NULL, NULL),
+(1801, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-08 00:00:00', '10973MAT0040', '40', 'MONICAH WANJIRU WANJA', '', '', '', '2003-12-22', '22', 'Female', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2025-09-16 00:00:00', '', '', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', NULL, NULL),
+(1802, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-08 00:00:00', '10973MAT0041', '41', 'PETER KAMAU NJUGUNA', '', '', '', '1996-07-07', '30', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 2mg', 12.00, 'Last Known dose', 'Active', 'Active', 'Lyani', '2025-09-22 00:00:00', '', '', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', '2026-10-31', NULL, NULL),
+(1803, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-08 00:00:00', '10973MAT0042', '42', 'HILLARY ATAMBO BIKUNDO', '', '', '', '1996-06-26', '30', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-01-14 00:00:00', '', '', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', '2024-01-14', NULL, NULL),
+(1804, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0043', '43', 'GEORGE KARIUKI NJERI', '', '', '', '1999-04-28', '27', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 100.00, 'Last Known dose', 'ltfu', 'Active', 'Tinah', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1805, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-08 00:00:00', '10973MAT0044', '44', 'FLORENCE NJAMBI NGARUIYA', '', '', '', '1996-12-04', '29', 'Female', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-24 00:00:00', '', '', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', NULL, NULL),
+(1806, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0045', '45', 'PETER MWANGI KAMAU', '', '', '', '1999-06-23', '27', 'Male', '', 'Juja', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'ltfu', 'Weaned', 'GRACE', '2024-09-15 00:00:00', '', '', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', '2026-12-15', NULL, NULL),
+(1807, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0046', '46', 'MARY WAYUA NDUNGE', '', '', '', '2003-02-07', '23', 'Female', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-09 00:00:00', '', '', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', NULL, NULL),
+(1808, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0047', '47', 'JOSEPHAT CHEGE MUTUGI', '', '', '', '1993-11-21', '32', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-03-24 00:00:00', '', '', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', NULL, NULL),
+(1809, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0048', '48', 'PETER KAMAU MBWIRE', '', '', '', '1995-09-20', '31', 'Male', '', 'Gatundu South', 'GATUNDU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-04-10 00:00:00', '', '', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', NULL, NULL),
+(1810, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0049', '49', 'PETER NJOROGE KARIUKI', '', '', '', '1996-06-15', '30', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-06-14 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1811, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0050', '50', 'BETTY NJERI KARWATHA', '', '', '', '1999-09-21', '27', 'Female', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2022-07-29 00:00:00', '', '', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', '2022-07-29', NULL, NULL),
+(1812, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-10 00:00:00', '10973MAT0051', '51', 'JOSEPH GICHEHA KIBUGI', '', '', '', '1998-11-23', '27', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-07-20 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1813, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0052', '52', 'NICHOLAS NDUNDA MUMBI', '', '', '', '2003-06-03', '23', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2022-10-02 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1814, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0053', '53', 'PAUL MBURU NJUGUNA', '', '', '', '1998-06-08', '28', 'Male', '', 'Nairobi County', 'MARURUI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2022-12-02 00:00:00', '', '', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', '2022-12-02', NULL, NULL),
+(1815, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0054', '54', 'MICHAEL NJUGUNAMBURU', '', '', '', '1995-05-06', '31', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1816, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-09 00:00:00', '10973MAT0055', '55', 'AMOS NJOROGE GATHUMBI', '', '', '', '1999-04-24', '27', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1817, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-13 00:00:00', '10973MAT0056', '56', 'FREDRICK KIONI MUTUNDA', '', '', '', '1999-08-27', '27', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-10-18 00:00:00', '', '', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', '2024-10-18', NULL, NULL),
+(1818, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-13 00:00:00', '10973MAT0057', '57', 'COLLINS WANGILA KATASI', '', '', '', '2002-07-31', '24', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1819, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-13 00:00:00', '10973MAT0058', '58', 'PETER KAMAU JANE', '', '', '', '2001-07-03', '25', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 2.50, 'Last Known dose', 'ltfu', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1820, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-13 00:00:00', '10973MAT0059', '59', 'KEN GICHURU MUMBI', '', '', '', '1998-11-30', '27', 'Male', '', 'Ruiru', '', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-19 00:00:00', '', '', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', '2023-02-19', NULL, NULL),
+(1821, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-13 00:00:00', '10973MAT0060', '60', 'STEPHEN KIMANI KABANDI', '', '', '', '1995-07-03', '31', 'Male', '', 'Nairobi County', 'MARURUI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-12-16 00:00:00', '', '', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', NULL, NULL),
+(1822, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-12 00:00:00', '10973MAT0061', '61', 'DAVID KARIUKI KINORU', '', '', '', '1978-07-28', '48', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1823, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-12 00:00:00', '10973MAT0062', '62', 'BENARD MWAI WANGARI', '', '', '', '1991-08-12', '35', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-16 00:00:00', '', '', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', '2023-11-16', NULL, NULL),
+(1824, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-12 00:00:00', '10973MAT0063', '63', 'PAUL KARIUKI WAMBEO', '', '', '', '1984-03-07', '42', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-01-21 00:00:00', '', '', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', '2023-01-21', NULL, NULL),
+(1825, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0064', '64', 'RICHARD NDUNGU NGARUIYA', '', '', '', '1990-01-01', '36', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-11-05 00:00:00', '', '', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', NULL, NULL),
+(1826, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0065', '65', 'ELIZABETH WAIRIMU NDUNGE', '', '', '', '1994-09-14', '32', 'Female', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-12-16 00:00:00', '', '', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', '2024-12-16', NULL, NULL),
+(1827, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0066', '66', 'GEORGE WANYOIKE KAMOCHIA', '', '', '', '1983-05-19', '43', 'Male', '', 'Ruiru', 'THUITA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-01-19 00:00:00', '', '', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', '2023-01-19', NULL, NULL),
+(1828, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0067', '67', 'WILSON NGANGA KANGETHE', '', '', '', '1992-12-08', '33', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2023-10-30 00:00:00', '', '', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', NULL, NULL),
+(1829, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0068', '68', 'BONVENTURE WAMALWA WANJALA', '', '', '', '1994-05-06', '32', 'Male', '', 'Ruiru', 'KIWANJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'ltfu', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1830, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-14 00:00:00', '10973MAT0069', '69', 'DAVID THUO WAINAINA', '', '', '', '1990-06-04', '36', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-06-11 00:00:00', '', '', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', NULL, NULL),
+(1831, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0070', '70', 'DAVID MBUGUA NUNGARI', '', '', '', '2002-04-13', '24', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1832, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0071', '71', 'MARTIN OBIERO OTIENO', '', '', '', '1984-09-14', '42', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-05 00:00:00', '', '', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', '2023-04-05', NULL, NULL),
+(1833, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0072', '72', 'JAMES NDUBU NJERU', '', '', '', '1999-12-13', '26', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-04-30 00:00:00', '', '', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', '2023-04-30', NULL, NULL),
+(1834, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0073', '73', 'PETER NJOROGE NJENGA', '', '', '', '2003-01-01', '23', 'Male', '', 'Ruiru', 'BYPASS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-06-15 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1835, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0074', '74', 'MOHAMMED ABDULAHI ROBO', '', '', '', '2003-04-24', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-03-25 00:00:00', '', '', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', '2023-03-25', NULL, NULL),
+(1836, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-16 00:00:00', '10973MAT0075', '75', 'DANIEL KAMAU WAMBUI', '', '', '', '1998-04-04', '28', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1837, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0076', '76', 'STANLEY MUIGAI MBUGUA', '', '', '', '1998-02-01', '28', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-06-01 00:00:00', '', '', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', NULL, NULL),
+(1838, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-15 00:00:00', '10973MAT0077', '77', 'ROBERT THUO NJAU', '', '', '', '2002-12-25', '23', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2025-02-28 00:00:00', '', '', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', '2025-02-28', NULL, NULL),
+(1839, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-17 00:00:00', '10973MAT0078', '78', 'JOHN NDICHU WANYOIKE', '', '', '', '1997-03-03', '29', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-25 00:00:00', '', '', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', '2023-12-25', NULL, NULL),
+(1840, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-20 00:00:00', '10973MAT0079', '79', 'JOHN KIBE MBURU', '', '', '', '1999-01-01', '27', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-04-13 00:00:00', '', '', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', NULL, NULL),
+(1841, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-20 00:00:00', '10973MAT0080', '80', 'JOHN IRUNGU MURIUKI', '', '', '', '1991-10-20', '35', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(1842, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-20 00:00:00', '10973MAT0081', '81', 'CHEGE MAINA ITHAGI', '', '', '', '1983-01-01', '43', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(1843, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-20 00:00:00', '10973MAT0082', '82', 'JOHN MBURU WANYOIKE', '', '', '', '1985-12-21', '40', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1844, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-17 00:00:00', '10973MAT0083', '83', 'FREDRICK NGANGA NJUGUNA', '', '', '', '1990-02-04', '36', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-05-15 00:00:00', '', '', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', '2025-05-15', NULL, NULL),
+(1845, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-22 00:00:00', '10973MAT0084', '84', 'KELVIN MWANGI KIMERE', '', '', '', '1997-07-07', '29', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-04-13 00:00:00', '', '', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', NULL, NULL),
+(1846, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-23 00:00:00', '10973MAT0085', '85', 'VIRGINIA MICHERE GAKUU', '', '', '', '2003-06-06', '23', 'Female', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-07-04 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1847, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-24 00:00:00', '10973MAT0086', '86', 'JOSEPH KINYANJUI MAINA', '', '', '', '1996-12-17', '29', 'Male', '', 'Thika', 'MAKONGENI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-19 00:00:00', '', '', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', NULL, NULL),
+(1848, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0087', '87', 'STEPHEN KAMAU NDEGWA', '', '', '', '1995-08-05', '31', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-03-18 00:00:00', '', '', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', '2023-03-18', NULL, NULL),
+(1849, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0088', '88', 'NEWTON KARIUKI MWANGI', '', '', '', '1999-07-06', '27', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(1850, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0089', '89', 'ERICK IRUNGU STEPHEN', '', '', '', '1988-01-01', '38', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-10-04 00:00:00', '', '', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', '2022-10-04', NULL, NULL),
+(1851, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0090', '90', 'JACKSON MWANGI NJERI', '', '', '', '1998-07-06', '28', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Other', 'Brian', '2023-04-18 00:00:00', '', '', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', '2023-04-18', NULL, NULL),
+(1852, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0091', '91', 'CHARLES NJUGUNA NDIRANGU', '', '', '', '1998-06-03', '28', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-08-09 00:00:00', '', '', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', '2023-08-09', NULL, NULL),
+(1853, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0092', '92', 'LOUIS THIMBA WANJIKU', '', '', '', '1989-03-07', '37', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-20 00:00:00', '', '', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', '2023-05-20', NULL, NULL),
+(1854, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-28 00:00:00', '10973MAT0093', '93', 'DICKSON KARANJA KARIUKI', '', '', '', '1991-07-01', '35', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2024-05-19 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1855, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-29 00:00:00', '10973MAT0094', '94', 'PATRICK MWANGI WAMBUI', '', '', '', '1995-12-20', '30', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-07-09 00:00:00', '', '', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', '2024-07-09', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(1856, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-29 00:00:00', '10973MAT0095', '95', 'PETER NDENGWA WANJOHI', '', '', '', '1975-10-06', '51', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-07-25 00:00:00', '', '', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', '2024-07-25', NULL, NULL),
+(1857, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-30 00:00:00', '10973MAT0096', '96', 'FRANCIS NDICHU KIMANI', '', '', '', '1999-09-10', '27', 'Male', '', 'Ruiru', 'KIAMUMBI', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-28 00:00:00', '', '', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', NULL, NULL),
+(1858, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-30 00:00:00', '10973MAT0097', '97', 'PAUL KIBARIA WANJIRI', '', '', '', '2000-07-01', '26', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2024-09-20 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1859, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-06-30 00:00:00', '10973MAT0098', '98', 'NAPHTALI NDUNGU WAIRIMU', '', '', '', '1998-03-07', '28', 'Male', '', 'Ruiru', 'KENYATTA ROAD', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(1860, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-01 00:00:00', '10973MAT0099', '99', 'PAUL MUTHAMA NJERI', '', '', '', '1998-06-08', '28', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-10 00:00:00', '', '', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', '2023-04-10', NULL, NULL),
+(1861, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-01 00:00:00', '10973MAT0100', '100', 'MERCY NJOKI WAIRAGU', '', '', '', '1999-07-09', '27', 'Female', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2025-05-26 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1862, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-01 00:00:00', '10973MAT0101', '101', 'SAMUEL WANJAU MBAU', '', '', '', '1995-05-25', '31', 'Male', '', 'Ruiru', 'KENYATTA ROAD', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-07-18 00:00:00', '', '', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', '2022-07-18', NULL, NULL),
+(1863, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-04 00:00:00', '10973MAT0102', '102', 'SHEREEN KINYA KAGWARIA', '', '', '', '1997-04-12', '29', 'Female', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-03-13 00:00:00', '', '', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', NULL, NULL),
+(1864, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-01 00:00:00', '10973MAT0103', '103', 'STEPHEN MWAURA NGANGA', '', '', '', '1999-11-10', '26', 'Male', '', 'Thika', 'MAKONGENI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-11-10 00:00:00', '', '', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', NULL, NULL),
+(1865, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-15 00:00:00', '10973MAT0104', '104', 'SOLOMON MWANGANGI MUTISYA', '', '', '', '1994-01-01', '32', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2022-07-20 00:00:00', '', '', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', '2022-07-20', NULL, NULL),
+(1866, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-12 00:00:00', '10973MAT0105', '105', 'PETER MUNGAI WACUKA', '', '', '', '1984-02-28', '42', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-04-03 00:00:00', '', '', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', NULL, NULL),
+(1867, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-12 00:00:00', '10973MAT0106', '106', 'EDWARD KAMAU KIBE', '', '', '', '2001-03-20', '25', 'Male', '', 'Githunguri', 'TINGANGA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1868, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-12 00:00:00', '10973MAT0107', '107', 'PETER MWANGI WAMBUI', '', '', '', '1984-09-12', '42', 'Male', '', 'Ruiru', 'GATONGORA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', '2026-11-03', NULL, NULL),
+(1869, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-12 00:00:00', '10973MAT0108', '108', 'PETER MACHARIA MWANGI', '', '', '', '1996-06-06', '30', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-07-14 00:00:00', '', '', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', '2022-07-14', NULL, NULL),
+(1870, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-13 00:00:00', '10973MAT0109', '109', 'JAMES KIHARA MUNGAI', '', '', '', '1998-09-26', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-07-18 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1871, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-13 00:00:00', '10973MAT0110', '110', 'KELVIN WANYIOKE NYAMBURA', '', '', '', '2001-05-07', '25', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-20 00:00:00', '', '', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', NULL, NULL),
+(1872, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-13 00:00:00', '10973MAT0111', '111', 'JACKSON SIMIYU MASIBO', '', '', '', '1985-01-15', '41', 'Male', '', 'Nairobi County', 'MARURUI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1873, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-05-05 00:00:00', '10973MAT0112', '112', 'SIMON NGUMO KAMAU', '', '', '', '1999-06-23', '27', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'ltfu', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1874, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-18 00:00:00', '10973MAT0113', '113', 'ERICK NJOROGE WAINAINA', '', '', '', '2003-12-28', '22', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2023-05-12 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1875, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-18 00:00:00', '10973MAT0114', '114', 'FREDRICK WANYOIKE MWENDIA', '', '', '', '1994-10-06', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2022-08-03 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1876, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-18 00:00:00', '10973MAT0115', '115', 'ALEX NJENGA WAIRIMU', '', '', '', '1994-06-09', '32', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-09-14 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1877, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-18 00:00:00', '10973MAT0116', '116', 'BENSON MUTHUI MWENDWA', '', '', '', '1997-06-25', '29', 'Male', '', 'Ruiru', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-04 00:00:00', '', '', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', '2023-05-04', NULL, NULL),
+(1878, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-18 00:00:00', '10973MAT0117', '117', 'DICKSON MAINA WANJIRU', '', '', '', '1999-05-16', '27', 'Male', '', 'Ruiru', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-20 00:00:00', '', '', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', NULL, NULL),
+(1879, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-27 00:00:00', '10973MAT0118', '118', 'ALEX MUNGAI MAINA', '', '', '', '1999-05-04', '27', 'Male', '', 'Nairobi County', 'MARURUI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2022-09-01 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1880, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-07-28 00:00:00', '10973MAT0119', '119', 'STEPHEN NYUTU IRUNGU', '', '', '', '1997-11-29', '28', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-03-27 00:00:00', '', '', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', NULL, NULL),
+(1881, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-01 00:00:00', '10973MAT0120', '120', 'JOHN MBAI GATHONI', '', '', '', '1991-07-02', '35', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-20 00:00:00', '', '', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', NULL, NULL),
+(1882, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-01 00:00:00', '10973MAT0121', '121', 'DENNIS MUSYOKA MUTUKU', '', '', '', '2000-06-15', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(1883, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-02 00:00:00', '10973MAT0122', '122', 'PAUL KIMANI KIGURU', '', '', '', '1986-05-05', '40', 'Male', '', 'Juja', 'MUNGETHO', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2022-10-30 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1884, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-03 00:00:00', '10973MAT0123', '123', 'ERIC NDUNGU MWANGI', '', '', '', '1998-07-30', '28', 'Male', '', 'Thika', 'GATANGA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-25 00:00:00', '', '', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', NULL, NULL),
+(1885, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-03 00:00:00', '10973MAT0124', '124', 'KELVIN MBUGUA MWANGI', '', '', '', '2000-06-24', '26', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-03 00:00:00', '', '', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', '2023-07-03', NULL, NULL),
+(1886, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-03 00:00:00', '10973MAT0125', '125', 'PETER NDIRITU WANGUI', '', '', '', '1995-08-04', '31', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2023-08-24 00:00:00', '', '', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', '2023-08-24', NULL, NULL),
+(1887, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-03 00:00:00', '10973MAT0126', '126', 'JOSEPH GITAU WANJIRU', '', '', '', '1998-11-17', '27', 'Male', '', 'Nairobi County', 'NGOMONGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-11-01 00:00:00', '', '', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', '2023-11-01', NULL, NULL),
+(1888, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-18 00:00:00', '10973MAT0127', '127', 'SAMUEL MAINA MUKORA', '', '', '', '1999-06-18', '27', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1889, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0128', '128', 'KELVIN MUTHUNDO MURUGURU', '', '', '', '1995-09-03', '31', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-09 00:00:00', '', '', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', '2023-07-09', NULL, NULL),
+(1890, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0129', '129', 'ANTONY KAMAU MARARO', '', '', '', '1994-08-07', '32', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2025-04-28 00:00:00', '', '', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', NULL, NULL),
+(1891, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0130', '130', 'STEPHEN NGUGI MWANGI', '', '', '', '1993-08-03', '33', 'Male', '', 'Thika', 'NANASI PILOT', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-19 00:00:00', '', '', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', NULL, NULL),
+(1892, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0131', '131', 'SAMUEL NDIRITU MWANGI', '', '', '', '1994-07-07', '32', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-10-25 00:00:00', '', '', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', NULL, NULL),
+(1893, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0132', '132', 'EDWIN MWANGI KAMAU', '', '', '', '1998-12-01', '27', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1894, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-24 00:00:00', '10973MAT0133', '133', 'JULIUS WAIGANJO NGUGI', '', '', '', '2000-06-15', '26', 'Male', '', 'Thika', 'NANASI PILOT', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2022-09-16 00:00:00', '', '', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', NULL, NULL),
+(1895, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-29 00:00:00', '10973MAT0134', '134', 'SAMUEL MAINA MACHARIA', '', '', '', '1998-06-15', '28', 'Male', '', 'Thika', 'NANASI PILOT', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-02-20 00:00:00', '', '', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', '2023-02-20', NULL, NULL),
+(1896, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0135', '135', 'GEORGE MUNIU WACHIRA', '', '', '', '1994-06-04', '32', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', '2031-11-15', NULL, NULL),
+(1897, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0136', '136', 'JOHN MAINA MUIRURI', '', '', '', '2005-09-25', '21', 'Male', '', 'Ruiru', 'MASHINANI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-02-18 00:00:00', '', '', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', '2024-02-18', NULL, NULL),
+(1898, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0137', '137', 'KELVIN MUNIU NGANGA', '', '', '', '2002-12-25', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1899, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0138', '138', 'KELVIN NYAMWEYA', '', '', '', '1997-05-21', '29', 'Male', '', 'Ruiru', 'MATOPENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-01-29 00:00:00', '', '', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', '2024-01-29', NULL, NULL),
+(1900, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0139', '139', 'BRIAN THAIRU MBURU', '', '', '', '2002-12-10', '23', 'Male', '', 'Juja', 'MATHARE', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-08-30 00:00:00', '', '', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', '2022-08-30', NULL, NULL),
+(1901, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0140', '140', 'JOSEPH KIBE KARANJA', '', '', '', '1999-01-01', '27', 'Male', '', 'Juja', 'MATHARE', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-04-28 00:00:00', '', '', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', '2023-04-28', NULL, NULL),
+(1902, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0141', '141', 'LAWRENCE KAMINJA GATHAU', '', '', '', '2000-09-10', '26', 'Male', '', 'juja', 'MUNGETHO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-14 00:00:00', '', '', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', '2023-02-14', NULL, NULL),
+(1903, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0142', '142', 'ELIJAH MUHIA', '', '', '', '2001-01-26', '25', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-07-25 00:00:00', '', '', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', '2023-07-25', NULL, NULL),
+(1904, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0143', '143', 'JOSEPH MUHIA WANJIRU', '', '', '', '1999-08-27', '27', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 60.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2024-09-23 00:00:00', '', '', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', '2031-07-31', NULL, NULL),
+(1905, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0144', '144', 'PETER NJOROGE SAMUEL', '', '', '', '2002-01-02', '24', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-03-14 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1906, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0145', '145', 'EPHANTUS DENNIS GIKARU', '', '', '', '1992-12-21', '33', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-10-13 00:00:00', '', '', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', NULL, NULL),
+(1907, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-30 00:00:00', '10973MAT0146', '146', 'KELVIN MAINA KIHARA', '', '', '', '1994-08-24', '32', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-03-11 00:00:00', '', '', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', '2023-03-11', NULL, NULL),
+(1908, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0147', '147', 'JAMES GATHIU KARIUKI', '', '', '', '1998-05-15', '28', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-24 00:00:00', '', '', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', NULL, NULL),
+(1909, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0148', '148', 'JANE WAMBUI', '', '', '', '1996-06-06', '30', 'Female', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2025-09-16 00:00:00', '', '', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', '2025-09-16', NULL, NULL),
+(1910, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0149', '149', 'SAMUEL NJENGA NYOKABI', '', '', '', '1989-11-18', '36', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-01-03 00:00:00', '', '', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', '2024-01-03', NULL, NULL),
+(1911, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0150', '150', 'JOSEPH MWANGI WAMAE', '', '', '', '1999-12-17', '26', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-07-15 00:00:00', '', '', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', NULL, NULL),
+(1912, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0151', '151', 'JOSEPH NJUGUNA WAMBOI', '', '', '', '2001-02-05', '25', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-08-09 00:00:00', '', '', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', '2024-08-09', NULL, NULL),
+(1913, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0152', '152', 'KELVIN KURIA MUKUNDI', '', '', '', '1992-07-06', '34', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-04-28 00:00:00', '', '', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', '2025-04-28', NULL, NULL),
+(1914, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0153', '153', 'STEPHEN NGIGE NYAMBURA', '', '', '', '1996-02-01', '30', 'Male', '', 'Thika', 'NGOIGWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-15 00:00:00', '', '', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', '2023-07-15', NULL, NULL),
+(1915, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0154', '154', 'JAMES NJOROGE NJAMBI', '', '', '', '1995-04-30', '31', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-06-26 00:00:00', '', '', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', '2024-06-26', NULL, NULL),
+(1916, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0155', '155', 'JOHNSON MWAMBURI MWAIGHO', '', '', '', '2000-10-10', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-10-29 00:00:00', '', '', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', '2022-10-29', NULL, NULL),
+(1917, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0156', '156', 'HERMAN MWANGI NJERI', '', '', '', '1994-06-30', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-03-04 00:00:00', '', '', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', '2023-03-04', NULL, NULL),
+(1918, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-08-31 00:00:00', '10973MAT0157', '157', 'SAMUEL WAMAE WASUKO', '', '', '', '1991-06-13', '35', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2025-03-04 00:00:00', '', '', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', '2025-03-04', NULL, NULL),
+(1919, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-03 00:00:00', '10973MAT0158', '158', 'KELVIN KIHARA WAMBOI', '', '', '', '1996-10-06', '30', 'Male', '', 'Nairobi County', 'MARURUI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-01-20 00:00:00', '', '', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', '2024-01-20', NULL, NULL),
+(1920, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-04 00:00:00', '10973MAT0159', '159', 'HASSAN SORA DIDA', '', '', '', '1995-03-07', '31', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-09-09 00:00:00', '', '', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', NULL, NULL),
+(1921, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0160', '160', 'JOHN MBUTHIA MAINA', '', '', '', '1999-07-30', '27', 'Male', '', 'Ruiru', 'KIHUNGURO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-10-25 00:00:00', '', '', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', '2024-10-25', NULL, NULL),
+(1922, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0161', '161', 'ALEX WAWERU WAMUGI', '', '', '', '1991-01-26', '35', 'Male', '', 'Githunguri', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-09-16 00:00:00', '', '', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', '2022-09-16', NULL, NULL),
+(1923, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0162', '162', 'JOHN NGARUIYA NJENGA', '', '', '', '1979-02-26', '47', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-30 00:00:00', '', '', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', '2023-11-30', NULL, NULL),
+(1924, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0163', '163', 'FREDRICK OWIRA WASUNA', '', '', '', '1985-04-18', '41', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-09 00:00:00', '', '', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', '2023-06-09', NULL, NULL),
+(1925, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0164', '164', 'BERES KARURI WAMBUI', '', '', '', '2005-06-26', '21', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-09-29 00:00:00', '', '', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', '2024-09-29', NULL, NULL),
+(1926, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-05 00:00:00', '10973MAT0165', '165', 'ANTONY NJOROGE NJERI', '', '', '', '1995-06-26', '31', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2023-05-27 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1927, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0166', '166', 'SAMUEL MWANGI NJOGU', '', '', '', '2003-06-26', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(1928, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0167', '167', 'STEPHEN KIMETO MUSYOKI', '', '', '', '1988-01-01', '38', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-21 00:00:00', '', '', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', '2023-02-21', NULL, NULL),
+(1929, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0168', '168', 'ANTONY MUGURO JACKSON', '', '', '', '1995-10-08', '31', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-08-19 00:00:00', '', '', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', '2024-08-19', NULL, NULL),
+(1930, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0169', '169', 'PAUL SAIYALEL NDEGWA', '', '', '', '1999-01-01', '27', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-23 00:00:00', '', '', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', '2023-04-23', NULL, NULL),
+(1931, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0170', '170', 'GIBSON NJOROGE WAITHERA', '', '', '', '1993-03-07', '33', 'Male', '', 'Nairobi County', 'GITHURAI', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-05-02 00:00:00', '', '', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', '2024-05-02', NULL, NULL),
+(1932, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-06 00:00:00', '10973MAT0171', '171', 'ROSE MUGURE NYAMBURA', '', '', '', '2002-08-16', '24', 'Female', '', 'Nairobi County', 'GITHURAI', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1933, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-08 00:00:00', '10973MAT0172', '172', 'PETER NJUGUNA MWANGI', '', '', '', '1980-01-02', '46', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-02 00:00:00', '', '', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', '2023-11-02', NULL, NULL),
+(1934, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-08 00:00:00', '10973MAT0173', '173', 'DENNIS MBURU NGARU', '', '', '', '1999-06-04', '27', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-11-23 00:00:00', '', '', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', NULL, NULL),
+(1935, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-08 00:00:00', '10973MAT0174', '174', 'FRANCIS GACHERU MWEHIA', '', '', '', '1988-12-12', '37', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2024-10-17 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1936, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-12 00:00:00', '10973MAT0175', '175', 'JOHN MWANGI GACHIRI', '', '', '', '1996-01-15', '30', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-09-11 00:00:00', '', '', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', NULL, NULL),
+(1937, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0176', '176', 'SAMUEL KAMAU GACIRI', '', '', '', '1980-06-15', '46', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-08 00:00:00', '', '', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', NULL, NULL),
+(1938, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0177', '177', 'EVA MUTHONI KAGURE', '', '', '', '1993-08-27', '33', 'Female', '', 'Juja', '', '', 'New', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 8mg', 8.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(1939, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0178', '178', 'MOSES KAMAU NJOROGE', '', '', '', '1992-08-03', '34', 'Male', '', 'Githunguri', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 1.00, 'Last Known dose', 'ltfu', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1940, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0179', '179', 'SAMUEL KARIGI KARARI', '', '', '', '1982-02-05', '44', 'Male', '', 'Githunguri', 'KAMOTHAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1941, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0180', '180', 'FELIX KARIUKI KARANJA', '', '', '', '2001-06-14', '25', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-05-15 00:00:00', '', '', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', NULL, NULL),
+(1942, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-12-04 00:00:00', '10973MAT0181', '181', 'PETER MUCHIRI WAITHERA', '', '', '', '2000-08-20', '26', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-07-11 00:00:00', '', '', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', '2024-07-11', NULL, NULL),
+(1943, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0182', '182', 'BONFACE MUTHEE WANJIRU', '', '', '', '1993-08-07', '33', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-01-12 00:00:00', '', '', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', '2024-01-12', NULL, NULL),
+(1944, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0183', '183', 'PAUL WAINAINA RIMI', '', '', '', '1994-05-02', '32', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2025-09-05 00:00:00', '', '', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', NULL, NULL),
+(1945, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0184', '184', 'SAMSON WAIRERA WAINAINA', '', '', '', '1985-08-08', '41', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-06-14 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1946, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0185', '185', 'ANTONY MWERI KUNGU', '', '', '', '2002-02-19', '24', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-08-13 00:00:00', '', '', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', '2023-08-13', NULL, NULL),
+(1947, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0186', '186', 'JOSPHAT WAITITU MWAURA', '', '', '', '2000-02-06', '26', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-06-11 00:00:00', '', '', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', NULL, NULL),
+(1948, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0187', '187', 'JACKSON WAINAINA NJERI', '', '', '', '1998-05-09', '28', 'Male', '', 'Nairobi County', 'SOWETO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-02-11 00:00:00', '', '', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', '2024-02-11', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(1949, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0188', '188', 'WINNIE WAMBUI KAVANJAA', '', '', '', '1992-08-08', '34', 'Female', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-06-11 00:00:00', '', '', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', NULL, NULL),
+(1950, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0189', '189', 'SAMUEL MBUGUA WAMBUI', '', '', '', '1982-01-16', '44', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-09-29 00:00:00', '', '', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', '2022-09-29', NULL, NULL),
+(1951, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0190', '190', 'SAMUEL MWAURA KURIA', '', '', '', '1987-06-30', '39', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-10-30 00:00:00', '', '', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', '2023-10-30', NULL, NULL),
+(1952, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0191', '191', 'ERICK MWANGI MBUNGUA', '', '', '', '1994-04-15', '32', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-01-31 00:00:00', '', '', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', '2024-01-31', NULL, NULL),
+(1953, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0192', '192', 'SAMUEL NJAU NDOROGO', '', '', '', '2000-08-28', '26', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Defaulted', 'Defaulter', 'Brian', '2025-12-09 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1954, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0193', '193', 'BONFACE MUTUKU KINYANJUI', '', '', '', '2000-01-07', '26', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-10-10 00:00:00', '', '', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', '2023-10-10', NULL, NULL),
+(1955, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-21 00:00:00', '10973MAT0194', '194', 'WILLIAM MBURU NGINA', '', '', '', '1993-06-06', '33', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-10-25 00:00:00', '', '', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', '2023-10-25', NULL, NULL),
+(1956, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0195', '195', 'GEORGE GATIMU MUHOI', '', '', '', '2001-05-08', '25', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-11-14 00:00:00', '', '', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', '2024-11-14', NULL, NULL),
+(1957, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0196', '196', 'MOSES MBURU NGUGI', '', '', '', '1999-12-12', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-08-03 00:00:00', '', '', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', '2023-08-03', NULL, NULL),
+(1958, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0197', '197', 'JAMES KINYANJUI MUNIU', '', '', '', '2002-03-15', '24', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2022-10-01 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1959, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0198', '198', 'GEOFREY OTSIULA OMANYO', '', '', '', '1994-05-09', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-03-27 00:00:00', '', '', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', '2024-03-27', NULL, NULL),
+(1960, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0199', '199', 'JOSPHAT MANJOGU KIEREINI', '', '', '', '1998-12-25', '27', 'Male', '', 'Githunguri', 'KOMOTHAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-03 00:00:00', '', '', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', '2023-04-03', NULL, NULL),
+(1961, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0200', '200', 'BRIAN MUTURI WANJIKU', '', '', '', '2002-07-22', '24', 'Male', '', 'Githunguri', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 2mg', 2.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(1962, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-27 00:00:00', '10973MAT0201', '201', 'VICTOR MUIGAI NYOKABI', '', '', '', '2003-03-15', '23', 'Male', '', 'Thika', 'NGOIGWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-11-28 00:00:00', '', '', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', NULL, NULL),
+(1963, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0202', '202', 'JOHN KOK KUR', '', '', '', '1999-09-28', '27', 'Male', '', 'Ruiru', 'KIAMUMBI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-09-03 00:00:00', '', '', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', '2024-09-03', NULL, NULL),
+(1964, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0203', '203', 'ALEX MAINA NGANGA', '', '', '', '1999-10-10', '27', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-03-09 00:00:00', '', '', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', '2024-03-09', NULL, NULL),
+(1965, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0204', '204', 'BRIAN GITHINJI KAGERA', '', '', '', '1992-11-24', '33', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2022-10-08 00:00:00', '', '', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', '2022-10-08', NULL, NULL),
+(1966, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0205', '205', 'JAMES NDIRANGU KINUTHIA', '', '', '', '1987-12-15', '38', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-09-11 00:00:00', '', '', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', '2023-09-11', NULL, NULL),
+(1967, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0206', '206', 'MARTIN MWAURA KARANJA', '', '', '', '1995-07-07', '31', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-24 00:00:00', '', '', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', NULL, NULL),
+(1968, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0207', '207', 'JULIUS MUNDIA WAMBUI', '', '', '', '1995-11-24', '30', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-27 00:00:00', '', '', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', NULL, NULL),
+(1969, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0208', '208', 'SIMON NDUNGU NJOROGE', '', '', '', '1986-06-21', '40', 'Male', '', 'Kiambu', 'KIAMBU', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-11-08 00:00:00', '', '', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', '2024-11-08', NULL, NULL),
+(1970, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0209', '209', 'DANIEL MBUGUA GICHURU', '', '', '', '1994-01-21', '32', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-07-02 00:00:00', '', '', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', NULL, NULL),
+(1971, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-28 00:00:00', '10973MAT0210', '210', 'BENSON MUKUNGA WANDERI', '', '', '', '1995-06-15', '31', 'Male', '', 'Nairobi County', 'MARURUI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1972, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-29 00:00:00', '10973MAT0211', '211', 'JOSEPH KAMAU MAMBO', '', '', '', '1997-02-01', '29', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-06-09 00:00:00', '', '', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', '2024-06-09', NULL, NULL),
+(1973, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-09-30 00:00:00', '10973MAT0212', '212', 'GEOFFREY MAINA KARIUKI', '', '', '', '1997-04-27', '29', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2022-11-14 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1974, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-03 00:00:00', '10973MAT0213', '213', 'JOSEPH KINYANJUI WAMBUI', '', '', '', '1996-02-20', '30', 'Male', '', 'Juja', 'GACHORORO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2023-02-28 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1975, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-03 00:00:00', '10973MAT0214', '214', 'AISHA HUSSEIN', '', '', '', '2000-12-17', '25', 'Female', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-09-20 00:00:00', '', '', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', '2023-09-20', NULL, NULL),
+(1976, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-04 00:00:00', '10973MAT0215', '215', 'JEFF NDEGWA MAINA', '', '', '', '1992-09-29', '34', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2022-10-08 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1977, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0216', '216', 'PENINAH WAIRIMU KAMAU', '', '', '', '2001-01-01', '25', 'Female', '', 'Nairobi County', 'SONIC-GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-17 00:00:00', '', '', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', '2023-11-17', NULL, NULL),
+(1978, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0217', '217', 'MARTIN WAINAINA WAMBUI', '', '', '', '2002-01-04', '24', 'Male', '', 'Ruiru', 'FULL GOSPEL', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1979, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0218', '218', 'JOHN KARIUKI NJOGU', '', '', '', '1993-09-18', '33', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-07-01 00:00:00', '', '', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', '2023-07-01', NULL, NULL),
+(1980, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0219', '219', 'ANTONY NJUGUNA GITAU', '', '', '', '1998-02-02', '28', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-04-29 00:00:00', '', '', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', '2024-04-29', NULL, NULL),
+(1981, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0220', '220', 'DAVID MWANGI NJOKI', '', '', '', '1989-07-07', '37', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-01-30 00:00:00', '', '', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', '2025-01-30', NULL, NULL),
+(1982, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-12 00:00:00', '10973MAT0221', '221', 'SAMUEL MUNJOGU GICHURU', '', '', '', '1987-03-20', '39', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(1983, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-18 00:00:00', '10973MAT0222', '222', 'KEN GITAU WAINAINA', '', '', '', '1999-01-18', '27', 'Male', '', 'Ruiru', 'PROGRESSIVE-GITHURAI', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-11-01 00:00:00', '', '', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', '2024-11-01', NULL, NULL),
+(1984, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-19 00:00:00', '10973MAT0223', '223', 'DAVID NYAGA NJUGUNA', '', '', '', '1980-10-22', '45', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-01-17 00:00:00', '', '', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', '2023-01-17', NULL, NULL),
+(1985, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-24 00:00:00', '10973MAT0224', '224', 'BRIAN KUNGU WAMBUI', '', '', '', '2000-06-09', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-10-24 00:00:00', '', '', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', '2022-10-24', NULL, NULL),
+(1986, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-24 00:00:00', '10973MAT0225', '225', 'JOSEPH GACHUCHA KARANJA', '', '', '', '1994-06-09', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-03-31 00:00:00', '', '', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', '2023-03-31', NULL, NULL),
+(1987, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-24 00:00:00', '10973MAT0226', '226', 'GEORGE KARANJA NJUGUNA', '', '', '', '1978-07-21', '48', 'Male', '', 'Githunguri', 'KWAMAIKA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-07-24 00:00:00', '', '', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', '2024-07-24', NULL, NULL),
+(1988, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-24 00:00:00', '10973MAT0227', '227', 'SAMUEL WAINANA KIMWAKI', '', '', '', '1989-04-18', '37', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-25 00:00:00', '', '', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', '2023-04-25', NULL, NULL),
+(1989, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0228', '228', 'DERRICK AZENGA ASUNGA', '', '', '', '2001-08-04', '25', 'Male', '', 'Githunguri', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-02-28 00:00:00', '', '', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', '2024-02-28', NULL, NULL),
+(1990, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0229', '229', 'MESHACK MALO ONEA', '', '', '', '2002-02-14', '24', 'Male', '', 'Ruiru', 'WATAALAM', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-12-24 00:00:00', '', '', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', NULL, NULL),
+(1991, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0230', '230', 'MEDI MOKELI OMOT', '', '', '', '2003-05-15', '23', 'Male', '', 'Ruiru', 'KIHUNGURO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-11-07 00:00:00', '', '', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', NULL, NULL),
+(1992, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0231', '231', 'EMMANUEL KANYUA TURUGA', '', '', '', '2000-11-15', '25', 'Male', '', 'Ruiru', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-09-09 00:00:00', '', '', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', '2024-09-09', NULL, NULL),
+(1993, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0232', '232', 'PATRICK MWAURA WANJIKU', '', '', '', '1999-08-04', '27', 'Male', '', 'Ruiru', 'RUIRU PRISON', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(1994, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0233', '233', 'EPHRAIM NDENGA NDENGA', '', '', '', '2003-01-21', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(1995, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0234', '234', 'HANNAH WANJIRU GRACE', '', '', '', '2004-04-02', '22', 'Female', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Brian', '2025-04-03 00:00:00', '', '', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', '2025-04-03', NULL, NULL),
+(1996, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0235', '235', 'JOYCE NJERI KAMAU', '', '', '', '2003-10-31', '22', 'Female', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(1997, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0236', '236', 'MARY MBAIRE WAMBUI', '', '', '', '1998-05-06', '28', 'Female', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', '0036-08-15', NULL, NULL),
+(1998, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0237', '237', 'HAFFERMAN MWANGI KAIRU', '', '', '', '1999-06-03', '27', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-28 00:00:00', '', '', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', '2023-06-28', NULL, NULL),
+(1999, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0238', '238', 'JOHN MBURU KINYANJUI', '', '', '', '1998-08-08', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(2000, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0239', '239', 'JOHN MWAI MWANGI', '', '', '', '1999-09-07', '27', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-13 00:00:00', '', '', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', '2023-02-13', NULL, NULL),
+(2001, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-25 00:00:00', '10973MAT0240', '240', 'DAVID MAINA MBUTHIA', '', '', '', '1997-11-12', '28', 'Male', '', 'Ruiru', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-09-01 00:00:00', '', '', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', '2024-09-01', NULL, NULL),
+(2002, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0241', '241', 'BENSON THUO CHEGE', '', '', '', '1996-09-04', '30', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-10-09 00:00:00', '', '', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', '2023-10-09', NULL, NULL),
+(2003, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0242', '242', 'FADHILI MOHAMMED ALI', '', '', '', '2001-02-24', '25', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-04-30 00:00:00', '', '', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', NULL, NULL),
+(2004, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0243', '243', 'DAVID GACHERU MWANGI', '', '', '', '1983-10-12', '43', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-10-26 00:00:00', '', '', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', '2023-10-26', NULL, NULL),
+(2005, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0244', '244', 'JAMES NJENGA MBURU', '', '', '', '2003-06-20', '23', 'Male', '', 'Ruiru', 'RUIRU PRISON', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2006, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0245', '245', 'BONFACE KABUS ULANDE', '', '', '', '1991-08-24', '35', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2023-10-14 00:00:00', '', '', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', '2023-10-14', NULL, NULL),
+(2007, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0246', '246', 'IAN KARIUKI WANJIKU', '', '', '', '1999-05-25', '27', 'Male', '', 'Ruiru', 'GITAMBAYA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-10-31 00:00:00', '', '', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', '2022-10-31', NULL, NULL),
+(2008, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0247', '247', 'STEPHEN KIHARA MUNGAI', '', '', '', '1993-07-23', '33', 'Male', '', 'Thika', 'NANASI PILOT', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-18 00:00:00', '', '', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', '2023-06-18', NULL, NULL),
+(2009, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-26 00:00:00', '10973MAT0248', '248', 'STANLEY NJOROGE MWANGI', '', '', '', '1999-01-05', '27', 'Male', '', 'Thika', 'THIKA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-19 00:00:00', '', '', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', NULL, NULL),
+(2010, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-27 00:00:00', '10973MAT0249', '249', 'ESBON RIATHI WANJIKU', '', '', '', '1995-08-24', '31', 'Male', '', 'Thika', 'MAJENGO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2024-05-15 00:00:00', '', '', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', '2024-05-15', NULL, NULL),
+(2011, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0250', '250', 'MOSES KAMUNYA KENNETH', '', '', '', '1999-06-15', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2022-11-25 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2012, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0251', '251', 'DANIEL KURIA MATARO', '', '', '', '1994-01-01', '32', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-02-07 00:00:00', '', '', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', '2023-02-07', NULL, NULL),
+(2013, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0252', '252', 'JOHN KARANJA NJERI', '', '', '', '1997-09-23', '29', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2022-10-31 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2014, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0253', '253', 'FRANCIS MBURU KYALO', '', '', '', '1995-08-04', '31', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 10.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2015, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0254', '254', 'FELAN ODHIAMBO', '', '', '', '1999-10-01', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-02-15 00:00:00', '', '', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', '2023-02-15', NULL, NULL),
+(2016, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0255', '255', 'SAMSON MACHARIA WATHIRU', '', '', '', '2000-03-29', '26', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2017, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0256', '256', 'KELVIN KAHIGA MBURU', '', '', '', '1997-04-29', '29', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-30 00:00:00', '', '', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', '2023-12-30', NULL, NULL),
+(2018, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0257', '257', 'MARTIN MUCHIRI MURIMA', '', '', '', '1999-03-04', '27', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2025-03-17 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2019, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0258', '258', 'THOMAS NGANGA ODUOR', '', '', '', '1998-12-01', '27', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2020, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-10-31 00:00:00', '10973MAT0259', '259', 'KELVIN MUIRURI GITHUNGO', '', '', '', '1997-04-25', '29', 'Male', '', 'Ruiru', 'KAMAKIS', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-03-12 00:00:00', '', '', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', NULL, NULL),
+(2021, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-01 00:00:00', '10973MAT0260', '260', 'PETER WANDERI NDUNGU', '', '', '', '1998-01-01', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-11-06 00:00:00', '', '', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', '2022-11-06', NULL, NULL),
+(2022, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-01 00:00:00', '10973MAT0261', '261', 'IBRAHIM KAMAU KAIRU', '', '', '', '1998-05-01', '28', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-29 00:00:00', '', '', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', '2023-06-29', NULL, NULL),
+(2023, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-01 00:00:00', '10973MAT0262', '262', 'MARTIN NJUGUNA NJERI', '', '', '', '1999-11-01', '26', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 65.00, 'STABLE', 'defaulted', 'Active', 'PETER', '2025-09-22 00:00:00', '', '', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', '2056-08-26', NULL, NULL),
+(2024, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-01 00:00:00', '10973MAT0263', '263', 'RASHID MOHAMMED NJIHIA', '', '', '', '1986-01-01', '40', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2022-11-02 00:00:00', '', '', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', '2022-11-02', NULL, NULL),
+(2025, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-01 00:00:00', '10973MAT0264', '264', 'JANE WANJIRU MWANGI', '', '', '', '1980-03-20', '46', 'Female', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 45.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2026, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-02 00:00:00', '10973MAT0265', '265', 'PETER KURIA WANGUI', '', '', '', '2004-04-24', '22', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-20 00:00:00', '', '', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', '2023-04-20', NULL, NULL),
+(2027, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-02 00:00:00', '10973MAT0266', '266', 'JOY CATHERINE MUTHONI', '', '', '', '2008-03-05', '18', 'Female', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2028, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-03 00:00:00', '10973MAT0267', '267', 'JOHN MBIU GITHUKA', '', '', '', '2001-05-04', '25', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-07-17 00:00:00', '', '', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', '2023-07-17', NULL, NULL),
+(2029, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-07 00:00:00', '10973MAT0268', '268', 'PAUL GITONGA WANYOIKE', '', '', '', '1994-11-01', '31', 'Male', '', 'Githunguri', 'NGEWA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-07-15 00:00:00', '', '', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', '2024-07-15', NULL, NULL),
+(2030, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0269', '269', 'JOHN MUCHANGI NJIRU', '', '', '', '1998-04-02', '28', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2031, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0270', '270', 'JESSICA MAKENA NDUTA', '', '', '', '2000-04-02', '26', 'Female', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-08-01 00:00:00', '', '', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', '2023-08-01', NULL, NULL),
+(2032, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0271', '271', 'DANIEL NDICHU WANJA', '', '', '', '2002-01-01', '24', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-08 00:00:00', '', '', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', NULL, NULL),
+(2033, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0272', '272', 'DENNIS KIMANI NDUNGU', '', '', '', '2000-04-04', '26', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-11-27 00:00:00', '', '', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', '2024-11-27', NULL, NULL),
+(2034, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0273', '273', 'AMOS MBUTHIA WAIRIMU', '', '', '', '2002-12-02', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-12-15 00:00:00', '', '', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', NULL, NULL),
+(2035, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0274', '274', 'OSMAN BINGI KARIUKI', '', '', '', '2003-08-28', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 105.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', NULL, NULL),
+(2036, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0275', '275', 'KEVIN MAINA MWANGI', '', '', '', '1999-09-06', '27', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-01 00:00:00', '', '', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', NULL, NULL),
+(2037, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0276', '276', 'SAMUEL MAINA MWANGI', '', '', '', '1999-12-13', '26', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-06-11 00:00:00', '', '', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', NULL, NULL),
+(2038, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0277', '277', 'PETER WANJIRU MBOTE', '', '', '', '1999-02-06', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-06-24 00:00:00', '', '', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', '2023-06-24', NULL, NULL),
+(2039, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0278', '278', 'RICHARD WAMBUA KYALO', '', '', '', '1996-02-13', '30', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-01-23 00:00:00', '', '', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', '2024-01-23', NULL, NULL),
+(2040, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0279', '279', 'KELVIN PATRICK MWAMBIA', '', '', '', '1997-02-20', '29', 'Male', '', 'Ruiru', 'BYPASS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-04-01 00:00:00', '', '', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', '2025-04-01', NULL, NULL),
+(2041, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0280', '280', 'TIMONA KILATIA WANGARI', '', '', '', '2002-01-01', '24', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', NULL, NULL),
+(2042, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-08 00:00:00', '10973MAT0281', '281', 'ROBERT NJUGUNA NJERI', '', '', '', '1990-11-11', '35', 'Male', '', 'Nairobi County', 'MWIKI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(2043, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-09 00:00:00', '10973MAT0282', '282', 'DENNIS MBURU KAGIMBI', '', '', '', '1998-01-04', '28', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-11-23 00:00:00', '', '', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', '2022-11-23', NULL, NULL),
+(2044, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-14 00:00:00', '10973MAT0283', '283', 'DAVID MACHARIA METHO', '', '', '', '1997-10-04', '29', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-08-27 00:00:00', '', '', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', '2023-08-27', NULL, NULL),
+(2045, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-14 00:00:00', '10973MAT0284', '284', 'PAUL KAHUTA AYELLOH', '', '', '', '1990-12-10', '35', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-02-09 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2046, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-14 00:00:00', '10973MAT0285', '285', 'SAMSON MACHARIA MWANGI', '', '', '', '1999-05-06', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2022-12-11 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2047, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-15 00:00:00', '10973MAT0286', '286', 'THOMAS MBURU KINYANJUI', '', '', '', '1979-07-21', '47', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-04-08 00:00:00', '', '', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', '2023-04-08', NULL, NULL),
+(2048, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-16 00:00:00', '10973MAT0287', '287', 'PETER KARANJA NDUNGU', '', '', '', '1988-07-15', '38', 'Male', '', 'Juja', 'GACHORORO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-03-13 00:00:00', '', '', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', '2024-03-13', NULL, NULL),
+(2049, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-16 00:00:00', '10973MAT0288', '288', 'PETER NGUGI KIHIU', '', '', '', '1994-07-07', '32', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-12-25 00:00:00', '', '', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', '2022-12-25', NULL, NULL),
+(2050, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-16 00:00:00', '10973MAT0289', '289', 'JOSEPH KIRU NJOMO', '', '', '', '1997-08-14', '29', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2022-12-29 00:00:00', '', '', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', '2022-12-29', NULL, NULL),
+(2051, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-21 00:00:00', '10973MAT0290', '290', 'PETER WANDERA MAINA', '', '', '', '1994-08-07', '32', 'Male', '', 'Ruiru', 'KIHUNGURO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-08-02 00:00:00', '', '', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', '2023-08-02', NULL, NULL),
+(2052, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-21 00:00:00', '10973MAT0291', '291', 'JOSHUA AINEA SIIBA', '', '', '', '1999-11-01', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-06-27 00:00:00', '', '', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', '2023-06-27', NULL, NULL),
+(2053, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-22 00:00:00', '10973MAT0292', '292', 'RICHARD MAINA MUTHEE', '', '', '', '1999-04-24', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-11-24 00:00:00', '', '', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', '2022-11-24', NULL, NULL),
+(2054, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-22 00:00:00', '10973MAT0293', '293', 'KELVIN WAWERU MWANGI', '', '', '', '2000-09-15', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-11-22 00:00:00', '', '', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', '2022-11-22', NULL, NULL),
+(2055, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-22 00:00:00', '10973MAT0294', '294', 'EDWIN KARIUKI GATHUKU', '', '', '', '1998-12-25', '27', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-08-07 00:00:00', '', '', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', '2023-08-07', NULL, NULL),
+(2056, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-22 00:00:00', '10973MAT0295', '295', 'DENNIS NJIIRI MWANGI', '', '', '', '1998-09-01', '28', 'Male', '', 'Ruiru', 'MURERA JUDA', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-02-17 00:00:00', '', '', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', '2024-02-17', NULL, NULL),
+(2057, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-23 00:00:00', '10973MAT0296', '296', 'BRIAN MUCHIRI MACHARIA', '', '', '', '1998-07-17', '28', 'Male', '', 'Thika', 'WITEITHIE', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-12-08 00:00:00', '', '', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', '2022-12-08', NULL, NULL),
+(2058, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-23 00:00:00', '10973MAT0297', '297', 'JOHN KARIUKI NJOGU', '', '', '', '1995-07-10', '31', 'Male', '', 'Juja', 'JOYLAND', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-06-07 00:00:00', '', '', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', '2023-06-07', NULL, NULL),
+(2059, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-23 00:00:00', '10973MAT0298', '298', 'JOSEPH MBUGUA MATHU', '', '', '', '1987-06-05', '39', 'Male', '', 'Thika', 'MAJENGO', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2060, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-24 00:00:00', '10973MAT0299', '299', 'PAUL KABUE NDIRANGU', '', '', '', '1991-05-12', '35', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-11-04 00:00:00', '', '', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', '2023-11-04', NULL, NULL),
+(2061, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-24 00:00:00', '10973MAT0300', '300', 'MARY WANGUI KARIUKI', '', '', '', '1983-12-08', '42', 'Female', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2062, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0301', '301', 'ANTONY CHEGE WAMBUI', '', '', '', '1996-01-01', '30', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'Active', 'Voluntary Discontinuation', 'GRACE', '2024-04-07 00:00:00', '', '', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', '2024-06-30', NULL, NULL),
+(2063, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-28 00:00:00', '10973MAT0302', '302', 'COLLINS MASITA MUMBUA', '', '', '', '1986-08-20', '40', 'Male', '', 'Nairobi County', 'KENYATTA MARKET', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2023-11-20 00:00:00', '', '', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', '2023-11-20', NULL, NULL),
+(2064, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-28 00:00:00', '10973MAT0303', '303', 'JOSEPH GIKABA WAINAINA', '', '', '', '1996-12-24', '29', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2023-12-27 00:00:00', '', '', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', '2023-12-27', NULL, NULL),
+(2065, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-29 00:00:00', '10973MAT0304', '304', 'DENNIS MBURU KANGETHE', '', '', '', '2000-01-24', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2066, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-30 00:00:00', '10973MAT0305', '305', 'JOHN GEORGE KANYARA', '', '', '', '1998-06-25', '28', 'Male', '', 'Thika', 'NANASI PILOT', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-19 00:00:00', '', '', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', '2023-07-19', NULL, NULL),
+(2067, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-11-30 00:00:00', '10973MAT0306', '306', 'ARTHUR NDUNGU WAMBUI', '', '', '', '1995-09-04', '31', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2022-12-15 00:00:00', '', '', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', '2022-12-15', NULL, NULL),
+(2068, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-01 00:00:00', '10973MAT0307', '307', 'MICHAEL KIBE NDUNGU', '', '', '', '1987-01-01', '39', 'Male', '', 'Githunguri', 'NGEWA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-14 00:00:00', '', '', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', '2023-06-14', NULL, NULL),
+(2069, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0308', '308', 'BENSON KAMOCHE KARIUKI', '', '', '', '1997-09-26', '29', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2070, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0309', '309', 'SAMUEL WACHIRA GICHERU', '', '', '', '1996-09-02', '30', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-03 00:00:00', '', '', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', '2023-02-03', NULL, NULL),
+(2071, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0310', '310', 'HARRISON NGANGA GATHUNGU', '', '', '', '1993-04-04', '33', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-12-06 00:00:00', '', '', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', '2022-12-06', NULL, NULL),
+(2072, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0311', '311', 'JULIUS MIANO WANJIKU', '', '', '', '1993-01-15', '33', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2073, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0312', '312', 'BONFACE HUBE NDUTA', '', '', '', '1999-04-30', '27', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-04-15 00:00:00', '', '', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', '2024-04-15', NULL, NULL),
+(2074, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0313', '313', 'FREDRICK GATHUITA NJOROGE', '', '', '', '1996-10-05', '30', 'Male', '', 'Juja', 'GACHORORO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-01-22 00:00:00', '', '', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', '2023-01-22', NULL, NULL),
+(2075, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0314', '314', 'WILSON NGANGA WACHUKA', '', '', '', '1992-09-07', '34', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-08-18 00:00:00', '', '', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', '2023-08-18', NULL, NULL),
+(2076, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0315', '315', 'JOSPHAT MUNYALO MURA', '', '', '', '1996-10-01', '30', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-05-23 00:00:00', '', '', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', '2024-05-23', NULL, NULL),
+(2077, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0316', '316', 'GEORGE NGANGA THUO', '', '', '', '2004-07-14', '22', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-08-16 00:00:00', '', '', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', '2023-08-16', NULL, NULL),
+(2078, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0317', '317', 'PETER NDUNGU THUO', '', '', '', '2004-07-13', '22', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-02-02 00:00:00', '', '', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', '2024-02-02', NULL, NULL),
+(2079, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-05 00:00:00', '10973MAT0318', '318', 'JOHN JOE WAMBUI', '', '', '', '1998-04-05', '28', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2022-12-09 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2080, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-06 00:00:00', '10973MAT0319', '319', 'JOHN KIRUGI MUMBI', '', '', '', '2002-08-21', '24', 'Male', '', 'Githunguri', 'NGEWA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-12-09 00:00:00', '', '', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', '2022-12-09', NULL, NULL),
+(2081, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-06 00:00:00', '10973MAT0320', '320', 'FRANCIS CHEGE KIHORO', '', '', '', '1998-11-06', '27', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-10 00:00:00', '', '', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', '2023-12-10', NULL, NULL),
+(2082, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-07 00:00:00', '10973MAT0321', '321', 'BRIAN WAMBAKI KINGORI', '', '', '', '1999-09-23', '27', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2023-02-04 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2083, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-07 00:00:00', '10973MAT0322', '322', 'SAMUEL KIMANI NDICHU', '', '', '', '1981-01-01', '45', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2025-06-11 00:00:00', '', '', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', '2025-06-11', NULL, NULL),
+(2084, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-14 00:00:00', '10973MAT0323', '323', 'HERMATON SANGARE KIMANI', '', '', '', '1997-02-20', '29', 'Male', '', 'Ruiru', 'KAMAKIS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-12-28 00:00:00', '', '', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', '2023-12-28', NULL, NULL),
+(2085, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-14 00:00:00', '10973MAT0324', '324', 'CHRISTOPHER OBANGO WAMBUI', '', '', '', '1997-05-09', '29', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-07-02 00:00:00', '', '', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', NULL, NULL),
+(2086, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-14 00:00:00', '10973MAT0325', '325', 'BRIAN MWAURA GITAU', '', '', '', '1997-08-07', '29', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-03-14 00:00:00', '', '', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', '2025-03-14', NULL, NULL),
+(2087, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-16 00:00:00', '10973MAT0326', '326', 'WILLIAM GICHIRA MBURU', '', '', '', '1992-02-15', '34', 'Male', '', 'Juja', 'JUJA', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2024-07-07 00:00:00', '', '', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', '2024-07-07', NULL, NULL),
+(2088, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0327', '327', 'KENNEDY WAWIRE WAFULA', '', '', '', '1998-04-27', '28', 'Male', '', 'Nairobi County', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 2mg', 4.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2089, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-19 00:00:00', '10973MAT0328', '328', 'BONFACE MUTUA MUNYOKI', '', '', '', '1996-12-15', '29', 'Male', '', 'Nairobi County', 'ZIMMERMAN', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2022-12-31 00:00:00', '', '', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', '2022-12-31', NULL, NULL),
+(2090, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-19 00:00:00', '10973MAT0329', '329', 'ALEX NDUNYU MUSEE', '', '', '', '1990-02-02', '36', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2022-12-24 00:00:00', '', '', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', '2022-12-24', NULL, NULL),
+(2091, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-21 00:00:00', '10973MAT0330', '330', 'KELVIN KAMAU WAMBUI', '', '', '', '1998-07-05', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-26 00:00:00', '', '', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', NULL, NULL),
+(2092, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-21 00:00:00', '10973MAT0331', '331', 'IRENE MUTHEU JACINTA', '', '', '', '2000-03-01', '26', 'Female', '', 'Nairobi County', 'GITHURAI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2025-01-01 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2093, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-21 00:00:00', '10973MAT0332', '332', 'JOSEPH MUTINDA MUSYOKA', '', '', '', '2005-11-03', '20', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-12-09 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2094, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-23 00:00:00', '10973MAT0333', '333', 'CATHERINE KABURA NGANGA', '', '', '', '1987-05-15', '39', 'Female', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-26 00:00:00', '', '', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', NULL, NULL),
+(2095, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-09 00:00:00', '10973MAT0334', '334', 'NICKSON NJAU NJOKI', '', '', '', '1996-06-05', '30', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 75.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2096, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-09 00:00:00', '10973MAT0335', '335', 'SOLOMON NJUGUNA WANGARI', '', '', '', '2000-08-05', '26', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2025-02-05 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2097, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-09 00:00:00', '10973MAT0336', '336', 'JOHN NDUNGU KAMAU', '', '', '', '1996-03-06', '30', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2024-03-26 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2098, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-10 00:00:00', '10973MAT0337', '337', 'DENNIS KIRAGU THURI', '', '', '', '1997-01-21', '29', 'Male', '', 'Kiambaa', 'RUAKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-07-24 00:00:00', '', '', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', '2023-07-24', NULL, NULL),
+(2099, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-10 00:00:00', '10973MAT0338', '338', 'DAVID NJUGUNA MBURU', '', '', '', '1987-01-01', '39', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2100, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-10 00:00:00', '10973MAT0339', '339', 'PAUL THUO WANJIRU', '', '', '', '2000-09-05', '26', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2025-03-24 00:00:00', '', '', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', '2025-03-24', NULL, NULL),
+(2101, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-10 00:00:00', '10973MAT0340', '340', 'DAVID NJANE NGICHU', '', '', '', '1996-09-13', '30', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2102, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-10 00:00:00', '10973MAT0341', '341', 'DAVID KABUE KABURI', '', '', '', '1994-06-10', '32', 'Male', '', 'Thika', 'MAJENGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2103, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-11 00:00:00', '10973MAT0342', '342', 'HARRISON KURIA NDICHU', '', '', '', '1989-06-15', '37', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2104, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-11 00:00:00', '10973MAT0343', '343', 'TITUS KIOKO MUTUA', '', '', '', '1992-05-10', '34', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2105, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-11 00:00:00', '10973MAT0344', '344', 'SAMUEL NZANGI KINYAI', '', '', '', '1994-05-25', '32', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-05-09 00:00:00', '', '', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', '2024-05-09', NULL, NULL),
+(2106, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-13 00:00:00', '10973MAT0345', '345', 'PAUL KAMAU NJOROGE', '', '', '', '1982-08-07', '44', 'Male', '', 'Ruiru', 'MASAKU', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-11-03 00:00:00', '', '', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', '2024-11-03', NULL, NULL),
+(2107, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-16 00:00:00', '10973MAT0346', '346', 'DAVID NDUNGU NGARUIYA', '', '', '', '2000-04-13', '26', 'Male', '', 'Nairobi County', 'ROYSAMBU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-12-13 00:00:00', '', '', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', NULL, NULL),
+(2108, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-17 00:00:00', '10973MAT0347', '347', 'DANCUN MAINA NYAWIRA', '', '', '', '1998-04-04', '28', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2109, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-17 00:00:00', '10973MAT0348', '348', 'HEZRON KIRUMA MAIINA', '', '', '', '1996-06-15', '30', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-02-26 00:00:00', '', '', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', '2023-02-26', NULL, NULL),
+(2110, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-17 00:00:00', '10973MAT0349', '349', 'GIDEON GITAKA WANJIRU', '', '', '', '1997-06-01', '29', 'Male', '', 'JUJA', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-03-14 00:00:00', '', '', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', '2024-03-14', NULL, NULL),
+(2111, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-17 00:00:00', '10973MAT0350', '350', 'HILDA WANGUI MWAURA', '', '', '', '2002-08-01', '24', 'Female', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-08-23 00:00:00', '', '', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', NULL, NULL),
+(2112, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-18 00:00:00', '10973MAT0351', '351', 'PAUL NDERE MUTEITHIA', '', '', '', '1993-09-09', '33', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2024-04-28 00:00:00', '', '', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', '2024-04-28', NULL, NULL),
+(2113, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-18 00:00:00', '10973MAT0352', '352', 'ALFRED KAMAU THUO', '', '', '', '1994-03-15', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Brian', '2023-11-28 00:00:00', '', '', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', '2023-11-28', NULL, NULL),
+(2114, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-24 00:00:00', '10973MAT0353', '353', 'DANSON GIKUYU WAMAITHA', '', '', '', '2000-02-15', '26', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-20 00:00:00', '', '', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', '2023-07-20', NULL, NULL),
+(2115, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-24 00:00:00', '10973MAT0354', '354', 'WILLIAM KUNGU NDWARU', '', '', '', '1992-01-03', '34', 'Male', '', 'Ruiru', 'KIMBO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-10-13 00:00:00', '', '', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', '2023-10-13', NULL, NULL),
+(2116, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-24 00:00:00', '10973MAT0355', '355', 'HILLARY KIVUVA WAMBUA', '', '', '', '2002-07-07', '24', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-01-24 00:00:00', '', '', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', '2023-01-24', NULL, NULL),
+(2117, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-25 00:00:00', '10973MAT0356', '356', 'AMOS MWANGI MUREGE', '', '', '', '2000-01-05', '26', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2024-11-12 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2118, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-27 00:00:00', '10973MAT0357', '357', 'MARTIN MUIGAI MBURU', '', '', '', '1995-06-16', '31', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-16 00:00:00', '', '', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', '2023-06-16', NULL, NULL),
+(2119, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0358', '358', 'PHILLIP NJUGUNA WANGUI', '', '', '', '1999-05-01', '27', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-12-18 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2120, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0359', '359', 'LAWRENCE KARANJA BABU', '', '', '', '2003-11-22', '22', 'Male', '', 'Ruiru', 'PRISON', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2121, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0360', '360', 'HUSSEIN ALI RAJAB', '', '', '', '2002-01-23', '24', 'Male', '', 'Ruiru', 'MEMBLEY', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2122, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0361', '361', 'ISSAC NGUGI WAMBUI', '', '', '', '1994-02-06', '32', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-02 00:00:00', '', '', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', '2023-02-02', NULL, NULL),
+(2123, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0362', '362', 'JAMES NJOROGE NDUNGU', '', '', '', '1996-01-05', '30', 'Male', '', 'Ruiru', 'KAMAKIS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2124, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0363', '363', 'MORRIS MUTHII MUCHIRA', '', '', '', '1998-12-03', '27', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-12-29 00:00:00', '', '', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', '2023-12-29', NULL, NULL),
+(2125, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0364', '364', 'VICTOR MWANGI NJUGUNA', '', '', '', '2000-03-05', '26', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-11-05 00:00:00', '', '', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', '2024-11-05', NULL, NULL),
+(2126, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0365', '365', 'MELVIN KANYI OMOKE', '', '', '', '2001-11-21', '24', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2023-08-26 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2127, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0366', '366', 'EDWIN NGANGA KIMATHI', '', '', '', '1998-09-19', '28', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-03-19 00:00:00', '', '', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', '2025-03-19', NULL, NULL),
+(2128, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0367', '367', 'MICHAEL MUCHUHI WAIRUGI', '', '', '', '2003-04-10', '23', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Defaulted', 'Defaulter', 'Mercy', '2025-08-25 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2129, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0368', '368', 'DENNIS MWANGI NJOROGE', '', '', '', '1999-10-16', '27', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2024-02-07 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2130, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0369', '369', 'JOSEPH MWANGI WANJA', '', '', '', '2003-10-20', '23', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2023-02-01 00:00:00', '', '', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', '2023-02-01', NULL, NULL),
+(2131, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0370', '370', 'JOHN NYAMAI MUTUA', '', '', '', '1994-08-15', '32', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-04-01 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2132, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-30 00:00:00', '10973MAT0371', '371', 'PETER GUCHU WANJIRU', '', '', '', '1978-01-01', '48', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2133, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0372', '372', 'NORMAN MBOGO KIRAGU', '', '', '', '1987-04-24', '39', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2024-01-26 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2134, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0373', '373', 'ANTONY KANYERE MUTERE', '', '', '', '1999-12-16', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', NULL, NULL),
+(2135, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0374', '374', 'JOHN KIHARA NDICHU', '', '', '', '2002-02-03', '24', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 50.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', NULL, NULL),
+(2136, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0375', '375', 'NELSON MWAURA MBAU', '', '', '', '1995-03-23', '31', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-27 00:00:00', '', '', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', '2023-07-27', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(2137, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0376', '376', 'FRANCIS MACHARIA WANJIHIA', '', '', '', '1998-03-03', '28', 'Male', '', 'Juja', 'JUJA', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2025-05-05 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2138, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0377', '377', 'GABRIEL WAINAINA MUMBI', '', '', '', '1995-08-09', '31', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', '2031-11-06', NULL, NULL),
+(2139, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-31 00:00:00', '10973MAT0378', '378', 'KENNEDY MBUGUA WANJIKU', '', '', '', '1995-02-23', '31', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2140, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-01 00:00:00', '10973MAT0379', '379', 'JOHN MWANGI KARIUKI', '', '', '', '1998-07-11', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-26 00:00:00', '', '', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', NULL, NULL),
+(2141, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-01 00:00:00', '10973MAT0380', '380', 'JOSEPH NGUGI KINUTHIA', '', '', '', '1998-05-27', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-08 00:00:00', '', '', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', '2023-05-08', NULL, NULL),
+(2142, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-01 00:00:00', '10973MAT0381', '381', 'SAMUEL WAMBUGU GITHARA', '', '', '', '1992-01-08', '34', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-02-08 00:00:00', '', '', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', '2023-02-08', NULL, NULL),
+(2143, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-07 00:00:00', '10973MAT0382', '382', 'HARRISON KIARIE KAMANGU', '', '', '', '1979-08-25', '47', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-05-07 00:00:00', '', '', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', '2023-05-07', NULL, NULL),
+(2144, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-07 00:00:00', '10973MAT0383', '383', 'NANCY WANJIRU CHEGE', '', '', '', '1995-07-28', '31', 'Female', '', 'Ruiru', 'KWA KAIRU', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Mercy', '2023-06-06 00:00:00', '', '', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', '2023-06-06', NULL, NULL),
+(2145, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-08 00:00:00', '10973MAT0384', '384', 'DAVID NGANGA MUNGAI', '', '', '', '1982-08-12', '44', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Brian', '2023-05-11 00:00:00', '', '', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', '2023-05-11', NULL, NULL),
+(2146, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-08 00:00:00', '10973MAT0385', '385', 'BENSON IRUNGU MUNGAI', '', '', '', '1990-06-15', '36', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 35.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2147, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-08 00:00:00', '10973MAT0386', '386', 'JOSEPH KIBATHI KIBERA', '', '', '', '1997-11-25', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-23 00:00:00', '', '', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', '2023-07-23', NULL, NULL),
+(2148, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-13 00:00:00', '10973MAT0387', '387', 'SAMUEL IRUNGU GAKIO', '', '', '', '1996-06-30', '30', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2025-06-20 00:00:00', '', '', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', '2025-06-20', NULL, NULL),
+(2149, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-13 00:00:00', '10973MAT0388', '388', 'STEPHEN KIRAGU CHEGE', '', '', '', '1989-09-10', '37', 'Male', '', 'Thika', 'MAKONGENI', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2023-06-09 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2150, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-14 00:00:00', '10973MAT0389', '389', 'KELVIN WAWERU WANJIRU', '', '', '', '2000-02-14', '26', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-03-07 00:00:00', '', '', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', NULL, NULL),
+(2151, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-20 00:00:00', '10973MAT0390', '390', 'IAN NGUGI WAMBUI', '', '', '', '1995-02-02', '31', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-03-13 00:00:00', '', '', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', '2023-03-13', NULL, NULL),
+(2152, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-20 00:00:00', '10973MAT0391', '391', 'DAVID MUGO NJERI', '', '', '', '1996-02-08', '30', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2153, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-21 00:00:00', '10973MAT0392', '392', 'JOSEPH MWANGI KABAO', '', '', '', '1998-01-22', '28', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-02-23 00:00:00', '', '', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', '2023-02-23', NULL, NULL),
+(2154, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-21 00:00:00', '10973MAT0393', '393', 'WILLY MWANGI IRUNGU', '', '', '', '1993-09-01', '33', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2155, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-21 00:00:00', '10973MAT0394', '394', 'PETER WAWERU KINYANJUI', '', '', '', '1995-10-01', '31', 'Male', '', 'Thika', 'NDARUGO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-03-07 00:00:00', '', '', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', '2023-03-07', NULL, NULL),
+(2156, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-24 00:00:00', '10973MAT0395', '395', 'WILLIAM MWAURA NJOKI', '', '', '', '1990-02-20', '36', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-05-24 00:00:00', '', '', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', '2023-05-24', NULL, NULL),
+(2157, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-27 00:00:00', '10973MAT0396', '396', 'MICHEAL IRUNGU NGUNJIRI', '', '', '', '2002-09-22', '24', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2158, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-28 00:00:00', '10973MAT0397', '397', 'JOHN GITAU NGUGI', '', '', '', '1999-09-29', '27', 'Male', '', 'Thika', 'KOMO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-31 00:00:00', '', '', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', '2023-07-31', NULL, NULL),
+(2159, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-28 00:00:00', '10973MAT0398', '398', 'JACKSON MWANGI WANJIRU', '', '', '', '1984-08-15', '42', 'Male', '', 'Thika', 'THIKA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2025-01-07 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2160, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-28 00:00:00', '10973MAT0399', '399', 'JOSEPH KIRI KURIA', '', '', '', '1989-04-02', '37', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(2161, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-28 00:00:00', '10973MAT0400', '400', 'JOHN MBUA WANGARURO', '', '', '', '1996-03-29', '30', 'Male', '', 'Githunguri', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2162, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-02-28 00:00:00', '10973MAT0401', '401', 'RICHARD MBURU WANGUI', '', '', '', '1999-12-25', '26', 'Male', '', 'Githunguri', 'GITHUNGURI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2023-03-01 00:00:00', '', '', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', '2030-08-15', NULL, NULL),
+(2163, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-01 00:00:00', '10973MAT0402', '402', 'DIANA WAMBUI KIMANI', '', '', '', '2001-08-23', '25', 'Female', '', 'Ruiru', 'MWIHOKO', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-10-24 00:00:00', '', '', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', '2023-10-24', NULL, NULL),
+(2164, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-01 00:00:00', '10973MAT0403', '403', 'SAMUEL NGUGI MUNGAI', '', '', '', '1995-08-12', '31', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2165, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-06 00:00:00', '10973MAT0404', '404', 'STACY WAMBUI MUTHONI', '', '', '', '2000-12-16', '25', 'Female', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2024-01-25 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2166, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-07 00:00:00', '10973MAT0405', '405', 'KEVIN KINUTHIA KARIUKI', '', '', '', '1999-11-02', '26', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-08-29 00:00:00', '', '', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', '2025-08-29', NULL, NULL),
+(2167, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-08 00:00:00', '10973MAT0406', '406', 'DOUGLAS NGIGE WAIRIMU', '', '', '', '1994-04-12', '32', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2023-08-18 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2168, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-13 00:00:00', '10973MAT0407', '407', 'PETER GITONGA MURAGU', '', '', '', '1996-04-26', '30', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-07-28 00:00:00', '', '', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', '2023-07-28', NULL, NULL),
+(2169, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-14 00:00:00', '10973MAT0408', '408', 'STANLEY MWANGI MWAURA', '', '', '', '1999-07-01', '27', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2024-06-25 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(2170, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-14 00:00:00', '10973MAT0409', '409', 'JOSEPH NJENGA MUGURE', '', '', '', '1998-02-02', '28', 'Male', '', 'Nairobi County', 'MARURUI', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-01-15 00:00:00', '', '', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', '2025-01-15', NULL, NULL),
+(2171, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-15 00:00:00', '10973MAT0410', '410', 'RODGERS MATATA LIZ', '', '', '', '2004-07-27', '22', 'Male', '', 'Nairobi County', 'KAHAWA WEST', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-05-19 00:00:00', '', '', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', NULL, NULL),
+(2172, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-20 00:00:00', '10973MAT0411', '411', 'TIMOTHY KARIUKI WARARI', '', '', '', '1999-12-10', '26', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-05-22 00:00:00', '', '', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', '2023-05-22', NULL, NULL),
+(2173, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-20 00:00:00', '10973MAT0412', '412', 'MOSES IRUNGU KAMONDE', '', '', '', '1976-01-01', '50', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'LTFU', 'Brian', '2023-05-20 00:00:00', '', '', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', '2027-01-21', NULL, NULL),
+(2174, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-21 00:00:00', '10973MAT0413', '413', 'BRIAN CHEGE WACHEKE', '', '', '', '1995-06-25', '31', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-04-04 00:00:00', '', '', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', '2023-04-04', NULL, NULL),
+(2175, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-21 00:00:00', '10973MAT0414', '414', 'LINDA NYAWIRA WANJOHI', '', '', '', '2002-02-07', '24', 'Female', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 50.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', '2031-08-15', NULL, NULL),
+(2176, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0415', '415', 'SAMSON KIMIGIRI NDICHU', '', '', '', '1997-12-02', '28', 'Male', '', 'Thika', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Voluntary Discontinuation', 'GRACE', '2023-09-03 00:00:00', '', '', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', '2026-10-15', NULL, NULL),
+(2177, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-27 00:00:00', '10973MAT0416', '416', 'BRIAN MAINA NJERI', '', '', '', '1997-12-25', '28', 'Male', '', 'Ruiru', 'MASAKU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 10.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', '2026-11-06', NULL, NULL),
+(2178, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-28 00:00:00', '10973MAT0417', '417', 'MERCY MWENDE KYALO', '', '', '', '1998-03-03', '28', 'Female', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-01 00:00:00', '', '', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', '2023-06-01', NULL, NULL),
+(2179, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-01 00:00:00', '10973MAT0418', '418', 'STEPHEN WANGOMBE MUGURE', '', '', '', '1998-07-12', '28', 'Male', '', 'Thika', 'KIANDUTU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-04-17 00:00:00', '', '', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', '2023-04-17', NULL, NULL),
+(2180, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-01 00:00:00', '10973MAT0419', '419', 'BRIAN MUTAKA IGOKI', '', '', '', '2002-07-20', '24', 'Male', '', 'Nairobi County', 'SOWETO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', '2026-11-11', NULL, NULL),
+(2181, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-13 00:00:00', '10973MAT0420', '420', 'MISHECK NDERITU KARIUKI', '', '', '', '1998-11-03', '27', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2182, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-05 00:00:00', '10973MAT0421', '421', 'MOSES MUIRURI MAINA', '', '', '', '2002-05-23', '24', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 3.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2183, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-12 00:00:00', '10973MAT0422', '422', 'KELVIN IRUNGU NGANGA', '', '', '', '1989-05-16', '37', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-07-26 00:00:00', '', '', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', '2023-07-26', NULL, NULL),
+(2184, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-18 00:00:00', '10973MAT0423', '423', 'IAN MBURU WAINAINA', '', '', '', '2001-09-22', '25', 'Male', '', 'Muranga County', 'KENOL', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2023-07-17 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2185, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-18 00:00:00', '10973MAT0424', '424', 'RONALD WAIRIOKO MARIO', '', '', '', '1983-04-22', '43', 'Male', '', 'Ruiru', 'KAMAKIS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2186, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-24 00:00:00', '10973MAT0425', '425', 'SAMUEL GITUANJA WACHIRA', '', '', '', '1992-08-09', '34', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2187, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0426', '426', 'KELVIN MWANGI NYAMBURA', '', '', '', '2003-08-15', '23', 'Male', '', 'Ruiru', '', '', 'New', '', 'Self', 'CSO - LVCT', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Voluntary Discontinuation', 'GRACE', '2023-05-17 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2188, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-25 00:00:00', '10973MAT0427', '427', 'DAVID MWANGI KINYANJUI', '', '', '', '1998-03-24', '28', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 3.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2189, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-15 00:00:00', '10973MAT0428', '428', 'ALLAN KAMAU NJOKI', '', '', '', '1998-01-19', '28', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2190, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-15 00:00:00', '10973MAT0429', '429', 'STEPHEN NGARUIYA MUCHINA', '', '', '', '2005-01-01', '21', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-06-05 00:00:00', '', '', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', '2023-06-05', NULL, NULL),
+(2191, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-15 00:00:00', '10973MAT0430', '430', 'IAN NDUNGU CHEGE', '', '', '', '2000-12-22', '25', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-07-02 00:00:00', '', '', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', '2023-07-02', NULL, NULL),
+(2192, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-15 00:00:00', '10973MAT0431', '431', 'GADSON MAINA KAMAU', '', '', '', '1998-03-04', '28', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2023-10-07 00:00:00', '', '', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', '2023-10-07', NULL, NULL),
+(2193, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-16 00:00:00', '10973MAT0432', '432', 'KELVIN GITIRI MBURU', '', '', '', '1998-02-10', '28', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2194, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-16 00:00:00', '10973MAT0433', '433', 'JULIUS MUTURI KIMANI', '', '', '', '2000-10-08', '26', 'Male', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 7.50, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2195, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-16 00:00:00', '10973MAT0434', '434', 'CYNTHIA MARIS MUINDI', '', '', '', '2004-09-26', '22', 'Female', '', 'Ruiru', 'KWA KAIRU', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', '2027-01-07', NULL, NULL),
+(2196, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-22 00:00:00', '10973MAT0435', '435', 'DENNIS MUIRU WANJIRU', '', '', '', '1997-05-05', '29', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2197, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-30 00:00:00', '10973MAT0436', '436', 'DAVID KARICHU WAMBUI', '', '', '', '2000-09-06', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2025-01-14 00:00:00', '', '', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', '2025-01-14', NULL, NULL),
+(2198, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-30 00:00:00', '10973MAT0437', '437', 'WILSON KIMANI NGUGI', '', '', '', '2000-01-01', '26', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2023-08-14 00:00:00', '', '', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', '2023-08-14', NULL, NULL),
+(2199, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-05 00:00:00', '10973MAT0438', '438', 'CLARENCE MWANGI KIMANI', '', '', '', '1979-12-07', '46', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-24 00:00:00', '', '', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', '2023-12-24', NULL, NULL),
+(2200, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-14 00:00:00', '10973MAT0439', '439', 'MICHAEL KARANJA OYUCHI', '', '', '', '2003-06-14', '23', 'Male', '', 'Nairobi County', 'GITHURAI44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 10.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2201, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-19 00:00:00', '10973MAT0440', '440', 'SHADRACK MWAURA MAINA', '', '', '', '1998-01-23', '28', 'Male', '', 'Nairobi County', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-06-18 00:00:00', '', '', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', '2024-06-18', NULL, NULL),
+(2202, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-19 00:00:00', '10973MAT0441', '441', 'MARY WANJIKU KINYUA', '', '', '', '2001-11-24', '24', 'Female', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'Mercy', '2024-07-06 00:00:00', '', '', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', '2024-07-06', NULL, NULL),
+(2203, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-19 00:00:00', '10973MAT0442', '442', 'FREDRICK KAMAU NGIGE', '', '', '', '1998-07-26', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-08-23 00:00:00', '', '', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', '2023-08-23', NULL, NULL),
+(2204, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-06-19 00:00:00', '10973MAT0443', '443', 'GEORGE MBUGUA NJOROGE', '', '', '', '1998-07-22', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2023-06-22 00:00:00', '', '', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', '2023-06-22', NULL, NULL),
+(2205, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-07-11 00:00:00', '10973MAT0444', '444', 'KELVIN MUNGAI KANGANGI', '', '', '', '1994-09-25', '32', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2206, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0445', '445', 'ELIJAH MARUI GUTU', '', '', '', '1986-05-05', '40', 'Male', '', 'Juja', '', '', 'New', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'TO: Thika', 'GRACE', '2025-01-01 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2207, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-07-26 00:00:00', '10973MAT0446', '446', 'AMOS KINYANJUI KAGAI', '', '', '', '2004-01-01', '22', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-11-06 00:00:00', '', '', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', '2023-11-06', NULL, NULL),
+(2208, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-08-02 00:00:00', '10973MAT0447', '447', 'NELSON NJOROGE KAHANYA', '', '', '', '2000-07-31', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2209, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-08-02 00:00:00', '10973MAT0448', '448', 'FRANCE ONELI MAJIMBO', '', '', '', '2003-03-22', '23', 'Male', '', 'Thika', 'MAKONGENI', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2210, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-08-28 00:00:00', '10973MAT0449', '449', 'BRIAN NGUGI WANJIKU', '', '', '', '2007-08-04', '19', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2211, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-08-30 00:00:00', '10973MAT0450', '450', 'PETER NGIGI MAINA', '', '', '', '1994-03-01', '32', 'Male', '', 'Thika', 'KIGANJO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-09-14 00:00:00', '', '', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', '2023-09-14', NULL, NULL),
+(2212, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-18 00:00:00', '10973MAT0451', '451', 'KELVIN NJOROGE NJERI', '', '', '', '1995-04-14', '31', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Weaned', 'Weaned', 'Mercy', '2025-05-20 00:00:00', '', '', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', '2025-05-20', NULL, NULL),
+(2213, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-18 00:00:00', '10973MAT0452', '452', 'ALEX KIMANI NYAMBURA', '', '', '', '1996-04-21', '30', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-02-02 00:00:00', '', '', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', '2025-02-02', NULL, NULL),
+(2214, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0453', '453', 'PETER NJOROGE KURIA', '', '', '', '1994-07-24', '32', 'Male', '', 'Ruiru', '', '', 'New', '', 'Self', 'CSO - SAPTA', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 45.00, 'Last Known dose', 'ltfu', 'LTFU', 'GRACE', '2025-03-25 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2215, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-18 00:00:00', '10973MAT0454', '454', 'SIMON WANJALA MUNIALO', '', '', '', '1996-01-01', '30', 'Male', '', 'Ruiru', 'WETAITHIE', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2023-10-17 00:00:00', '', '', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', '2023-10-17', NULL, NULL),
+(2216, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-18 00:00:00', '10973MAT0455', '455', 'DORCAS EMILY OWANO', '', '', '', '1996-01-24', '30', 'Female', '', 'Ruiru', 'MAZIWA', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 60.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2217, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-20 00:00:00', '10973MAT0456', '456', 'SIMIYU ADAMBO ASIAGO', '', '', '', '1996-05-10', '30', 'Male', '', 'Ruiru', 'KWAMAIKO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-03-24 00:00:00', '', '', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', '2024-03-24', NULL, NULL),
+(2218, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-02 00:00:00', '10973MAT0457', '457', 'JOHN MWANGI NJERI', '', '', '', '1999-09-08', '27', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 50.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', '2056-07-20', NULL, NULL),
+(2219, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-02 00:00:00', '10973MAT0458', '458', 'TIMOTHY ENOCK PHILIP', '', '', '', '1998-08-24', '28', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 10.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2220, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-02 00:00:00', '10973MAT0459', '459', 'JAMES MUIGAI NGUGI', '', '', '', '1993-07-22', '33', 'Male', '', 'Ruiru', 'KAHAWA SUKARI', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 60.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', '2026-12-17', NULL, NULL),
+(2221, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-02 00:00:00', '10973MAT0460', '460', 'BRIAN MURIITHI WAMAITHA', '', '', '', '1997-12-11', '28', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2025-07-25 00:00:00', '', '', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', '2025-07-25', NULL, NULL),
+(2222, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-03 00:00:00', '10973MAT0461', '461', 'JOSEPH THEURI KANAI', '', '', '', '1993-06-01', '33', 'Male', '', 'Ruiru', 'SOWETO', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2024-09-29 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2223, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-03 00:00:00', '10973MAT0462', '462', 'EDWIN JOSEPH MWARARI', '', '', '', '1991-01-27', '35', 'Male', '', 'Ruiru', 'KAHAWA WENDANI', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Relapse', 'Brian', '2025-09-05 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2224, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-03 00:00:00', '10973MAT0463', '463', 'ELLY NYASAKA OPANDE', '', '', '', '1983-08-12', '43', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-10-23 00:00:00', '', '', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', '2023-10-23', NULL, NULL),
+(2225, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-09 00:00:00', '10973MAT0464', '464', 'DENHART GIKONGE', '', '', '', '1997-02-15', '29', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2023-11-06 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2226, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-09 00:00:00', '10973MAT0465', '465', 'KARABU BRIAN MWANGI', '', '', '', '1994-11-02', '31', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2025-05-26 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2227, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-17 00:00:00', '10973MAT0466', '466', 'JOSEPH IRUNGU MWANGI', '', '', '', '1993-03-12', '33', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Brian', '2025-01-28 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2228, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-24 00:00:00', '10973MAT0467', '467', 'JESCA JASMINE NYAMBURA', '', '', '', '2001-03-15', '25', 'Female', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'ltfu', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2229, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-30 00:00:00', '10973MAT0468', '468', 'EVANSON MWANGI KARIUKI', '', '', '', '1998-08-06', '28', 'Male', '', 'Ruiru', 'KARIOBANGI SOUTH', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-11-09 00:00:00', '', '', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', '2023-11-09', NULL, NULL),
+(2230, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-10-30 00:00:00', '10973MAT0469', '469', 'KELVIN MACHARIA GITICHIE', '', '', '', '1997-05-27', '29', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2231, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-22 00:00:00', '10973MAT0470', '470', 'MARY WANJIKU NDUNGU', '', '', '', '1987-12-21', '38', 'Female', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2023-12-21 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(2232, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-22 00:00:00', '10973MAT0471', '471', 'PETER KAMAU WANJIRU', '', '', '', '1998-01-30', '28', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 100.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', '2027-01-04', NULL, NULL),
+(2233, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-22 00:00:00', '10973MAT0472', '472', 'BRIAN KATHINOI MUSYIMI', '', '', '', '2002-01-01', '24', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2234, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-12 00:00:00', '10973MAT0473', '473', 'NICHOLAS GICHARU MUHIA', '', '', '', '1999-11-25', '26', 'Male', '', 'Ruiru', 'GATONGOA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2025-01-12 00:00:00', '', '', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', '2025-01-12', NULL, NULL),
+(2235, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-12 00:00:00', '10973MAT0474', '474', 'KELVIN NYONGESA NJERI', '', '', '', '2001-09-14', '25', 'Male', '', 'Ruiru', 'GWA KAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'Brian', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2236, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-12 00:00:00', '10973MAT0475', '475', 'LAWRENCE WAMBUA GACHARA', '', '', '', '1991-01-01', '35', 'Male', '', 'Ruiru', 'GWAKAIRU', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Mercy', '2025-02-15 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2237, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-12 00:00:00', '10973MAT0476', '476', 'KENNEDY MATHEKA MUNYAO', '', '', '', '2000-07-06', '26', 'Male', '', 'Ruiru', 'KAMAKIS', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2023-12-14 00:00:00', '', '', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', '2023-12-14', NULL, NULL),
+(2238, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-07-02 00:00:00', '10973MAT0477', '477', 'DAVID NGATI MARARA', '', '', '', '1999-12-04', '26', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 140.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', '2027-01-05', NULL, NULL),
+(2239, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-08-02 00:00:00', '10973MAT0478', '478', 'RICHARD MWAURA KIGOCHI', '', '', '', '2000-01-15', '26', 'Male', '', 'Roysambu', 'SOWETO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 7.50, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', '2026-11-12', NULL, NULL),
+(2240, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-13 00:00:00', '10973MAT0479', '479', 'PETER MACHARIA MUHIA', '', '', '', '2001-07-03', '25', 'Male', '', 'Ruiru', 'RUIRU', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2241, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-26 00:00:00', '10973MAT0480', '480', 'SAMSON KARIUKI WAWERU', '', '', '', '1993-11-11', '32', 'Male', '', 'Ruiru', 'SOWETO', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2025-01-26 00:00:00', '', '', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', '2025-01-26', NULL, NULL),
+(2242, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-04 00:00:00', '10973MAT0481', '481', 'PATRICK KAMAU NYAMBURA', '', '', '', '2002-10-16', '24', 'Male', '', 'Roysambu', 'KAMAE', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Rachael', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2243, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-04 00:00:00', '10973MAT0482', '482', 'DENNIS WATURU NGANGA', '', '', '', '2002-09-03', '24', 'Male', '', 'Roysambu', 'KAMAE', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 7.50, 'Last Known dose', 'defaulted', 'Active', 'Brian', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2244, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-04 00:00:00', '10973MAT0483', '483', 'JAMES NGWIRI NZAU', '', '', '', '2000-11-27', '25', 'Male', '', 'Roysambu', 'KAMAE', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 10.00, 'Last Known dose', 'defaulted', 'Active', 'Rachael', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2245, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0484', '484', 'ERIC MUCHIRI MUREITHI', '', '', '', '2000-12-28', '25', 'Male', '', 'Roysambu', '', '', 'New', '', 'Self', 'CSO - SAPTA', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'defaulted', 'Relapse', 'GRACE', '2024-08-02 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2246, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-16 00:00:00', '10973MAT0485', '485', 'NICHOLAS NGIGI MWANGI', '', '', '', '1998-10-08', '28', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'LTFU', 'Relapse', 'Rachael', '2025-04-25 00:00:00', '', '', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', '2027-01-22', NULL, NULL),
+(2247, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-17 00:00:00', '10973MAT0486', '486', 'JOSEPH MAINA NGECHU', '', '', '', '1997-01-15', '29', 'Male', '', 'Roysambu', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2025-07-03 00:00:00', '', '', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', '2025-07-03', NULL, NULL),
+(2248, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-22 00:00:00', '10973MAT0487', '487', 'MICHAEL MBURU MUTHEE', '', '', '', '1992-09-22', '34', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'Mercy', '2024-12-24 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2249, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-05 00:00:00', '10973MAT0488', '488', 'EDWIN OMAMBIA WAKUTHI', '', '', '', '2001-07-25', '25', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', NULL, NULL),
+(2250, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-08-21 00:00:00', '10973MAT0489', '489', 'COLLINS NJAU NJENGA', '', '', '', '1996-06-16', '30', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'System User', '2025-05-06 00:00:00', '', '', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', '2025-05-06', NULL, NULL),
+(2251, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-18 00:00:00', '10973MAT0490', '490', 'JOHN KAMAU WANJIKU', '', '', '', '1991-05-25', '35', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Not Eligible', 'Not Eligible', 'System User', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2252, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-30 00:00:00', '10973MAT0491', '491', 'PETER MUNGAI MBURU', '', '', '', '2004-01-11', '22', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 50.00, 'having withdrawals', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2253, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-30 00:00:00', '10973MAT0492', '492', 'JOSEPH MUGO WANJIKU', '', '', '', '1999-02-18', '27', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'System User', '2025-05-19 00:00:00', '', '', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', '2025-05-19', NULL, NULL),
+(2254, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-10-16 00:00:00', '10973MAT0493', '493', 'JOSEPH NJENGA WAIHENYA', '', '', '', '1995-12-15', '30', 'Male', '', 'Ruiru', 'KAHAWA WEST', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2255, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0494', '494', 'KENNETH MWANGI MUCHOKI', '', '', '', '1996-01-10', '30', 'Male', '', 'Roysambu', '', '', 'New', '', 'Self', 'CSO - SAPTA', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2256, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-29 00:00:00', '10973MAT0495', '495', 'JAMES WANJAGI MAINA', '', '', '', '2002-12-21', '23', 'Male', '', '', 'SOWETO', '', 'New', '', 'CSO - SAPTA', 'CSO - SAPTA', 'SAPTA', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'System User', '2025-06-15 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2257, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-03-20 00:00:00', '10973MAT0496', '496', 'BENSON NJOROGE GAKUNA', '', '', '', '2004-04-05', '22', 'Male', '', 'Ruiru', 'GITOTHUA', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', '2031-07-20', NULL, NULL),
+(2258, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-11-04 00:00:00', '10973MAT0497', '497', 'MARGRET MUTHONI MWANGI', '', '', '', '1998-08-21', '28', 'Female', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'System User', '2025-05-05 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2259, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-04-24 00:00:00', '10973MAT0498', '498', 'GIBSON KARIUKI WANGUI', '', '', '', '2003-07-02', '23', 'Male', '', 'Ruiru', 'PRISON', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2260, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-04-28 00:00:00', '10973MAT0499', '499', 'GEORGE WAWERU NYOKABI', '', '', '', '2002-08-01', '24', 'Male', '', 'Ruiru', 'WAKAIRO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 35.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2261, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-05-15 00:00:00', '10973MAT0500', '500', 'CLINTON NYANTIKA NYABUTO', '', '', '', '1998-03-06', '28', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'System User', '2025-09-05 00:00:00', '', '', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', '2025-09-05', NULL, NULL),
+(2262, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-05-26 00:00:00', '10973MAT0501', '501', 'VICTOR KIMOTHO KANYENYA', '', '', '', '2001-05-28', '25', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 50.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2263, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-12-08 00:00:00', '10973MAT0502', '502', 'FREDRICK CHEGE MWAURA', '', '', '', '2002-12-25', '23', 'Male', '', 'Ruiru', 'KIMBO', '', 'New', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 60.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', '2027-01-11', NULL, NULL),
+(2264, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-09-14 00:00:00', '10973MATJ329', 'J329', 'DEXTER NAIMA OCHIENG', '', '', '', '1999-09-19', '27', 'Male', '', 'Thika', 'KIMBO', '', 'Transfer in', '', 'TI: Jootrh', 'TI: Jootrh', 'Jootrh', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: JOOTRH', 'System User', '2023-11-07 00:00:00', '', '', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', '2023-11-07', NULL, NULL),
+(2265, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-10-12 00:00:00', '10973MATJO135', 'JO135', 'ERIC ODEYO', '', '', '', '1987-06-15', '39', 'Male', '', 'Roysambu', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Jootrh', 'TI: Jootrh', 'Jootrh', '', '', '', '', '', 'Methadone', 20.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-04-23 00:00:00', '', '', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', NULL, NULL),
+(2266, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-01 00:00:00', '10973MATK216', 'K216', 'BENARD NDUNGU WAMBUI', '', '', '', '1994-06-09', '32', 'Male', '', 'Roysambu', 'NGOMONGO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'ltfu', 'Active', 'brian', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2267, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-03-18 00:00:00', '10973MATK327', 'K327', 'BENARD MWANGI NJERI', '', '', '', '1998-06-11', '28', 'Male', '', 'Ruiru', 'KWA MAIKO', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'System User', '2025-05-16 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2268, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-10 00:00:00', '10973MATK356', 'K356', 'MATHEW WAINAINA WAIHENYA', '', '', '', '1995-12-25', '30', 'Male', '', 'Ruiru', 'KAMAE', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'LTFU', 'brian', '2023-10-04 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2269, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-10 00:00:00', '10973MATK365', 'K365', 'DAVID MAINA KAMAU', '', '', '', '1995-06-08', '31', 'Male', '', 'Ruiru', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2270, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-26 00:00:00', '10973MATK366', 'K366', 'ANTONY KIMANI AJODE', '', '', '', '1996-02-14', '30', 'Male', '', 'Ruiru', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Brian', '2024-12-28 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2271, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-09-09 00:00:00', '10973MATK459', 'K459', 'EVANS KIARIE THAKU', '', '', '', '2001-05-25', '25', 'Male', '', 'Ruiru', 'JUJA', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'System User', '2025-02-05 00:00:00', '', '', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', '2025-02-05', NULL, NULL),
+(2272, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-06-08 00:00:00', '10973MATK561', 'K561', 'STEPHEN KARIUKI WACHIRA', '', '', '', '1992-10-30', '33', 'Male', '', 'Roysambu', 'RYOSAMBU', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 15.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2273, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2026-02-25 00:00:00', '10973MATK813', 'K813', 'NICHOLAS KANGETHE GITAU', '', '', '', '2000-03-07', '26', 'Male', '', 'Roysambu', 'KAWHAWA WEST', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2274, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-08 00:00:00', '10973MATK933', 'K933', 'ERNESY KAMANDE MUCHOKI', '', '', '', '1990-02-09', '36', 'Male', '', 'Ruiru', 'RUIRU BYPASS', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2275, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2026-08-19 00:00:00', '10973MATK934', 'K934', 'STEPHEN MUNYUA NJENGA', '', '', '', '1995-04-24', '31', 'Male', '', '', '', '', 'Transfer in', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Buprenorphine 8mg', 1.50, 'Last Known dose', 'ltfu', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', '2031-01-29', NULL, NULL),
+(2276, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-01-02 00:00:00', '10973MATKO1247', 'KO1247', 'IDDI HASSAN', '', '', '', '1985-06-01', '41', 'Male', '', 'Kiambu', 'KAMITI', '', 'Transfer in', '', 'TI: Kombani', 'TI: Kombani', 'Kombani', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'defaulted', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2277, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATKO1473', 'KO1473', 'IAN LEYAN MAINA', '', '', '', '1995-10-27', '30', 'Male', '', 'Kiambu', '', '', 'New', '', 'Self', 'TI: Kombani', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'ltfu', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2278, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-28 00:00:00', '10973MATKO531', 'KO531', 'CEASAR KANGETHE KAGOTHO', '', '', '', '1993-10-28', '32', 'Male', '', 'Ruiru', 'GITHURAI', '', 'Transfer in', '', 'TI: Kombani', 'TI: Kombani', 'Kombani', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'Brian', '2024-10-08 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2280, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-10 00:00:00', '10973MATM009', 'M009', 'AMINA AZIZ KANAELI', '', '', '', '1970-09-01', '56', 'Female', '', 'Ruiru', 'KIMBO', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Mercy', '2024-01-18 00:00:00', '', '', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', '2024-01-18', NULL, NULL),
+(2281, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-12 00:00:00', '10973MATM1138', 'M1138', 'DANIEL NDUNGU NJERI', '', '', '', '1995-09-14', '31', 'Male', '', 'Kiambu', 'KAMITI CORNER', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-04-30 00:00:00', '', '', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', NULL, NULL),
+(2282, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-08-22 00:00:00', '10973MATM1537', 'M1537', 'STEPHEN MBURU MWANGI', '', '', '', '2002-02-22', '24', 'Male', '', 'Thika', 'WETAITHIE', '', 'Transfer in', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Mercy', '2024-03-04 00:00:00', '', '', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', '2024-03-04', NULL, NULL),
+(2283, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-11 00:00:00', '10973MATN0190', 'N0190', 'PHILIP MUNENE KAWIRA', '', '', '', '1983-12-13', '42', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2284, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATN0191', 'N0191', 'EDWARD KEN MWANGI', '', '', '', '1987-05-01', '39', 'Male', '', 'Ruiru', '', '', 'New', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 30.00, 're-induction', 'ltfu', 'LTFU', 'GRACE', '2026-05-26 00:00:00', '', '', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', '2026-08-24', NULL, NULL),
+(2285, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-11 00:00:00', '10973FETN0406', 'N0406', 'RACHAEL WANGUI WANJIRU', '', '', '', '1994-04-14', '32', 'Female', '', 'Roysambu', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Dead', 'Died', 'System User', '2024-11-18 00:00:00', '', '', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', '2024-11-18', NULL, NULL),
+(2286, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATN434', 'N434', 'JAMES NGETHE CHEGE', '', 'bylaw', '35540262', '1966-03-12', '60', 'Male', '', 'Ruiru', '', '0769149559', 'Transfer In', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Prison Warden', '', '', '', 'Methadone', 3.00, 'cessation', 'defaulted', 'Active', 'PETER', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2287, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATN0675', 'N0675', 'NATHAN MULWA WAMBUA', '', '', '', '1997-07-01', '29', 'Male', '', 'Roysambu', '', '', 'New', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 40.00, 'Last Known dose', 'defaulted', 'Active', 'PETER', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2288, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-11 00:00:00', '10973FETN1087', 'N1087', 'GRACE WAMBUI NJERI', '', '', '', '1997-01-08', '29', 'Female', '', 'Roysambu', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2289, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATN1097', 'N1097', 'KENNETH WACHIRA WANJIRU', '', '', '', '1994-07-13', '32', 'Male', '', 'Roysambu', '', '', 'New', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 35.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2290, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-11 00:00:00', '10973MATN1187', 'N1187', 'PATRICK MUIRURI KIIRU', '', '', '', '1984-09-29', '42', 'Male', '', 'Roysambu', 'KAHAWA WEST', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 65.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', '2056-08-15', NULL, NULL),
+(2291, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-11 00:00:00', '10973MATN1304', 'N1304', 'MARTIN WAMBUI MBURU', '', '', '', '1995-03-16', '31', 'Male', '', 'Roysambu', 'GITHURAI 44', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'defaulted', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2292, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-10 00:00:00', '10973MATN1746', 'N1746', 'CHRISTOPHER EMEKA OGBUAGU', '', '', '', '1986-03-17', '40', 'Male', '', 'Ruiru', 'KIMBO', '', 'Transfer in', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2293, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATN1747', 'N1747', 'ANTHONY GITHUKU MWANGI', '', '', '', '1997-06-07', '29', 'Male', '', 'Roysambu', '', '', 'New', '', 'Self', 'TI: Ngara', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 35.00, 'sedation', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', '2056-08-10', NULL, NULL),
+(2294, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-30 00:00:00', '10973MACN1828', 'N1828', 'DAVID KINUTHIA NGIGI', '', '', '', '1996-09-20', '30', 'Male', '', 'Ruiru', 'GITHURAI', '', 'Transfer in', '', 'CSO - LVCT', 'CSO - LVCT', 'New Induction', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'LTFU', 'Relapse', 'System User', '2025-06-15 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2295, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973FETT0065', 'T0065', 'VICTORIA TETI MUTHOKI', '', '', '', '2000-09-27', '26', 'Female', '', 'Nairobi County', '', '', 'Transfer In', '', 'Self', 'TI: Thika', 'Thika Level 5 Hospital', '065', 'Parent', '', '', '', 'Methadone', 25.00, 'Last Known dose', 'defaulted', 'Active', 'PETER', '2025-09-22 00:00:00', '', '', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2296, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-11-09 00:00:00', '10973MATT007', 'T007', 'BONIFACE MACHARIA', '', '', '', '2000-02-22', '26', 'Male', '', 'Thika', 'KIANDUTU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2297, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-09 00:00:00', '10973MATT0089', 'T0089', 'ELVIS MWAURA', '', '', '', '2004-06-09', '22', 'Male', '', 'Roysambu', 'SOWETO', '', 'Transfer in', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2298, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-01 00:00:00', '10973MATTR002', 'TR002', 'DANIEL NJAU KARANJA', '', '', '', '2004-03-19', '22', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-05-29 00:00:00', '', '', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', '2023-05-29', NULL, NULL),
+(2299, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-08 00:00:00', '10973FETTR004', 'TR004', 'IRENE GATHONI WAMAE', '', '', '', '2001-06-15', '25', 'Female', '', 'Ruiru', 'GITHURAI 44', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-01-03 00:00:00', '', '', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', '2023-01-03', NULL, NULL),
+(2300, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2022-12-22 00:00:00', '10973MATTR005', 'TR005', 'STANLEY NDUNGU NDICHU', '', '', '', '1977-12-27', '48', 'Male', '', 'Githunguri', 'KWAMAIKO', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-01-10 00:00:00', '', '', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', '2023-01-10', NULL, NULL),
+(2301, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-06 00:00:00', '10973MATTR006', 'TR006', 'BRIAN NJAU NDUNGU', '', '', '', '1997-01-31', '29', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-02-16 00:00:00', '', '', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', '2023-02-16', NULL, NULL),
+(2302, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-01-17 00:00:00', '10973MATTR007', 'TR007', 'ANTONY MWANGI KURIA', '', '', '', '1995-09-09', '31', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-01-31 00:00:00', '', '', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', '2023-01-31', NULL, NULL),
+(2303, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-20 00:00:00', '10973MATTR008', 'TR008', 'BENSON CHEGE WAIRIMU', '', '', '', '1991-01-01', '35', 'Male', '', 'Thika', 'WITEITHIE', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2023-05-28 00:00:00', '', '', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', '2023-05-28', NULL, NULL),
+(2304, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-23 00:00:00', '10973MATTR009', 'TR009', 'JULIUS NJOROGE WAMBUI', '', '', '', '1997-12-07', '28', 'Male', '', 'Thika', 'MAJENGO', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Mercy', '2023-03-30 00:00:00', '', '', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', '2023-03-30', NULL, NULL),
+(2305, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-04-04 00:00:00', '10973MATTR010', 'TR010', 'SAMUEL KIBE WANGUI', '', '', '', '1983-02-15', '43', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'Brian', '2023-04-13 00:00:00', '', '', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', '2023-04-13', NULL, NULL),
+(2306, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-05-02 00:00:00', '10973MATTR011', 'TR011', 'PATRICK MWANGI WARUINU', '', '', '', '1999-07-04', '27', 'Male', '', 'Ruiru', 'GITHURAI 45', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-10-04 00:00:00', '', '', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', '2023-10-04', NULL, NULL),
+(2307, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-07-26 00:00:00', '10973MATTR012', 'TR012', 'MOSES KAMANDE THUO', '', '', '', '1993-05-12', '33', 'Male', '', 'Kiambaa', 'BANANA', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2023-11-10 00:00:00', '', '', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', '2023-11-10', NULL, NULL),
+(2308, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-07-26 00:00:00', '10973MATTR013', 'TR013', 'KENNETH MACHARIA THUO', '', '', '', '1999-06-17', '27', 'Male', '', 'Limuru', 'LIMURU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2309, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-03-08 00:00:00', '10973MATTR014', 'TR014', 'PATRICK MUIGAI KIARIE', '', '', '', '1996-09-16', '30', 'Male', '', 'Kiambaa', 'KAWAIDA', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2023-09-07 00:00:00', '', '', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', '2023-09-07', NULL, NULL),
+(2310, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-08-29 00:00:00', '10973MATTR015', 'TR015', 'MARTIN MBURU WAMBUI', '', '', '', '1994-06-03', '32', 'Male', '', 'Ruiru', 'KITHURAI 44', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Mercy', '2023-12-04 00:00:00', '', '', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', '2023-12-04', NULL, NULL),
+(2311, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2023-11-29 00:00:00', '10973MATTR016', 'TR016', 'LAWRENCE KAMAU WAMBUI', '', '', '', '1992-02-18', '34', 'Male', '', 'Ruiru', 'GACHIE', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Buprenorphine 2mg', 1.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2024-01-22 00:00:00', '', '', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', '2024-01-22', NULL, NULL),
+(2312, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-01-18 00:00:00', '10973MATTR018', 'TR018', 'ALI MUHAMMED NGARI', '', '', '', '1990-01-01', '36', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Voluntary Discontinuation', 'Voluntary Discontinuation', 'Brian', '2024-12-13 00:00:00', '', '', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', '2024-12-13', NULL, NULL),
+(2313, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-02 00:00:00', '10973MATTR019', 'TR019', 'TITUS NGANGA MBUGUA', '', '', '', '2000-08-12', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-02-22 00:00:00', '', '', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', '2024-02-22', NULL, NULL),
+(2314, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-02 00:00:00', '10973MATTR020', 'TR020', 'JOSEPH KAMAU MUREMI', '', '', '', '1994-04-04', '32', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'Brian', '2024-06-06 00:00:00', '', '', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', '2024-06-06', NULL, NULL),
+(2315, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-02 00:00:00', '10973MATTR021', 'TR021', 'SHADRACK KIOKO NDUNGE', '', '', '', '1996-04-08', '30', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-03-01 00:00:00', '', '', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', '2024-03-01', NULL, NULL),
+(2316, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-02 00:00:00', '10973MATTR022', 'TR022', 'SAMUEL NDUNGU CHEGE', '', '', '', '1995-06-12', '31', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Brian', '2024-04-30 00:00:00', '', '', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', '2024-04-30', NULL, NULL),
+(2317, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-19 00:00:00', '10973MATTR023', 'TR023', 'JOSEPH KAAU WANIRU', '', '', '', '2000-01-01', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'Mercy', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2318, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-19 00:00:00', '10973MATTR024', 'TR024', 'MARTIN KARIUKI', '', '', '', '1995-02-10', '31', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-03-10 00:00:00', '', '', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', '2024-03-10', NULL, NULL),
+(2319, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-19 00:00:00', '10973MATTR025', 'TR025', 'EZEIEL KIARIE NDUNGU', '', '', '', '2000-06-15', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2024-03-15 00:00:00', '', '', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', NULL, NULL),
+(2320, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-19 00:00:00', '10973MATTR026', 'TR026', 'STEPHEN CHEGE MUIYURO', '', '', '', '1995-06-22', '31', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-03-11 00:00:00', '', '', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', '2024-03-11', NULL, NULL),
+(2321, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-19 00:00:00', '10973MATTR027', 'TR027', 'KENNEDY KIMANI WANJIRU', '', '', '', '1985-06-13', '41', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2024-03-12 00:00:00', '', '', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', '2024-03-12', NULL, NULL),
+(2322, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-22 00:00:00', '10973MATTR028', 'TR028', 'PETER KARANJA MBUGUA', '', '', '', '1994-01-02', '32', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-06-14 00:00:00', '', '', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', '2024-06-14', NULL, NULL),
+(2323, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-02-27 00:00:00', '10973FETTR029', 'TR029', 'SUSAN NJOKI DAVID', '', '', '', '1987-08-12', '39', 'Female', '', 'Ruiru', 'KWAMAIKO', '', 'Transit', '', 'TI: Kisauni', 'TI: Kisauni', 'Kisauni', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Kisauni', 'Mercy', '2024-03-19 00:00:00', '', '', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', '2024-03-19', NULL, NULL),
+(2324, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-01-03 00:00:00', '10973MATTR030', 'TR030', 'AARON NJOROGE MBURU', '', '', '', '2002-10-19', '24', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-03-15 00:00:00', '', '', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', '2024-03-15', NULL, NULL),
+(2325, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-11-03 00:00:00', '10973MATTR031', 'TR031', 'SAMUEL KANGETHE', '', '', '', '1997-02-10', '29', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-05-05 00:00:00', '', '', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', '2024-05-05', NULL, NULL),
+(2326, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATTR032', 'TR032', 'SAMUEL KIARIE KAHIGA', '', '', '', '1998-02-26', '28', 'Male', '', 'Ruiru', '', '', 'Transit', '', 'Self', 'TI: Karuri', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 55.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2327, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-11-03 00:00:00', '10973MATTR033', 'TR033', 'PETER WANGAI MUTHII', '', '', '', '1999-01-04', '27', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'Mercy', '2024-04-17 00:00:00', '', '', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', '2024-04-17', NULL, NULL);
+INSERT IGNORE INTO `deleted_patients` (`p_id`, `reg_facility`, `mflcode`, `county`, `scounty`, `reg_date`, `mat_id`, `mat_number`, `clientName`, `sname`, `nickName`, `nat_id`, `dob`, `age`, `sex`, `marital_status`, `residence_scounty`, `p_address`, `client_phone`, `mat_status`, `transfer_id`, `referral_type`, `cso`, `referring_facility`, `reffering_fac_client_number`, `accompanment_type`, `peer_edu_name`, `peer_edu_phone`, `rx_supporter_name`, `drugname`, `dosage`, `reasons`, `current_status`, `status_change_notes`, `hcw_name`, `comp_date`, `last_vlDate`, `results`, `next_appointment`, `psycho_social_tca`, `psychiatric_tca`, `nursing_tca`, `nutrition_tca`, `laboratory_tca`, `records_tca`, `peer_tca`, `admin_tca`, `religion`, `occupation`) VALUES
+(2328, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-03-14 00:00:00', '10973MATTR034', 'TR034', 'SOLOMON NGUGI MAINA', '', '', '', '1998-03-03', '28', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-08-31 00:00:00', '', '', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', '2024-08-31', NULL, NULL),
+(2329, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-03-28 00:00:00', '10973MATTR035', 'TR035', 'JULIUS MUHIA', '', '', '', '1991-08-28', '35', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Mercy', '2024-11-04 00:00:00', '', '', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', '2024-11-04', NULL, NULL),
+(2330, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-03-28 00:00:00', '10973MATTR036', 'TR036', 'ALEX MWANGI KAIRU', '', '', '', '2003-02-14', '23', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'Brian', '2024-08-23 00:00:00', '', '', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', '2024-08-23', NULL, NULL),
+(2331, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-15 00:00:00', '10973MATTR037', 'TR037', 'DAVID KIONI WANGECHI', '', '', '', '2000-01-07', '26', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'System User', '2024-08-08 00:00:00', '', '', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', '2024-08-08', NULL, NULL),
+(2332, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-04-23 00:00:00', '10973MATTR038', 'TR038', 'BONFACE MARI GITAU', '', '', '', '1982-12-12', '43', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2333, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-08-21 00:00:00', '10973MATTR039', 'TR039', 'SAMUEL MWAURA WANJIKU', '', '', '', '1994-06-06', '32', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'System User', '2024-08-25 00:00:00', '', '', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', '2024-08-25', NULL, NULL),
+(2334, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-01 00:00:00', '10973MATTR040', 'TR040', 'SAMUEL MUKURIA NJENGA', '', '', '', '1990-07-07', '36', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', '', '', '', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'System User', '2025-01-10 00:00:00', '', '', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', '2025-01-10', NULL, NULL),
+(2335, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-08-31 00:00:00', '10973MATTR041', 'TR041', 'PETER THUKU MBUGUA', '', '', '', '1988-02-12', '38', 'Male', '', 'Thika', 'MAJENGO', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'System User', '2024-10-02 00:00:00', '', '', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', '2024-10-02', NULL, NULL),
+(2336, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-11-26 00:00:00', '10973MATTR042', 'TR042', 'EVANS KARIUKI MUTHONI', '', '', '', '1995-04-29', '31', 'Male', '', 'Nairobi County', 'KAYOLE', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'System User', '2024-12-20 00:00:00', '', '', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', '2024-12-20', NULL, NULL),
+(2337, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-11-26 00:00:00', '10973MATTR043', 'TR043', 'ERIC MEROKO RASUGU', '', '', '', '1996-01-01', '30', 'Male', '', 'Nairobi County', 'MAJENGO', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'System User', '2024-12-02 00:00:00', '', '', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', '2024-12-02', NULL, NULL),
+(2338, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-18 00:00:00', '10973MATTR044', 'TR044', 'SAMSON OMASATSI KITAMA', '', '', '', '1985-06-07', '41', 'Male', '', 'Nairobi County', 'NGARA', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Ngara', 'System User', '2025-05-05 00:00:00', '', '', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', '2025-05-05', NULL, NULL),
+(2339, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2024-12-26 00:00:00', '10973MATTR045', 'TR045', 'TITUS KARIUKI', '', '', '', '1997-07-03', '29', 'Male', '', 'Nairobi County', 'MATHARE', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'System User', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2340, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-04-01 00:00:00', '10973MATTR047', 'TR047', 'BONFACE KURIA WANJIRU', '', '', '', '1989-11-05', '36', 'Male', '', 'Thika', 'THIKA', '', 'Transit', '', 'TI: Thika', 'TI: Thika', 'Thika', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Thika', 'System User', '2025-01-01 00:00:00', '', '', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', '2025-01-01', NULL, NULL),
+(2341, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATTR048', 'TR048', 'DAVID KARIUKI MWEA', '', '', '', '2000-12-17', '25', 'Male', '', 'Thika', '', '', 'Transit', '', 'Self', 'TI: Thika', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 5.00, 'Last Known dose', 'ltfu', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2342, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-15 00:00:00', '10973MATTR049', 'TR049', 'NOAH MUGWE SERAH', '', '', '', '1998-08-04', '28', 'Male', '', 'Thika', 'THIKA', '', 'Transit', '', 'TI: Karuri', 'TI: Karuri', 'Karuri', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Karuri', 'System User', '2025-05-04 00:00:00', '', '', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', '2025-05-04', NULL, NULL),
+(2343, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-01-01 00:00:00', '10973MATTR050', 'TR050', 'JOSEPH KAGUMO NDUNGU', '', '', '', '1986-03-15', '40', 'Male', '', 'Nairobi County', 'KAYOLE', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO: Mathare', 'System User', '2025-05-02 00:00:00', '', '', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', '2025-05-02', NULL, NULL),
+(2344, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-06-23 00:00:00', '10973FETTR051', 'TR051', 'MAUREEN WAITHERA KIBE', '', '', '', '1993-09-28', '33', 'Female', '', 'Gatundu South', 'GATUNDU', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Transout', 'TO:Mathare', 'System User', '2025-09-22 00:00:00', '', '', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', '2025-09-22', NULL, NULL),
+(2345, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-04-07 00:00:00', '10973MATTR052', 'TR052', 'JOHN KIRIGE WAIRIMU', '', '', '', '1990-02-08', '36', 'Male', '', 'Nairobi County', 'MATHARE', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2346, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATTR053', 'TR053', 'FRANCIS MUGWI', '', '', '', '1989-06-10', '37', 'Male', '', 'Ruiru', '', '', 'Transit', '', 'Self', 'TI: Mathare', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 45.00, 'Last Known dose', 'defaulted', 'Active', 'GRACE', '2025-09-22 00:00:00', '', '', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2347, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-06-08 00:00:00', '10973MATTR054', 'TR054', 'PETER KIMWE MACHARIA', '', '', '', '2005-12-12', '20', 'Male', '', 'Ruiru', 'RUIRU', '', 'Transit', '', 'TI: Mathare', 'TI: Mathare', 'Mathare', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2348, 'Ruiru MAT Clinic', '10973', 'Kiambu', 'Ruiru', '2025-10-09 00:00:00', '10973MATTR055', 'TR055', 'DANIEL GICHANGA CHEGE', '', '', '', '1989-07-13', '37', 'Male', '', 'Nairobi County', 'NGARA', '', 'Transit', '', 'TI: Ngara', 'TI: Ngara', 'Ngara', '', '', '', '', '', 'Methadone', 30.00, 'Last Known dose', 'Active', 'Active', 'System User', '2025-09-22 00:00:00', '', '', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', '2026-08-15', NULL, NULL),
+(2349, 'Kombani Mat Clinic', '23368', 'Kwale', 'Matuga', '2025-12-03 00:00:00', 'RUIRU0001', '', 'Test Client', '', '', '', '2010-08-02', '16', 'Female', '', '', 'Inmate', '', 'Transit', '', '', NULL, '', '', '', '', '', '', 'Methadone', 20.00, 'Start dose', 'Transout', 'Normal', 'Lyani Sitti', '2025-12-03 10:18:41', NULL, NULL, '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', '2025-12-03', NULL, NULL),
+(2350, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT503', '503', 'Joseph Kinuthia', 'Wambui', 'samto', '', '1999-05-25', '27', 'Male', 'Separated/Divorced', 'Ruiru', '', '', 'New', '', 'CSO', 'Other', ' South B Police Band', '', 'Outreach worker', 'Grace Wambui', '0745482432', '', 'Methadone', 40.00, 'withdrawals', 'Active', 'Normal', 'PETER', '2026-04-23 08:56:00', NULL, NULL, '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', '2026-05-30', NULL, NULL),
+(2351, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-10-06 00:00:00', '10973MAT504', '504', 'Bosco Gitau', 'Nyambura', 'gt', '', '1994-05-19', '32', 'Male', 'Single', 'Ruiru', '', '', 'New', '', 'CSO', 'Other', 'SAPTA KAYOLE', '', 'Outreach worker', 'James Mugo', '0706288552', 'James Mugo', 'Methadone', 57.50, 'stabilization', 'defaulted', 'Normal', 'PETER KIBURI', '2026-04-23 09:45:07', NULL, NULL, '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2352, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-04-27 00:00:00', '10973MAT507', '507', 'Robert Kariuki', 'Mwangi', 'Jongo', '', '1999-07-15', '27', 'Male', '', '', 'GITHURAI 44', '', 'New', '', '', '', '', '', '', 'leah', '0711615091', '', 'Methadone', 40.00, 'stability', 'ltfu', 'Normal', 'jeremiah muthoni', '2026-04-27 10:40:34', NULL, NULL, '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', NULL, NULL),
+(2353, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-04-27 00:00:00', '10288508', '508', 'vicent mutoka', 'ngadul', 'Tito', '', '1997-09-16', '29', 'Male', '', 'Ruiru', 'Kamae', '0757348432', 'New', '', '', '', '', '', '', 'Salome', '0757854377', '', 'Methadone', 15.00, 'stability', 'defaulted', 'Normal', 'jeremiah muthoni', '2026-04-27 10:59:59', NULL, NULL, '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', '2036-06-15', NULL, NULL),
+(2354, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-04-27 00:00:00', '10288510', '510', 'Denis Kennedy', 'Wanyoike', 'Spata', '', '2005-10-22', '20', 'Male', '', 'Ruiru', 'Githurai45', '0791649421', 'New', '', '', '', '', '', '', 'Wilson kamau', '', '', 'Methadone', 35.00, 'stability', 'ltfu', 'Normal', 'jeremiah muthoni', '2026-04-27 11:05:04', NULL, NULL, '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', NULL, NULL),
+(2355, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10288511', '511', 'Vincent Wambugu', 'Kangethe', '', '', '2003-03-23', '23', 'Male', '', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 25.00, 'stability', 'Voluntary Discontinuation', 'Normal', 'PETER', '2026-10-06 11:09:00', NULL, NULL, '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2356, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-03-11 00:00:00', '10288512', '512', 'Patrick musee', 'Wangechi', 'Pato', '35125096', '1998-06-01', '28', 'Male', '', '', 'kahawa west', '', 'New', '', '', '', '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-04-27 11:13:37', NULL, NULL, '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', NULL, NULL),
+(2357, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-03-17 00:00:00', '10288513', '513', 'Agnes Wangari', 'Wanjiru', 'Aggie', '', '2002-03-03', '24', 'Female', 'Cohabiting', '', 'Majengo Githurai', '', 'New', '', '', '', '', '', '', '', '', '', 'Methadone', 45.00, 'stability', 'Active', 'Normal', 'jeremiah muthoni', '2026-04-27 11:19:46', NULL, NULL, '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', '2026-07-31', NULL, NULL),
+(2358, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-03-17 00:00:00', '10288514', '514', 'John Karanu', 'Waithera', 'Karano', '', '2003-02-08', '23', 'Male', '', 'Ruiru', 'Kamae', '0701091326', 'New', '', '', '', '', '', '', '', '', '', 'Methadone', 30.00, 'stability', 'defaulted', 'Normal', 'jeremiah muthoni', '2026-04-27 11:24:17', NULL, NULL, '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2359, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-04-27 00:00:00', '10288515', '515', 'William Mwaura', 'Njoki', 'Blacki', '', '1990-02-02', '36', 'Male', '', 'Ruiru', 'kahawa west', '', 'New', '', '', '', '', '', '', '', '', '', 'Methadone', 55.00, 'stability', 'defaulted', 'Normal', 'jeremiah muthoni', '2026-04-27 11:29:17', NULL, NULL, '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', '2027-01-15', NULL, NULL),
+(2360, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-03-17 00:00:00', '10288516', '516', 'Evans Ngugi', 'Maina', 'Lasti', '', '2004-06-01', '22', 'Male', '', '', 'Kamae', '', 'New', '', '', '', '', '', '', '', '', '', 'Methadone', 25.00, 'for stability', 'defaulted', 'Normal', 'jeremiah muthoni', '2026-04-27 11:34:02', NULL, NULL, '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', '2056-12-05', NULL, NULL),
+(2361, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-04-15 00:00:00', '10288517', '517', 'Stanley Njenga', 'Wanjiku', '', '', '2000-11-28', '25', 'Male', '', 'Ruiru', '', '0719261004', 'New', '', '', '', '', '', '', '', '', '', 'Methadone', 35.00, 'stability', 'ltfu', 'Normal', 'jeremiah muthoni', '2026-04-27 11:39:23', NULL, NULL, '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', '2031-06-30', NULL, NULL),
+(2362, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-05-06 00:00:00', '10973MAT505', '505', 'Kennedy Munene', '', 'Nene', '', '2002-09-25', '24', 'Male', 'Unknown', '', 'GITHURAI-Dampsite', '0714752950', 'Re-induction', '', '', '', '', '', '', '', '', 'Lucy Wanja', 'Methadone', 45.00, 'insomnia, abdominal cramps', 'ltfu', 'Normal', 'PETER KIBURI', '2026-05-06 11:47:27', NULL, NULL, '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', '2026-06-26', NULL, NULL),
+(2363, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2024-02-01 00:00:00', '10973MATKO609', 'KO609', 'ATHMAN BAKARI', 'SUYA', '', '', '1984-02-26', '42', 'Male', 'Unknown', '', 'INMATE', '', 'Transfer In', '', 'Criminal Justice Sytem', '', 'Kamiti Prison Hospital', '', 'Prison Warden', '', '', '', 'Methadone', 1.50, 'CESSATION', 'defaulted', 'Normal', 'PETER KIBURI', '2026-05-08 09:59:44', NULL, NULL, '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', '2026-06-30', NULL, NULL),
+(2364, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT509', '509', 'EVANS OKOTH', 'NYANDO', '', '', '1990-04-20', '36', 'Male', 'Married (Monogamous)', 'Ruiru', '', '0725508181', 'New', '', 'Self', '', ' South B Police Band', '', 'None', '', '', '', 'Buprenorphine 8mg', 18.00, 're-induction', 'defaulted', 'Normal', 'isaac', '2026-09-08 11:00:00', NULL, NULL, '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', NULL, NULL),
+(2365, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-10-10 00:00:00', '10973MAT506', '506', 'GEORGE MUGO', 'KIMARI', 'G.I', '', '1987-01-01', '39', 'Male', 'Unknown', 'Riabai', '', '', 'New', '', 'CSO', 'Other', 'SAPTA KAYOLE', '', 'Parent', '', '', '', 'Methadone', 50.00, 'stable', 'defaulted', 'Normal', 'PETER KIBURI', '2026-05-13 11:36:08', NULL, NULL, '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', '2026-11-13', NULL, NULL),
+(2366, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT518', '518', 'EDWARD MUNENE', 'MUKAMI', 'MU-EDU', '', '2002-08-12', '24', 'Male', 'Single', 'KAHAWA WEST', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Friend', '', '', 'PURITY MUKAMI', 'Methadone', 50.00, 'STABILISATION', 'defaulted', 'Normal', 'GRACE', '2026-05-14 09:03:00', NULL, NULL, '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', '2031-05-18', NULL, NULL),
+(2367, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2026-05-26 00:00:00', '10973MAT', 'TR071', 'ELIJAH MBURU', 'NGUGI', 'ELIJAH', '', '1994-05-25', '32', 'Male', 'Single', '', '', '', 'Transit', '', 'Transfer from MAT clinic', '', 'Mathari Hospital', '', 'None', '', '', '', 'Buprenorphine 4mg', 4.00, 'TRANSIT CLIENT FROM LAMU VIA MATHARI, STABLE', 'Active', 'Normal', 'PETER KIBURI', '2026-05-26 09:44:45', NULL, NULL, '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', '2026-07-26', NULL, NULL),
+(2368, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0519', '519', 'JOHN GICHAMBA', 'NDIRANGU', 'SHANG', '', '2007-01-17', '19', 'Male', 'Unknown', 'KAHAWA WEST', '', '', 'New', '', 'GoK facility', '', ' South B Police Band', '', 'Friend', '', '', '', 'Methadone', 20.00, '', 'Active', 'Normal', 'PETER', '2026-10-01 10:32:00', NULL, NULL, '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', NULL, NULL),
+(2369, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0521', '521', 'ROBERT NDUNG\'U', 'NJERI', '', '', '2004-09-29', '22', 'Male', 'Unknown', 'KAHAWA WEST', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 25.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:36:00', NULL, NULL, '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', '2026-11-05', NULL, NULL),
+(2370, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0522', '522', 'SAMSON GICHARU', 'KARIUKI', 'KARIS', '', '1991-01-29', '35', 'Male', 'Unknown', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Friend', '', '', '', 'Methadone', 25.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:38:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2371, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0523', '523', 'JAMES MUIGAI', 'WACHUKA', 'JIMMY', '', '2000-04-01', '26', 'Male', 'Unknown', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 15.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:41:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2372, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2023-10-05 00:00:00', 'K365', '24969/10288/K365', 'DAVID MAINA', 'KAMAU', 'MICHE', '34475586', '1995-06-08', '31', 'Male', 'Single', 'ROYSAMBU', 'SOWETO', '0768641153', 'Transfer In', '365', 'Transfer from MAT clinic', 'LVCT', 'Kairuri Health Center', '', 'None', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-01 10:45:29', NULL, NULL, '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', NULL, NULL),
+(2373, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0524', '524', 'ANTHONY KAMAU', 'GICHORIO', '', '', '1984-04-05', '42', 'Male', 'Unknown', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 35.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:47:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2374, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0525', '525', 'BRIAN KAGIA', 'GATHII', 'YOBO', '', '1996-10-04', '30', 'Male', 'Unknown', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Friend', '', '', '', 'Methadone', 25.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:50:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2375, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-08-01 00:00:00', 'K933', '24969/10288/K93', 'ERNESY KAMANDE', 'MUCHOKI', '', '', '1990-02-09', '36', 'Male', 'Separated/Divorced', '', '', '', 'Transfer In', '933', 'Transfer from MAT clinic', 'LVCT', 'Karuri Health Centre', '', 'None', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-01 10:53:01', NULL, NULL, '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', NULL, NULL),
+(2376, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0526', '526', 'KELVIN MUIA', 'MUTISO', 'NOISY', '', '2001-04-09', '25', 'Male', 'Unknown', '', '', '', 'New', '', 'CSO', '', 'SAPTA KAYOLE', '', 'Friend', '', '', '', 'Methadone', 30.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:53:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2377, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0527', '527', 'BRIAN MUCHEMI', 'MUGUTU', 'SKYLO', '', '2003-03-27', '23', 'Male', 'Unknown', 'JUJA', '', '', 'New', '', 'CSO', 'Other', 'SAPTA KAYOLE', '', 'Friend', '', '', '', 'Methadone', 40.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 10:56:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2378, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'K934', '24969/10288/K934', 'STEPHEN MUNYUA', 'NJENGA', 'STEVO', '33106779', '1995-04-24', '31', 'Male', 'Single', 'ROYSAMBU', '', '0708537657', 'Transfer In', '934', 'Transfer from MAT clinic', '', 'Karuri Health Centre', '', 'None', '', '', '', 'Buprenorphine 8mg', 12.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 10:58:00', NULL, NULL, '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', NULL, NULL),
+(2379, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0528', '528', 'ERIC NDUNG\'U', 'NJARAMBA', '', '', '2004-01-01', '22', 'Male', 'Unknown', 'ROYSAMBU', '', '', 'New', '', 'Self', 'Other', 'SAPTA KAYOLE', '', 'Friend', '', '', '', 'Methadone', 55.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 11:01:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2380, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0529', '529', 'KELVIN MUNGAI', 'MBITHI', 'JUJU', '', '2004-10-26', '21', 'Male', 'Unknown', 'KAHAWA WEST', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'None', '', '', '', 'Methadone', 55.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 11:09:00', NULL, NULL, '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', '2056-11-05', NULL, NULL),
+(2381, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0530', '530', 'KEVIN KOGI', 'MUIRU', '', '', '1992-03-09', '34', 'Male', 'Unknown', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Friend', '', '', '', 'Methadone', 35.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 11:11:00', NULL, NULL, '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2382, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MAT0531', '531', 'ANTHONY NGUGI', 'MUIRU', '', '', '1996-05-13', '30', 'Male', 'Single', '', '', '', 'New', '', 'Self', '', ' South B Police Band', '', 'Friend', '', '', '', 'Methadone', 30.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 11:14:00', NULL, NULL, '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2383, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'N1609', '24969/10288/N1609', 'DAVID BRADLEY', 'GATHONI', 'BRADO', '41686656', '2003-08-16', '23', 'Male', 'Single', 'ROYSAMBU', '', '0742991047', 'Transfer In', '1609', 'Transfer from MAT clinic', 'Other', 'Ngara Health Centre (City Council of Nairobi)', '', 'None', '', '', '', 'Methadone', 30.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 11:40:00', NULL, NULL, '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2384, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'K464', '24969/10288/K464', 'JACKSON MACHARIA', 'MWINGI', '', '', '1998-08-27', '28', 'Male', 'Married (Monogamous)', 'ROYSAMBU', '', '', 'Transfer In', '464', 'Transfer from MAT clinic', 'LVCT', 'Karuri Health Centre', '', 'None', '', '', 'NAOMI NJERI', 'Methadone', 35.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 11:51:00', NULL, NULL, '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', NULL, NULL),
+(2385, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'T0110', '24969/10288/T0110', 'MYLES MUCHIRI', 'IRUNGU', 'MAKURATA', '729651280', '2005-07-26', '21', 'Male', 'Married (Monogamous)', 'RUIRU', '', '', 'Transfer In', '0110', 'Transfer from MAT clinic', 'LVCT', 'GK Prisons Thika', '', 'None', '', '', 'RACHEL NJANE', 'Methadone', 65.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 11:56:00', NULL, NULL, '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2386, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-12-01 00:00:00', 'M1682', '24969/10288/M1682', 'ANTONY KAMAU', '', 'MALARA', '', '1993-07-27', '33', 'Male', 'Married (Monogamous)', 'THIKA', '', '0726320781', 'Transfer In', '1682', 'Transfer from MAT clinic', '', 'Mathari Hospital', '', 'None', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-01 12:06:04', NULL, NULL, '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', '2026-10-01', NULL, NULL),
+(2387, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'M1705', '24969/10288/M1705', 'FRANCIS NJOROGE', 'NGIGE', 'KIBABI WA SENKE', '38025110', '2000-10-26', '25', 'Male', 'Separated/Divorced', 'ROYSAMBU', '', '0116346710', 'Transfer In', '1705', 'Transfer from MAT clinic', '', 'Mathari Hospital', '', 'None', '', '', 'NANCY WANGUI', 'Methadone', 40.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 12:14:00', NULL, NULL, '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', '2027-01-29', NULL, NULL),
+(2388, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '24969/10288', 'N096', 'BONFACE MARI', 'GITAU', 'MALO', '', '1996-12-12', '29', 'Male', '', 'RUIRU', '', '0721896360', 'Transfer In', 'N096', 'CSO', 'LVCT', 'Ngara Health Centre (City Council of Nairobi)', '96', 'None', '', '', '', 'Methadone', 50.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-01 12:31:00', NULL, NULL, '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', '2031-10-01', NULL, NULL),
+(2389, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'N966', 'N966', 'JOSEPH KIGOTHO', 'NGIGE', '', '', '1983-10-01', '43', 'Male', 'Unknown', '', '', '0716847252', 'Transfer In', 'N966', 'CSO', '', ' South B Police Band', '', 'None', '', '', '', 'Methadone', 100.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 12:48:00', NULL, NULL, '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2390, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'N0282', 'N0282', 'MARY MGOIRI', 'WAWERU', '', '27972168', '1990-10-31', '35', 'Female', 'Single', 'GITHURAI44', '', '0715397593', 'Transfer In', 'N282', 'CSO', 'LVCT', 'Ngara Health Centre (City Council of Nairobi)', 'N282', 'Parent', '', '', '', 'Methadone', 35.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-01 13:03:00', NULL, NULL, '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', '2027-02-05', NULL, NULL),
+(2391, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10973MATKF278', 'KF278', 'ELIJAH MBURU', 'NGUGI', '', '', '1994-05-25', '32', 'Male', 'Unknown', 'KAHAWA WEST', '', '', 'Transfer In', '278', 'Transfer from MAT clinic', '', 'Mathari Hospital', '', 'None', '', '', '', 'Buprenorphine 2mg', 2.00, '', 'defaulted', 'Normal', 'PETER', '2026-10-02 09:26:00', NULL, NULL, '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', '2027-01-08', NULL, NULL),
+(2392, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10288N0191', 'N0191', 'EDWARD KEN', 'MWANGI', 'KEN', '24629703', '1987-05-01', '39', 'Male', 'Married (Monogamous)', 'Ruiru', '', '0797162349', 'Transfer In', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Buprenorphine 4mg', 0.00, '', 'Active', 'Normal', 'jeremiah', '2026-10-02 10:20:00', NULL, NULL, '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', NULL, NULL),
+(2402, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10288TR067', 'TR067', 'JAMES THIONGO', 'NJERI', '', '', '2003-11-16', '22', 'Male', '', '', '', '074635876', 'Transit', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 40.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-02 11:38:00', NULL, NULL, '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', NULL, NULL),
+(2403, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10288TR073', 'TRO73', 'SAMUEL MWANGI', 'MAINA', '', '', '1992-05-01', '34', 'Male', '', '', '', '', 'Transit', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 55.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-02 11:43:00', NULL, NULL, '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', NULL, NULL),
+(2404, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', '10288TR072', 'TR072', 'CHARLES MBAIYA', 'WAITITU', '', '', '1992-08-24', '34', 'Male', '', '', '', '', 'Transit', '', 'Self', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 40.00, '', 'defaulted', 'Normal', 'GRACE', '2026-10-02 11:46:00', NULL, NULL, '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', '2031-10-02', NULL, NULL),
+(2405, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-07-11 00:00:00', '10288TR053', 'TR053', 'FRANCIS MUGWI', 'WAMBUI', '', '', '1988-07-15', '38', 'Male', '', '', '', '', 'Transit', '', '', '', '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-02 11:50:33', NULL, NULL, '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', NULL, NULL),
+(2406, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2025-01-16 00:00:00', '10288TR048', 'TR048', 'DAVID KARIUKI', 'MWEA', '', '', '1999-02-02', '27', 'Male', '', '', '', '', 'Transit', '', '', '', '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-02 11:53:29', NULL, NULL, '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', NULL, NULL),
+(2407, 'GK Prison Dispensary (Ruiru)', '10288', 'Kiambu', 'Ruiru', '2024-03-11 00:00:00', '10288TR032', 'TR032', 'SAMUEL KIARIE', 'KAHIGA', 'MBABAZ', '31118750', '1986-02-26', '40', 'Male', '', '', '', '', 'Transit', '', '', '', '', '', '', '', '', '', '', 0.00, '', 'Active', 'Normal', 'jeremiah muthoni', '2026-10-02 11:57:44', NULL, NULL, '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', NULL, NULL),
+(2410, 'Ruiru Sub-County Hospital', '10973', 'Kiambu', 'Ruiru', '1970-01-01 00:00:00', 'tr074', 'tr074', 'kimbery', 'chesaina', '', '27708810', '1989-11-11', '36', 'Female', '', 'Githunguri', '', '0715966943', 'Transit', 'k587', 'Private Facility', '', ' South B Police Band', '', 'Parent', '', '', '', 'Methadone', 85.00, 'stability', 'defaulted', 'Normal', 'isaac', '2026-10-09 08:26:00', NULL, NULL, '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', '2026-10-30', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `deleted_prescriptions`
 --
 
-CREATE TABLE IF NOT EXISTS `deleted_prescriptions` (
+CREATE TABLE `deleted_prescriptions` (
   `del_id` int NOT NULL,
   `disp_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -624,7 +1299,7 @@ CREATE TABLE IF NOT EXISTS `deleted_prescriptions` (
 -- Table structure for table `demo_requests`
 --
 
-CREATE TABLE IF NOT EXISTS `demo_requests` (
+CREATE TABLE `demo_requests` (
   `id` int NOT NULL,
   `first_name` varchar(80) NOT NULL,
   `last_name` varchar(80) NOT NULL,
@@ -646,7 +1321,7 @@ CREATE TABLE IF NOT EXISTS `demo_requests` (
 -- Table structure for table `dispensing_comments`
 --
 
-CREATE TABLE IF NOT EXISTS `dispensing_comments` (
+CREATE TABLE `dispensing_comments` (
   `comment_id` int NOT NULL,
   `log_date` date NOT NULL,
   `drugID` int NOT NULL,
@@ -659,7 +1334,7 @@ CREATE TABLE IF NOT EXISTS `dispensing_comments` (
 -- Table structure for table `dose_schedules`
 --
 
-CREATE TABLE IF NOT EXISTS `dose_schedules` (
+CREATE TABLE `dose_schedules` (
   `id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drugname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -680,7 +1355,7 @@ CREATE TABLE IF NOT EXISTS `dose_schedules` (
 -- Table structure for table `dosing`
 --
 
-CREATE TABLE IF NOT EXISTS `dosing` (
+CREATE TABLE `dosing` (
   `id` int NOT NULL,
   `dosage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -703,7 +1378,7 @@ INSERT IGNORE INTO `dosing` (`id`, `dosage`) VALUES
 -- Table structure for table `drug`
 --
 
-CREATE TABLE IF NOT EXISTS `drug` (
+CREATE TABLE `drug` (
   `drugID` int NOT NULL,
   `drugName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drugCategory` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1024,7 +1699,10 @@ INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, 
 (1042, 'tenofovir/emcitarabine-prep', NULL, 'prep,tdf /ftc', 1, '2025-12-08 11:59:51'),
 (1043, 'Tenofovir/lamivudine 300MG/300MG', 'antiviral', 'Tablets', 0, '2025-12-08 12:37:35'),
 (1044, 'TB PACKS', 'antibacterial', 'Tablets', 0, '2025-12-10 13:04:43'),
-(1045, 'Griseofulvin 500mg', NULL, 'Tablets', 1, '2026-03-24 09:53:10');
+(1045, 'Griseofulvin 500mg', NULL, 'Tablets', 1, '2026-03-24 09:53:10'),
+(1046, 'RHZE', 'antibacterial', 'Intense Phase Anti TBs', 0, '2026-07-17 13:27:48'),
+(1047, '400MGSOFOSBUVIR/60MGDACLATASVIR', 'antiviral', 'HEP C ', 0, '2026-09-07 12:36:03'),
+(1048, 'BENZYLBENZOATE', 'medicines', 'ANTI-SCABIES', 0, '2026-09-07 12:38:51');
 
 -- --------------------------------------------------------
 
@@ -1032,7 +1710,7 @@ INSERT IGNORE INTO `drug` (`drugID`, `drugName`, `drugCategory`, `description`, 
 -- Table structure for table `drugcategory`
 --
 
-CREATE TABLE IF NOT EXISTS `drugcategory` (
+CREATE TABLE `drugcategory` (
   `id` int NOT NULL,
   `catname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
@@ -1060,7 +1738,7 @@ INSERT IGNORE INTO `drugcategory` (`id`, `catname`, `description`) VALUES
 -- Table structure for table `drug_sources`
 --
 
-CREATE TABLE IF NOT EXISTS `drug_sources` (
+CREATE TABLE `drug_sources` (
   `source_id` int NOT NULL,
   `source_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -1081,7 +1759,7 @@ INSERT IGNORE INTO `drug_sources` (`source_id`, `source_name`, `date_created`) V
 -- Table structure for table `durationunits`
 --
 
-CREATE TABLE IF NOT EXISTS `durationunits` (
+CREATE TABLE `durationunits` (
   `unit_id` int NOT NULL,
   `duration` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -1103,10 +1781,21 @@ INSERT IGNORE INTO `durationunits` (`unit_id`, `duration`, `date_created`) VALUE
 -- Table structure for table `education_level`
 --
 
-CREATE TABLE IF NOT EXISTS `education_level` (
+CREATE TABLE `education_level` (
   `edu_id` int NOT NULL,
   `edu_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `education_level`
+--
+
+INSERT IGNORE INTO `education_level` (`edu_id`, `edu_name`) VALUES
+(5, 'None'),
+(4, 'Other'),
+(3, 'Post-secondary'),
+(1, 'Primary'),
+(2, 'Secondary');
 
 -- --------------------------------------------------------
 
@@ -1114,7 +1803,7 @@ CREATE TABLE IF NOT EXISTS `education_level` (
 -- Table structure for table `employment_status`
 --
 
-CREATE TABLE IF NOT EXISTS `employment_status` (
+CREATE TABLE `employment_status` (
   `emp_id` int NOT NULL,
   `emp_status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1135,7 +1824,7 @@ INSERT IGNORE INTO `employment_status` (`emp_id`, `emp_status_name`) VALUES
 -- Table structure for table `enrolment_status`
 --
 
-CREATE TABLE IF NOT EXISTS `enrolment_status` (
+CREATE TABLE `enrolment_status` (
   `enrolment_id` int NOT NULL,
   `enrolment_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `decsription` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -1155,28 +1844,10 @@ INSERT IGNORE INTO `enrolment_status` (`enrolment_id`, `enrolment_status_name`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `facerecognitionnodes`
---
-
-CREATE TABLE IF NOT EXISTS `facerecognitionnodes` (
-  `Id` int NOT NULL,
-  `PatientId` int DEFAULT NULL,
-  `Complexity` double NOT NULL,
-  `Data` longblob NOT NULL,
-  `L1Norm` double NOT NULL,
-  `DistanceToParent` double DEFAULT NULL,
-  `LeftId` int DEFAULT NULL,
-  `Radius` double NOT NULL,
-  `RightId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `facilities`
 --
 
-CREATE TABLE IF NOT EXISTS `facilities` (
+CREATE TABLE `facilities` (
   `id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -1450,7 +2121,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (250, 'Busia County Referral Hospital', '15834', 'Busia', 'Matayos', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'AMRS', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (251, 'Busibwabo Dispensary', '15835', 'Busia', 'Matayos', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.41086', '34.20122', '2025-07-13 05:15:02'),
 (252, 'Butula Mission Health Centre', '15838', 'Busia', 'Butula', 'Other Faith Based', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.34325', '34.33363', '2025-07-13 05:15:02'),
-(253, 'Bwaliro Dispensary', '15840', 'Busia', 'Butula', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.37825', '34.3162', '2025-07-13 05:15:02'),
+(253, 'Bwaliro Dispensary', '15840', 'Busia', 'Butula', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.37825', '34.3162', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (254, 'GK Prisons Dispensary (Busia)', '15891', 'Busia', 'Matayos', 'Other Public Institution', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.45296', '34.11452', '2025-07-13 05:15:02'),
 (255, 'Igara Dispensary', '15897', 'Busia', 'Nambale', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.53294', '34.36315', '2025-07-13 05:15:02'),
 (256, 'Khayo Dispensary', '15937', 'Busia', 'Nambale', 'Ministry of Health', 'USAID Dumisha Afya', 'USAID', '', 'Stalled/Inactive', 'On Premises', '0.51051', '34.38897', '2025-07-13 05:15:02'),
@@ -1699,7 +2371,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (499, 'Ogongo Sub County Hospital', '13967', 'Homa Bay', 'Mbita', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (500, 'Okiki Amayo Health Centre', '13972', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.41198', '34.51135', '2025-07-13 05:15:02'),
 (501, 'Olando Dispensary', '13974', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.43246', '34.65263', '2025-07-13 05:15:02'),
-(502, 'Ombek Health Centre', '13978', 'Homa Bay', 'Rachuonyo South', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(502, 'Ombek Health Centre', '13978', 'Homa Bay', 'Rachuonyo South', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (503, 'Ombo Kachieng Dispensary', '13979', 'Homa Bay', 'Ndhiwa', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (504, 'Omboga Dispensary', '13980', 'Homa Bay', 'Rachuonyo North', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.43925', '34.62273', '2025-07-13 05:15:02'),
 (505, 'Omiro Dispensary', '13981', 'Homa Bay', 'Kabondo Kasipul', 'Ministry of Health', 'HOMA BAY CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.45299', '34.80357', '2025-07-13 05:15:02'),
@@ -1943,7 +2616,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (743, 'St Charles Lwanga Health Centre', '15957', 'Kakamega', 'Lugari', 'Kenya Episcopal Conference-Catholic Secretariat', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.62801', '34.88434', '2025-07-13 05:15:02'),
 (744, 'Kuvasali Health Centre', '15959', 'Kakamega', 'Malava', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.42106', '34.94322', '2025-07-13 05:15:02'),
 (745, 'Likuyani Sub-County Hospital', '15961', 'Kakamega', 'Likuyani', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(746, 'Lugari Forest Dispensary', '15964', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.66328', '34.90693', '2025-07-13 05:15:02'),
+(746, 'Lugari Forest Dispensary', '15964', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.66328', '34.90693', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (747, 'Lumakanda Sub County Hospital', '15969', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.63478', '34.97615', '2025-07-13 05:15:02'),
 (748, 'Lumani Dispensary', '15970', 'Kakamega', 'Lugari', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.4904', '34.72177', '2025-07-13 05:15:02'),
 (749, 'Lunganyiro Health Centre', '15972', 'Kakamega', 'Matungu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -2192,7 +2866,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (992, 'Makongeni dispensary', '18432', 'Kiambu', 'Thika Town', 'Local Authority', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-1.06234', '37.10882', '2025-07-13 05:15:02'),
 (993, 'Gachororo health centre', '18608', 'Kiambu', 'Juja', 'Ministry of Health', 'Kiambu County Endeleza Program', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-1.08697', '37.02015', '2025-07-13 05:15:02'),
 (994, 'Mundoro Community Dispensary', '18658', 'Kiambu', 'Gatundu South', 'Community Development Fund', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.95055', '36.76462', '2025-07-13 05:15:02'),
-(995, 'Langata Health centre (Ruiru)', '18762', 'Kiambu', 'Ruiru', 'Ministry of Health', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(995, 'Langata Health centre (Ruiru)', '18762', 'Kiambu', 'Ruiru', 'Ministry of Health', 'LVCT Dhibiti', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (996, 'Cordis Maria Dispensary', '19722', 'Kiambu', 'Ruiru', 'Kenya Episcopal Conference-Catholic Secretariat', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-1.21589', '36.93658', '2025-07-13 05:15:02'),
 (997, 'Holy family catholic hospital githunguri', '19963', 'Kiambu', 'Githunguri', 'Kenya Episcopal Conference-Catholic Secretariat', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (998, 'Child & Family Wellness Clinic', '19985', 'Kiambu', 'Kiambu Town', 'Other Faith Based', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.17535', '36.8304', '2025-07-13 05:15:02'),
@@ -2435,7 +3110,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1235, 'Gucha District Hospital', '13594', 'Kisii', 'Bomachoge Chache', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.79631', '34.72383', '2025-07-13 05:15:02'),
 (1236, 'Hema Hospital', '13603', 'Kisii', 'Kitutu Chache South', 'Private Enterprise (Institution)', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.67496', '34.77007', '2025-07-13 05:15:02'),
 (1237, 'Ibacho Sub-District Hospital', '13611', 'Kisii', 'Nyaribari Masaba', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.89806', '34.94024', '2025-07-13 05:15:02'),
-(1238, 'Ibeno Sub-District Hospital', '13612', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.77956', '34.85261', '2025-07-13 05:15:02'),
+(1238, 'Ibeno Sub-District Hospital', '13612', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.77956', '34.85261', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (1239, 'Igare Medical Clinic', '13613', 'Kisii', 'Bobasi', 'Private Enterprise (Institution)', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1240, 'Iranda Health Centre', '13620', 'Kisii', 'Kitutu Chache South', 'Ministry of Health', 'LVCT Vukisha 95', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.62703', '34.74898', '2025-07-13 05:15:02'),
 (1241, 'Irondi Dispensary', '13621', 'Kisii', 'Nyaribari Chache', 'Ministry of Health', 'KISII COUNTY DEPARTMENT OF HEALTH SERVICES', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.7861', '34.87875', '2025-07-13 05:15:02'),
@@ -2678,7 +3354,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1478, 'OTIENO OWALA HEALTH CENTRE', '20024', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1479, 'Osewre Dispensary', '20069', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', '-0.13337', '34.44436', '2025-07-13 05:15:02'),
 (1480, 'Avenue Hospital Kisumu', '20123', 'Kisumu', 'Kisumu Central', 'Private Enterprise (Institution)', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.088626', '34.770387', '2025-07-13 05:15:02'),
-(1481, 'Mbaka Oromo Health Centre', '20199', 'Kisumu', 'Kisumu West', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(1481, 'Mbaka Oromo Health Centre', '20199', 'Kisumu', 'Kisumu West', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (1482, 'Onyuongo Dispensary', '20209', 'Kisumu', 'Nyakach', 'Ministry of Health', 'CIHEB Entrench', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-0.32515', '35.00533', '2025-07-13 05:15:02'),
 (1483, 'Dago Jonyo Dispensary', '20377', 'Kisumu', 'Seme', 'Ministry of Health', 'HJF-Kisumu West', 'DOD', 'KenyaEMR', 'Active', 'On Premises', '-0.18251', '34.50411', '2025-07-13 05:15:02'),
 (1484, 'Manyatta Community Medical Clinic', '20512', 'Kisumu', 'Kisumu East', 'Private Practice - Clinical Officer', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-0.09366', '34.78063', '2025-07-13 05:15:02'),
@@ -2927,7 +3604,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1728, 'Mother Angela Huruma Hospital', '14553', 'Laikipia', 'Laikipia East', 'Kenya Episcopal Conference-Catholic Secretariat', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1729, 'Ilpolei Dispensary', '14561', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '0.35968', '37.07226', '2025-07-13 05:15:02'),
 (1730, 'Kalalu Dispensary', '14659', 'Laikipia', 'Laikipia East', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.08227', '37.16625', '2025-07-13 05:15:02'),
-(1731, 'Kimanjo Dispensary', '14869', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.47444', '37.01297', '2025-07-13 05:15:02'),
+(1731, 'Kimanjo Dispensary', '14869', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.47444', '37.01297', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (1732, 'Lamuria Dispensary (Laikipia East)', '15007', 'Laikipia', 'Laikipia East', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.13434', '36.86165', '2025-07-13 05:15:02'),
 (1733, 'Likii Dispensary', '15035', 'Laikipia', 'Laikipia East', 'Other Public Institution', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.02416', '37.07758', '2025-07-13 05:15:02'),
 (1734, 'Lokusero Dispensary', '15065', 'Laikipia', 'Laikipia North', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '0.30832', '37.29749', '2025-07-13 05:15:02'),
@@ -3176,7 +3854,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (1977, 'Ilatu Health Centre (Makindu)', '19976', 'Makueni', 'Kibwezi West', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1978, 'Kimeeni Dispensary', '20130', 'Makueni', 'Mbooni', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.6939', '37.7391', '2025-07-13 05:15:02'),
 (1979, 'Mbuvo Health Centre', '20271', 'Makueni', 'Makueni', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-2.07199', '37.76967', '2025-07-13 05:15:02'),
-(1980, 'GK Makueni', '20722', 'Makueni', 'Makueni', 'Ministry of Health', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(1980, 'GK Makueni', '20722', 'Makueni', 'Makueni', 'Ministry of Health', 'LVCT Prisons', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (1981, 'Haifa Med Clinic', '20974', 'Makueni', 'Mbooni', 'Private Practice - Nurse / Midwifery', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.6594', '37.44871', '2025-07-13 05:15:02'),
 (1982, 'Banisa Sub County Hospital', '13300', 'Mandera', 'Banissa', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (1983, 'Mandera Central Sub county Hospital', '13335', 'Mandera', 'Mandera South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -3422,7 +4101,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2223, 'Aga Khan Hospital (Mombasa)', '11203', 'Mombasa', 'Mvita', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-4.07012', '39.67003', '2025-07-13 05:15:02'),
 (2224, 'Al Farooq Hospital', '11208', 'Mombasa', 'Mvita', 'Private Practice - Private Institution Academic', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.04899', '39.66513', '2025-07-13 05:15:02'),
 (2225, 'Amurt Health Centre (Likoni)', '11221', 'Mombasa', 'Likoni', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-4.07765', '39.65362', '2025-07-13 05:15:02'),
-(2226, 'Bamburi Dispensary', '11239', 'Mombasa', 'Nyali', 'Local Authority', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.00435', '39.69335', '2025-07-13 05:15:02'),
+(2226, 'Bamburi Dispensary', '11239', 'Mombasa', 'Nyali', 'Local Authority', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.00435', '39.69335', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (2227, 'Bamburi Medicare', '11240', 'Mombasa', 'Nyali', 'Private Enterprise (Institution)', 'USAID Stawisha Pwani', 'USAID', '', '', 'On Premises', '-4.00329', '39.6986', '2025-07-13 05:15:02'),
 (2228, 'Baobab Clinic - Bamburi Cement', '11243', 'Mombasa', 'Nyali', 'Private Enterprise (Institution)', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-3.96975', '39.7061', '2025-07-13 05:15:02'),
 (2229, 'Bokole CDF Dispensary', '11254', 'Mombasa', 'Changamwe', 'Ministry of Health', 'USAID Stawisha Pwani', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-4.01724', '39.60873', '2025-07-13 05:15:02'),
@@ -3663,7 +4343,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2466, 'Marura Nursing Home', '13070', 'Nairobi', 'Ruaraka', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.24875', '36.871', '2025-07-13 05:15:02'),
 (2467, 'Marurui Dispensary', '13071', 'Nairobi', 'Roysambu', 'Private Enterprise (Institution)', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.20244', '36.9038', '2025-07-13 05:15:02'),
 (2468, 'Mary Immaculate Sisters Dispensary', '13072', 'Nairobi', 'Makadara', 'Other Faith Based', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.29206', '36.8574', '2025-07-13 05:15:02'),
-(2469, 'The Mater Misericordiae Hospital', '13074', 'Nairobi', 'Starehe', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(2469, 'The Mater Misericordiae Hospital', '13074', 'Nairobi', 'Starehe', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (2470, 'Mathare 3A (EDARP)', '13075', 'Nairobi', 'Mathare', 'Kenya Episcopal Conference-Catholic Secretariat', 'Coptic Orthodox Church', 'CDC', 'ECare', 'Active', 'On Premises', '-1.26038', '36.8476', '2025-07-13 05:15:02'),
 (2471, 'Mathari Hospital', '13076', 'Nairobi', 'Mathare', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.26097', '36.84912', '2025-07-13 05:15:02'),
 (2472, 'Mathare North Health Centre', '13077', 'Nairobi', 'Ruaraka', 'Local Authority', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.25323', '36.86485', '2025-07-13 05:15:02'),
@@ -3677,8 +4358,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2480, 'Mji Wa Huruma Dispensary ', '13093', 'Nairobi', 'Westlands', 'Ministry of Health', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Cloud', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2481, 'Moi Airbase Hospital', '13095', 'Nairobi', 'Kamukunji', 'Armed Forces', 'HJF-Nairobi', 'DOD', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2482, 'Mukuru Mmm Clinic', '13101', 'Nairobi', 'Embakasi South', 'Kenya Episcopal Conference-Catholic Secretariat', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-1.30472', '36.885', '2025-07-13 05:15:02'),
-(2483, 'Mutuini Sub-District Hospital', '13105', 'Nairobi', 'Dagoretti South', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.3', '36.7', '2025-07-13 05:15:02');
-INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
+(2483, 'Mutuini Sub-District Hospital', '13105', 'Nairobi', 'Dagoretti South', 'Ministry of Health', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.3', '36.7', '2025-07-13 05:15:02'),
 (2484, 'Nairobi Deaf (Liverpool)', '13108', 'Nairobi', 'Starehe', 'Non-Governmental Organizations', 'CIHEB CONNECT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-1.2852', '36.821', '2025-07-13 05:15:02'),
 (2485, 'Meridian Equator Hospital', '13109', 'Nairobi', 'Langata', 'Private Enterprise (Institution)', 'USAID Fahari ya Jamii', 'USAID', 'KenyaEMR', 'Active', 'On Cloud', '-1.30801', '36.82421', '2025-07-13 05:15:02'),
 (2486, 'Nairobi Hospital', '13110', 'Nairobi', 'Dagoretti North', 'Private Enterprise (Institution)', 'No Partner', 'No Agency', '', '', 'On Premises', '-1.296139', '36.803995', '2025-07-13 05:15:02'),
@@ -3898,7 +4578,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2700, 'Kamara Dispensary', '14668', 'Nakuru', 'Kuresoi North', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.0965', '35.67934', '2025-07-13 05:15:02'),
 (2701, 'Kapkures Health Centre (Nakuru West)', '14733', 'Nakuru', 'Nakuru West', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2702, 'Karagita Health Centre', '14801', 'Nakuru', 'Naivasha', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(2703, 'Karati Dispensary', '14802', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.69032', '36.47886', '2025-07-13 05:15:02'),
+(2703, 'Karati Dispensary', '14802', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.69032', '36.47886', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (2704, 'Karunga Dispensary', '14805', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.40633', '36.35059', '2025-07-13 05:15:02'),
 (2705, 'Keringet  Sub County Hospital', '14836', 'Nakuru', 'Kuresoi South', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (2706, 'Kiambogo Dispensary (Gilgil)', '14845', 'Nakuru', 'Gilgil', 'Ministry of Health', 'USAID Tujenge Jamii Activity', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
@@ -4141,7 +4822,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (2943, 'Bogwendo Health Centre(Manga)', '13504', 'Nyamira', 'Manga', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', 'Stalled/Inactive', 'On Premises', '-0.64391', '34.89357', '2025-07-13 05:15:02'),
 (2944, 'Bosiango Health Centre', '13514', 'Nyamira', 'Nyamira', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.63996', '34.95055', '2025-07-13 05:15:02'),
 (2945, 'Chepngombe Health Centre', '13523', 'Nyamira', 'Borabu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.83926', '35.00363', '2025-07-13 05:15:02'),
-(2946, 'Chaina Dispensary', '13525', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(2946, 'Chaina Dispensary', '13525', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (2947, 'Ekerenyo Sub-District Hospital', '13540', 'Nyamira', 'Nyamira North', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.52815', '34.98799', '2025-07-13 05:15:02'),
 (2948, 'Embonga Health Centre', '13543', 'Nyamira', 'Nyamira', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', 'Stalled/Inactive', 'On Premises', '-0.54319', '34.88419', '2025-07-13 05:15:02'),
 (2949, 'Endiba Health Centre', '13544', 'Nyamira', 'Borabu', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.55994', '34.96206', '2025-07-13 05:15:02'),
@@ -4384,7 +5066,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3186, 'Kadenge Ratuoro Health Centre', '13641', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.02373', '34.17477', '2025-07-13 05:15:02'),
 (3187, 'Kagwa Health Centre', '13644', 'Siaya', 'Rarieda', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.22851', '34.25665', '2025-07-13 05:15:02'),
 (3188, 'Kaluo Health Centre', '13648', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
-(3189, 'Kambajo Dispensary', '13651', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.078944', '34.21136', '2025-07-13 05:15:02'),
+(3189, 'Kambajo Dispensary', '13651', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.078944', '34.21136', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (3190, 'Kapiyo Health Centre', '13655', 'Siaya', 'Bondo', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3191, 'Kogelo Dispensary', '13710', 'Siaya', 'Alego Usonga', 'Ministry of Health', 'Siaya CHMT', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '0.00716', '34.3448', '2025-07-13 05:15:02'),
 (3192, 'Kunya Dispensary', '13725', 'Siaya', 'Rarieda', 'Ministry of Health', 'CHS Shinda Tena', 'CDC', 'KenyaEMR', 'Active', 'On Cloud', '-0.28581', '34.39937', '2025-07-13 05:15:02'),
@@ -4635,7 +5318,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3437, 'Muthambi Health Centre', '12589', 'Tharaka-Nithi', 'Muthambi', 'Ministry of Health', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.27457', '37.66054', '2025-07-13 05:15:02'),
 (3438, 'Mutindwa Dispensary', '12597', 'Tharaka-Nithi', 'Mwimbi', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '-0.24269', '37.60172', '2025-07-13 05:15:02'),
 (3439, 'Nguruki-Iruma Dispensary', '12659', 'Tharaka-Nithi', 'Mwimbi', 'Christian Health Association of Kenya', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', '-0.22126', '37.689', '2025-07-13 05:15:02'),
-(3440, 'Nkondi Health centre', '12665', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
+(3440, 'Nkondi Health centre', '12665', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'No Partner', 'No Agency', '', 'Stalled/Inactive', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (3441, 'St Orsola Mission Hospital', '12769', 'Tharaka-Nithi', 'Tharaka South', 'Christian Health Association of Kenya', 'CHAK CHAP STAWISHA', 'CDC', 'KenyaEMR', 'Active', 'On Premises', '-0.31621', '37.90028', '2025-07-13 05:15:02'),
 (3442, 'Thanantu Faith Hospital', '12793', 'Tharaka-Nithi', 'Tharaka North', 'Private Enterprise (Institution)', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3443, 'Tharaka District Hospital', '12795', 'Tharaka-Nithi', 'Tharaka South', 'Ministry of Health', 'USAID Jamii Tekelezi', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '-0.15802', '37.97501', '2025-07-13 05:15:02'),
@@ -4879,7 +5563,8 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3681, 'Jepkoyai Dispensary', '16453', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.00584', '34.72548', '2025-07-13 05:15:02'),
 (3682, 'Joint Partner Medical Clinic', '16455', 'Vihiga', 'Hamisi', 'Private Practice - Nurse / Midwife', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.14149', '34.8809', '2025-07-13 05:15:02'),
 (3683, 'Kaptech Dispensary', '16456', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.16416', '34.82459', '2025-07-13 05:15:02'),
-(3684, 'Kaptisi Dispensary', '16457', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.18418', '34.92219', '2025-07-13 05:15:02'),
+(3684, 'Kaptisi Dispensary', '16457', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', '0.18418', '34.92219', '2025-07-13 05:15:02');
+INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, `subcountyname`, `owner`, `sdp`, `agency`, `emr`, `emrstatus`, `infrastructuretype`, `latitude`, `longitude`, `date_created`) VALUES
 (3685, 'Kimogoi Dispensary', '16458', 'Vihiga', 'Hamisi', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.05252', '34.7792', '2025-07-13 05:15:02'),
 (3686, 'Emusire Sub County Hospital', '16979', 'Vihiga', 'Emuhaya', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', 'KenyaEMR', 'Active', 'On Premises', 'Not Found', 'Not Found', '2025-07-13 05:15:02'),
 (3687, 'Ebukoolo Dispensary', '17113', 'Vihiga', 'Emuhaya', 'Ministry of Health', 'USAID NURU YA MTOTO', 'USAID', '', '', 'On Premises', '0.07013', '34.56275', '2025-07-13 05:15:02'),
@@ -4916,7 +5601,10 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 (3718, 'Alale Health Centre', '16367', 'West Pokot', 'Pokot North', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '2.25005', '35.02779', '2025-07-13 05:15:02'),
 (3719, 'Tiinei Dispensary', '16368', 'West Pokot', 'Pokot North', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '1.46722', '34.94112', '2025-07-13 05:15:02'),
 (3720, 'Murkwijit Dispensary', '20055', 'West Pokot', 'West Pokot', 'Ministry of Health', 'USAID AMPATH Uzima', 'USAID', 'AMRS', 'Active', 'On Premises', '1.1921', '35.09173', '2025-07-13 05:15:02'),
-(3721, 'Onoch Dispensary', '20317', 'West Pokot', 'Pokot Central', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '1.46325', '35.42293', '2025-07-13 05:15:02');
+(3721, 'Onoch Dispensary', '20317', 'West Pokot', 'Pokot Central', 'Ministry of Health', 'No Partner', 'No Agency', '', '', 'On Premises', '1.46325', '35.42293', '2025-07-13 05:15:02'),
+(3722, 'Test Health Facility', '10001', 'LVCT Health County', 'LVCT Health Sub County', 'LVCT', 'Health Centre', 'BD', 'Self', 'Active', 'Onsite', '0.00012', '-1.33256', '2025-10-10 19:44:50'),
+(3723, 'Kisauni MAT clinic', '28293', 'Mombasa (County)', 'Nyali', 'MOH', 'MOH', NULL, 'MOH', 'ACTIVE', '', '', '02222', '2025-10-22 12:50:44'),
+(3724, 'Shimo La Tewa MAT clinic', '99999', 'Mombasa (County)', 'Kisauni', 'MOH', 'Stawisha', NULL, 'IORPMS', 'Active', 'Local', '1', '1', '2025-11-07 10:43:43');
 
 -- --------------------------------------------------------
 
@@ -4924,7 +5612,7 @@ INSERT IGNORE INTO `facilities` (`id`, `facilityname`, `mflcode`, `countyname`, 
 -- Table structure for table `facility_settings`
 --
 
-CREATE TABLE IF NOT EXISTS `facility_settings` (
+CREATE TABLE `facility_settings` (
   `id` int NOT NULL,
   `facility_id` int DEFAULT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -4943,7 +5631,7 @@ CREATE TABLE IF NOT EXISTS `facility_settings` (
 -- Table structure for table `fingerprints`
 --
 
-CREATE TABLE IF NOT EXISTS `fingerprints` (
+CREATE TABLE `fingerprints` (
   `print_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -4960,7 +5648,7 @@ CREATE TABLE IF NOT EXISTS `fingerprints` (
 -- Table structure for table `fingerprint_audit`
 --
 
-CREATE TABLE IF NOT EXISTS `fingerprint_audit` (
+CREATE TABLE `fingerprint_audit` (
   `id` int NOT NULL,
   `fingerprint_id` int DEFAULT NULL,
   `mat_id` varchar(50) DEFAULT NULL,
@@ -4976,7 +5664,7 @@ CREATE TABLE IF NOT EXISTS `fingerprint_audit` (
 -- Table structure for table `followup_psychiatric_form`
 --
 
-CREATE TABLE IF NOT EXISTS `followup_psychiatric_form` (
+CREATE TABLE `followup_psychiatric_form` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -4993,7 +5681,7 @@ CREATE TABLE IF NOT EXISTS `followup_psychiatric_form` (
 -- Table structure for table `formulation`
 --
 
-CREATE TABLE IF NOT EXISTS `formulation` (
+CREATE TABLE `formulation` (
   `formID` int NOT NULL,
   `fname` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
@@ -5016,7 +5704,7 @@ INSERT IGNORE INTO `formulation` (`formID`, `fname`, `description`) VALUES
 -- Table structure for table `gad7_assessments`
 --
 
-CREATE TABLE IF NOT EXISTS `gad7_assessments` (
+CREATE TABLE `gad7_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5041,7 +5729,7 @@ CREATE TABLE IF NOT EXISTS `gad7_assessments` (
 -- Table structure for table `hepb_status`
 --
 
-CREATE TABLE IF NOT EXISTS `hepb_status` (
+CREATE TABLE `hepb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5062,7 +5750,7 @@ INSERT IGNORE INTO `hepb_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `hepc_status`
 --
 
-CREATE TABLE IF NOT EXISTS `hepc_status` (
+CREATE TABLE `hepc_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5083,7 +5771,7 @@ INSERT IGNORE INTO `hepc_status` (`status_id`, `status_name`, `date_created`) VA
 -- Table structure for table `initial_psychiatric_form`
 --
 
-CREATE TABLE IF NOT EXISTS `initial_psychiatric_form` (
+CREATE TABLE `initial_psychiatric_form` (
   `psy_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `occupation` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5117,10 +5805,27 @@ CREATE TABLE IF NOT EXISTS `initial_psychiatric_form` (
 -- Table structure for table `integration_status`
 --
 
-CREATE TABLE IF NOT EXISTS `integration_status` (
+CREATE TABLE `integration_status` (
   `integration_id` int NOT NULL,
   `integration_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `integration_status`
+--
+
+INSERT IGNORE INTO `integration_status` (`integration_id`, `integration_name`) VALUES
+(6, 'Community Reintegration'),
+(10, 'Cultural Reintegration'),
+(5, 'Education Reintegration'),
+(2, 'Employment Reintegration'),
+(1, 'Family Reintegration'),
+(8, 'Health Reintegration'),
+(3, 'Housing Reintegration'),
+(7, 'Legal Reintegration'),
+(11, 'None'),
+(9, 'Peer Support Reintegration'),
+(4, 'Stable Reintegration');
 
 -- --------------------------------------------------------
 
@@ -5128,7 +5833,7 @@ CREATE TABLE IF NOT EXISTS `integration_status` (
 -- Table structure for table `involuntary_discontinuation`
 --
 
-CREATE TABLE IF NOT EXISTS `involuntary_discontinuation` (
+CREATE TABLE `involuntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5160,7 +5865,7 @@ CREATE TABLE IF NOT EXISTS `involuntary_discontinuation` (
 -- Table structure for table `laboratory`
 --
 
-CREATE TABLE IF NOT EXISTS `laboratory` (
+CREATE TABLE `laboratory` (
   `lab_id` int NOT NULL,
   `visitDate` date NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5187,10 +5892,34 @@ CREATE TABLE IF NOT EXISTS `laboratory` (
 -- Table structure for table `living_conditions`
 --
 
-CREATE TABLE IF NOT EXISTS `living_conditions` (
+CREATE TABLE `living_conditions` (
   `cond_id` int NOT NULL,
   `condition_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `living_conditions`
+--
+
+INSERT IGNORE INTO `living_conditions` (`cond_id`, `condition_name`) VALUES
+(17, 'At risk of eviction'),
+(16, 'Frequently changing residence'),
+(10, 'Homeless / sleeping rough'),
+(13, 'Incarceration / prison'),
+(14, 'Institutional accommodation'),
+(11, 'Living on the street'),
+(4, 'Living with children'),
+(6, 'Living with friends'),
+(5, 'Living with other relatives'),
+(3, 'Living with parents'),
+(2, 'Living with spouse/partner'),
+(18, 'Other'),
+(7, 'Renting own house'),
+(8, 'Shared rental housing'),
+(12, 'Shelter / rescue centre'),
+(1, 'Stable/permanent housing'),
+(9, 'Temporary accommodation'),
+(15, 'Unstable housing');
 
 -- --------------------------------------------------------
 
@@ -5198,7 +5927,7 @@ CREATE TABLE IF NOT EXISTS `living_conditions` (
 -- Table structure for table `login_logs`
 --
 
-CREATE TABLE IF NOT EXISTS `login_logs` (
+CREATE TABLE `login_logs` (
   `id` int NOT NULL,
   `user_id` int DEFAULT NULL,
   `username` varchar(100) DEFAULT NULL,
@@ -5217,7 +5946,7 @@ CREATE TABLE IF NOT EXISTS `login_logs` (
 -- Table structure for table `marital_status`
 --
 
-CREATE TABLE IF NOT EXISTS `marital_status` (
+CREATE TABLE `marital_status` (
   `mar_id` int NOT NULL,
   `marital_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5234,7 +5963,9 @@ INSERT IGNORE INTO `marital_status` (`mar_id`, `marital_status_name`, `date_crea
 (6, 'Separated/Divorced', '2024-04-18 20:27:32'),
 (7, 'Cohabiting', '2024-04-18 20:27:48'),
 (8, 'Widowed', '2024-04-20 09:17:55'),
-(9, 'Unknown', '2024-11-13 00:00:00');
+(9, 'Unknown', '2024-11-13 00:00:00'),
+(10, 'Remarried', '2025-10-04 18:14:07'),
+(11, 'Never married', '2025-10-04 18:14:07');
 
 -- --------------------------------------------------------
 
@@ -5242,7 +5973,7 @@ INSERT IGNORE INTO `marital_status` (`mar_id`, `marital_status_name`, `date_crea
 -- Table structure for table `medical_history`
 --
 
-CREATE TABLE IF NOT EXISTS `medical_history` (
+CREATE TABLE `medical_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5289,7 +6020,7 @@ DELIMITER ;
 -- Table structure for table `medical_history_new`
 --
 
-CREATE TABLE IF NOT EXISTS `medical_history_new` (
+CREATE TABLE `medical_history_new` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5328,7 +6059,7 @@ CREATE TABLE IF NOT EXISTS `medical_history_new` (
 -- Table structure for table `nursing_history`
 --
 
-CREATE TABLE IF NOT EXISTS `nursing_history` (
+CREATE TABLE `nursing_history` (
   `id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5361,10 +6092,18 @@ CREATE TABLE IF NOT EXISTS `nursing_history` (
 -- Table structure for table `nursing_services`
 --
 
-CREATE TABLE IF NOT EXISTS `nursing_services` (
+CREATE TABLE `nursing_services` (
   `nursing_id` int NOT NULL,
   `nurising_service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nursing_services`
+--
+
+INSERT IGNORE INTO `nursing_services` (`nursing_id`, `nurising_service_name`) VALUES
+(1, 'Wound dressing'),
+(2, 'Injection');
 
 -- --------------------------------------------------------
 
@@ -5372,10 +6111,36 @@ CREATE TABLE IF NOT EXISTS `nursing_services` (
 -- Table structure for table `offences`
 --
 
-CREATE TABLE IF NOT EXISTS `offences` (
+CREATE TABLE `offences` (
   `offense_id` int NOT NULL,
   `offense_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `offences`
+--
+
+INSERT IGNORE INTO `offences` (`offense_id`, `offense_name`) VALUES
+(8, 'Assault / physical violence'),
+(7, 'Burglary / housebreaking'),
+(19, 'Currently incarcerated'),
+(9, 'Domestic violence'),
+(15, 'Driving-related offense'),
+(2, 'Drug possession'),
+(4, 'Drug trafficking / dealing'),
+(3, 'Drug use-related offense'),
+(12, 'Fraud / forgery'),
+(1, 'No known offense / None'),
+(17, 'Other criminal offense'),
+(18, 'Pending court case'),
+(16, 'Possession of illegal weapon'),
+(20, 'Previous incarceration'),
+(13, 'Property damage'),
+(11, 'Public disorder'),
+(6, 'Robbery'),
+(10, 'Sexual offense'),
+(5, 'Theft'),
+(14, 'Trespassing');
 
 -- --------------------------------------------------------
 
@@ -5383,7 +6148,7 @@ CREATE TABLE IF NOT EXISTS `offences` (
 -- Table structure for table `other_prescriptions`
 --
 
-CREATE TABLE IF NOT EXISTS `other_prescriptions` (
+CREATE TABLE `other_prescriptions` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5402,7 +6167,7 @@ CREATE TABLE IF NOT EXISTS `other_prescriptions` (
 -- Table structure for table `other_status`
 --
 
-CREATE TABLE IF NOT EXISTS `other_status` (
+CREATE TABLE `other_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -5427,7 +6192,7 @@ INSERT IGNORE INTO `other_status` (`status_id`, `status_name`, `date_created`) V
 -- Table structure for table `patientfingerprints`
 --
 
-CREATE TABLE IF NOT EXISTS `patientfingerprints` (
+CREATE TABLE `patientfingerprints` (
   `Id` int NOT NULL,
   `Template` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5438,7 +6203,7 @@ CREATE TABLE IF NOT EXISTS `patientfingerprints` (
 -- Table structure for table `patients`
 --
 
-CREATE TABLE IF NOT EXISTS `patients` (
+CREATE TABLE `patients` (
   `p_id` int NOT NULL,
   `reg_facility` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mflcode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5522,7 +6287,7 @@ DELIMITER ;
 -- Table structure for table `patientsignatures`
 --
 
-CREATE TABLE IF NOT EXISTS `patientsignatures` (
+CREATE TABLE `patientsignatures` (
   `SessionId` int NOT NULL,
   `ImageData` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -5530,10 +6295,23 @@ CREATE TABLE IF NOT EXISTS `patientsignatures` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `patient_bup_formulation`
+--
+
+CREATE TABLE `patient_bup_formulation` (
+  `mat_id` varchar(50) NOT NULL,
+  `components` text NOT NULL COMMENT 'JSON {drugname: tablets}',
+  `dose_mg` decimal(10,2) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `patient_checkins`
 --
 
-CREATE TABLE IF NOT EXISTS `patient_checkins` (
+CREATE TABLE `patient_checkins` (
   `checkin_id` int NOT NULL,
   `patient_id` int DEFAULT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5549,7 +6327,7 @@ CREATE TABLE IF NOT EXISTS `patient_checkins` (
 -- Table structure for table `patient_drug_histories`
 --
 
-CREATE TABLE IF NOT EXISTS `patient_drug_histories` (
+CREATE TABLE `patient_drug_histories` (
   `id` int NOT NULL,
   `encounter_id` int NOT NULL,
   `drug_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -5567,7 +6345,7 @@ CREATE TABLE IF NOT EXISTS `patient_drug_histories` (
 -- Table structure for table `pharmacy`
 --
 
-CREATE TABLE IF NOT EXISTS `pharmacy` (
+CREATE TABLE `pharmacy` (
   `disp_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5584,7 +6362,11 @@ CREATE TABLE IF NOT EXISTS `pharmacy` (
   `current_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `pharm_officer_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `dispDate` datetime DEFAULT CURRENT_TIMESTAMP,
-  `pump_id` int DEFAULT NULL
+  `pump_id` int DEFAULT NULL,
+  `conversion` decimal(10,2) DEFAULT NULL,
+  `conversion_unit` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `formulation_detail` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `dispense_group` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -5593,7 +6375,7 @@ CREATE TABLE IF NOT EXISTS `pharmacy` (
 -- Table structure for table `photos`
 --
 
-CREATE TABLE IF NOT EXISTS `photos` (
+CREATE TABLE `photos` (
   `photo_id` int NOT NULL,
   `visitDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5608,7 +6390,7 @@ CREATE TABLE IF NOT EXISTS `photos` (
 -- Table structure for table `phq9_assessments`
 --
 
-CREATE TABLE IF NOT EXISTS `phq9_assessments` (
+CREATE TABLE `phq9_assessments` (
   `assessment_id` int UNSIGNED NOT NULL,
   `p_id` int UNSIGNED NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5635,7 +6417,7 @@ CREATE TABLE IF NOT EXISTS `phq9_assessments` (
 -- Table structure for table `prescription_drugs`
 --
 
-CREATE TABLE IF NOT EXISTS `prescription_drugs` (
+CREATE TABLE `prescription_drugs` (
   `id` int NOT NULL,
   `prescription_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `drug_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -5645,7 +6427,8 @@ CREATE TABLE IF NOT EXISTS `prescription_drugs` (
   `total_dosage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `total_dispensed` int NOT NULL DEFAULT '0',
   `remaining_balance` int DEFAULT '0',
-  `prescr_status` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending'
+  `prescr_status` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `is_dot` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Directly Observed Therapy: always co-dispensed with the MAT drug'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -5654,7 +6437,7 @@ CREATE TABLE IF NOT EXISTS `prescription_drugs` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE IF NOT EXISTS `products` (
+CREATE TABLE `products` (
   `id` int NOT NULL,
   `category` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `productname` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6021,355 +6804,6 @@ INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `pa
 (346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, 3.00, 10, 17, 'active', '2025-09-04 14:52:46'),
 (347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, 41.00, 80, 1, 'active', '2025-09-04 14:52:46'),
 (348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, 18.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(1, '1', 'Ibuprofen Tablet BP 400mg', 'Gesic 400 ADL Brufen', 100, 125, 1.25, 3, 33, 'active', '2025-09-04 14:52:46'),
-(2, '1', 'Paracetamol Tablet BP 500mg', 'Cetamol 500mg', 100, 60, 0.60, 2, 33, 'active', '2025-09-04 14:52:46'),
-(3, '1', 'Piroxicam Capsules USP', 'Roxicam 20mg', 100, 65, 0.65, 5, 33, 'active', '2025-09-04 14:52:46'),
-(4, '1', 'Meloxicam Tablet 7.5mg BP', 'Melostar 7.5mg', 100, 161, 1.61, 5, 33, 'active', '2025-09-04 14:52:46'),
-(5, '1', 'Soluble Paracetamol BP 1000mg', 'PARA NOVA ', 8, 185, 23.13, 40, 3, 'active', '2025-09-04 14:52:46'),
-(6, '1', 'Ibuprofen 400mg/Paracetamol 325mg BP', 'Brustan Tablets', 10, 99, 9.90, 20, 3, 'active', '2025-09-04 14:52:46'),
-(7, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'ACEPAR-MR Caplets', 10, 260, 26.00, 35, 3, 'active', '2025-09-04 14:52:46'),
-(8, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 375mg', 'Rilif - MR Tablets', 20, 495, 24.75, 35, 7, 'active', '2025-09-04 14:52:46'),
-(9, '1', 'Aceclofenac 100mg/Paracetamol 500mg/Chlorzoxazone 500mg', 'Zyrtal - MR Tablets', 20, 685, 34.25, 50, 7, 'active', '2025-09-04 14:52:46'),
-(10, '1', 'Diclofenac 50mg/Paracetamol 500mg/Chlorzoxazone 250mg', 'DOLOACT - MR Tablets', 100, 1807, 18.07, 25, 33, 'active', '2025-09-04 14:52:46'),
-(11, '1', 'Paracetamol Tablet BP 500mg/Caffeine 65mg', 'Panadol Extra Tablets (Pairs)', 50, 396, 7.92, 20, 17, 'active', '2025-09-04 14:52:46'),
-(12, '1', 'Paracetamol Tablet BP 500mg', 'Panadol Advance Tablets (Pairs)', 50, 396, 7.92, 15, 17, 'active', '2025-09-04 14:52:46'),
-(13, '1', 'Etoricoxib Tablet 60mg', 'Tory 60 Tablet', 30, 830, 27.67, 40, 10, 'active', '2025-09-04 14:52:46'),
-(14, '1', 'Etoricoxib Tablet 90mg', 'Tory 90 Tablet', 30, 877, 29.23, 45, 10, 'active', '2025-09-04 14:52:46'),
-(15, '1', 'Etoricoxib Tablet 120mg', 'Tory 120 Tablet', 30, 1066, 35.53, 50, 10, 'active', '2025-09-04 14:52:46'),
-(16, '1', 'Paracetamol Tablet BP 500mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg', 'Panadol Cold&Flu Tablets', 24, 320, 13.33, 20, 8, 'active', '2025-09-04 14:52:46'),
-(17, '1', 'Paracetamol Tablet BP 300mg/Pseudoephedrine Hydrochloride 30mg/Chlorpheniramine Maleate 2mg/Caffeine 30mg', 'FLU-GONE Capsules', 1, 115, 115.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(18, '1', 'Paracetamol Tablet BP 650mg/Phenylephrine Hydrochloride 5mg/Chlorpheniramine Maleate 2mg', 'CONTUS-650 Tablet', 1, 99, 99.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(19, '1', 'Cetirizine Hydrochloride Tablet 10mg', 'CACHCET Tablet', 100, 78, 0.78, 5, 33, 'active', '2025-09-04 14:52:46'),
-(20, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Montallerg Tablets', 20, 1000, 50.00, 70, 7, 'active', '2025-09-04 14:52:46'),
-(21, '1', 'Montelukast 10mg', 'Montana 10mg', 14, 740, 52.86, 75, 5, 'active', '2025-09-04 14:52:46'),
-(22, '1', 'Montelukast 10mg/Levocetirizine 5mg', 'Motechest', 30, 409, 13.63, 40, 10, 'active', '2025-09-04 14:52:46'),
-(23, '1', 'Ephedrine 12mg/Theophyline 120mg', 'F-Tab (Franol) Tablet', 100, 179, 1.79, 5, 33, 'active', '2025-09-04 14:52:46'),
-(24, '1', 'Salbutamol Inhaler 100mcg', 'Medisalant 100mcg', 1, 165, 165.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(25, '1', 'Betamethasone 0.25mg/Dexchlorpheniramine Maleate BP 2mg', 'Celestinac Tablet', 30, 149, 4.97, 15, 10, 'active', '2025-09-04 14:52:46'),
-(26, '1', 'Paracetamol 500mg/Chlorzoxazone 250mg', 'Myospaz Tablet', 100, 1595, 15.95, 25, 33, 'active', '2025-09-04 14:52:46'),
-(27, '1', 'Diclofenac 100mg', 'ZOFENAC 100', 100, 75, 0.75, 10, 33, 'active', '2025-09-04 14:52:46'),
-(28, '1', 'Predinsolone 5mg', 'Olsolone Tablets', 100, 68, 0.68, 3, 33, 'active', '2025-09-04 14:52:46'),
-(29, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Duxscospan Plus (Buscopan Plus Generic)', 20, 338, 16.90, 25, 7, 'active', '2025-09-04 14:52:46'),
-(30, '1', 'Doxylamine Succ. 10mg/Pyridoxine 10mg ', 'NOSIC ', 20, 385, 19.25, 25, 7, 'active', '2025-09-04 14:52:46'),
-(31, '1', 'Metoclopramide 10mg', 'Emeton 10mg Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
-(32, '1', 'Meloxicam EP Tablet 7.5mg', 'Melcam 7.5mg Tablet', 100, 331.5, 3.32, 5, 33, 'active', '2025-09-04 14:52:46'),
-(33, '1', 'Meloxicam EP Tablet 15mg', 'Melcam 15mg Tablet', 50, 306, 6.12, 10, 17, 'active', '2025-09-04 14:52:46'),
-(34, '1', 'Metoclopramide 10mg', 'Melasil - 10 Tablet', 100, 70, 0.70, 5, 33, 'active', '2025-09-04 14:52:46'),
-(35, '1', 'Promethazine 25mg', 'Promethazine Tablet', 100, 55, 0.55, 5, 33, 'active', '2025-09-04 14:52:46'),
-(36, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 60mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(37, '1', 'Paracetamol 120mg/5ml', 'Curamol Suspension 100mL', 1, 47, 47.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(38, '1', 'Paracetamol 120mg/5ml', 'Calpol Suspension 60mL', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(39, '1', 'Ibuprofen 100mg/5ml', 'Triofen 60mL', 1, 21, 21.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(40, '1', 'Ibuprofen 100mg/5ml', 'Triofen 100mL', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(41, '1', 'Paracetamol 120mg/5ml', 'Panadol Baby&Infant 100mL', 1, 343, 343.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(42, '1', 'Ibuprofen 100mg/Paracetamol 125mg BP', 'Brustan Suspension', 1, 235, 235.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(43, '1', 'Soluble Paracetamol BP 1000mg', 'Parafast ET 1000 Tablet', 8, 380, 47.50, 50, 3, 'active', '2025-09-04 14:52:46'),
-(44, '1', 'Loratidine USP 10mg', 'Loratin Fast', 100, 850, 8.50, 15, 33, 'active', '2025-09-04 14:52:46'),
-(45, '1', 'Hyoscine - N- Butylbromide 10mg', 'HYCIN 10 Tablets (Buscopan Generic)', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
-(46, '1', 'Paracetamol 500mg/Hyoscine Butylbromide 10mg', 'Hismopan Plus Tablets (Buscopan Plus Generic)', 100, 600, 6.00, 15, 33, 'active', '2025-09-04 14:52:46'),
-(47, '1', 'Metronidazole 400mg', 'Tricozole - 400mg Tablet', 100, 120, 1.20, 5, 33, 'active', '2025-09-04 14:52:46'),
-(48, '1', 'Tetracycline Eye Ointment USP', 'Metacycline', 1, 33, 33.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(49, '1', 'Betamethasone 0.1% w/v/Neomycin 0.5 %w/v', 'Probeta-N', 1, 105, 105.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(50, '1', 'Ciprofloxacin/Dexamethasone Eye/Ear Drops', 'Ciploglax-D Eye Drops', 1, 149, 149.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(51, '1', 'Ciprofloxacin 0.3% USP', 'Ciproken', 1, 102, 102.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(52, '1', 'Dextran 70 USP 1mg/Hypromellose USP 3mg', 'Lubtear', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(53, '1', 'Ciprofloxacin 0.3%/Beclomethasone 0.025%/Clotrimazole 1%/Lignocaine 2% Ear Drops', 'Otobiotic', 1, 228, 228.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(54, '1', 'fluticasone propionate ', 'Flonaspray', 1, 680, 680.00, 950, 1, 'active', '2025-09-04 14:52:46'),
-(55, '1', 'Esomeprazole', 'Protas 40 Tablets', 100, 1190, 11.90, 30, 33, 'active', '2025-09-04 14:52:46'),
-(56, '1', 'Esomeprazole', 'Nexium 20', 14, 550, 39.29, 70, 5, 'active', '2025-09-04 14:52:46'),
-(57, '1', 'Omeprazole Satchets', 'Risek insta', 10, 331, 33.10, 50, 3, 'active', '2025-09-04 14:52:46'),
-(58, '1', 'Omeprazole ', 'Omecos 20 Capsules', 100, 105, 1.05, 5, 33, 'active', '2025-09-04 14:52:46'),
-(59, '1', 'Pantoprazole Delayed Release', 'Pantakind 40', 60, 1440, 24.00, 35, 20, 'active', '2025-09-04 14:52:46'),
-(60, '1', 'Clotrimazole Vaginal Tablets 200mg', 'Canazol Vaginal Tablet, 3s', 1, 46, 46.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(61, '1', 'Ketocozole 200mg  BP', 'Hitoral 200mg Tablet', 100, 340, 3.40, 10, 33, 'active', '2025-09-04 14:52:46'),
-(62, '1', 'Amoxicllin 125mg/5mL', 'ELYMOX Suspension 100mL', 1, 43, 43.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(63, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 100mL', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(64, '1', 'Co-trimoxazole 240mg/5mL', 'BIOTRIM 50mL', 1, 30, 30.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(65, '1', 'Ampicillin/Cloxacillin 250mg/5mL', 'Ampiclo-Dawa Suspension', 1, 68, 68.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(66, '1', 'Ampicillin/Cloxacillin 250mg/250mg', 'Ampiclo-Dawa 500 Capsule', 100, 400, 4.00, 10, 33, 'active', '2025-09-04 14:52:46'),
-(67, '1', 'Flucloxacillin 125mg/5mL', 'ELYFLOX 100mL Suspension', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(68, '1', 'Azithromycin Oral Suspension 200mg', 'IzziThree 15mg', 1, 39, 39.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(69, '1', 'Vitamin B Complex', 'Neuro-Forte', 20, 270, 13.50, 20, 7, 'active', '2025-09-04 14:52:46'),
-(70, '1', 'Levocetirizine 5mg', 'VIVACET L 5', 10, 55, 5.50, 20, 3, 'active', '2025-09-04 14:52:46'),
-(71, '1', 'Maternity Pads', 'Medimax', 1, 97, 97.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(72, '1', 'Maternity Pads', 'Medicott', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(73, '1', 'Absorbent Cotton Wool 400mg', 'Velvex', 1, 250, 250.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(74, '1', 'Adult Diapers XL', 'MY A+ XLARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
-(75, '1', 'Adult Diapers L', 'MY A+ LARGE', 10, 100, 10.00, 15, 3, 'active', '2025-09-04 14:52:46'),
-(76, '1', 'Adult Pants L', 'ADFIT  PANTS LARGE', 30, 100, 3.33, 5, 10, 'active', '2025-09-04 14:52:46'),
-(77, '1', 'Sulphadoxine 500mg/Pyrimethamine 25mg', 'FANLAR Tablets', 25, 30, 1.20, 50, 8, 'active', '2025-09-04 14:52:46'),
-(78, '1', 'Terbinafine 250mg', 'Terbinaforce 250 Tablets', 30, 953, 31.77, 50, 10, 'active', '2025-09-04 14:52:46'),
-(79, '1', 'Fluconazole 150mg', 'NOCANZ 150 Tablet', 1, 15, 15.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(80, '1', 'Griseofulvin 250mg', 'Grisolab-250 Tablet', 100, 520, 5.20, 10, 33, 'active', '2025-09-04 14:52:46'),
-(81, '1', 'Griseofulvin 125mg', 'Biofulvin 125 Tablet', 100, 390, 3.90, 10, 33, 'active', '2025-09-04 14:52:46'),
-(82, '1', 'Artemether 20mg/Lumefantrine 120mg', 'LONART Tablet, 24s', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(83, '1', 'Artemether 20mg/Lumefantrine 120mg', 'PANAART 20/120, 24s', 1, 0, 0.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(84, '1', 'Povidone-Iodine USP 1%', 'Peardine Mouth Wash, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(85, '1', 'Povidone-Iodine USP 1%', 'Rexe-Dine Mouth Wash', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(86, '1', 'Amoxicillin 500mg', 'AMOXIMED 500 Capsule', 100, 320, 3.20, 6.6, 33, 'active', '2025-09-04 14:52:46'),
-(87, '1', 'Cefuroxime 500mg USP', 'Theoroxime 500 Tablets', 1, 165, 165.00, 400, 1, 'active', '2025-09-04 14:52:46'),
-(88, '1', 'Cefixime 400mg USP', 'Theofix - 400 Tablets', 10, 170, 17.00, 350, 3, 'active', '2025-09-04 14:52:46'),
-(89, '1', 'Azithromycin 500mg USP', 'AGYCIN-500 Tablet, 3s', 1, 55, 55.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(90, '1', 'Nitrofurantoin 100mg', 'NIFURAN', 100, 200, 2.00, 10, 33, 'active', '2025-09-04 14:52:46'),
-(91, '1', 'Tinidazole 500mg', 'Tinizol 500 Tablets,4s', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(92, '1', 'Amoxicillin 250mg', 'SPASMOX 250 Capsule', 100, 195, 1.95, 3.3, 33, 'active', '2025-09-04 14:52:46'),
-(93, '1', 'Doxycycline 100mg', 'XYCYCLINE 100 Capsule', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
-(94, '1', 'Secnidazole 1g', 'Secnida Forte Tablets, 2s', 1, 25, 25.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(95, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Microgynon Fe Tablets', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(96, '1', 'Sildenafil 50mg ', 'MTM-50 Tablet', 4, 36, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(97, '1', 'Sildenafil 100mg ', 'MTM-100 Tablet', 4, 46, 11.50, 50, 1, 'active', '2025-09-04 14:52:46'),
-(98, '1', 'Sildenafil 100mg ', 'Nelgra-100 Tablet', 4, 43, 10.75, 50, 1, 'active', '2025-09-04 14:52:46'),
-(99, '1', 'Sildenafil 100mg ', 'VEGA-100 Tablet', 4, 41, 10.25, 50, 1, 'active', '2025-09-04 14:52:46'),
-(100, '1', 'Levonogestrel 0.75mg', 'Postinor-2 Tablets, 2s', 1, 143, 143.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(101, '1', 'levonogestrel 0.75mg', 'Safe-72 Tablets,2s', 1, 20, 20.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(102, '1', 'Betamethasone Sodium Phosphate 2mg/ml/Betamethasone Dipropionate 5mg/ml Suspension for Inj,2ml', 'KRIDOFOS Injection', 1, 675, 675.00, 900, 1, 'active', '2025-09-04 14:52:46'),
-(103, '1', 'Medroxyprogesterone Injection 150mg/mL', 'Lydia Contraceptive Injection', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(104, '1', 'Levonogestrel 0.15mg/Ethinylestradiol 0.03mg', 'Femiplan Tablets', 1, 85, 85.00, 120, 1, 'active', '2025-09-04 14:52:46'),
-(105, '1', 'Diclofenac 75mg Injection', 'CAREFENAC Injection', 10, 45, 4.50, 20, 3, 'active', '2025-09-04 14:52:46'),
-(106, '1', 'Carbamazepine 200mg BP', 'Carbamazepine 200mg Tablets', 100, 369, 3.69, 5, 33, 'active', '2025-09-04 14:52:46'),
-(107, '1', 'Amitriptyline 25mg', 'Amitiptyline Tablets, Cosmos', 100, 252, 2.52, 5, 33, 'active', '2025-09-04 14:52:46'),
-(108, '1', 'Phenobarbital 30mg', 'Phenobarbital Tablets, Cosmos', 100, 235, 2.35, 5, 33, 'active', '2025-09-04 14:52:46'),
-(109, '1', 'Diazepam 5mg', 'Cozepam Tablets', 100, 302, 3.02, 5, 33, 'active', '2025-09-04 14:52:46'),
-(110, '1', 'Maternity Pants', 'Dafi Maternity Pants, M-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
-(111, '1', 'Maternity Pants', 'Dafi Maternity Pants, S-L', 6, 750, 125.00, 200, 2, 'active', '2025-09-04 14:52:46'),
-(112, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'Augmentin 457 Suspension', 1, 990, 990.00, 1200, 1, 'active', '2025-09-04 14:52:46'),
-(113, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Augmentin 228 Suspension', 1, 635, 635.00, 850, 1, 'active', '2025-09-04 14:52:46'),
-(114, '1', 'Tamsulosin 0.4mg', 'Tamsolin Capsules', 10, 770, 77.00, 100, 3, 'active', '2025-09-04 14:52:46'),
-(115, '1', 'Amoxicillin/Clavulanate 625mg', 'Labclav 625 Tablets', 1, 115, 115.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(116, '1', 'Amoxicillin/Clavulanate 1000mg', 'Acinet 1000 Tablets', 1, 275, 275.00, 400, 1, 'active', '2025-09-04 14:52:46'),
-(117, '1', 'Amoxicillin/Clavulanate 375mg', 'Acinet 375 Tablets', 1, 171, 171.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(118, '1', 'Ciprofloxacin 500mg USP', 'Ciproglax 500mg Tablets', 100, 240, 2.40, 10, 33, 'active', '2025-09-04 14:52:46'),
-(119, '1', 'Finasteride 5mg/Tamsulosin 400mcg', 'FINOSIN Tablets', 30, 1750, 58.33, 75, 10, 'active', '2025-09-04 14:52:46'),
-(120, '1', 'Flucloxacillin Injection 500mg Vial', 'Flupene Injection', 1, 38, 38.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(121, '1', 'HydrocortisoneInjection 100mg', 'OCORTIN 100 Injection', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(122, '1', 'Lidocaine Injection 20mg/mL, 30mL', 'LIDOCAINE 2% Injection', 1, 36, 36.00, 60, 1, 'active', '2025-09-04 14:52:46'),
-(123, '1', 'Cefuroxime 125mg/5mL', 'Evorox, 50mL Suspension', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(124, '1', 'Cefalexin 125mh/5mL', 'Leocef, 100mL Suspension', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(125, '1', 'Amoxicillin/Clavulanate 228.5mg/5mL', 'Labclav 228 Suspension', 1, 102, 102.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(126, '1', 'Amoxicillin/Clavulanate 457mg/5mL', 'ACINET DRY SYRUP 457', 1, 260, 260.00, 380, 1, 'active', '2025-09-04 14:52:46'),
-(127, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Neonatal Ampiclox Drops', 1, 345, 345.00, 500, 1, 'active', '2025-09-04 14:52:46'),
-(128, '1', 'Ampicillin 60mg/cloxacillin 30mg/0.6mL', 'Ampliclo-Dawa (Neonata Amplicox Gen)', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(129, '1', 'Amlodipine 5mg/Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Amlozaar-H Tablet', 30, 1400, 46.67, 70, 10, 'active', '2025-09-04 14:52:46'),
-(130, '1', 'Flucloxacillin 250mg/Amoxicillin 250mg', 'MoxaForte 500 Capsules, 20s', 1, 354, 354.00, 500, 1, 'active', '2025-09-04 14:52:46'),
-(131, '1', 'Ceftriaxone 1g', '\'GALAXY\'S SEFIN Injection', 1, 32, 32.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(132, '1', 'Urine Bag', 'Urine Collection Bag, 2000mL', 1, 48, 48.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(133, '1', 'Zinc Sulfate DT 20mg', 'Junior Zinc Tablets', 100, 89, 0.89, 5, 33, 'active', '2025-09-04 14:52:46'),
-(134, '1', 'Normal Saline Nasal Drops', 'Nosfree Saline Drops', 1, 17, 17.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(135, '1', 'Hyoscine - N- Butylbromide 5mg/5mL', 'Hycin Syrup, 60mL', 1, 62, 62.00, 120, 1, 'active', '2025-09-04 14:52:46'),
-(136, '1', 'Orals Rehydration Salts', 'ORASOL, ORS', 1, 8, 8.00, 20, 1, 'active', '2025-09-04 14:52:46'),
-(137, '1', 'Ondasetron 2mg/5mL', 'EMITOSS Oral Solution, 30mL', 1, 270, 270.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(138, '1', 'Zinc Sulfate 20mg Syrup', 'TOTO-ZincOD Syrup', 1, 80, 80.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(139, '1', 'Nystatin 100,000 units', 'NYSTAL Suspension', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(140, '1', 'Glucosamine/Chondroitin/Cod Liver/Omega 3', 'Cartil Omega Softgel Capsules', 30, 1758, 58.60, 75, 10, 'active', '2025-09-04 14:52:46'),
-(141, '1', 'Calcium/Magnesium/Vitamin D', 'Osteocare Tablets', 30, 620, 20.67, 30, 10, 'active', '2025-09-04 14:52:46'),
-(142, '1', 'Calcium 320mg/Phosphorus 137.5mg', 'Purecal Chewable Tablets', 30, 750, 25.00, 35, 10, 'active', '2025-09-04 14:52:46'),
-(143, '1', 'Calcium/Magnesium/Vitamin D', 'Zedcal Oral Suspension, 200mL', 1, 549, 549.00, 750, 1, 'active', '2025-09-04 14:52:46'),
-(144, '1', 'Lansoprazole/Tinidazole/Clarithromycin', 'Sure Kit, H. Pylori Kit', 1, 698, 698.00, 1000, 1, 'active', '2025-09-04 14:52:46'),
-(145, '1', 'Amoxicillin,clarithromycin,Esomeprazole', 'Esofag kit,H.Pylori kit', 1, 950, 950.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
-(146, '1', 'lansoprazole/Amoxicilin/Clarithromycin', 'Pylotrip,H.Pylori Kit', 1, 890, 890.00, 1300, 1, 'active', '2025-09-04 14:52:46'),
-(147, '1', 'syringe 10cc', 'Syringe 10cc', 1, 450, 450.00, 10, 1, 'active', '2025-09-04 14:52:46'),
-(148, '1', 'Syringe 5cc', 'Syringe 5cc', 1, 270, 270.00, 10, 1, 'active', '2025-09-04 14:52:46'),
-(149, '1', 'Lactulose solution', 'Osmolax Suspension', 1, 340, 340.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(150, '1', 'magaldrate and simethicone 200ml', 'Maganta Suspension', 1, 361.25, 361.25, 500, 1, 'active', '2025-09-04 14:52:46'),
-(151, '1', 'Sodium alginate 500mg/sodium bicarbonate/calcium carbonate', ' Asynta Max 200mL', 1, 467.5, 467.50, 700, 1, 'active', '2025-09-04 14:52:46'),
-(152, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 180mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(153, '1', 'Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone', 'Relcer Gel 100mL', 1, 247, 247.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(154, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Alugel Suspension, 100mL', 1, 81, 81.00, 120, 1, 'active', '2025-09-04 14:52:46'),
-(155, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 200mL Suspension', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(156, '1', 'Aluminium oxide 200mg/Magnesium hydroxyde 400mg/simethicone 30mg', 'Nilacid 100mL Suspension', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(157, '1', 'Aluminium Hydroxide 120mg/Magnesium Trisilicate 250mg', 'Gocid 100mL Suspension', 1, 35, 35.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(158, '1', 'Alginic Acid Aluminium Hydroxide 365mg/magnesium hydroxyde/simethicone ', 'ULGICID Suspension 200mL', 1, 285, 285.00, 400, 1, 'active', '2025-09-04 14:52:46'),
-(159, '1', 'Sucralfate/Oxetacaine', 'Sucrafil O Gel Suspension, 100mL', 1, 280, 280.00, 400, 1, 'active', '2025-09-04 14:52:46'),
-(160, '1', 'Aluminium Hydroxide 300mg/magnesium hydroxyde 150mg/simethicone 100mg', 'Benagas Gel, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(161, '1', 'Aluminium Hydroxide 150mg/Magnesium Trisilicate 250mg', 'Tryactin Suspension, 100mL', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(162, '1', 'Magaldrate 480mg and simethicone 20mg', 'Magnacid Gel 100mL', 1, 55, 55.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(163, '1', 'Ferric Ammonium Citrate 200mg/Folic 1.5mg/Cyanocobalamin 50mcg/Ethanol', 'Ranferon 12 Suspension, 200mL', 1, 325, 325.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(164, '1', 'Dried Ferrous Sulphate 200mg/Folic Acid 0.4mg', 'Ferrolic-LF Tablets, IFAS', 100, 133, 1.33, 5, 33, 'active', '2025-09-04 14:52:46'),
-(165, '1', 'Ferrous Fumarate 305mg/Folic Acid 0.75mg/Cyanocobalamin 5mcg/Ascorbic Acid 75mg/Zinc Sulphate 5mg', 'Ranferon Capsules', 30, 286, 9.53, 20, 10, 'active', '2025-09-04 14:52:46'),
-(166, '1', 'Iron 50mg/Manganese 1.33mg/Copper 0.70mg', '\'Tot\'Hema Ampoules\'', 20, 860, 43.00, 80, 7, 'active', '2025-09-04 14:52:46'),
-(167, '1', 'Diloxanide Furoate 250mg/Metronidazole 200mg/Dicyclomine 10mg/5mL', 'Entamaxin Oral Suspension, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(168, '1', 'Metronidazole 200mg/5mL', 'Amizole Oral Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(169, '1', 'Metronidazole Benzoate 200mg/5mL', 'Tricozole - 200mg Suspension', 1, 45, 45.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(170, '1', 'Multivitamin Syrup', 'Filwel Kids, 100mL', 1, 204, 204.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(171, '1', 'Secnidazole 750mg/15mL', 'Secnida for Children, 15mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(172, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Tablets', 30, 360, 12.00, 15, 10, 'active', '2025-09-04 14:52:46'),
-(173, '1', 'Cyproheptadine 4mg/ B Vitamins/Minerals', 'Becoactin Syrup, 200mL', 30, 320, 10.67, 450, 10, 'active', '2025-09-04 14:52:46'),
-(174, '1', 'Cyproheptadine 2mg/ B Vitamins/Minerals', 'Cypro B Plus Syrup, 200mL', 1, 235, 235.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(175, '1', 'Cyproheptadine 2mg/ Tricholine Citrate 275mg', 'Cypon Syrup,100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(176, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Ambroxol Expectorant Syrup, 100mL', 1, 178.4, 178.40, 250, 1, 'active', '2025-09-04 14:52:46'),
-(177, '1', 'Adovas Syrup', 'Adovas Syrup, 100mL', 1, 204, 204.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(178, '1', 'Sulbutamol 1mg/Bromhexine 2mg/Guaifenesin 50mg', 'Cadistin Plus, 100mL', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(179, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadiphen Syrup, 100mL', 1, 140, 140.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(180, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg', 'Flu-Gone DM, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
-(181, '1', 'Dextromethorphan 10mg/Chlorpheniramine 2mg/Pseudoephedrine 30mg/Paracetamol', 'Flu-Gone P+, 60mL', 1, 165, 165.00, 230, 1, 'active', '2025-09-04 14:52:46'),
-(182, '1', 'Promethazine 2.5mg/Diphenhydramine 5mg/Ammonium Cl 90mg/Sodium Citrate 45mg/Ephedrine Hcl 7.5mg', 'Tridex Cough Mixture,100mL', 1, 58, 58.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(183, '1', 'Dextromethorphan 10mg/Cetirizine 5mg/Phenylephrine Hcl 5mg', 'Zefcolin Dry Cough Formula Syrup, 100mL', 1, 229, 229.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(184, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 100mL', 1, 214.4, 214.40, 300, 1, 'active', '2025-09-04 14:52:46'),
-(185, '1', 'SalbutamoL Sulfate 2mg/Bromhexine Hcl 4mg/Guaifenesin 100mg/ Menthol 1mg', 'Ascoril Expectorant 200mL', 1, 375.4, 375.40, 500, 1, 'active', '2025-09-04 14:52:46'),
-(186, '1', 'Chlorpheniramine 2mg/Sodium Citrate 44mg/Guaifenesin 80mg/Ammonium Chloride 100mg/Levomenthol 0.8mg', 'Cadistin Expectorant, 100mL', 1, 98, 98.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(187, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 10mg/Paracetamol 120mg', 'Coldcap Syrup, 100mL', 1, 90, 90.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(188, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 60mL', 1, 36, 36.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(189, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg/Sodium Citrate 90mg', 'Benahist Syrup, 100mL', 1, 53, 53.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(190, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Guaifenesin 100mg', 'Trimex Diabetic', 1, 215, 215.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(191, '1', 'Ambroxol Hydrochloride 15mg/5mL', 'Mucosolvan Syrup,100mL', 1, 590, 590.00, 850, 1, 'active', '2025-09-04 14:52:46'),
-(192, '1', 'Chlorpheniramine 2mg/Pseudoephedrine 30mg/Sodium Citrate 44mg/Dextromethorphan 10mg/Menthol 1mg', 'Coscof-DM Linctus,100mL', 1, 155, 155.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(193, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Original, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
-(194, '1', 'Cod Liver Oil, Vitamin A&D, Calcium', 'Scott\'s Emulsion, Orange Flavour, 100mL, Syrup', 1, 410, 410.00, 600, 1, 'active', '2025-09-04 14:52:46'),
-(195, '1', 'Bonnisan', 'Bonnisan, 120mL, Syrup', 1, 385, 385.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(196, '1', 'Sodium Bicarbonate 50mg/Terpeneless Dillseed Oil 2.15mg', 'Gripe Water', 1, 92, 92.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(197, '1', 'Levosalbutamol 1mg/5mg', 'Levostar, 100mL Syrup', 1, 216, 216.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(198, '1', 'Levocetirizine 2.5mg', 'ALERFREE Syrup,60mL', 1, 123, 123.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(199, '1', 'Desloratidine 2.5mg/5mL', 'DESOSTAR Syrup, 60mL', 1, 266, 266.00, 380, 1, 'active', '2025-09-04 14:52:46'),
-(200, '1', 'Loratidine USP 5mg/5mL', 'Lorhistina Syrup,  60mL', 1, 179, 179.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(201, '1', 'Predinsolone 5mg/5mL', 'Olsolone Syrup, 50mL', 1, 100, 100.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(202, '1', 'Promethazine Hcl, 5mg/5mL', 'Largan, Syrup', 1, 19, 19.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(203, '1', 'Chlorpheniramine Maleate 4mg', 'Dawa-CPM Tablets, 4mg', 100, 31, 0.31, 2, 33, 'active', '2025-09-04 14:52:46'),
-(204, '1', 'Chlorpheniramine Maleate 2mg/5mL', 'Dawa-CPM Syrup, 60mL', 1, 22, 22.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(205, '1', 'Cetirizine HCL 5mg/5mL', 'CetriPlain, 60mL Syrup', 1, 20, 20.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(206, '1', 'Sodium Lactate IV Infusion', 'Ringer - Lactate, 500mL,IV Infusion', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(207, '1', 'Sodium Chloride, 0.9%', 'VIDASAL, 500mL, IV Infusion (Normal Saline)', 1, 80, 80.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(208, '1', 'Erythromycin 125mg/5mL', 'Erythrox 100mL', 1, 78, 78.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(209, '1', 'Clarithromycin 500mg', 'Aziclar-500 Tablets', 1, 229, 229.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(210, '1', 'Diloxanide Furoate 500mg/Metronidazole 400mg', 'Diracip-MDS, Tablets,15s', 1, 225, 225.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(211, '1', 'Azithromycin 1g/Fluconazole 150mg/Secnidazole 1g', 'AZFLOSEC KIT', 1, 325, 325.00, 500, 1, 'active', '2025-09-04 14:52:46'),
-(212, '1', 'Ciprofloxacin 500mg/Tinidazole 600mg', 'CIPRO-T, Tablets', 1, 150, 150.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(213, '1', 'Cefalexin 500mg', 'Felaxin 500 Capsules', 1, 6.8, 6.80, 15, 1, 'active', '2025-09-04 14:52:46'),
-(214, '1', 'Tramadol 50mg', 'Metadol Capsules', 100, 350, 3.50, 10, 33, 'active', '2025-09-04 14:52:46'),
-(215, '1', 'Cefadroxil 500mg', 'DROX 500', 1, 183.6, 183.60, 400, 1, 'active', '2025-09-04 14:52:46'),
-(216, '1', 'Pregnancy Test Strip', 'Pregnancy Test Strip', 1, 11, 11.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(217, '1', 'Metformin HCl 500mg', 'Glucophage 500 Tablets', 90, 395, 4.39, 8, 30, 'active', '2025-09-04 14:52:46'),
-(218, '1', 'Metformin HCl 850mg', 'Glucophage 850 Tablets', 60, 564, 9.40, 15, 20, 'active', '2025-09-04 14:52:46'),
-(219, '1', 'Norethisterone 5mg', 'Primolut N Tablets', 30, 940, 31.33, 45, 10, 'active', '2025-09-04 14:52:46'),
-(220, '1', 'Clomifene 50mg', 'Clophene 50mg, Tablets', 30, 379, 12.63, 50, 10, 'active', '2025-09-04 14:52:46'),
-(221, '1', 'Fluconazole 150mg/Azithromycin 1g/Secnidazole 1g', 'VDM KIT, Tablets', 1, 645, 645.00, 850, 1, 'active', '2025-09-04 14:52:46'),
-(222, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 28s Tablets', 28, 145, 5.18, 7, 9, 'active', '2025-09-04 14:52:46'),
-(223, '1', 'Metformin 500mg', 'Sukarmin 500mg Tablets', 100, 85, 0.85, 5, 33, 'active', '2025-09-04 14:52:46'),
-(224, '1', 'Amlodipine 5mg', 'Varinil 5 Tablets', 28, 155, 5.54, 10, 9, 'active', '2025-09-04 14:52:46'),
-(225, '1', 'Hydrochlorothiazide 50mg', 'HYMET Tablets', 100, 75, 0.75, 4, 33, 'active', '2025-09-04 14:52:46'),
-(226, '1', 'Acetylsalicylic Acid 75mg', 'Ascard 75 Tablets', 30, 105, 3.50, 150, 10, 'active', '2025-09-04 14:52:46'),
-(227, '1', 'Metformin HCl 850mg', 'Glucomet 850 Tablets', 56, 420, 7.50, 15, 19, 'active', '2025-09-04 14:52:46'),
-(228, '1', 'Glibenclamide 5mg', 'Nogluc 5mg, 112s Tablets', 112, 495, 4.42, 7, 37, 'active', '2025-09-04 14:52:46'),
-(229, '1', 'Anusol', 'Anusol Suppositories', 12, 700, 58.33, 80, 4, 'active', '2025-09-04 14:52:46'),
-(230, '1', 'Atenolol 50mg', 'Cardinol 50 Tablets, 28s', 28, 125, 4.46, 8, 9, 'active', '2025-09-04 14:52:46'),
-(231, '1', 'Losartan 50mg', 'Amlozaar 50 Tablets', 30, 950, 31.67, 45, 10, 'active', '2025-09-04 14:52:46'),
-(232, '1', 'Carvedilol 12.5mg', 'Vidol 12.5 Tablets', 28, 410, 14.64, 20, 9, 'active', '2025-09-04 14:52:46'),
-(233, '1', 'Carvedilol 6.25mg', 'Vidol 6.25 Tablets', 28, 285, 10.18, 15, 9, 'active', '2025-09-04 14:52:46'),
-(234, '1', 'Nifedipine 20mg', 'Nicardin-SR Tablets', 100, 80, 0.80, 5, 33, 'active', '2025-09-04 14:52:46'),
-(235, '1', 'Losartan 50mg', 'Angilock 50 Tablets', 30, 131.75, 4.39, 8, 10, 'active', '2025-09-04 14:52:46'),
-(236, '1', 'Losartan 50mg/Hydrochlorothiazide 12.5mg', 'Angilock-Plus 50/12.5 Tablets', 30, 170, 5.67, 10, 10, 'active', '2025-09-04 14:52:46'),
-(237, '1', 'Atenolol 50mg', 'Lonet 50 Tablets', 100, 337, 3.37, 5, 33, 'active', '2025-09-04 14:52:46'),
-(238, '1', 'Atorvastatin 20mg ', 'Avastatin 20 Tablets', 28, 304, 10.86, 20, 9, 'active', '2025-09-04 14:52:46'),
-(239, '1', 'Atorvastatin 20mg ', 'Atsta*20 Tablets', 30, 170, 5.67, 15, 10, 'active', '2025-09-04 14:52:46'),
-(240, '1', 'Enalapril 10mg', 'Dawapril 10 Tablet', 100, 113, 1.13, 5, 33, 'active', '2025-09-04 14:52:46'),
-(241, '1', 'Enalapril 5mg', 'Dawapril 5 Tablet', 100, 123, 1.23, 5, 33, 'active', '2025-09-04 14:52:46'),
-(242, '1', 'Co-trimoxazole 480mg Tablets', 'CO-TRI 480 Tablets', 100, 149, 1.49, 5, 33, 'active', '2025-09-04 14:52:46'),
-(243, '1', 'Co-trimoxazole 960mg Tablets', 'Co-trimoxazole 960 Tablets', 100, 485, 4.85, 10, 33, 'active', '2025-09-04 14:52:46'),
-(244, '1', 'Blood Lancets', 'Blood Lancets Pieces', 100, 174, 1.74, 300, 33, 'active', '2025-09-04 14:52:46'),
-(245, '1', 'Benzyl Benzoate Application 25%', 'Scabees Application, 100mL', 1, 210, 210.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(246, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 75MG', 1, 120, 120.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(247, '1', 'Toothpaste', 'ELEDENT TOOTHPASTE, 150MG', 1, 220, 220.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(248, '1', 'Calcium Antiacids', 'ENO Tablets (Pairs)', 100, 595, 5.95, 20, 33, 'active', '2025-09-04 14:52:46'),
-(249, '1', 'Touch ang Go', 'Touch and Go', 1, 220, 220.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(250, '1', 'Hydrocortisone Ointment 1% w/w', 'ELYCORT 15G OINTMENT', 1, 62, 62.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(251, '1', 'Hydrocortisone Cream 1% w/w', 'ELYCORT 15G CREAM', 1, 66, 66.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(252, '1', 'Neomycin 5mg/Bacitracin 2.5mg/Gramicidin 0.5mg Powder', 'GRABACIN POWDER 10GM', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(253, '1', 'Neomycin 5mg/Bacitracin 250 IU', 'NEBANOL POWDER 5MG', 1, 59, 59.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(254, '1', 'Neomycin 3.5mg/Bacitracin 5000 units/Bacitracin 500 units', 'GRABACIN 3 Ointment', 1, 255, 255.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(255, '1', 'Hydrocortisone Ointment 1% w/w', 'HYDROTOPIC Ointment 15g Tube', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(256, '1', 'Condoms', 'Kiss Classic Condoms, 3s', 24, 627, 26.13, 50, 8, 'active', '2025-09-04 14:52:46'),
-(257, '1', 'Condoms', 'Kiss Strawberry Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
-(258, '1', 'Condoms', 'Kiss Studded Condoms, 3s', 24, 892, 37.17, 100, 8, 'active', '2025-09-04 14:52:46'),
-(259, '1', 'Condoms', 'Kiss Chocolate Condoms, 3s', 24, 826, 34.42, 100, 8, 'active', '2025-09-04 14:52:46'),
-(260, '1', 'Condoms', 'Durex Fetherlite Ultra, 3s', 1, 337, 337.00, 550, 1, 'active', '2025-09-04 14:52:46'),
-(261, '1', 'Condoms', 'Durex Extra Safe, 3s', 1, 302, 302.00, 400, 1, 'active', '2025-09-04 14:52:46'),
-(262, '1', 'Condoms', 'TRUST RIBBED, 3s', 24, 920, 38.33, 100, 8, 'active', '2025-09-04 14:52:46'),
-(263, '1', 'Condoms', 'TRUST CLASSIC, 3s', 24, 600, 25.00, 50, 8, 'active', '2025-09-04 14:52:46'),
-(264, '1', 'Condoms', 'TRUST STUDDED, 3s', 24, 900, 37.50, 100, 8, 'active', '2025-09-04 14:52:46'),
-(265, '1', 'Bandages', 'Crepe Bandage Spandex 5cm', 1, 18, 18.00, 30, 1, 'active', '2025-09-04 14:52:46'),
-(266, '1', 'Bandages', 'Crepe Bandage Spandex 7.5cm', 1, 29, 29.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(267, '1', 'Bandages', 'Crepe Bandage Spandex 15cm', 1, 49, 49.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(268, '1', 'Bandages', 'Crepe Bandage Spandex 10cm', 1, 46, 46.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(269, '1', 'Diclofenac Gel 1%', 'DICLOGEN 1% GEL', 1, 19, 19.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(270, '1', 'Clotrimazole 1% w/w/Beclomethasone Dipropionate 0.025% w/w', 'Bulkot-B Cream', 1, 51, 51.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(271, '1', 'Betamethasone Dipropionate, Gentamicin & Clotrimazole  Cream', 'Xtraderm Cream', 1, 126, 126.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(272, '1', 'Clotrimazole 10.0% w/w/Betamethasone 0.5mg', 'Clozole-B Cream', 1, 72, 72.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(273, '1', 'Clotrimazole 1.0% w/w', 'Clozole Cream', 1, 28, 28.00, 70, 1, 'active', '2025-09-04 14:52:46'),
-(274, '1', 'Hydrocortisone Cream 1% w/w', 'OLCORT 15G Cream', 1, 28, 28.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(275, '1', 'Beclomethasone 0.025%, Miconazole 2%, Neomycin Sulphate 0.5% Chlorocresol 0.25%', 'Beclomin Ointment 15g', 1, 150, 150.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(276, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Ointment 15g', 1, 76, 76.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(277, '1', 'Betamethasone Valerate 0.1% w/w', 'MEDIVEN Cream 15g', 1, 45, 45.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(278, '1', 'Betamethasone Valerate 0.1% w/w/Salicylic acid 3% w/w', 'MEDIVEN-S Ointment 15g', 1, 180, 180.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(279, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 15g', 1, 40, 40.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(280, '1', 'Calamine Lotion', 'COVIGEN Calamine Lotion, 100mL', 1, 29, 29.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(281, '1', 'Surgical Spirit 70% v/v', 'COVIGEN Surgical Spirit, 50mL', 1, 26, 26.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(282, '1', 'Povidone-Iodine USP 10% w/v', 'FAHOLO POVIDONE IODINE, 50mL', 1, 50, 50.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(283, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 100g', 1, 169, 169.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(284, '1', 'Silver Sulfadiazine 1% w/w', 'Dermazine Cream 1% w/w, Dawa, 250g', 1, 308, 308.00, 500, 1, 'active', '2025-09-04 14:52:46'),
-(285, '1', 'Chlorine 3.5% w/v', 'FAHOLO Sodium Hypochlorite 3.5% w/v', 1, 300, 300.00, 450, 1, 'active', '2025-09-04 14:52:46'),
-(286, '1', 'Sterile Paraffin Dressing ', 'Sterifin Dressing Gauze, 10x10', 10, 287, 28.70, 50, 3, 'active', '2025-09-04 14:52:46'),
-(287, '1', 'Sodium Bicarbonate 300mg ', 'SodaMint Tablets', 100, 87, 0.87, 5, 33, 'active', '2025-09-04 14:52:46'),
-(288, '1', 'Indomethacin 25mg', 'Caredomet 25mg Capsules, Indocid', 100, 80, 0.80, 3, 33, 'active', '2025-09-04 14:52:46'),
-(289, '1', 'Esomeprazole 20mg', 'ESOMAC 20', 28, 789, 28.18, 35, 9, 'active', '2025-09-04 14:52:46'),
-(290, '1', 'Esomeprazole 20mg', 'ESOMAC 40', 14, 745, 53.21, 70, 5, 'active', '2025-09-04 14:52:46'),
-(291, '1', 'Albendazole 400mg', 'Zentel 400 Tablet', 1, 190, 190.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(292, '1', 'Ketoconazole 2% w/v', 'Hitoral  Shampoo, 100mL', 1, 316, 316.00, 500, 1, 'active', '2025-09-04 14:52:46'),
-(293, '1', 'Ivermectin BP 6mg', 'Iverkot-6', 10, 2100, 210.00, 250, 3, 'active', '2025-09-04 14:52:46'),
-(294, '1', 'Lidocaine HCl/Cetylpyridinium', 'Dentinox 10g', 2, 646, 323.00, 900, 1, 'active', '2025-09-04 14:52:46'),
-(295, '1', 'Trimetabol', 'Trimetabol Solution', 1, 750, 750.00, 1100, 1, 'active', '2025-09-04 14:52:46'),
-(296, '1', 'Diclofenac/Linseed/Methyl Salicylate/Racementhol/Benzyl Alcohol', 'VOLINI GEL, 100MG', 1, 218, 218.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(297, '1', 'Good Morning Lung Tonic', 'Good Morning, 60mL', 1, 76, 76.00, 130, 1, 'active', '2025-09-04 14:52:46'),
-(298, '1', 'Kofgon Red', 'KOFGON Syr, 60mL', 1, 25, 25.00, 50, 1, 'active', '2025-09-04 14:52:46'),
-(299, '1', 'Tricohist ', 'Tricohist, 100mL', 1, 108, 108.00, 180, 1, 'active', '2025-09-04 14:52:46'),
-(300, '1', 'Tricohist ', 'Tricohist, 60mL', 1, 95, 95.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(301, '1', 'Diphenhydramine 10mg/Promethazine 5mg/Ammonium Chloride 180mg', 'Tripozed, Expectorant, 100mL', 1, 41, 41.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(302, '1', 'Diclofenac Sodium Slow Release 100mg', 'Diclomol SR 100mg, Tablets', 100, 435, 4.35, 10, 33, 'active', '2025-09-04 14:52:46'),
-(303, '1', 'Tretinoine 0.05% w/w', 'Acnesol Cream, 25g', 1, 153, 153.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(304, '1', 'Telmisartan 80mg/Amlodipine 5mg', 'AMTEL 80/5 Tabs', 30, 2000, 66.67, 80, 10, 'active', '2025-09-04 14:52:46'),
-(305, '1', 'Sulfadoxine/Pyrimethamine', 'Malodar Tbalets, 3s', 1, 40, 40.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(306, '1', 'Flucloxacillin/Amoxicillin 250mg/5mL', 'MoxaForte Suspension, 100mL', 1, 265, 265.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(307, '1', 'Sensodyne Toothpaste', 'Sensodyne Multicare, 40mL', 1, 241, 241.00, 350, 1, 'active', '2025-09-04 14:52:46'),
-(308, '1', 'Sildenafil 100mg/5g', 'KAMAGRA ORAL JELLY 100MG', 1, 660, 660.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(309, '1', 'aceclofenac/Paracetamol/Chlorzoxazone', 'ACETAL MR Tablets', 10, 519, 51.90, 15, 3, 'active', '2025-09-04 14:52:46'),
-(310, '1', 'Canullas G22 (Blue)', 'Canullas G22 (Blue)', 1, 13, 13.00, 30, 1, 'active', '2025-09-04 14:52:46'),
-(311, '1', 'Canullas G24(Yellow)', 'Canullas G24(Yellow)', 1, 14, 14.00, 30, 1, 'active', '2025-09-04 14:52:46'),
-(312, '1', 'FloraNorm Satchets', 'FloraNorm Satchets', 10, 870, 87.00, 130, 3, 'active', '2025-09-04 14:52:46'),
-(313, '1', 'Amoxicillin 1g/Clavulanate 200mg', 'GAMOK Injection, Vial', 1, 125, 125.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(314, '1', 'Insulin Syringes, 0.5mL', 'Insulin Syringes, 0.5mL', 10, 205, 20.50, 30, 3, 'active', '2025-09-04 14:52:46'),
-(315, '1', 'Insulin Syringes, 1mL', 'Insulin Syringes, 1mL', 10, 200, 20.00, 30, 3, 'active', '2025-09-04 14:52:46'),
-(316, '1', 'Diclofenac/Paracetamol/Chlorzoxazone', 'LOBAK Tablets, 100s', 100, 969, 9.69, 15, 33, 'active', '2025-09-04 14:52:46'),
-(317, '1', 'Tranexamic Acid 500mg/5mL', 'MENOZIP INJ, 500mg/5mL', 5, 461, 92.20, 150, 2, 'active', '2025-09-04 14:52:46'),
-(318, '1', 'Carbocisteine 100mg', 'NASITHIOL INFANT, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(319, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 100mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(320, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'NASITHIOL PROM, 60mL', 1, 56, 56.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(321, '1', 'Needle G21', 'Needle G21', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
-(322, '1', 'Needle G23', 'Needle G23', 100, 128, 1.28, 5, 33, 'active', '2025-09-04 14:52:46'),
-(323, '1', 'Omeprazole Inj 40mg', 'Ompac 40mg', 1, 60, 60.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(324, '1', 'Ondasetron 4mg/2mL', 'ONDEX 4MG', 5, 431, 86.20, 150, 2, 'active', '2025-09-04 14:52:46'),
-(325, '1', 'Dihydroartemisinin 40mg/Piperaquine 320mg', 'P-ALAXIN 9S', 1, 175, 175.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(326, '1', 'Paracetamol/Codeine Phosphate/Doxylamine, Caffeine', 'TAMEPYN, 20S', 20, 215, 10.75, 15, 7, 'active', '2025-09-04 14:52:46'),
-(327, '1', 'Lubricating Jelly', 'Veri-Lube, 42g', 1, 117, 117.00, 280, 1, 'active', '2025-09-04 14:52:46'),
-(328, '1', 'Carbocisteine 100mg/Promethazine 2.5mg', 'Vithiol Syrup, 125mg', 1, 130, 130.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(329, '1', 'Timolol Eye Drops 0.5%', 'TIMOGLAX EYE DROPS, 5mL', 1, 67, 67.00, 150, 1, 'active', '2025-09-04 14:52:46'),
-(330, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, LEMON', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
-(331, '1', 'Herbal Cough Lozenges', 'ZECUF LOZENGES, ORANGE', 20, 185, 9.25, 30, 7, 'active', '2025-09-04 14:52:46'),
-(332, '1', 'Miconazole Nitrate 2%w/w', 'MUCOBEN CREAM', 1, 30, 30.00, 100, 1, 'active', '2025-09-04 14:52:46'),
-(333, '1', 'Medicated Soap', 'TETMOSOL Medicated Soap', 1, 95, 95.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(334, '1', 'Strepsils', 'Strepsils Soothing, Honey & Lemon', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
-(335, '1', 'Strepsils', 'Strepsils Regular', 100, 1300, 13.00, 50, 33, 'active', '2025-09-04 14:52:46'),
-(336, '1', 'Mupirocin Ointment 2%', 'Zupricin Ointment, 15g', 1, 505.5, 505.50, 750, 1, 'active', '2025-09-04 14:52:46'),
-(337, '1', 'Mupirocin 2%/Betamethasone 0.5% Ointment', 'Zupricin B Ointment, 15g', 1, 625.5, 625.50, 850, 1, 'active', '2025-09-04 14:52:46'),
-(338, '1', 'Anti-Rabies Vaccine', 'Anti-Rabies Vaccine, Vial', 3, 800, 266.67, 1200, 1, 'active', '2025-09-04 14:52:46'),
-(339, '1', 'Vitamin B Complex', 'Neurobion Forte Tablets', 1, 3, 3.00, 10, 1, 'active', '2025-09-04 14:52:46'),
-(340, '1', 'Insulin 70/30', 'Mixtard 30, Vial', 1, 500, 500.00, 700, 1, 'active', '2025-09-04 14:52:46'),
-(341, '1', 'Bisacodyl 5mg', 'Bicolex 5, Tablets', 100, 187, 1.87, 5, 33, 'active', '2025-09-04 14:52:46'),
-(342, '1', 'Clindamycin 300mg', 'Clindacin-300 Capsules', 1, 135, 135.00, 250, 1, 'active', '2025-09-04 14:52:46'),
-(343, '1', 'Diloxanide 250mg/Metronidazole 200mg/Dicyclomine 10mg', 'Entamaxin Capsules,', 1, 190, 190.00, 300, 1, 'active', '2025-09-04 14:52:46'),
-(344, '1', 'Fluconazole 200mg ', 'Diconazol 200mg Tablets', 100, 1086, 10.86, 15, 33, 'active', '2025-09-04 14:52:46'),
-(345, '1', 'Crotamiton+Sulphur', 'Scabion Cream, 20g', 1, 135, 135.00, 200, 1, 'active', '2025-09-04 14:52:46'),
-(346, '1', 'Surgical Masks', 'Surgical Mask', 50, 150, 3.00, 10, 17, 'active', '2025-09-04 14:52:46'),
-(347, '1', 'MENTHO PLUS BALM', 'EMAMI MENTHO PLUS', 1, 41, 41.00, 80, 1, 'active', '2025-09-04 14:52:46'),
-(348, '1', 'Albendazole 400mg', 'NILWORM 400MG, TABLET', 1, 9, 9.00, 50, 1, 'active', '2025-09-04 14:52:46'),
 (349, '1', 'Albendazole 400mg/10mL', 'TANZOL SUSPENSION', 1, 18, 18.00, 50, 1, 'active', '2025-09-04 14:52:46');
 
 -- --------------------------------------------------------
@@ -6378,7 +6812,7 @@ INSERT IGNORE INTO `products` (`id`, `category`, `productname`, `brandname`, `pa
 -- Table structure for table `psychiatric_encounters`
 --
 
-CREATE TABLE IF NOT EXISTS `psychiatric_encounters` (
+CREATE TABLE `psychiatric_encounters` (
   `id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6429,10 +6863,39 @@ CREATE TABLE IF NOT EXISTS `psychiatric_encounters` (
 -- Table structure for table `psychiatric_rx_problems`
 --
 
-CREATE TABLE IF NOT EXISTS `psychiatric_rx_problems` (
+CREATE TABLE `psychiatric_rx_problems` (
   `problem_id` int NOT NULL,
   `problem_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `psychiatric_rx_problems`
+--
+
+INSERT IGNORE INTO `psychiatric_rx_problems` (`problem_id`, `problem_name`) VALUES
+(1, 'No identified mental health problem'),
+(2, 'Anxiety symptoms'),
+(3, 'Depression symptoms'),
+(4, 'Psychotic symptoms'),
+(5, 'Bipolar/manic symptoms'),
+(6, 'Trauma/PTSD symptoms'),
+(7, 'Suicidal thoughts/ideation'),
+(8, 'Self-harm history'),
+(9, 'Sleep problems'),
+(10, 'Cognitive/functional difficulties'),
+(11, 'Behavioral problems'),
+(12, 'Substance-induced psychiatric symptoms'),
+(13, 'Not receiving psychiatric treatment'),
+(14, 'Currently receiving treatment'),
+(15, 'Previously received treatment'),
+(16, 'Referred for psychiatric assessment'),
+(17, 'Awaiting psychiatric assessment'),
+(18, 'On psychiatric medication'),
+(19, 'Medication adherence problem'),
+(20, 'Discontinued psychiatric medication'),
+(21, 'Missed psychiatric appointments'),
+(22, 'Requires urgent psychiatric assessment'),
+(23, 'Other');
 
 -- --------------------------------------------------------
 
@@ -6440,7 +6903,7 @@ CREATE TABLE IF NOT EXISTS `psychiatric_rx_problems` (
 -- Table structure for table `psychodar`
 --
 
-CREATE TABLE IF NOT EXISTS `psychodar` (
+CREATE TABLE `psychodar` (
   `dar_id` int NOT NULL,
   `visitDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `visit_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6480,7 +6943,7 @@ CREATE TABLE IF NOT EXISTS `psychodar` (
 -- Table structure for table `psychosocial_intake_form_1a`
 --
 
-CREATE TABLE IF NOT EXISTS `psychosocial_intake_form_1a` (
+CREATE TABLE `psychosocial_intake_form_1a` (
   `id` int NOT NULL,
   `visitDate` date DEFAULT NULL,
   `visit_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6549,10 +7012,38 @@ CREATE TABLE IF NOT EXISTS `psychosocial_intake_form_1a` (
 -- Table structure for table `psychosocial_interventions`
 --
 
-CREATE TABLE IF NOT EXISTS `psychosocial_interventions` (
+CREATE TABLE `psychosocial_interventions` (
   `intervention_id` int NOT NULL,
   `intervention_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `psychosocial_interventions`
+--
+
+INSERT IGNORE INTO `psychosocial_interventions` (`intervention_id`, `intervention_name`) VALUES
+(1, 'Routine psychosocial follow-up'),
+(2, 'Initial psychosocial assessment'),
+(3, 'Treatment adherence support'),
+(4, 'Methadone adherence support'),
+(5, 'Missed dose follow-up'),
+(6, 'Missed appointment follow-up'),
+(7, 'Relapse prevention'),
+(8, 'Substance use counseling'),
+(9, 'Craving management'),
+(10, 'Mental health follow-up'),
+(11, 'Family counseling'),
+(12, 'Relationship/family support'),
+(13, 'Parenting support'),
+(14, 'Legal support'),
+(15, 'Housing support'),
+(16, 'Employment/livelihood support'),
+(17, 'Financial/social support'),
+(18, 'Stigma/discrimination support'),
+(19, 'Violence/safety assessment'),
+(20, 'Reintegration/community support'),
+(21, 'Crisis intervention'),
+(22, 'Other');
 
 -- --------------------------------------------------------
 
@@ -6560,10 +7051,27 @@ CREATE TABLE IF NOT EXISTS `psychosocial_interventions` (
 -- Table structure for table `psychosocial_outcomes`
 --
 
-CREATE TABLE IF NOT EXISTS `psychosocial_outcomes` (
+CREATE TABLE `psychosocial_outcomes` (
   `psyc_outcome_id` int NOT NULL,
   `outcome_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `psychosocial_outcomes`
+--
+
+INSERT IGNORE INTO `psychosocial_outcomes` (`psyc_outcome_id`, `outcome_name`) VALUES
+(1, 'Continue routine follow-up'),
+(2, 'Increased follow-up frequency'),
+(3, 'Counseling provided'),
+(4, 'Treatment plan updated'),
+(5, 'Family involved'),
+(6, 'Referred'),
+(7, 'Linked to service'),
+(8, 'Follow-up appointment scheduled'),
+(9, 'Case closed'),
+(10, 'Client lost to follow-up'),
+(11, 'Other');
 
 -- --------------------------------------------------------
 
@@ -6571,10 +7079,27 @@ CREATE TABLE IF NOT EXISTS `psychosocial_outcomes` (
 -- Table structure for table `psycho_followup_visits`
 --
 
-CREATE TABLE IF NOT EXISTS `psycho_followup_visits` (
+CREATE TABLE `psycho_followup_visits` (
   `visit_id` int NOT NULL,
   `followup_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `psycho_followup_visits`
+--
+
+INSERT IGNORE INTO `psycho_followup_visits` (`visit_id`, `followup_name`) VALUES
+(1, 'Initial visit'),
+(2, 'Followup visit 1'),
+(3, 'Followup visit 2'),
+(4, 'Followup visit 3'),
+(5, 'Followup visit 4'),
+(6, 'Followup visit 5'),
+(7, 'Followup visit 6'),
+(8, 'Followup visit 7'),
+(9, 'Followup visit 8'),
+(10, 'Followup visit 9'),
+(11, 'Followup visit -other ');
 
 -- --------------------------------------------------------
 
@@ -6582,7 +7107,7 @@ CREATE TABLE IF NOT EXISTS `psycho_followup_visits` (
 -- Table structure for table `pump_calibration`
 --
 
-CREATE TABLE IF NOT EXISTS `pump_calibration` (
+CREATE TABLE `pump_calibration` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `calibration_factor` decimal(10,2) NOT NULL,
@@ -6609,7 +7134,7 @@ CREATE TABLE IF NOT EXISTS `pump_calibration` (
 -- Table structure for table `pump_devices`
 --
 
-CREATE TABLE IF NOT EXISTS `pump_devices` (
+CREATE TABLE `pump_devices` (
   `id` int NOT NULL,
   `label` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `port` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6619,13 +7144,20 @@ CREATE TABLE IF NOT EXISTS `pump_devices` (
   `api_secret` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'Shared secret for the local pump API on client machines'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pump_devices`
+--
+
+INSERT IGNORE INTO `pump_devices` (`id`, `label`, `port`, `created_at`, `pump_host`, `is_reversed`, `api_secret`) VALUES
+(1, 'Pump A', 'COM3', '2025-12-22 09:50:48', 'localhost', 0, '');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `pump_reservoir_history`
 --
 
-CREATE TABLE IF NOT EXISTS `pump_reservoir_history` (
+CREATE TABLE `pump_reservoir_history` (
   `id` int NOT NULL,
   `pump_id` int NOT NULL,
   `milligrams` decimal(10,2) NOT NULL,
@@ -6641,7 +7173,7 @@ CREATE TABLE IF NOT EXISTS `pump_reservoir_history` (
 -- Table structure for table `referral`
 --
 
-CREATE TABLE IF NOT EXISTS `referral` (
+CREATE TABLE `referral` (
   `referral_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6665,10 +7197,38 @@ CREATE TABLE IF NOT EXISTS `referral` (
 -- Table structure for table `referral_linkage_services`
 --
 
-CREATE TABLE IF NOT EXISTS `referral_linkage_services` (
+CREATE TABLE `referral_linkage_services` (
   `ref_id` int NOT NULL,
   `ref_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `referral_linkage_services`
+--
+
+INSERT IGNORE INTO `referral_linkage_services` (`ref_id`, `ref_name`) VALUES
+(1, 'Mental health/psychiatric services'),
+(2, 'Medical services'),
+(3, 'HIV care and treatment'),
+(4, 'TB services'),
+(5, 'Hepatitis services'),
+(6, 'Sexual and reproductive health'),
+(7, 'STI services'),
+(8, 'Gender-based violence services'),
+(9, 'Substance use treatment'),
+(10, 'Inpatient rehabilitation'),
+(11, 'Emergency/crisis services'),
+(12, 'Legal services'),
+(13, 'Child protection services'),
+(14, 'Social protection services'),
+(15, 'Housing/shelter services'),
+(16, 'Education services'),
+(17, 'Vocational training'),
+(18, 'Employment/livelihood services'),
+(19, 'Family/social services'),
+(20, 'Community-based organization'),
+(21, 'Peer support group'),
+(22, 'Other');
 
 -- --------------------------------------------------------
 
@@ -6676,7 +7236,7 @@ CREATE TABLE IF NOT EXISTS `referral_linkage_services` (
 -- Table structure for table `regimens`
 --
 
-CREATE TABLE IF NOT EXISTS `regimens` (
+CREATE TABLE `regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -6701,7 +7261,7 @@ INSERT IGNORE INTO `regimens` (`regimen_id`, `regimen_name`, `date_created`) VAL
 -- Table structure for table `regimen_type`
 --
 
-CREATE TABLE IF NOT EXISTS `regimen_type` (
+CREATE TABLE `regimen_type` (
   `regimen_id` int NOT NULL,
   `regimen_type_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -6715,10 +7275,6 @@ INSERT IGNORE INTO `regimen_type` (`regimen_id`, `regimen_type_name`, `date_crea
 (6, 'First Line', '2024-04-30 13:37:40'),
 (7, 'Second Line', '2024-04-30 13:38:01'),
 (8, 'Third Line', '2024-04-30 13:38:11'),
-(9, 'None', '2024-04-30 13:38:15'),
-(6, 'First Line', '2024-04-30 13:37:40'),
-(7, 'Second Line', '2024-04-30 13:38:01'),
-(8, 'Third Line', '2024-04-30 13:38:11'),
 (9, 'None', '2024-04-30 13:38:15');
 
 -- --------------------------------------------------------
@@ -6727,7 +7283,7 @@ INSERT IGNORE INTO `regimen_type` (`regimen_id`, `regimen_type_name`, `date_crea
 -- Table structure for table `reintegration_status`
 --
 
-CREATE TABLE IF NOT EXISTS `reintegration_status` (
+CREATE TABLE `reintegration_status` (
   `reint_id` int NOT NULL,
   `reint_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -6754,7 +7310,7 @@ INSERT IGNORE INTO `reintegration_status` (`reint_id`, `reint_name`) VALUES
 -- Table structure for table `religion`
 --
 
-CREATE TABLE IF NOT EXISTS `religion` (
+CREATE TABLE `religion` (
   `id` int NOT NULL,
   `religion_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -6767,7 +7323,29 @@ INSERT IGNORE INTO `religion` (`id`, `religion_name`) VALUES
 (1, 'Muslim'),
 (2, 'Christiam'),
 (3, 'Hindu'),
-(4, 'Other');
+(4, 'Other'),
+(5, 'Atheist');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schema_migrations`
+--
+
+CREATE TABLE `schema_migrations` (
+  `id` int NOT NULL,
+  `migration` varchar(190) NOT NULL,
+  `applied_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `schema_migrations`
+--
+
+INSERT IGNORE INTO `schema_migrations` (`id`, `migration`, `applied_at`) VALUES
+(1, '001_tb_regimens_3rhze.php', '2026-10-20 19:48:04'),
+(2, '002_pharmacy_conversion_and_bup_tables.php', '2026-10-20 19:48:04'),
+(3, '003_update_tracking_tables.php', '2026-10-20 19:50:38');
 
 -- --------------------------------------------------------
 
@@ -6775,7 +7353,7 @@ INSERT IGNORE INTO `religion` (`id`, `religion_name`) VALUES
 -- Table structure for table `seq_0_to_30`
 --
 
-CREATE TABLE IF NOT EXISTS `seq_0_to_30` (
+CREATE TABLE `seq_0_to_30` (
   `seq` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -6823,7 +7401,7 @@ INSERT IGNORE INTO `seq_0_to_30` (`seq`) VALUES
 -- Table structure for table `status`
 --
 
-CREATE TABLE IF NOT EXISTS `status` (
+CREATE TABLE `status` (
   `status_id` int NOT NULL,
   `status_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6852,7 +7430,7 @@ INSERT IGNORE INTO `status` (`status_id`, `status_name`, `descr`, `date_created`
 -- Table structure for table `statushistory`
 --
 
-CREATE TABLE IF NOT EXISTS `statushistory` (
+CREATE TABLE `statushistory` (
   `status_id` int NOT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `sex` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6870,7 +7448,7 @@ CREATE TABLE IF NOT EXISTS `statushistory` (
 -- Table structure for table `stocks`
 --
 
-CREATE TABLE IF NOT EXISTS `stocks` (
+CREATE TABLE `stocks` (
   `stockID` int NOT NULL,
   `drugID` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -6895,7 +7473,7 @@ CREATE TABLE IF NOT EXISTS `stocks` (
 -- Table structure for table `stock_movements`
 --
 
-CREATE TABLE IF NOT EXISTS `stock_movements` (
+CREATE TABLE `stock_movements` (
   `trans_id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `drugID` int NOT NULL,
@@ -6963,7 +7541,7 @@ DELIMITER ;
 -- Table structure for table `stores_inventory`
 --
 
-CREATE TABLE IF NOT EXISTS `stores_inventory` (
+CREATE TABLE `stores_inventory` (
   `inventory_id` int NOT NULL,
   `drugID` int DEFAULT NULL,
   `drugname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -6982,7 +7560,7 @@ CREATE TABLE IF NOT EXISTS `stores_inventory` (
 -- Table structure for table `sub_counties`
 --
 
-CREATE TABLE IF NOT EXISTS `sub_counties` (
+CREATE TABLE `sub_counties` (
   `sub_county_id` int NOT NULL,
   `sub_county_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `county_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7294,7 +7872,8 @@ INSERT IGNORE INTO `sub_counties` (`sub_county_id`, `sub_county_name`, `county_n
 (298, 'Central Pokot', 'West Pokot', '2025-01-10 00:00:00'),
 (299, 'North Pokot', 'West Pokot', '2025-01-10 00:00:00'),
 (300, 'Pokot South', 'West Pokot', '2025-01-10 00:00:00'),
-(301, 'West Pokot', 'West Pokot', '2025-01-10 00:00:00');
+(301, 'West Pokot', 'West Pokot', '2025-01-10 00:00:00'),
+(302, 'LVCT Health Sub County', 'LVCT Health County', '2025-10-10 19:39:33');
 
 -- --------------------------------------------------------
 
@@ -7302,7 +7881,7 @@ INSERT IGNORE INTO `sub_counties` (`sub_county_id`, `sub_county_name`, `county_n
 -- Table structure for table `suppliers`
 --
 
-CREATE TABLE IF NOT EXISTS `suppliers` (
+CREATE TABLE `suppliers` (
   `supplier_id` int NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `contact_person` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7327,7 +7906,7 @@ INSERT IGNORE INTO `suppliers` (`supplier_id`, `name`, `contact_person`, `phone`
 -- Table structure for table `table_image`
 --
 
-CREATE TABLE IF NOT EXISTS `table_image` (
+CREATE TABLE `table_image` (
   `photo_id` int NOT NULL,
   `photo_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -7341,7 +7920,7 @@ CREATE TABLE IF NOT EXISTS `table_image` (
 -- Table structure for table `tblaccompanment`
 --
 
-CREATE TABLE IF NOT EXISTS `tblaccompanment` (
+CREATE TABLE `tblaccompanment` (
   `accompanmentID` int NOT NULL,
   `accompanmentType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7358,13 +7937,6 @@ INSERT IGNORE INTO `tblaccompanment` (`accompanmentID`, `accompanmentType`, `dat
 (4, 'Outreach worker', '2024-04-09 19:19:02'),
 (5, 'Other', '2024-04-09 19:19:14'),
 (6, 'None', '2024-04-13 17:56:29'),
-(7, 'Prison Warden', '2024-04-14 08:24:37'),
-(1, 'Parent', '2024-04-09 19:18:26'),
-(2, 'Partner', '2024-04-09 19:18:37'),
-(3, 'Friend', '2024-04-09 19:18:47'),
-(4, 'Outreach worker', '2024-04-09 19:19:02'),
-(5, 'Other', '2024-04-09 19:19:14'),
-(6, 'None', '2024-04-13 17:56:29'),
 (7, 'Prison Warden', '2024-04-14 08:24:37');
 
 -- --------------------------------------------------------
@@ -7373,7 +7945,7 @@ INSERT IGNORE INTO `tblaccompanment` (`accompanmentID`, `accompanmentType`, `dat
 -- Table structure for table `tblcso`
 --
 
-CREATE TABLE IF NOT EXISTS `tblcso` (
+CREATE TABLE `tblcso` (
   `cso_id` int NOT NULL,
   `cso_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7399,7 +7971,7 @@ INSERT IGNORE INTO `tblcso` (`cso_id`, `cso_name`, `description`, `date_created`
 -- Table structure for table `tblgender`
 --
 
-CREATE TABLE IF NOT EXISTS `tblgender` (
+CREATE TABLE `tblgender` (
   `gender_id` int NOT NULL,
   `gender_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7418,7 +7990,7 @@ INSERT IGNORE INTO `tblgender` (`gender_id`, `gender_name`) VALUES
 -- Table structure for table `tblreferral`
 --
 
-CREATE TABLE IF NOT EXISTS `tblreferral` (
+CREATE TABLE `tblreferral` (
   `referralID` int NOT NULL,
   `referralType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7443,7 +8015,7 @@ INSERT IGNORE INTO `tblreferral` (`referralID`, `referralType`, `date_created`) 
 -- Table structure for table `tblusers`
 --
 
-CREATE TABLE IF NOT EXISTS `tblusers` (
+CREATE TABLE `tblusers` (
   `user_id` int NOT NULL,
   `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7455,7 +8027,7 @@ CREATE TABLE IF NOT EXISTS `tblusers` (
   `photo` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `userrole` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `full_name` varchar(100),
+  `full_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `must_change_password` tinyint(1) NOT NULL DEFAULT '0',
   `is_demo` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7464,8 +8036,8 @@ CREATE TABLE IF NOT EXISTS `tblusers` (
 -- Dumping data for table `tblusers`
 --
 
-INSERT IGNORE INTO `tblusers` (`user_id`, `username`, `first_name`, `last_name`, `email`, `password`, `gender`, `mobile`, `photo`, `userrole`, `date_created`, `must_change_password`, `is_demo`) VALUES
-(56, 'sysadmin', 'Lyani', 'Sitti', 'lyani.sitti@lvcthealth.org', '$2a$12$C9EijEgdHdJWRCaGdjQ0XuRBrJNbOosXTJKPukGQkt/ywixd8yZHm', 'Male', '0722427721', '', 'Admin', '2026-09-14 10:10:42', 0, 0);
+INSERT IGNORE INTO `tblusers` (`user_id`, `username`, `first_name`, `last_name`, `email`, `password`, `gender`, `mobile`, `photo`, `userrole`, `date_created`, `full_name`, `must_change_password`, `is_demo`) VALUES
+(1, 'sysadmin', 'Lyani', 'Sitti', 'superuser@gmail.com', '$2a$12$NgLcRX3Di/Nmp/NHxckY3ePnICRJICwuHAOXJqTcfXd0IjCL3Ojia', 'Male', '0722427721', NULL, 'Admin', '2026-01-21 17:10:44', 'Lyani Sitti', 0, 0);
 
 --
 -- Triggers `tblusers`
@@ -7495,7 +8067,7 @@ DELIMITER ;
 -- Table structure for table `tbl_hiv_status`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_hiv_status` (
+CREATE TABLE `tbl_hiv_status` (
   `status_id` int NOT NULL,
   `hiv_status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7509,9 +8081,6 @@ CREATE TABLE IF NOT EXISTS `tbl_hiv_status` (
 INSERT IGNORE INTO `tbl_hiv_status` (`status_id`, `hiv_status_name`, `description`, `date_created`) VALUES
 (1, 'Positive', 'Patients who test positive for antibody or antigen test', '2024-04-14 19:13:05'),
 (2, 'Negative', 'Patients who tested negative for serology test algorithym', '2024-04-14 19:13:50'),
-(3, 'Unknown', 'Patients who have not tested for HIV serology', '2024-04-14 19:14:31'),
-(1, 'Positive', 'Patients who test positive for antibody or antigen test', '2024-04-14 19:13:05'),
-(2, 'Negative', 'Patients who tested negative for serology test algorithym', '2024-04-14 19:13:50'),
 (3, 'Unknown', 'Patients who have not tested for HIV serology', '2024-04-14 19:14:31');
 
 -- --------------------------------------------------------
@@ -7520,7 +8089,7 @@ INSERT IGNORE INTO `tbl_hiv_status` (`status_id`, `hiv_status_name`, `descriptio
 -- Table structure for table `tb_regimens`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_regimens` (
+CREATE TABLE `tb_regimens` (
   `regimen_id` int NOT NULL,
   `regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7536,7 +8105,8 @@ INSERT IGNORE INTO `tb_regimens` (`regimen_id`, `regimen_name`) VALUES
 (4, '4 Km/Mfx/Pto/Cfz/H-Inh/Z/E'),
 (5, '5 Mfx/Cfz//Z/E'),
 (6, '15 R/Z/Lfx'),
-(7, '4 RHZE');
+(7, '4 RHZE'),
+(8, '3 RHZE');
 
 -- --------------------------------------------------------
 
@@ -7544,7 +8114,7 @@ INSERT IGNORE INTO `tb_regimens` (`regimen_id`, `regimen_name`) VALUES
 -- Table structure for table `tb_status`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_status` (
+CREATE TABLE `tb_status` (
   `status_id` int NOT NULL,
   `status_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP
@@ -7557,9 +8127,6 @@ CREATE TABLE IF NOT EXISTS `tb_status` (
 INSERT IGNORE INTO `tb_status` (`status_id`, `status_name`, `date_created`) VALUES
 (1, 'Positive', '2024-04-14 19:44:15'),
 (2, 'Negative', '2024-04-14 19:44:21'),
-(3, 'Unknown', '2024-04-14 19:44:30'),
-(1, 'Positive', '2024-04-14 19:44:15'),
-(2, 'Negative', '2024-04-14 19:44:21'),
 (3, 'Unknown', '2024-04-14 19:44:30');
 
 -- --------------------------------------------------------
@@ -7568,7 +8135,7 @@ INSERT IGNORE INTO `tb_status` (`status_id`, `status_name`, `date_created`) VALU
 -- Table structure for table `temp_updates`
 --
 
-CREATE TABLE IF NOT EXISTS `temp_updates` (
+CREATE TABLE `temp_updates` (
   `p_id` int NOT NULL,
   `new_clientName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7579,7 +8146,7 @@ CREATE TABLE IF NOT EXISTS `temp_updates` (
 -- Table structure for table `toxicology_results`
 --
 
-CREATE TABLE IF NOT EXISTS `toxicology_results` (
+CREATE TABLE `toxicology_results` (
   `tox_id` int NOT NULL,
   `visitDate` datetime NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7620,7 +8187,7 @@ CREATE TABLE IF NOT EXISTS `toxicology_results` (
 -- Table structure for table `tpt_regimens`
 --
 
-CREATE TABLE IF NOT EXISTS `tpt_regimens` (
+CREATE TABLE `tpt_regimens` (
   `tpt_id` int NOT NULL,
   `tpt_regimen_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7641,7 +8208,7 @@ INSERT IGNORE INTO `tpt_regimens` (`tpt_id`, `tpt_regimen_name`) VALUES
 -- Table structure for table `transaction_types`
 --
 
-CREATE TABLE IF NOT EXISTS `transaction_types` (
+CREATE TABLE `transaction_types` (
   `id` int NOT NULL,
   `transactionType` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7663,7 +8230,7 @@ INSERT IGNORE INTO `transaction_types` (`id`, `transactionType`) VALUES
 -- Table structure for table `transfer_forms`
 --
 
-CREATE TABLE IF NOT EXISTS `transfer_forms` (
+CREATE TABLE `transfer_forms` (
   `id` int NOT NULL,
   `p_id` int NOT NULL,
   `facilityname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7711,7 +8278,7 @@ CREATE TABLE IF NOT EXISTS `transfer_forms` (
 -- Table structure for table `treatment_stage`
 --
 
-CREATE TABLE IF NOT EXISTS `treatment_stage` (
+CREATE TABLE `treatment_stage` (
   `stage_id` int NOT NULL,
   `stage_of_rx_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7735,7 +8302,7 @@ INSERT IGNORE INTO `treatment_stage` (`stage_id`, `stage_of_rx_name`) VALUES
 -- Table structure for table `triage_services`
 --
 
-CREATE TABLE IF NOT EXISTS `triage_services` (
+CREATE TABLE `triage_services` (
   `id` int NOT NULL,
   `patient_id` int NOT NULL,
   `clinician_id` int NOT NULL,
@@ -7773,10 +8340,59 @@ CREATE TABLE IF NOT EXISTS `triage_services` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `update_contacts`
+--
+
+CREATE TABLE `update_contacts` (
+  `id` int NOT NULL,
+  `facility_id` int DEFAULT NULL,
+  `facility_name` varchar(255) NOT NULL,
+  `mflcode` varchar(100) NOT NULL,
+  `contact_name` varchar(150) NOT NULL,
+  `email` varchar(190) NOT NULL,
+  `last_link_sent` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `update_contacts`
+--
+
+INSERT IGNORE INTO `update_contacts` (`id`, `facility_id`, `facility_name`, `mflcode`, `contact_name`, `email`, `last_link_sent`, `created_at`) VALUES
+(2, 938, 'Karuri Health Centre', '10507', 'Dr Elizabeth Muritu', 'murituelizabeth4711@gmail.com', '2026-10-20 20:36:09', '2026-10-20 17:26:02'),
+(3, 1783, 'Lamu County Referral Hospital', '11512', 'Dr Conrad Nyabono', 'sittilyani@yahoo.com', '2026-10-21 09:57:41', '2026-10-20 17:28:07'),
+(4, 1059, 'Malindi District Hospital', '11555', 'Dr Taher', 'malindimatpharmacy@gmail.com', '2026-10-20 20:36:12', '2026-10-20 17:29:54'),
+(5, 1713, 'Kombani Mat Clinic', '23368', 'Dr Usra Mohammed', 'shimolatewamatclinic@gmail.com', '2026-10-20 20:36:13', '2026-10-20 17:31:39'),
+(6, 938, 'Karuri Health Centre', '10507', 'Dr Elizabeth Muritu', 'karurimatclinic@yahoo.com', '2026-10-20 20:36:14', '2026-10-20 17:32:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `update_reports`
+--
+
+CREATE TABLE `update_reports` (
+  `id` int NOT NULL,
+  `mflcode` varchar(100) NOT NULL,
+  `facility_name` varchar(255) NOT NULL,
+  `commit_sha` varchar(40) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `files_updated` int NOT NULL DEFAULT '0',
+  `files_added` int NOT NULL DEFAULT '0',
+  `migrations_applied` int NOT NULL DEFAULT '0',
+  `message` varchar(500) DEFAULT NULL,
+  `details` mediumtext,
+  `applied_at` datetime NOT NULL,
+  `received_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `userroles`
 --
 
-CREATE TABLE IF NOT EXISTS `userroles` (
+CREATE TABLE `userroles` (
   `id` int NOT NULL,
   `role` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `descr` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -7807,7 +8423,7 @@ INSERT IGNORE INTO `userroles` (`id`, `role`, `descr`) VALUES
 -- Table structure for table `viral_load`
 --
 
-CREATE TABLE IF NOT EXISTS `viral_load` (
+CREATE TABLE `viral_load` (
   `vl_id` int NOT NULL,
   `mat_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `clientName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7831,7 +8447,7 @@ CREATE TABLE IF NOT EXISTS `viral_load` (
 -- Table structure for table `voluntary_discontinuation`
 --
 
-CREATE TABLE IF NOT EXISTS `voluntary_discontinuation` (
+CREATE TABLE `voluntary_discontinuation` (
   `id` int NOT NULL,
   `visit_date` date NOT NULL,
   `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -7860,7 +8476,7 @@ CREATE TABLE IF NOT EXISTS `voluntary_discontinuation` (
 -- Table structure for table `yellow_card_visits`
 --
 
-CREATE TABLE IF NOT EXISTS `yellow_card_visits` (
+CREATE TABLE `yellow_card_visits` (
   `visit_id` int NOT NULL,
   `mat_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `consultation_date` date NOT NULL,
@@ -7931,6 +8547,14 @@ ALTER TABLE `administrationroutes`
 --
 ALTER TABLE `backup_log`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bin_card_entries`
+--
+ALTER TABLE `bin_card_entries`
+  ADD PRIMARY KEY (`entry_id`),
+  ADD KEY `idx_bin_drug_date` (`drugname`,`trans_date`),
+  ADD KEY `idx_bin_disp` (`disp_id`);
 
 --
 -- Indexes for table `categories`
@@ -8222,6 +8846,18 @@ ALTER TABLE `patients`
   ADD UNIQUE KEY `mat_id` (`mat_id`);
 
 --
+-- Indexes for table `patient_bup_formulation`
+--
+ALTER TABLE `patient_bup_formulation`
+  ADD PRIMARY KEY (`mat_id`);
+
+--
+-- Indexes for table `patient_checkins`
+--
+ALTER TABLE `patient_checkins`
+  ADD PRIMARY KEY (`checkin_id`);
+
+--
 -- Indexes for table `patient_drug_histories`
 --
 ALTER TABLE `patient_drug_histories`
@@ -8251,6 +8887,12 @@ ALTER TABLE `photos`
 ALTER TABLE `prescription_drugs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `prescription_id` (`prescription_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `psychiatric_encounters`
@@ -8326,6 +8968,12 @@ ALTER TABLE `regimens`
   ADD PRIMARY KEY (`regimen_id`);
 
 --
+-- Indexes for table `regimen_type`
+--
+ALTER TABLE `regimen_type`
+  ADD PRIMARY KEY (`regimen_id`);
+
+--
 -- Indexes for table `reintegration_status`
 --
 ALTER TABLE `reintegration_status`
@@ -8337,6 +8985,13 @@ ALTER TABLE `reintegration_status`
 --
 ALTER TABLE `religion`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `schema_migrations`
+--
+ALTER TABLE `schema_migrations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `migration` (`migration`);
 
 --
 -- Indexes for table `seq_0_to_30`
@@ -8389,6 +9044,12 @@ ALTER TABLE `suppliers`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+-- Indexes for table `tblaccompanment`
+--
+ALTER TABLE `tblaccompanment`
+  ADD PRIMARY KEY (`accompanmentID`);
+
+--
 -- Indexes for table `tblcso`
 --
 ALTER TABLE `tblcso`
@@ -8415,10 +9076,22 @@ ALTER TABLE `tblusers`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `tbl_hiv_status`
+--
+ALTER TABLE `tbl_hiv_status`
+  ADD PRIMARY KEY (`status_id`);
+
+--
 -- Indexes for table `tb_regimens`
 --
 ALTER TABLE `tb_regimens`
   ADD PRIMARY KEY (`regimen_id`);
+
+--
+-- Indexes for table `tb_status`
+--
+ALTER TABLE `tb_status`
+  ADD PRIMARY KEY (`status_id`);
 
 --
 -- Indexes for table `temp_updates`
@@ -8445,6 +9118,12 @@ ALTER TABLE `transaction_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `transfer_forms`
+--
+ALTER TABLE `transfer_forms`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `treatment_stage`
 --
 ALTER TABLE `treatment_stage`
@@ -8455,6 +9134,20 @@ ALTER TABLE `treatment_stage`
 --
 ALTER TABLE `triage_services`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `update_contacts`
+--
+ALTER TABLE `update_contacts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_facility_email` (`mflcode`,`email`);
+
+--
+-- Indexes for table `update_reports`
+--
+ALTER TABLE `update_reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_mfl` (`mflcode`,`applied_at`);
 
 --
 -- Indexes for table `userroles`
@@ -8498,10 +9191,22 @@ ALTER TABLE `backup_log`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `bin_card_entries`
+--
+ALTER TABLE `bin_card_entries`
+  MODIFY `entry_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `client_consents`
+--
+ALTER TABLE `client_consents`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `clinical_encounters`
@@ -8519,7 +9224,7 @@ ALTER TABLE `clinical_encounter_drafts`
 -- AUTO_INCREMENT for table `counties`
 --
 ALTER TABLE `counties`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -8537,13 +9242,13 @@ ALTER TABLE `daily_report_comments`
 -- AUTO_INCREMENT for table `deleted_patients`
 --
 ALTER TABLE `deleted_patients`
-  MODIFY `p_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `p_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2411;
 
 --
 -- AUTO_INCREMENT for table `deleted_prescriptions`
 --
 ALTER TABLE `deleted_prescriptions`
-  MODIFY `del_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `del_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=942;
 
 --
 -- AUTO_INCREMENT for table `demo_requests`
@@ -8561,7 +9266,7 @@ ALTER TABLE `dispensing_comments`
 -- AUTO_INCREMENT for table `dose_schedules`
 --
 ALTER TABLE `dose_schedules`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- AUTO_INCREMENT for table `dosing`
@@ -8573,7 +9278,7 @@ ALTER TABLE `dosing`
 -- AUTO_INCREMENT for table `drug`
 --
 ALTER TABLE `drug`
-  MODIFY `drugID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1046;
+  MODIFY `drugID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1049;
 
 --
 -- AUTO_INCREMENT for table `drugcategory`
@@ -8597,19 +9302,19 @@ ALTER TABLE `durationunits`
 -- AUTO_INCREMENT for table `education_level`
 --
 ALTER TABLE `education_level`
-  MODIFY `edu_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `edu_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3722;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3725;
 
 --
 -- AUTO_INCREMENT for table `facility_settings`
 --
 ALTER TABLE `facility_settings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `fingerprints`
@@ -8645,31 +9350,31 @@ ALTER TABLE `hepc_status`
 -- AUTO_INCREMENT for table `integration_status`
 --
 ALTER TABLE `integration_status`
-  MODIFY `integration_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `integration_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `laboratory`
 --
 ALTER TABLE `laboratory`
-  MODIFY `lab_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `lab_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `living_conditions`
 --
 ALTER TABLE `living_conditions`
-  MODIFY `cond_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `cond_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=290;
 
 --
 -- AUTO_INCREMENT for table `marital_status`
 --
 ALTER TABLE `marital_status`
-  MODIFY `mar_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `mar_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `medical_history`
@@ -8693,19 +9398,19 @@ ALTER TABLE `nursing_history`
 -- AUTO_INCREMENT for table `nursing_services`
 --
 ALTER TABLE `nursing_services`
-  MODIFY `nursing_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `nursing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `offences`
 --
 ALTER TABLE `offences`
-  MODIFY `offense_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `offense_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `other_prescriptions`
 --
 ALTER TABLE `other_prescriptions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `other_status`
@@ -8717,7 +9422,13 @@ ALTER TABLE `other_status`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `p_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `p_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2411;
+
+--
+-- AUTO_INCREMENT for table `patient_checkins`
+--
+ALTER TABLE `patient_checkins`
+  MODIFY `checkin_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `patient_drug_histories`
@@ -8729,73 +9440,97 @@ ALTER TABLE `patient_drug_histories`
 -- AUTO_INCREMENT for table `pharmacy`
 --
 ALTER TABLE `pharmacy`
-  MODIFY `disp_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `disp_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5368;
 
 --
 -- AUTO_INCREMENT for table `photos`
 --
 ALTER TABLE `photos`
-  MODIFY `photo_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `photo_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `prescription_drugs`
 --
 ALTER TABLE `prescription_drugs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=350;
 
 --
 -- AUTO_INCREMENT for table `psychiatric_rx_problems`
 --
 ALTER TABLE `psychiatric_rx_problems`
-  MODIFY `problem_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `problem_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `psychosocial_interventions`
 --
 ALTER TABLE `psychosocial_interventions`
-  MODIFY `intervention_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `intervention_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `psychosocial_outcomes`
 --
 ALTER TABLE `psychosocial_outcomes`
-  MODIFY `psyc_outcome_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `psyc_outcome_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `psycho_followup_visits`
 --
 ALTER TABLE `psycho_followup_visits`
-  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `pump_calibration`
 --
 ALTER TABLE `pump_calibration`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `pump_devices`
 --
 ALTER TABLE `pump_devices`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pump_reservoir_history`
 --
 ALTER TABLE `pump_reservoir_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `referral`
 --
 ALTER TABLE `referral`
-  MODIFY `referral_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `referral_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `referral_linkage_services`
 --
 ALTER TABLE `referral_linkage_services`
-  MODIFY `ref_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ref_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `regimen_type`
+--
+ALTER TABLE `regimen_type`
+  MODIFY `regimen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `religion`
+--
+ALTER TABLE `religion`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `schema_migrations`
+--
+ALTER TABLE `schema_migrations`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `status`
@@ -8807,7 +9542,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `statushistory`
 --
 ALTER TABLE `statushistory`
-  MODIFY `status_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- AUTO_INCREMENT for table `stocks`
@@ -8819,19 +9554,25 @@ ALTER TABLE `stocks`
 -- AUTO_INCREMENT for table `stock_movements`
 --
 ALTER TABLE `stock_movements`
-  MODIFY `trans_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `trans_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=957;
 
 --
 -- AUTO_INCREMENT for table `stores_inventory`
 --
 ALTER TABLE `stores_inventory`
-  MODIFY `inventory_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `inventory_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `sub_counties`
 --
 ALTER TABLE `sub_counties`
-  MODIFY `sub_county_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
+  MODIFY `sub_county_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
+
+--
+-- AUTO_INCREMENT for table `tblaccompanment`
+--
+ALTER TABLE `tblaccompanment`
+  MODIFY `accompanmentID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblcso`
@@ -8843,19 +9584,31 @@ ALTER TABLE `tblcso`
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
+
+--
+-- AUTO_INCREMENT for table `tbl_hiv_status`
+--
+ALTER TABLE `tbl_hiv_status`
+  MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tb_regimens`
 --
 ALTER TABLE `tb_regimens`
-  MODIFY `regimen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `regimen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `tb_status`
+--
+ALTER TABLE `tb_status`
+  MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `toxicology_results`
 --
 ALTER TABLE `toxicology_results`
-  MODIFY `tox_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `tox_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tpt_regimens`
@@ -8864,16 +9617,40 @@ ALTER TABLE `tpt_regimens`
   MODIFY `tpt_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `transfer_forms`
+--
+ALTER TABLE `transfer_forms`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `triage_services`
 --
 ALTER TABLE `triage_services`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `update_contacts`
+--
+ALTER TABLE `update_contacts`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `update_reports`
+--
+ALTER TABLE `update_reports`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `userroles`
 --
 ALTER TABLE `userroles`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `viral_load`
+--
+ALTER TABLE `viral_load`
+  MODIFY `vl_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `voluntary_discontinuation`
@@ -8885,7 +9662,7 @@ ALTER TABLE `voluntary_discontinuation`
 -- AUTO_INCREMENT for table `yellow_card_visits`
 --
 ALTER TABLE `yellow_card_visits`
-  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `visit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- Constraints for dumped tables
