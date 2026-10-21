@@ -6,6 +6,17 @@ include '../includes/languages.php';
 
 $error_message = ''; // Initialize error message variable
 
+function demoHasExpired(mysqli $conn, int $userId): bool
+{
+    include_once '../includes/demo_schema.php';
+    expireDemoAccounts($conn);
+    $q = $conn->prepare("SELECT 1 FROM demo_requests WHERE user_id = ? AND status = 'expired' LIMIT 1");
+    if (!$q) return false;
+    $q->bind_param('i', $userId);
+    $q->execute();
+    return (bool)$q->get_result()->fetch_row();
+}
+
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
@@ -49,7 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $result->fetch_assoc();
 
             // Verify password
-            if (password_verify($password, $user['password'])) {
+            if (password_verify($password, $user['password'])
+                && (int)($user['is_demo'] ?? 0) === 1
+                && demoHasExpired($conn, (int)$user['user_id'])) {
+                // 30-day demo is over (status shows as 'expired' in the demo analytics)
+                $error_message = "Your 30-day demo has expired. To request reactivation, submit the demo request form again with the same email, or contact support@sitti.site.";
+            } elseif (password_verify($password, $user['password'])) {
 
                 // ── Log the login (powers superadmin/demo_analytics.php) ──
                 $conn->query("CREATE TABLE IF NOT EXISTS login_logs (
@@ -197,6 +213,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          .btn-submit:hover{
             cursor:pointer;
         }
+        .pw-wrap{position:relative;display:inline-block;}
+        .pw-wrap input{padding-right:46px;}
+        .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;
+                color:#2D008A;font-size:20px;cursor:pointer;padding:6px 8px;line-height:1;}
     </style>
 </head>
 <body>
@@ -224,7 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="text" id="username" name="username" required>
                         <br><br>
                         <label for="password"><?php echo $text['password']; ?></label> <br><br>
-                        <input type="password" id="password" name="password" required>
+                        <div class="pw-wrap">
+                            <input type="password" id="password" name="password" required>
+                            <button type="button" id="togglePw" class="pw-eye" aria-label="Show password" title="Show / hide password"><i class="fa fa-eye"></i></button>
+                        </div>
                         <br><br>
                         <button type="submit" class="btn-submit"><?php echo $text['login']; ?></button>
                     </form>
@@ -254,6 +277,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         </div>
 
+<script>
+document.getElementById('togglePw').addEventListener('click', function () {
+    var f = document.getElementById('password'), show = f.type === 'password';
+    f.type = show ? 'text' : 'password';
+    this.querySelector('i').className = show ? 'fa fa-eye-slash' : 'fa fa-eye';
+    this.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+});
+</script>
 <?php include '../includes/footer.php'; ?>
 
 </body>

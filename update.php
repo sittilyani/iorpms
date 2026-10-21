@@ -61,11 +61,13 @@ function upd_excluded(string $path): bool
 $root = __DIR__;
 require_once $root . '/includes/config.php';
 
+// Command line (Windows Task Scheduler): php update.php --auto   -> silent unattended update, see auto_update.bat
+$isCli = PHP_SAPI === 'cli';
 $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 $isLoopback = in_array($ip, ['127.0.0.1', '::1'], true);
 $isPrivate  = filter_var($ip, FILTER_VALIDATE_IP) !== false
            && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
-if (APP_ENV !== 'offline' || !($isLoopback || $isPrivate)) {
+if (APP_ENV !== 'offline' || !($isCli || $isLoopback || $isPrivate)) {
     http_response_code(403);
     exit('This updater only runs on a clinic computer (localhost / local network).');
 }
@@ -475,6 +477,28 @@ if (isset($_GET['run'])) {
     flock($lock, LOCK_UN);
     echo json_encode($rep);
     exit;
+}
+
+// ── Unattended mode: only does anything when GitHub differs from this clinic ─
+if ($isCli) {
+    $log = function (string $m) use ($root) {
+        $f = $root . '/cache/auto_update.log';
+        if (is_file($f) && filesize($f) > 200000) @rename($f, $f . '.old');
+        @file_put_contents($f, '[' . date('Y-m-d H:i:s') . '] ' . $m . PHP_EOL, FILE_APPEND);
+    };
+    if (!in_array('--auto', $argv ?? [], true)) exit("Usage: php update.php --auto\n");
+    $lock = fopen($lockFile, 'c');
+    if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) { $log('Skipped: an update is already running.'); exit(0); }
+    $check = upd_run($root, $conn, true, false);                 // dry run: no backup, nothing changed
+    if (!$check['ok'] && !$check['updated'] && !$check['added']) { $log('Check failed: ' . $check['message']); exit(0); }   // e.g. offline - try again next time
+    $n = count($check['updated']) + count($check['added']);
+    if ($n === 0) { $log('Up to date.'); exit(0); }
+    $log("Updating $n file(s)...");
+    $rep = upd_run($root, $conn, false, true);                   // real run: backs up the database first
+    $log(($rep['ok'] ? 'OK' : 'FAILED') . ': ' . $rep['message'] . ' (' . count($rep['updated']) . ' updated, ' . count($rep['added']) . ' added, ' . count($rep['migrations']) . ' migrations'
+        . ($rep['notified'] === false ? '; admin notice queued: ' . $rep['notify_error'] : '') . ')');
+    flock($lock, LOCK_UN);
+    exit(0);
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────

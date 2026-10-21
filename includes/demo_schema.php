@@ -54,6 +54,18 @@ function ensureDemoSchema(mysqli $conn): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
     addColumnIfMissing($conn, 'demo_requests', 'user_id', 'INT NULL');
+    addColumnIfMissing($conn, 'demo_requests', 'lang', "CHAR(2) NOT NULL DEFAULT 'en'");
+    addColumnIfMissing($conn, 'demo_requests', 'approved_at', 'DATETIME NULL');
+    addColumnIfMissing($conn, 'demo_requests', 'expires_at', 'DATETIME NULL');
+    addColumnIfMissing($conn, 'demo_requests', 'reactivation_requested_at', 'DATETIME NULL');
+    $sc = $conn->query("SHOW COLUMNS FROM demo_requests LIKE 'status'");
+    if ($sc && ($col = $sc->fetch_assoc()) && stripos($col['Type'], 'expired') === false) {
+        $conn->query("ALTER TABLE demo_requests MODIFY status ENUM('pending','approved','rejected','expired') NOT NULL DEFAULT 'pending'");
+    }
+    // Demos approved before expiry existed: 30 days from the request date
+    $conn->query("UPDATE demo_requests SET approved_at = created_at, expires_at = created_at + INTERVAL 30 DAY
+                  WHERE status = 'approved' AND expires_at IS NULL");
+    expireDemoAccounts($conn);
 
     // ── login_logs ───────────────────────────────────────────
     $conn->query("
@@ -85,6 +97,12 @@ function ensureDemoSchema(mysqli $conn): void
                       SELECT COALESCE(MAX(id),0)+1, 'Demo', 'Demo/evaluation user — full read access to explore the system'
                       FROM userroles");
     }
+}
+
+/** Demo accounts last 30 days from approval; afterwards the request is marked 'expired' and the account cannot log in. */
+function expireDemoAccounts(mysqli $conn): void
+{
+    $conn->query("UPDATE demo_requests SET status = 'expired' WHERE status = 'approved' AND expires_at IS NOT NULL AND expires_at < NOW()");
 }
 
 function addColumnIfMissing(mysqli $conn, string $table, string $column, string $definition): void

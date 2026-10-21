@@ -49,7 +49,10 @@ $loginDaily= qAll($conn, "SELECT DATE(login_time) d, COUNT(*) n FROM login_logs
                           WHERE login_time >= NOW() - INTERVAL 14 DAY GROUP BY DATE(login_time) ORDER BY d");
 
 // ── Tables ───────────────────────────────────────────────────
-$recentReqs   = qAll($conn, "SELECT first_name, last_name, clinic_name, email, phone, country, plan, status, created_at
+$_SESSION['demo_csrf'] = $_SESSION['demo_csrf'] ?? bin2hex(random_bytes(16));
+$totExpired   = q1($conn, "SELECT COUNT(*) FROM demo_requests WHERE status = 'expired'");
+$totPending   = q1($conn, "SELECT COUNT(*) FROM demo_requests WHERE status = 'pending'");
+$recentReqs   = qAll($conn, "SELECT id, first_name, last_name, clinic_name, email, phone, country, plan, status, created_at, expires_at, reactivation_requested_at
                              FROM demo_requests ORDER BY created_at DESC LIMIT 25");
 $recentLogins = qAll($conn, "SELECT username, userrole, is_demo, country, ip_address, login_time
                              FROM login_logs ORDER BY login_time DESC LIMIT 25");
@@ -92,7 +95,9 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
   td{padding:7px 10px;border-bottom:1px solid #eef1f7;}
   .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.72rem;font-weight:bold;}
   .b-demo{background:#e8f3d9;color:#4a7a1e;} .b-staff{background:#e3e7fb;color:#2C3162;}
-  .b-approved{background:#e6f4ea;color:#276749;} .b-pending{background:#fff4d9;color:#9a6b00;} .b-rejected{background:#fdecec;color:#c53030;}
+  .b-approved{background:#e6f4ea;color:#276749;} .b-pending{background:#fff4d9;color:#9a6b00;} .b-rejected{background:#fdecec;color:#c53030;} .b-expired{background:#e2e3e5;color:#4a4f55;}
+  .act{border:1px solid #2C3162;background:#fff;color:#2C3162;border-radius:5px;padding:3px 10px;font-size:.76rem;cursor:pointer;}
+  .act.ok{background:#82b543;border-color:#82b543;color:#fff;} .act.no{border-color:#c53030;color:#c53030;} .act:disabled{opacity:.5;cursor:wait;}
   .empty{color:#90a4ae;font-size:.86rem;font-style:italic;}
 </style>
 </head>
@@ -117,6 +122,8 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
     <div class="kpi"><div class="v"><?php echo $totLogins; ?></div><div class="l">Total Logins Logged</div></div>
     <div class="kpi"><div class="v"><?php echo $demoLogins; ?></div><div class="l">Demo Logins</div></div>
     <div class="kpi"><div class="v"><?php echo $countriesHit; ?></div><div class="l">Countries Reached</div></div>
+    <div class="kpi"><div class="v"><?php echo $totPending; ?></div><div class="l">Awaiting Approval</div></div>
+    <div class="kpi"><div class="v"><?php echo $totExpired; ?></div><div class="l">Expired Demos</div></div>
   </div>
   <p style="font-size:.75rem;color:#90a4ae;margin:-16px 0 22px;">* demo accounts that still have their temporary password (haven't completed first login).</p>
 
@@ -172,7 +179,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
     <?php else: ?>
     <div style="overflow-x:auto;">
     <table>
-      <tr><th>Name</th><th>Clinic</th><th>Email</th><th>Phone</th><th>Country</th><th>Plan</th><th>Status</th><th>Requested</th></tr>
+      <tr><th>Name</th><th>Clinic</th><th>Email</th><th>Phone</th><th>Country</th><th>Plan</th><th>Status</th><th>Requested</th><th>Expires</th><th>Action</th></tr>
       <?php foreach ($recentReqs as $r): ?>
       <tr>
         <td><?php echo htmlspecialchars($r['first_name'] . ' ' . $r['last_name']); ?></td>
@@ -183,6 +190,18 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
         <td><?php echo htmlspecialchars($r['plan']); ?></td>
         <td><span class="badge b-<?php echo htmlspecialchars($r['status']); ?>"><?php echo htmlspecialchars($r['status']); ?></span></td>
         <td><?php echo htmlspecialchars($r['created_at']); ?></td>
+        <td><?php echo $r['expires_at'] ? htmlspecialchars(substr($r['expires_at'], 0, 10)) : '-'; ?></td>
+        <td style="white-space:nowrap;">
+          <?php if ($r['status'] === 'pending'): ?>
+            <button class="act ok" data-id="<?php echo (int)$r['id']; ?>" data-a="approve">Approve</button>
+            <button class="act no" data-id="<?php echo (int)$r['id']; ?>" data-a="reject">Reject</button>
+          <?php elseif ($r['status'] === 'expired'): ?>
+            <?php if ($r['reactivation_requested_at']): ?><span class="badge b-pending" title="<?php echo htmlspecialchars($r['reactivation_requested_at']); ?>">reactivation requested</span><?php endif; ?>
+            <button class="act ok" data-id="<?php echo (int)$r['id']; ?>" data-a="reactivate">Reactivate</button>
+          <?php elseif ($r['status'] === 'approved'): ?>
+            <button class="act" data-id="<?php echo (int)$r['id']; ?>" data-a="resend" title="New temporary password by email + WhatsApp">Resend credentials</button>
+          <?php endif; ?>
+        </td>
       </tr>
       <?php endforeach; ?>
     </table>
@@ -214,5 +233,24 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
   </div>
 
 </div>
+<script>
+// Approve / Reactivate / Resend: the server emails the credentials and returns a WhatsApp link, which is opened here.
+// The window is opened on the click itself so the browser's popup blocker allows it.
+document.querySelectorAll('.act').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var a = b.dataset.a, label = {approve: 'Approve this demo request', reactivate: 'Reactivate this demo for another 30 days', resend: 'Send new credentials', reject: 'Reject this request'}[a];
+    if (!confirm(label + '?' + (a === 'reject' ? '' : '\nThe credentials are emailed and a WhatsApp message opens.'))) return;
+    var wa = a === 'reject' ? null : window.open('', '_blank');
+    b.disabled = true;
+    var fd = new FormData(); fd.append('id', b.dataset.id); fd.append('action', a); fd.append('csrf', <?php echo json_encode($_SESSION['demo_csrf']); ?>);
+    fetch('demo_action.php', {method: 'POST', body: fd}).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j.success) { if (wa) wa.close(); alert(j.error || 'Failed.'); b.disabled = false; return; }
+      if (wa) { if (j.wa_link) wa.location = j.wa_link; else wa.close(); }
+      if (a !== 'reject') alert((j.email_sent ? 'Email sent to the requester.' : 'Email NOT delivered: ' + j.email_error) + '\n' + (j.wa_link ? 'WhatsApp opened - press Send there.' : 'No valid phone number for WhatsApp.') + '\nUsername: ' + j.username + '\nValid until: ' + j.expires_at.substr(0, 10));
+      location.reload();
+    }).catch(function () { if (wa) wa.close(); alert('Request failed.'); b.disabled = false; });
+  });
+});
+</script>
 </body>
 </html>

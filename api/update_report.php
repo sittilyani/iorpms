@@ -44,4 +44,15 @@ $st = $conn->prepare("INSERT INTO update_reports (mflcode, facility_name, commit
                       VALUES (?,?,?,?,?,?,?,?,?,?)");
 $st->bind_param('ssssiiisss', $mfl, $name, $commit, $status, $fu, $fa, $mg, $msg, $details, $at);
 $st->execute();
+
+// Update did not complete: email the clinic's contact to run update.php again (at most once every 6 hours)
+if ($status === 'failed') {
+    try {
+        require_once __DIR__ . '/../includes/update_alert.php';
+        $cs = $conn->prepare("SELECT * FROM update_contacts WHERE mflcode = ? AND (last_link_sent IS NULL OR last_link_sent < NOW() - INTERVAL 6 HOUR)");
+        $cs->bind_param('s', $mfl);
+        $cs->execute();
+        foreach ($cs->get_result()->fetch_all(MYSQLI_ASSOC) as $t) sendUpdateAlert($conn, $t, 'incomplete', '', $msg);
+    } catch (Throwable $e) { error_log('[update_report] alert email failed: ' . $e->getMessage()); }
+}
 echo json_encode(['ok' => true]);

@@ -10,6 +10,7 @@
 session_start();
 include '../includes/config.php';
 require_once '../includes/mail_helper.php';
+require_once '../includes/update_alert.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $role = $_SESSION['userrole'] ?? '';
@@ -98,23 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception('Tick at least one contact, or choose "Everyone who is not up to date".');
             }
             $note = trim($_POST['note'] ?? '');
+            $kind = ($_POST['kind'] ?? '') === 'incomplete' ? 'incomplete' : 'available';
             $sent = 0; $fail = [];
             foreach ($targets as $t) {
-                $body = '<p>Dear ' . htmlspecialchars($t['contact_name']) . ',</p>'
-                      . '<p>A new system update is available for <strong>' . htmlspecialchars($t['facility_name']) . '</strong>.</p>'
-                      . ($note !== '' ? '<p>' . nl2br(htmlspecialchars($note)) . '</p>' : '')
-                      . '<p>On the computer that runs the system (Laragon must be running and the computer connected to the internet), open this link and wait until the progress bar reaches 100%:</p>'
-                      . '<p><a href="' . $linkUrl . '" style="background:#2C3162;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;">Run the update</a><br><small>' . $linkUrl . '</small></p>'
-                      . '<p>Client photos and your data are not changed or removed. When it finishes, the administrator is notified automatically.</p>'
-                      . '<p>Thank you.</p>';
-                // SMTP only: the mail() fallback in sendAppMail reports success on a PC without a mail server although nothing is delivered.
-                $r = trySendViaPHPMailer($t['email'], $t['contact_name'], 'System update available - ' . $t['facility_name'], $body);
-                mailHelperLog(($r['success'] ? 'OK  ' : 'FAIL ') . 'to=' . $t['email'] . ' update-link via SMTP ' . ($r['error'] ?? ''));
+                $r = sendUpdateAlert($conn, $t, $kind, $note);
                 if (!empty($r['success'])) {
                     $sent++;
-                    $u = $conn->prepare("UPDATE update_contacts SET last_link_sent = NOW() WHERE id = ?");
-                    $u->bind_param('i', $t['id']);
-                    $u->execute();
                 } else {
                     $fail[] = $t['email'] . ' (' . ($r['error'] ?? 'failed') . ')';
                 }
@@ -205,7 +195,10 @@ $h = fn($s) => htmlspecialchars((string)$s);
     <td><?= $c['last_commit'] ? $h(substr($c['last_commit'], 0, 8)) : '-' ?></td>
     <td><?= $h($c['last_applied']) ?></td>
     <td><span class="badge-s <?= $cls ?>"><?= $txt ?></span></td>
-    <td><button type="submit" form="del<?= (int)$c['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this contact?')">Remove</button></td>
+    <td style="white-space:nowrap;">
+      <?php if ($cls !== 'b-ok'): ?><button type="submit" form="rem<?= (int)$c['id'] ?>" class="btn btn-sm btn-warning" title="Email the contact to run update.php">Email reminder</button><?php endif; ?>
+      <button type="submit" form="del<?= (int)$c['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this contact?')">Remove</button>
+    </td>
    </tr>
   <?php endforeach; if (!$contacts): ?><tr><td colspan="10" class="text-center text-muted">No contacts yet - add one above.</td></tr><?php endif; ?>
   </tbody>
@@ -222,6 +215,7 @@ $h = fn($s) => htmlspecialchars((string)$s);
 </form>
 <?php foreach ($contacts as $c): ?>
 <form method="POST" id="del<?= (int)$c['id'] ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$c['id'] ?>"></form>
+<form method="POST" id="rem<?= (int)$c['id'] ?>"><input type="hidden" name="action" value="send"><input type="hidden" name="kind" value="incomplete"><input type="hidden" name="scope" value="selected"><input type="hidden" name="ids[]" value="<?= (int)$c['id'] ?>"></form>
 <?php endforeach; ?>
 
 <div class="card-box">
