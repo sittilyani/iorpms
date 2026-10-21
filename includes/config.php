@@ -48,7 +48,7 @@ if (APP_ENV === 'online') {
     // ── ONLINE (production — sitti.site) ──
     defined('DB_HOST') || define('DB_HOST', 'localhost');
     defined('DB_USER') || define('DB_USER', 'sittkelw');
-    defined('DB_PASS') || define('DB_PASS', 'D@t@5cience');
+    defined('DB_PASS') || define('DB_PASS', 'D1@nah1984+');
     defined('DB_NAME') || define('DB_NAME', 'sittkelw_methadone');
 } else {
     // ── OFFLINE (local Laragon dev) ──
