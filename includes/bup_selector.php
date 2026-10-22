@@ -32,9 +32,9 @@ $__bupIsSaved   = !bup_validate($__bupSaved, $__bupDose, $__bupStrengths);
         <?php foreach ($__bupStrengths as $name => $s): ?>
             <label style="display:flex;flex-direction:column;font-weight:600;">
                 <?= htmlspecialchars(str_ireplace('Buprenorphine ', '', $name)) ?> tablets
-                <input type="number" min="0" step="1" class="bup-tab-input" data-mg="<?= $s['mg'] ?>"
+                <input type="number" min="0" step="0.5" class="bup-tab-input" data-mg="<?= $s['mg'] ?>"
                        name="bup_tabs[<?= htmlspecialchars($name) ?>]"
-                       value="<?= (int)($__bupPrefill[$name] ?? 0) ?>" style="width:90px;">
+                       value="<?= (float)($__bupPrefill[$name] ?? 0) ?>" style="width:90px;">
             </label>
         <?php endforeach; ?>
         </div>
@@ -51,7 +51,7 @@ $__bupIsSaved   = !bup_validate($__bupSaved, $__bupDose, $__bupStrengths);
     function total() {
         var mg = 0;
         document.querySelectorAll('.bup-tab-input').forEach(function (i) {
-            mg += (parseInt(i.value, 10) || 0) * parseFloat(i.dataset.mg);
+            mg += (parseFloat(i.value) || 0) * parseFloat(i.dataset.mg);
         });
         return Math.round(mg * 100) / 100;
     }

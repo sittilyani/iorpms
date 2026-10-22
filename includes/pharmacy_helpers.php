@@ -110,7 +110,7 @@ if (!function_exists('bup_components_mg')) {
         $mg = 0.0;
         foreach ($components as $name => $tabs) {
             if (isset($strengths[$name])) {
-                $mg += $strengths[$name]['mg'] * (int)$tabs;
+                $mg += $strengths[$name]['mg'] * (float)$tabs;
             }
         }
         return round($mg, 2);
@@ -123,9 +123,9 @@ if (!function_exists('bup_describe')) {
     {
         $parts = [];
         foreach ($strengths as $name => $s) {
-            $t = (int)($components[$name] ?? 0);
+            $t = (float)($components[$name] ?? 0);
             if ($t > 0) {
-                $parts[] = $t . ' x ' . rtrim(rtrim(number_format($s['mg'], 2, '.', ''), '0'), '.') . 'mg';
+                $parts[] = rtrim(rtrim(number_format($t, 2, '.', ''), '0'), '.') . ' x ' . rtrim(rtrim(number_format($s['mg'], 2, '.', ''), '0'), '.') . 'mg';
             }
         }
         return implode(' + ', array_reverse($parts));
@@ -145,7 +145,7 @@ if (!function_exists('bup_get_saved')) {
         $row = $stmt->get_result()->fetch_assoc();
         $stmt->close();
         $arr = $row ? json_decode($row['components'], true) : [];
-        return is_array($arr) ? array_map('intval', $arr) : [];
+        return is_array($arr) ? array_map('floatval', $arr) : [];
     }
 }
 
@@ -172,7 +172,7 @@ if (!function_exists('bup_default_split')) {
         $left = round($dose_mg, 2);
         $out = [];
         foreach (array_reverse($strengths, true) as $name => $s) {
-            $n = (int)floor(($left + 1e-9) / $s['mg']);
+            $n = floor(($left + 1e-9) / $s['mg'] * 2) / 2;   // whole or half tablets
             if ($n > 0) {
                 $out[$name] = $n;
                 $left = round($left - $n * $s['mg'], 2);
@@ -188,7 +188,7 @@ if (!function_exists('bup_parse_post')) {
     {
         $out = [];
         foreach (($post['bup_tabs'] ?? []) as $name => $n) {
-            $n = (int)$n;
+            $n = round((float)$n * 2) / 2;   // whole or half tablets only
             if ($n > 0 && isset($strengths[$name])) {
                 $out[$name] = $n;
             }
