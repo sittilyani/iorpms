@@ -21,9 +21,9 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Other prescriptions form</h2>
+    <h2 style="color: #2D008A; ">Other prescriptions form</h2>
 
-<form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+<form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">

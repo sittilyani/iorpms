@@ -3,9 +3,9 @@ include '../includes/config.php';
 include ("../includes/header.php");
 
 // Check if ID parameter is passed through the URL
-if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
+if (isset($_GET['id']) && !empty(trim((string)($_GET['id'])))) {
     // Get ID from URL
-    $id = trim($_GET['id']);
+    $id = trim((string)($_GET['id']));
 
     // Prepare SELECT statement
     $sql = "SELECT * FROM pharmacy WHERE id = ?";
@@ -80,7 +80,7 @@ include '../includes/footer.php';
 <div class="container mt-5">
     <h2 class="mb-4">Edit Drug Stocks</h2>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
         <div class="form-group">
             <label for="drugName">Drug Name:</label>
             <input type="text" name="drugName" id="drugName" value="<?= $drugName; ?>" readonly>

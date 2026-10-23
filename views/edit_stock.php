@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->execute();
 
         // Redirect back to the same page after updating
-        header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]) . '?drugname=' . urlencode($drugname));
+        header("Location: " . htmlspecialchars((string)($_SERVER["PHP_SELF"])) . '?drugname=' . urlencode((string)($drugname)));
         exit();
     }
 }
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Stock - <?= htmlspecialchars($drugname); ?></title>
+    <title>Edit Stock - <?= htmlspecialchars((string)($drugname)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 <div class="container mt-5">
-    <h2>Edit Stock - <?= htmlspecialchars($drugname); ?></h2>
+    <h2>Edit Stock - <?= htmlspecialchars((string)($drugname)); ?></h2>
 
     <!-- Stock Details Table -->
     <table class="table table-bordered">
@@ -70,16 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tr>
                 <td>
                     <!-- Form for updating stock quantity for a specific trans_id -->
-                    <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) . '?drugname=' . urlencode($drugname); ?>" method="post">
-                        <input type="number" name="newtotal_qty" value="<?= htmlspecialchars($stock['total_qty']); ?>" required>
-                        <input type="hidden" name="trans_id" value="<?= htmlspecialchars($stock['trans_id']); ?>">
+                    <form action="<?= htmlspecialchars((string)($_SERVER["PHP_SELF"])) . '?drugname=' . urlencode((string)($drugname)); ?>" method="post">
+                        <input type="number" name="newtotal_qty" value="<?= htmlspecialchars((string)($stock['total_qty'])); ?>" required>
+                        <input type="hidden" name="trans_id" value="<?= htmlspecialchars((string)($stock['trans_id'])); ?>">
                         <input type="submit" class="btn btn-primary" value="Edit Balance">
                     </form>
                 </td>
-                <td><?= htmlspecialchars($stock['trans_id']); ?></td>
-                <td><?= htmlspecialchars($stock['trans_date']); ?></td>
-                <td><?= htmlspecialchars($stock['batch_number']); ?></td>
-                <td><?= htmlspecialchars($stock['expiry_date']); ?></td>
+                <td><?= htmlspecialchars((string)($stock['trans_id'])); ?></td>
+                <td><?= htmlspecialchars((string)($stock['trans_date'])); ?></td>
+                <td><?= htmlspecialchars((string)($stock['batch_number'])); ?></td>
+                <td><?= htmlspecialchars((string)($stock['expiry_date'])); ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($pdfGenerated) {
             $successMessage = "Transfer form submitted successfully, patient status updated to 'Transout', and PDF saved.";
-            header("Location: patient_transfer_form.php?p_id=" . $p_id . "&success=" . urlencode($successMessage));
+            header("Location: patient_transfer_form.php?p_id=" . $p_id . "&success=" . urlencode((string)($successMessage)));
             exit();
         } else {
             throw new Exception("PDF generation failed");
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->rollback();
         $errorMessage = "Error: " . $e->getMessage();
         error_log("Transfer form error: " . $e->getMessage());
-        header("Location: patient_transfer_form.php?p_id=" . $p_id . "&error=" . urlencode($errorMessage));
+        header("Location: patient_transfer_form.php?p_id=" . $p_id . "&error=" . urlencode((string)($errorMessage)));
         exit();
     }
 }
@@ -215,13 +215,13 @@ function generateTransferPDF($data, $filename, $conn) {
                 .header { text-align: center; margin-bottom: 15px; position: relative; }
                 .header h2 { font-size: 14px; margin: 3px 0; font-weight: bold; }
                 .header h3 { font-size: 12px; margin: 3px 0; font-weight: bold; color: #6633CC; }
-                .client-photo { position: absolute; top: 0; right: 10px; width: 80px; height: 100px; border: 2px solid #3498db; }
-                .section-title { background-color: #3498db; color: white; padding: 6px 10px; margin: 10px 0 5px; font-size: 11px; font-weight: bold; }
+                .client-photo { position: absolute; top: 0; right: 10px; width: 80px; height: 100px; border: 2px solid #2D008A; }
+                .section-title { background-color: #2D008A; color: white; padding: 6px 10px; margin: 10px 0 5px; font-size: 11px; font-weight: bold; }
                 table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
                 table td { border: 1px solid #333; padding: 4px; font-size: 10px; vertical-align: top; }
                 .label { font-weight: bold; width: 35%; background-color: #f5f5f5; }
                 .value { width: 65%; }
-                .signature-table th { background-color: #3498db; color: white; font-weight: bold; border: 1px solid #333; padding: 4px; font-size: 10px; }
+                .signature-table th { background-color: #2D008A; color: white; font-weight: bold; border: 1px solid #333; padding: 4px; font-size: 10px; }
                 .signature-table td { border: 1px solid #333; padding: 4px; font-size: 9px; }
             </style>
         </head>
@@ -237,34 +237,34 @@ function generateTransferPDF($data, $filename, $conn) {
 
                 <div class="section-title">CLIENT\'S DETAILS</div>
                 <table>
-                    <tr><td class="label">Facility Name</td><td class="value">' . htmlspecialchars($data['facilityname']) . '</td></tr>
-                    <tr><td class="label">MFL Code</td><td class="value">' . htmlspecialchars($data['mflcode']) . '</td></tr>
-                    <tr><td class="label">County</td><td class="value">' . htmlspecialchars($data['county']) . '</td></tr>
-                    <tr><td class="label">Sub County</td><td class="value">' . htmlspecialchars($data['sub_county']) . '</td></tr>
-                    <tr><td class="label">Client Name</td><td class="value">' . htmlspecialchars($data['clientName']) . '</td></tr>
-                    <tr><td class="label">MAT ID</td><td class="value">' . htmlspecialchars($data['mat_id']) . '</td></tr>
-                    <tr><td class="label">Sex</td><td class="value">' . htmlspecialchars($data['sex']) . '</td></tr>
-                    <tr><td class="label">Date of Birth</td><td class="value">' . htmlspecialchars($data['dob']) . '</td></tr>
-                    <tr><td class="label">Client Phone</td><td class="value">' . htmlspecialchars($data['client_phone']) . '</td></tr>
-                    <tr><td class="label">MAT Clinic Enrolled In</td><td class="value">' . htmlspecialchars($data['reg_facility']) . '</td></tr>
-                    <tr><td class="label">MAT Enrollment Date</td><td class="value">' . htmlspecialchars($data['reg_date']) . '</td></tr>
-                    <tr><td class="label">Referral Date</td><td class="value">' . htmlspecialchars($data['referral_date']) . '</td></tr>
-                    <tr><td class="label">Type of Movement</td><td class="value">' . htmlspecialchars($data['type_of_movement']) . '</td></tr>
-                    <tr><td class="label">From (Referral Site)</td><td class="value">' . htmlspecialchars($data['from_site']) . '</td></tr>
-                    <tr><td class="label">To (Dispensing Site)</td><td class="value">' . htmlspecialchars($data['to_site']) . '</td></tr>
+                    <tr><td class="label">Facility Name</td><td class="value">' . htmlspecialchars((string)($data['facilityname'])) . '</td></tr>
+                    <tr><td class="label">MFL Code</td><td class="value">' . htmlspecialchars((string)($data['mflcode'])) . '</td></tr>
+                    <tr><td class="label">County</td><td class="value">' . htmlspecialchars((string)($data['county'])) . '</td></tr>
+                    <tr><td class="label">Sub County</td><td class="value">' . htmlspecialchars((string)($data['sub_county'])) . '</td></tr>
+                    <tr><td class="label">Client Name</td><td class="value">' . htmlspecialchars((string)($data['clientName'])) . '</td></tr>
+                    <tr><td class="label">MAT ID</td><td class="value">' . htmlspecialchars((string)($data['mat_id'])) . '</td></tr>
+                    <tr><td class="label">Sex</td><td class="value">' . htmlspecialchars((string)($data['sex'])) . '</td></tr>
+                    <tr><td class="label">Date of Birth</td><td class="value">' . htmlspecialchars((string)($data['dob'])) . '</td></tr>
+                    <tr><td class="label">Client Phone</td><td class="value">' . htmlspecialchars((string)($data['client_phone'])) . '</td></tr>
+                    <tr><td class="label">MAT Clinic Enrolled In</td><td class="value">' . htmlspecialchars((string)($data['reg_facility'])) . '</td></tr>
+                    <tr><td class="label">MAT Enrollment Date</td><td class="value">' . htmlspecialchars((string)($data['reg_date'])) . '</td></tr>
+                    <tr><td class="label">Referral Date</td><td class="value">' . htmlspecialchars((string)($data['referral_date'])) . '</td></tr>
+                    <tr><td class="label">Type of Movement</td><td class="value">' . htmlspecialchars((string)($data['type_of_movement'])) . '</td></tr>
+                    <tr><td class="label">From (Referral Site)</td><td class="value">' . htmlspecialchars((string)($data['from_site'])) . '</td></tr>
+                    <tr><td class="label">To (Dispensing Site)</td><td class="value">' . htmlspecialchars((string)($data['to_site'])) . '</td></tr>
                 </table>
 
                 <div class="section-title">TRANSFER NOTES</div>
                 <table>
-                    <tr><td class="label">Reason for Transfer/Transit</td><td class="value">' . nl2br(htmlspecialchars($data['reason_transfer'])) . '</td></tr>
-                    <tr><td class="label">Clinical & Drug Use History</td><td class="value">' . nl2br(htmlspecialchars($data['clinical_history'])) . '</td></tr>
-                    <tr><td class="label">Psychosocial Background</td><td class="value">' . nl2br(htmlspecialchars($data['psychosocial'])) . '</td></tr>
-                    <tr><td class="label">Laboratory Investigations</td><td class="value">' . nl2br(htmlspecialchars($data['lab_investigations'] ?? 'N/A')) . '</td></tr>
-                    <tr><td class="label">Vaccinations</td><td class="value">' . nl2br(htmlspecialchars($data['vaccinations'] ?? 'N/A')) . '</td></tr>
-                    <tr><td class="label">Diagnosis</td><td class="value">' . nl2br(htmlspecialchars($data['diagnosis'])) . '</td></tr>
-                    <tr><td class="label">Current Dose</td><td class="value">' . htmlspecialchars($data['current_dose']) . '</td></tr>
-                    <tr><td class="label">Date Last Administered</td><td class="value">' . htmlspecialchars($data['date_last_administered']) . '</td></tr>
-                    <tr><td class="label">Other Medications</td><td class="value">' . htmlspecialchars($data['other_medications'] ?? 'N/A') . '</td></tr>
+                    <tr><td class="label">Reason for Transfer/Transit</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['reason_transfer'])))) . '</td></tr>
+                    <tr><td class="label">Clinical & Drug Use History</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['clinical_history'])))) . '</td></tr>
+                    <tr><td class="label">Psychosocial Background</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['psychosocial'])))) . '</td></tr>
+                    <tr><td class="label">Laboratory Investigations</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['lab_investigations'] ?? 'N/A')))) . '</td></tr>
+                    <tr><td class="label">Vaccinations</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['vaccinations'] ?? 'N/A')))) . '</td></tr>
+                    <tr><td class="label">Diagnosis</td><td class="value">' . nl2br((string)(htmlspecialchars((string)($data['diagnosis'])))) . '</td></tr>
+                    <tr><td class="label">Current Dose</td><td class="value">' . htmlspecialchars((string)($data['current_dose'])) . '</td></tr>
+                    <tr><td class="label">Date Last Administered</td><td class="value">' . htmlspecialchars((string)($data['date_last_administered'])) . '</td></tr>
+                    <tr><td class="label">Other Medications</td><td class="value">' . htmlspecialchars((string)($data['other_medications'] ?? 'N/A')) . '</td></tr>
                 </table>
 
                 <div class="section-title">TREATMENT TEAM</div>
@@ -278,17 +278,17 @@ function generateTransferPDF($data, $filename, $conn) {
                     </tr>
                     <tr>
                         <td>MAT Clinician</td>
-                        <td>' . htmlspecialchars($data['clinician_name']) . '</td>
-                        <td>' . htmlspecialchars($data['clinician_org']) . '</td>
-                        <td>' . htmlspecialchars($data['clinician_signature']) . '</td>
-                        <td>' . htmlspecialchars($data['clinician_date']) . '</td>
+                        <td>' . htmlspecialchars((string)($data['clinician_name'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['clinician_org'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['clinician_signature'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['clinician_date'])) . '</td>
                     </tr>
                     <tr>
                         <td>MAT Counselor</td>
-                        <td>' . htmlspecialchars($data['counselor_name']) . '</td>
-                        <td>' . htmlspecialchars($data['counselor_org']) . '</td>
-                        <td>' . htmlspecialchars($data['counselor_signature']) . '</td>
-                        <td>' . htmlspecialchars($data['counselor_date']) . '</td>
+                        <td>' . htmlspecialchars((string)($data['counselor_name'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['counselor_org'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['counselor_signature'])) . '</td>
+                        <td>' . htmlspecialchars((string)($data['counselor_date'])) . '</td>
                     </tr>
                 </table>
             </div>

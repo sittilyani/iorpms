@@ -6,7 +6,7 @@ include('../includes/header.php');
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $marital_status_name = trim($_POST["marital_status_name"]);
+        $marital_status_name = trim((string)($_POST["marital_status_name"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO marital_status (marital_status_name) VALUES (?)";
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
         <div class="wrapper">
                 <h2>Add Marital Status</h2>
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
 
                         <div class="form-group">
                                 <label>Marital Status</label>

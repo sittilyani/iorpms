@@ -1,7 +1,7 @@
 <?php
 include '../includes/config.php';
 
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search = isset($_GET['search']) ? trim((string)($_GET['search'])) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $results_per_page = isset($_GET['results_per_page']) ? (int)$_GET['results_per_page'] : 10;
 $count_only = isset($_GET['count']) && $_GET['count'] === 'true';
@@ -37,21 +37,21 @@ while ($row = $result->fetch_assoc()) {
 
 foreach ($patients as $patient) {
         echo '<div class="search-result-item"
-                    data-p-id="' . htmlspecialchars($patient['p_id']) . '"
-                    data-mat-id="' . htmlspecialchars($patient['mat_id']) . '"
-                    data-mat-number="' . htmlspecialchars($patient['mat_number']) . '"
-                    data-name="' . htmlspecialchars($patient['clientName']) . '"
-                    data-nickname="' . htmlspecialchars($patient['nickName']) . '"
-                    data-dob="' . htmlspecialchars($patient['dob']) . '"
-                    data-age="' . htmlspecialchars($patient['age']) . '"
-                    data-sex="' . htmlspecialchars($patient['sex']) . '"
-                    data-address="' . htmlspecialchars($patient['p_address']) . '"
-                    data-cso="' . htmlspecialchars($patient['cso']) . '"
-                    data-dosage="' . htmlspecialchars($patient['dosage'] ?? '0') . '"
-                    data-drugname="' . htmlspecialchars($patient['drugname'] ?? '') . '"
-                    data-status="' . htmlspecialchars($patient['current_status']) . '">
-                        <strong>' . htmlspecialchars($patient['clientName']) . ' (' . htmlspecialchars($patient['mat_id']) . ')</strong>
-                        <p>Status: ' . htmlspecialchars($patient['current_status']) . ' | Drug: ' . htmlspecialchars($patient['drugname'] ?? '') . ' | Dosage: ' . htmlspecialchars($patient['dosage'] ?? '0') . ' mg</p>
+                    data-p-id="' . htmlspecialchars((string)($patient['p_id'])) . '"
+                    data-mat-id="' . htmlspecialchars((string)($patient['mat_id'])) . '"
+                    data-mat-number="' . htmlspecialchars((string)($patient['mat_number'])) . '"
+                    data-name="' . htmlspecialchars((string)($patient['clientName'])) . '"
+                    data-nickname="' . htmlspecialchars((string)($patient['nickName'])) . '"
+                    data-dob="' . htmlspecialchars((string)($patient['dob'])) . '"
+                    data-age="' . htmlspecialchars((string)($patient['age'])) . '"
+                    data-sex="' . htmlspecialchars((string)($patient['sex'])) . '"
+                    data-address="' . htmlspecialchars((string)($patient['p_address'])) . '"
+                    data-cso="' . htmlspecialchars((string)($patient['cso'])) . '"
+                    data-dosage="' . htmlspecialchars((string)($patient['dosage'] ?? '0')) . '"
+                    data-drugname="' . htmlspecialchars((string)($patient['drugname'] ?? '')) . '"
+                    data-status="' . htmlspecialchars((string)($patient['current_status'])) . '">
+                        <strong>' . htmlspecialchars((string)($patient['clientName'])) . ' (' . htmlspecialchars((string)($patient['mat_id'])) . ')</strong>
+                        <p>Status: ' . htmlspecialchars((string)($patient['current_status'])) . ' | Drug: ' . htmlspecialchars((string)($patient['drugname'] ?? '')) . ' | Dosage: ' . htmlspecialchars((string)($patient['dosage'] ?? '0')) . ' mg</p>
                     </div>';
 }
 

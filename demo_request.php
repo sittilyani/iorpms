@@ -34,14 +34,14 @@ ensureDemoSchema($conn);
 
 // ── Helper: safe string ──────────────────────────────────────────────────────
 function clean(string $v): string {
-    return htmlspecialchars(strip_tags(trim($v)), ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string)(strip_tags((string)(trim((string)($v))))), ENT_QUOTES, 'UTF-8');
 }
 
 // ── Collect & validate ───────────────────────────────────────────────────────
 $first_name  = clean($_POST['first_name']  ?? '');
 $last_name   = clean($_POST['last_name']   ?? '');
 $clinic_name = clean($_POST['clinic_name'] ?? '');
-$email       = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+$email       = filter_var(trim((string)($_POST['email'] ?? '')), FILTER_SANITIZE_EMAIL);
 $phone       = clean($_POST['phone']       ?? '');
 $country     = clean($_POST['country']     ?? '');
 $plan        = clean($_POST['plan']        ?? 'professional');

@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $save_successful = true;
         } else {
             // Handle DB error
-            $message = urlencode("Database Error: Could not save assessment. " . $stmt->error);
+            $message = urlencode((string)("Database Error: Could not save assessment. " . $stmt->error));
             header("Location: search_gad7.php?message=" . $message . "&status=error");
             exit();
         }
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         /* Color classes based on GAD-7 thresholds */
         .severe { background-color: #fceae5; border: 1px solid #e74c3c; color: #e74c3c; } /* >= 15 */
         .moderate { background-color: #fcf8e5; border: 1px solid #f39c12; color: #f39c12; } /* >= 10 */
-        .mild { background-color: #e5f5fc; border: 1px solid #3498db; color: #3498db; } /* >= 5 */
+        .mild { background-color: #e5f5fc; border: 1px solid #2D008A; color: #2D008A; } /* >= 5 */
         .minimal { background-color: #e5fce5; border: 1px solid #2ecc71; color: #2ecc71; } /* 0-4 */
 
         .management-list {
@@ -206,10 +206,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <h2>Assessment Summary</h2>
-        <p><strong>Client Name:</strong> <?php echo htmlspecialchars($clientName); ?></p>
-        <p><strong>MAT ID:</strong> <?php echo htmlspecialchars($mat_id); ?></p>
-        <p><strong>Date:</strong> <?php echo htmlspecialchars($visitDate); ?></p>
-        <p><strong>Age:</strong> <?php echo htmlspecialchars($age); ?> Years</p>
+        <p><strong>Client Name:</strong> <?php echo htmlspecialchars((string)($clientName)); ?></p>
+        <p><strong>MAT ID:</strong> <?php echo htmlspecialchars((string)($mat_id)); ?></p>
+        <p><strong>Date:</strong> <?php echo htmlspecialchars((string)($visitDate)); ?></p>
+        <p><strong>Age:</strong> <?php echo htmlspecialchars((string)($age)); ?> Years</p>
 
         <hr>
 

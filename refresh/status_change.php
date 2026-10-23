@@ -6,7 +6,7 @@ include('config.php');
 $currentDate = date('Y-m-d');
 
 // Calculate the date four days ago
-$fourDaysAgo = date('Y-m-d', strtotime('-4 days', strtotime($currentDate)));
+$fourDaysAgo = date('Y-m-d', strtotime('-4 days', strtotime((string)($currentDate))));
 
 // Get all unique mat_ids from dispense table
 $sql = "SELECT DISTINCT mat_id FROM dispense";

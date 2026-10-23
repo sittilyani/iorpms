@@ -54,7 +54,7 @@ if (isset($_GET['message'])) {
         }
 
         .search-input {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
         }
 
@@ -86,7 +86,7 @@ if (isset($_GET['message'])) {
         }
 
         th {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             font-weight: bold;
             position: sticky;
@@ -104,7 +104,7 @@ if (isset($_GET['message'])) {
 
         /* Action links styling */
         .action-links a {
-            color: #2C3162;
+            color: #2D008A;
             text-decoration: none;
             margin-right: 5px;
             font-size: 14px;
@@ -158,7 +158,7 @@ if (isset($_GET['message'])) {
 
         .pagination a {
             padding: 8px 12px;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             text-decoration: none;
             border-radius: 4px;
@@ -245,15 +245,15 @@ if (isset($_GET['message'])) {
 </head>
 <body>
     <div class="content-main">
-        <h2 style="color: #2C3162;">Clients' Consent Form</h2>
+        <h2 style="color: #2D008A;">Clients' Consent Form</h2>
 
         <!-- Search Form -->
-        <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+        <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
             <div class="header">
                 <div class="search-container">
                     <label for="search">Search:</label>
                     <input type="text" id="search" class="search-entry" name="search"
-                           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                           value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>"
                            placeholder="Search by MAT ID, name, etc...">
                     <input type="submit" value="Search" class="search-input">
                     <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
@@ -334,7 +334,7 @@ if (isset($_GET['message'])) {
                 // Determine consent status
                 $consentStatus = '';
                 if (!empty($row['consent_status'])) {
-                    if (strtolower($row['consent_status']) == 'yes') {
+                    if (strtolower((string)($row['consent_status'])) == 'yes') {
                         $consentStatus = '<span class="consent-status consent-exists">Consented</span>';
                     } else {
                         $consentStatus = '<span class="consent-status no-consent">Not Consented</span>';
@@ -344,17 +344,17 @@ if (isset($_GET['message'])) {
                 }
 
                 // Format display date - use date_of_consent if available, otherwise use reg_date
-                $displayDate = !empty($row['display_date']) ? htmlspecialchars($row['display_date']) : 'N/A';
+                $displayDate = !empty($row['display_date']) ? htmlspecialchars((string)($row['display_date'])) : 'N/A';
 
                 echo "<tr>
-                        <td>" . htmlspecialchars($row['p_id']) . "</td>
+                        <td>" . htmlspecialchars((string)($row['p_id'])) . "</td>
                         <td>" . $displayDate . "</td>
-                        <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                        <td>" . htmlspecialchars($row['clientName']) . "</td>
+                        <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
                         <td>" . $consentStatus . "</td>
-                        <td>" . htmlspecialchars($row['dob']) . "</td>
-                        <td>" . htmlspecialchars($row['sex']) . "</td>
-                        <td>" . htmlspecialchars($row['current_status']) . "</td>
+                        <td>" . htmlspecialchars((string)($row['dob'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['current_status'])) . "</td>
                         <td class='action-links'>
                             <a href='../patients/view_patient.php?p_id=" . $row['p_id'] . "'>View</a>";
 
@@ -380,19 +380,19 @@ if (isset($_GET['message'])) {
             echo "<div class='pagination'>";
             if ($current_page > 1) {
                 $prev_page = $current_page - 1;
-                echo "<a href='?page=$prev_page" . (isset($_GET['search']) ? "&search=" . urlencode($_GET['search']) : "") . "'>Previous</a>";
+                echo "<a href='?page=$prev_page" . (isset($_GET['search']) ? "&search=" . urlencode((string)($_GET['search'])) : "") . "'>Previous</a>";
             }
 
             // Page numbers
             for ($page = $start_range; $page <= $end_range; $page++) {
                 $active = ($page == $current_page) ? " style='background-color: #1a1f3a;'" : "";
-                echo "<a href='?page=$page" . (isset($_GET['search']) ? "&search=" . urlencode($_GET['search']) : "") . "'$active>$page</a>";
+                echo "<a href='?page=$page" . (isset($_GET['search']) ? "&search=" . urlencode((string)($_GET['search'])) : "") . "'$active>$page</a>";
             }
 
             // Next link
             if ($current_page < $number_of_pages) {
                 $next_page = $current_page + 1;
-                echo "<a href='?page=$next_page" . (isset($_GET['search']) ? "&search=" . urlencode($_GET['search']) : "") . "'>Next</a>";
+                echo "<a href='?page=$next_page" . (isset($_GET['search']) ? "&search=" . urlencode((string)($_GET['search'])) : "") . "'>Next</a>";
             }
             echo "</div>";
         } else {

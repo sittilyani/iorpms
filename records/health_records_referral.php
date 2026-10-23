@@ -625,17 +625,17 @@ $stmt->close();
 
     <!-- Patient Information Display -->
     <div class="info-box">
-        <p><strong>MAT ID:</strong> <?php echo htmlspecialchars($patient['mat_id']); ?></p>
-        <p><strong>Client Name:</strong> <?php echo htmlspecialchars($patient['clientName']); ?></p>
-        <p><strong>Age:</strong> <?php echo htmlspecialchars($patient['age']); ?> | <strong>Sex:</strong> <?php echo htmlspecialchars($patient['sex']); ?></p>
+        <p><strong>MAT ID:</strong> <?php echo htmlspecialchars((string)($patient['mat_id'])); ?></p>
+        <p><strong>Client Name:</strong> <?php echo htmlspecialchars((string)($patient['clientName'])); ?></p>
+        <p><strong>Age:</strong> <?php echo htmlspecialchars((string)($patient['age'])); ?> | <strong>Sex:</strong> <?php echo htmlspecialchars((string)($patient['sex'])); ?></p>
     </div>
 
     <form method="POST" action="" id="triageForm">
         <!-- Hidden fields for patient data -->
-        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($patient['mat_id']); ?>">
-        <input type="hidden" name="clientName" value="<?php echo htmlspecialchars($patient['clientName']); ?>">
-        <input type="hidden" name="age" value="<?php echo htmlspecialchars($patient['age']); ?>">
-        <input type="hidden" name="sex" value="<?php echo htmlspecialchars($patient['sex']); ?>">
+        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($patient['mat_id'])); ?>">
+        <input type="hidden" name="clientName" value="<?php echo htmlspecialchars((string)($patient['clientName'])); ?>">
+        <input type="hidden" name="age" value="<?php echo htmlspecialchars((string)($patient['age'])); ?>">
+        <input type="hidden" name="sex" value="<?php echo htmlspecialchars((string)($patient['sex'])); ?>">
 
         <!-- Section 1: Client Type -->
         <div class="section-title">Client Type Classification</div>
@@ -706,17 +706,17 @@ $stmt->close();
         <div class="form-grid">
             <div class="form-group">
                 <label for="refer_from">Referring Department</label>
-                <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars($user_role); ?>">
+                <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars((string)($user_role)); ?>">
             </div>
 
             <div class="form-group">
                 <label for="mobile">Contact Number</label>
-                <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars($user_mobile); ?>">
+                <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars((string)($user_mobile)); ?>">
             </div>
 
             <div class="form-group">
                 <label for="referral_name">Referring Officer</label>
-                <input type="text" name="referral_name" class="form-control" readonly value="<?php echo htmlspecialchars($referral_name); ?>">
+                <input type="text" name="referral_name" class="form-control" readonly value="<?php echo htmlspecialchars((string)($referral_name)); ?>">
             </div>
         </div>
 
@@ -731,7 +731,7 @@ $stmt->close();
 
                 if ($statusResult->num_rows > 0) {
                     while ($statusRow = $statusResult->fetch_assoc()) {
-                        $statusName = htmlspecialchars($statusRow['role']);
+                        $statusName = htmlspecialchars((string)($statusRow['role']));
                         echo "<option value='$statusName'>$statusName</option>";
                     }
                 } else {

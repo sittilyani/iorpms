@@ -6,7 +6,7 @@ include('../includes/header.php');
 
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
-    echo "<div>" . htmlspecialchars($message) . "</div>";
+    echo "<div>" . htmlspecialchars((string)($message)) . "</div>";
 }
 
 $today = date('Y-m-d');
@@ -36,10 +36,10 @@ $count = $countResult->num_rows > 0 ? $countResult->fetch_assoc()['count'] : 0;
         #print-pdf, #export-excel { width: 140px; height: 40px; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; margin: 0 20px; color: white; }
         #print-pdf { background-color: grey; }
         #export-excel { background-color: green; }
-        h3 { margin-top: 30px; color: #2C3162; }
+        h3 { margin-top: 30px; color: #2D008A; }
         th, td { padding: 10px; white-space: nowrap; }
         table { width: 100%; border-collapse: collapse; }
-        th { background-color: #2C3162; color: white; }
+        th { background-color: #2D008A; color: white; }
         td { border: 1px solid #ddd; }
     </style>
 </head>
@@ -48,7 +48,7 @@ $count = $countResult->num_rows > 0 ? $countResult->fetch_assoc()['count'] : 0;
     <div class="header">
         <button id="print-pdf" onclick="window.print()">Print PDF</button>
         <button id="export-excel" onclick="exportToExcel()">Export to Excel</button>
-        <span style="margin-left: 20px; font-size: 18px; color: #2C3162;">
+        <span style="margin-left: 20px; font-size: 18px; color: #2D008A;">
             Total Records: <strong><?php echo $count; ?></strong>
         </span>
     </div>
@@ -114,18 +114,18 @@ if ($result->num_rows > 0) {
 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
-                <td>" . htmlspecialchars($row['p_id'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['mat_id'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['clientName'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['dob'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['reg_date'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['age'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['sex'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['p_address'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['cso'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['drugname'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['dosage'] ?? 'N/A') . "</td>
-                <td>" . htmlspecialchars($row['lastVisitDate'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars((string)($row['p_id'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['mat_id'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['clientName'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['dob'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['reg_date'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['age'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['sex'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['p_address'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['cso'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['drugname'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['dosage'] ?? 'N/A')) . "</td>
+                <td>" . htmlspecialchars((string)($row['lastVisitDate'] ?? 'N/A')) . "</td>
             </tr>";
     }
     echo "</table>";

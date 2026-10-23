@@ -41,41 +41,41 @@ $errorMessage = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
     // Collect and sanitize form data
-    $mat_id = trim($_POST['mat_id']);
-    $mat_number = trim($_POST['mat_number']);
-    $clientName = trim($_POST['clientName']);
-    $sname = trim($_POST['sname']);
-    $nickName = trim($_POST['nickName']);
-    $nat_id = trim($_POST['nat_id']);
+    $mat_id = trim((string)($_POST['mat_id']));
+    $mat_number = trim((string)($_POST['mat_number']));
+    $clientName = trim((string)($_POST['clientName']));
+    $sname = trim((string)($_POST['sname']));
+    $nickName = trim((string)($_POST['nickName']));
+    $nat_id = trim((string)($_POST['nat_id']));
     $dob = $_POST['dob'];
     $sex = $_POST['sex'];
-    $reg_facility = trim($_POST['reg_facility']);
-    $mflcode = trim($_POST['mflcode']);
+    $reg_facility = trim((string)($_POST['reg_facility']));
+    $mflcode = trim((string)($_POST['mflcode']));
     $county = $_POST['county'];
     $scounty = $_POST['scounty'];
     $residence_scounty = $_POST['residence_scounty'];
-    $p_address = trim($_POST['p_address']);
+    $p_address = trim((string)($_POST['p_address']));
     $reg_date = $_POST['reg_date'];
-    $client_phone = trim($_POST['client_phone']);
+    $client_phone = trim((string)($_POST['client_phone']));
     $mat_status = $_POST['mat_status'];
-    $transfer_id = trim($_POST['transfer_id']);
+    $transfer_id = trim((string)($_POST['transfer_id']));
     $referral_type = $_POST['referral_type'];
     $referring_facility = $_POST['referring_facility'];
-    $reffering_fac_client_number = trim($_POST['reffering_fac_client_number']);
+    $reffering_fac_client_number = trim((string)($_POST['reffering_fac_client_number']));
     $accompanment_type = $_POST['accompanment_type'];
-    $peer_edu_name = trim($_POST['peer_edu_name']);
-    $peer_edu_phone = trim($_POST['peer_edu_phone']);
-    $rx_supporter_name = trim($_POST['rx_supporter_name']);
+    $peer_edu_name = trim((string)($_POST['peer_edu_name']));
+    $peer_edu_phone = trim((string)($_POST['peer_edu_phone']));
+    $rx_supporter_name = trim((string)($_POST['rx_supporter_name']));
     $drugname = $_POST['drugname'];
-    $dosage = trim($_POST['dosage']);
-    $reasons = trim($_POST['reasons']);
+    $dosage = trim((string)($_POST['dosage']));
+    $reasons = trim((string)($_POST['reasons']));
     $current_status = $_POST['current_status'];
-    $hcw_name = trim($_POST['hcw_name']);
+    $hcw_name = trim((string)($_POST['hcw_name']));
     $comp_date = $_POST['comp_date'];
 
     // Format dates
-    $reg_date = date('Y-m-d', strtotime($reg_date));
-    $comp_date = date('Y-m-d H:i:s', strtotime($comp_date));
+    $reg_date = date('Y-m-d', strtotime((string)($reg_date)));
+    $comp_date = date('Y-m-d H:i:s', strtotime((string)($comp_date)));
 
     // Update query
     $query = "UPDATE patients SET mat_id = ?, mat_number = ?, clientName = ?,
@@ -100,6 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             $reasons, $current_status, $hcw_name, $comp_date, $patientId);
 
         if ($stmt->execute()) {
+            $note = (strcasecmp($current_status, 'Dead') === 0 && !empty($_POST['death_cause'])) ? 'Cause of death: ' . trim((string)($_POST['death_cause'])) : null;
+            if ($note !== null) { $ns = $conn->prepare('UPDATE patients SET status_change_notes = ? WHERE p_id = ?'); $ns->bind_param('si', $note, $patientId); $ns->execute(); }
             $successMessage = "Patient Profile updated successfully";
             // Refresh to show updated data
             echo "<script>
@@ -178,7 +180,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                 </div>
                 <div class="form_group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" name="mat_id" value="<?php echo htmlspecialchars($currentSettings['mat_id']); ?>" required>
+                    <input type="text" name="mat_id" value="<?php echo htmlspecialchars((string)($currentSettings['mat_id'])); ?>" required>
                 </div>
                 <div class="form_group">
                     <label for="mat_number">MAT Number</label>
@@ -186,7 +188,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                 </div>
                 <div class="form_group">
                     <label for="clientName">Client Name</label>
-                    <input type="text" name="clientName" value="<?php echo htmlspecialchars($currentSettings['clientName']); ?>" required>
+                    <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($currentSettings['clientName'])); ?>" required>
                 </div>
                 <div class="form_group">
                     <label for="sname">Surname</label>
@@ -206,7 +208,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                 </div>
                 <div class="form_group">
                     <label for="sex">Sex</label>
-                    <input type="text" name="sex" value="<?php echo htmlspecialchars($currentSettings['sex']); ?>" class="readonly-input" readonly>
+                    <input type="text" name="sex" value="<?php echo htmlspecialchars((string)($currentSettings['sex'])); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form_group">
                     <label for="p_address">Current Residence</label>
@@ -408,7 +410,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                 </div>
                 <div class="form_group">
                     <label for="current_status">Current Status</label>
-                    <select name="current_status" required>
+                    <select name="current_status" id="current_status" required onchange="document.getElementById('deathCauseBox').style.display = this.value === 'Dead' ? 'block' : 'none'; document.getElementById('death_cause').required = this.value === 'Dead';">
                         <?php
                         $sql = "SELECT status_name FROM status";
                         $result = $conn->query($sql);
@@ -424,13 +426,20 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                         ?>
                     </select>
                 </div>
+                <div class="form_group" id="deathCauseBox" style="display:none">
+                    <label for="death_cause">Reason / cause of death</label>
+                    <select name="death_cause" id="death_cause">
+                        <option value="">Select cause</option>
+                        <?php $dc = $conn->query("SELECT cause_name, category FROM patient_death_causes WHERE is_active = 1 ORDER BY category, cause_name"); while ($dc && ($d = $dc->fetch_assoc())) echo '<option value="' . htmlspecialchars((string)($d['cause_name'])) . '">' . htmlspecialchars((string)($d['category'] . ' - ' . $d['cause_name'])) . '</option>'; ?>
+                    </select>
+                </div>
                 <div class="form_group">
                     <label for="hcw_name">Healthcare Worker Name</label>
-                    <input type="text" name="hcw_name" value="<?php echo htmlspecialchars($hcwName); ?>" class="readonly-input" readonly>
+                    <input type="text" name="hcw_name" value="<?php echo htmlspecialchars((string)($hcwName)); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form_group">
                     <label for="comp_date">Status Change Date</label>
-                    <input type="datetime-local" name="comp_date" value="<?php echo date('Y-m-d\TH:i', strtotime($currentSettings['comp_date'])); ?>" required>
+                    <input type="datetime-local" name="comp_date" value="<?php echo date('Y-m-d\TH:i', strtotime((string)($currentSettings['comp_date']))); ?>" required>
                 </div>
                 <div class="form_group">
                     <input type="submit" name="update" class="custom-submit-btn" value="Update Patient Information">

@@ -46,7 +46,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                             // Check existence of id parameter before processing further
                             if(isset($_GET["dispense_id"])){
                                 // Get URL parameter
-                                $dispense_id =  trim($_GET["dispense_id"]);
+                                $dispense_id =  trim((string)($_GET["dispense_id"]));
                                 // Prepare a select statement
                                 $sql = "SELECT * FROM dispence WHERE dispense_id = :dispense_id";
                                 if($stmt = $pdo->prepare($sql)){
@@ -139,7 +139,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 <label>Edited By</label></br>
                 <input type="text" name="edited_by" class="form-control" value="
                 <?php
-                echo htmlspecialchars($_SESSION["names"]);
+                echo htmlspecialchars((string)($_SESSION["names"]));
                  ?>"
                  readonly>
             </div>

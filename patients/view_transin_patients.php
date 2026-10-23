@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Transin clients');
 session_start();
 include('../includes/config.php');
 
@@ -24,9 +24,9 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Transfer In Clients</h2>
+    <h2 style="color: #2D008A; ">Transfer In Clients</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -122,21 +122,21 @@ if (isset($_GET['message'])) {
 
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                    <td>" . htmlspecialchars($row['p_id']) . "</td>
-                    <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                    <td>" . htmlspecialchars($row['clientName']) . "</td>
-                    <td>" . htmlspecialchars($row['dob']) . "</td>
-                    <td>" . htmlspecialchars($row['reg_date']) . "</td>
-                    <td>" . htmlspecialchars($row['age']) . "</td>
-                    <td>" . htmlspecialchars($row['sex']) . "</td>
-                    <td>" . htmlspecialchars($row['p_address']) . "</td>
+                    <td>" . htmlspecialchars((string)($row['p_id'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['dob'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['reg_date'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['age'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['p_address'])) . "</td>
                     <td>" . $row['cso'] . "</td>
-                    <td>" . htmlspecialchars($row['drugname']) . "</td>
-                    <td>" . htmlspecialchars($row['dosage']) . "</td>
+                    <td>" . htmlspecialchars((string)($row['drugname'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['dosage'])) . "</td>
                     <td>
-                        <a href='../patients/view_patient.php?p_id=" . htmlspecialchars($row['p_id']) . "'>View</a> |
-                        <a href='../patients/update.php?p_id=" . htmlspecialchars($row['p_id']) . "'>Update</a>
-                     | <a href='../referrals/refer.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>Refer</a>
+                        <a href='../patients/view_patient.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>View</a> |
+                        <a href='../patients/update.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>Update</a>
+                     | <a href='../referrals/refer.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>Refer</a>
                      </td>
                 </tr>";
         }

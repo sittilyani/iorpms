@@ -71,7 +71,7 @@ function getPositiveResults($record) {
 
     $positives = [];
     foreach ($drugs as $field => $label) {
-        if (isset($record[$field]) && strtolower($record[$field]) === 'yes') {
+        if (isset($record[$field]) && strtolower((string)($record[$field])) === 'yes') {
             $positives[] = $label;
         }
     }
@@ -107,7 +107,7 @@ function getToxiStatus($record) {
     ];
 
     foreach ($drugs as $field) {
-        if (isset($record[$field]) && strtolower($record[$field]) === 'yes') {
+        if (isset($record[$field]) && strtolower((string)($record[$field])) === 'yes') {
             return 'Positive';
         }
     }
@@ -153,7 +153,7 @@ $conn->close();
 <body>
     <div class="content-main" style='width: 95%;'>
         <?php if ($patientDetails): ?>
-        <h4><?php echo htmlspecialchars($patientDetails['mat_id']); ?> Toxicology History <span style='font-style: italic;'>for</span> <?php echo htmlspecialchars($patientDetails['clientName']); ?> Enrolment Date: <?php echo htmlspecialchars($patientDetails['reg_date']); ?></h4>
+        <h4><?php echo htmlspecialchars((string)($patientDetails['mat_id'])); ?> Toxicology History <span style='font-style: italic;'>for</span> <?php echo htmlspecialchars((string)($patientDetails['clientName'])); ?> Enrolment Date: <?php echo htmlspecialchars((string)($patientDetails['reg_date'])); ?></h4>
 
         <button class="excel-btn" onclick="exportToExcel()">Export to Excel</button>
         <div style="clear: both;"></div>
@@ -174,13 +174,13 @@ $conn->close();
             <tbody>
                 <?php foreach ($ToxiResultsHistory as $record): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($record['tox_id'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($record['date_of_test']); ?></td>
-                    <td><?php echo htmlspecialchars(getPositiveResults($record)); ?></td>
-                    <td><?php echo htmlspecialchars(getToxiStatus($record)); ?></td>
-                    <td><?php echo htmlspecialchars($record['mode_drug_use']); ?></td>
-                    <td><?php echo htmlspecialchars($record['lab_officer_name']); ?></td>
-                    <td><?php echo htmlspecialchars($record['lab_notes']); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['tox_id'] ?? 'N/A')); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['date_of_test'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)(getPositiveResults($record))); ?></td>
+                    <td><?php echo htmlspecialchars((string)(getToxiStatus($record))); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['mode_drug_use'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['lab_officer_name'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['lab_notes'])); ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -200,7 +200,7 @@ $conn->close();
             var link = document.createElement("a");
             link.href = uri;
             link.style = "visibility:hidden";
-            link.download = "toxicology_results_history_<?php echo htmlspecialchars($mat_id); ?>.xls";
+            link.download = "toxicology_results_history_<?php echo htmlspecialchars((string)($mat_id)); ?>.xls";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

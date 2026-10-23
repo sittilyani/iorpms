@@ -27,9 +27,9 @@ if ($stmt) {
         $total_clients = $row['total_clients'];
 
         if ($total_clients === null || $total_clients == 0) {
-            echo '<p>No clients served on ' . htmlspecialchars($current_display_date) . '.</p>';
+            echo '<p>No clients served on ' . htmlspecialchars((string)($current_display_date)) . '.</p>';
         } else {
-            echo '<p>Clients on ' . htmlspecialchars($current_display_date) . ': <span style="font-weight: bold; color: red;">' . htmlspecialchars($total_clients) . '&nbsp;client(s)</span></p>';
+            echo '<p>Clients on ' . htmlspecialchars((string)($current_display_date)) . ': <span style="font-weight: bold; color: red;">' . htmlspecialchars((string)($total_clients)) . '&nbsp;client(s)</span></p>';
         }
     } else {
         error_log("Error executing query for clients: " . $stmt->error);

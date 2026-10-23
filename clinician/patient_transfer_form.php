@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include "../includes/config.php";
 
@@ -76,17 +76,17 @@ $mflCode = "N/A";
 $facilityIncharge = "N/A";
 $facilityPhone = "N/A";
 
-$queryFacilitySettings = "SELECT facilityname, mflcode, countyname, subcountyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1";
+$queryFacilitySettings = "SELECT fs.facilityname, COALESCE(NULLIF(fs.mflcode,''), f.mflcode) AS mflcode, fs.countyname, fs.subcountyname, fs.facilityincharge, fs.facilityphone FROM facility_settings fs LEFT JOIN facilities f ON f.id = fs.facility_id LIMIT 1";
 $resultFacilitySettings = $conn->query($queryFacilitySettings);
 
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
-    $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
-    $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
-    $subcountyName = htmlspecialchars($rowFacilitySettings['subcountyname']);
+    $facilityName = htmlspecialchars((string)($rowFacilitySettings['facilityname']));
+    $countyName = htmlspecialchars((string)($rowFacilitySettings['countyname']));
+    $subcountyName = htmlspecialchars((string)($rowFacilitySettings['subcountyname']));
     $mflCode = $rowFacilitySettings['mflcode'];
     $facilityIncharge = $rowFacilitySettings['facilityincharge'];
-    $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
+    $facilityPhone = htmlspecialchars((string)($rowFacilitySettings['facilityphone']));
 }
 ?>
 
@@ -108,8 +108,8 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
         .header h2 { font-size: 16px; margin: 5px 0; font-weight: bold; }
         .header h3 { font-size: 14px; margin: 8px 0; font-weight: bold; }
         .logo { width: 120px; height: auto; margin: 10px 0; }
-        .client-photo { position: absolute; top: 30px; right: 60px; width: 100px; height: 120px; border: 2px solid #3498db; background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; text-align: center; padding: 5px; }
-        .section-title { background-color: #3498db; color: white; padding: 8px 40px; margin: 15px 40px 0; font-size: 14px; font-weight: bold; border-radius: 3px; }
+        .client-photo { position: absolute; top: 30px; right: 60px; width: 100px; height: 120px; border: 2px solid #2D008A; background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; text-align: center; padding: 5px; }
+        .section-title { background-color: #2D008A; color: white; padding: 8px 40px; margin: 15px 40px 0; font-size: 14px; font-weight: bold; border-radius: 3px; }
         .form-group-1 { padding: 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 11px; }
@@ -121,11 +121,11 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
         .full-width { grid-column: 1 / -1; }
         .signature-table { width: 92%; border-collapse: collapse; margin-left: auto; margin-right: auto; font-size: 11px; }
         .signature-table th, .signature-table td { border: 1px solid #dcdcdc; padding: 8px; text-align: left; }
-        .signature-table th { background-color: #3498db; color: #fff; font-weight: bold; }
+        .signature-table th { background-color: #2D008A; color: #fff; font-weight: bold; }
         .signature-table td { background-color: #f9f9f9; }
         .signature-table input, .signature-table select { width: 100%; padding: 5px; border: 1px solid #dcdcdc; border-radius: 3px; font-size: 10px; }
-        .submit-button { background-color: #3498db; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; margin: 20px 0; transition: background-color 0.3s; }
-        .submit-button:hover { background-color: #2980b9; }
+        .submit-button { background-color: #2D008A; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; margin: 20px 0; transition: background-color 0.3s; }
+        .submit-button:hover { background-color: #1d0059; }
         .export-button { background-color: #27ae60; color: white; padding: 10px 25px; border: none; border-radius: 5px; font-size: 13px; font-weight: bold; cursor: pointer; margin: 10px 5px; text-decoration: none; display: inline-block; transition: background-color 0.3s; }
         .export-button:hover { background-color: #229954; }
         .button-group { text-align: center; margin: 20px 0;}
@@ -145,13 +145,13 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     <div class="container">
         <?php if ($successMessage): ?>
             <div class="alert alert-success" id="success-message">
-                <?php echo htmlspecialchars($successMessage); ?>
+                <?php echo htmlspecialchars((string)($successMessage)); ?>
             </div>
         <?php endif; ?>
 
         <?php if ($errorMessage): ?>
             <div class="alert alert-danger" id="error-message">
-                <?php echo htmlspecialchars($errorMessage); ?>
+                <?php echo htmlspecialchars((string)($errorMessage)); ?>
             </div>
         <?php endif; ?>
 
@@ -175,7 +175,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
         </div>
 
         <form method="POST" action="save_transfer_form.php" enctype="multipart/form-data">
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id ?? ''); ?>">
+            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($p_id ?? '')); ?>">
 
             <div class="section-title">CLIENT'S DETAILS</div>
 
@@ -202,37 +202,37 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
 
                 <div class="form-group">
                     <label for="clientName" class="required-field">Client Name</label>
-                    <input type="text" id="clientName" name="clientName" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['clientName']) : ''; ?>" required>
+                    <input type="text" id="clientName" name="clientName" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['clientName'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" id="mat_id" name="mat_id" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['mat_id']) : ''; ?>" required>
+                    <input type="text" id="mat_id" name="mat_id" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['mat_id'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="sex">Sex</label>
-                    <input type="text" id="sex" name="sex" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['sex']) : ''; ?>" required>
+                    <input type="text" id="sex" name="sex" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['sex'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="text" id="dob" name="dob" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['dob']) : ''; ?>" required>
+                    <input type="text" id="dob" name="dob" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['dob'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="client_phone">Client Phone</label>
-                    <input type="text" id="client_phone" name="client_phone" value="<?php echo $client ? htmlspecialchars($client['client_phone']) : ''; ?>">
+                    <input type="text" id="client_phone" name="client_phone" value="<?php echo $client ? htmlspecialchars((string)($client['client_phone'])) : ''; ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="reg_facility">MAT Clinic Enrolled In</label>
-                    <input type="text" id="reg_facility" name="reg_facility" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['reg_facility']) : ''; ?>" required>
+                    <input type="text" id="reg_facility" name="reg_facility" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['reg_facility'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="reg_date">MAT Enrollment Date</label>
-                    <input type="text" id="reg_date" name="reg_date" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['reg_date']) : ''; ?>" required>
+                    <input type="text" id="reg_date" name="reg_date" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['reg_date'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -257,7 +257,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
 
                 <div class="form-group">
                     <label for="from_site">From (Referral Site)</label>
-                    <input type="text" name="from_site" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars($client['reg_facility']) : ''; ?>" required>
+                    <input type="text" name="from_site" class="readonly-input" readonly value="<?php echo $client ? htmlspecialchars((string)($client['reg_facility'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -334,7 +334,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
                             <select name="clinician_name" required>
                                 <option value="">Select Clinician</option>
                                 <?php foreach ($clinicians as $clinician): ?>
-                                    <option value="<?php echo htmlspecialchars($clinician); ?>"><?php echo htmlspecialchars($clinician); ?></option>
+                                    <option value="<?php echo htmlspecialchars((string)($clinician)); ?>"><?php echo htmlspecialchars((string)($clinician)); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
@@ -348,7 +348,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
                             <select name="counselor_name" required>
                                 <option value="">Select Counselor</option>
                                 <?php foreach ($clinicians as $clinician): ?>
-                                    <option value="<?php echo htmlspecialchars($clinician); ?>"><?php echo htmlspecialchars($clinician); ?></option>
+                                    <option value="<?php echo htmlspecialchars((string)($clinician)); ?>"><?php echo htmlspecialchars((string)($clinician)); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>

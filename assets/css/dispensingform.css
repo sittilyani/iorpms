@@ -16,7 +16,7 @@
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin: 20px 0;
             text-align: center;
         }
@@ -106,7 +106,7 @@
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
-            color: #2C3162;
+            color: #2D008A;
         }
 
         .form-group input,
@@ -129,7 +129,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 2px dotted #2C3162;
+            border: 2px dotted #2D008A;
             padding: 10px;
             border-radius: 8px;
             background-color: white;

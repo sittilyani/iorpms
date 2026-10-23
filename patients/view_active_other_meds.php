@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Active Other Meds clients');
 session_start();
 include('../includes/config.php');
 
@@ -36,14 +36,14 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../assets/css/tables.css" type="text/css">
 </head>
 <body>
-    <h2 style="color: #2C3162;">Active Clients on Other Medications</h2>
+    <h2 style="color: #2D008A;">Active Clients on Other Medications</h2>
     <p>Clients not on Methadone or Buprenorphine who are receiving other prescriptions.
        <a href="view_active_patients.php">&larr; Active clients on Methadone / Buprenorphine</a></p>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
-            <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+            <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars((string)($_GET['search'] ?? '')); ?>">
             <input type="submit" value="Search" class="search-input">
             <button type="button" onclick="document.getElementById('search').value='';document.getElementById('searchForm').submit();" class="cancel-input">Cancel</button>
             <button type="button" onclick="window.print()">Print PDF</button>
@@ -64,15 +64,15 @@ $result = $conn->query($sql);
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
                 <td><?php echo (int)$row['p_id']; ?></td>
-                <td><?php echo htmlspecialchars($row['mat_id']); ?></td>
-                <td><?php echo htmlspecialchars($row['clientName']); ?></td>
-                <td><?php echo htmlspecialchars($row['age']); ?></td>
-                <td><?php echo htmlspecialchars($row['sex']); ?></td>
-                <td><?php echo htmlspecialchars($row['p_address']); ?></td>
-                <td><?php echo htmlspecialchars($row['cso']); ?></td>
-                <td><?php echo htmlspecialchars($row['other_drugs'] ?? ''); ?></td>
-                <td><?php echo htmlspecialchars($row['last_prescription_date'] ?? ''); ?></td>
-                <td><?php echo htmlspecialchars($row['current_status']); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['mat_id'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['clientName'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['age'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['sex'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['p_address'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['cso'])); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['other_drugs'] ?? '')); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['last_prescription_date'] ?? '')); ?></td>
+                <td><?php echo htmlspecialchars((string)($row['current_status'])); ?></td>
                 <td><a href="view_patient.php?p_id=<?php echo (int)$row['p_id']; ?>">View</a></td>
             </tr>
         <?php endwhile; ?>

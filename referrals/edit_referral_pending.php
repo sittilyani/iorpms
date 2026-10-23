@@ -122,40 +122,40 @@ $stmt->close();
 
         <!-- Display success or error messages -->
         <?php if ($successMessage): ?>
-                <div class="alert alert-success"><?php echo htmlspecialchars($successMessage); ?></div>
+                <div class="alert alert-success"><?php echo htmlspecialchars((string)($successMessage)); ?></div>
         <?php endif; ?>
 
         <?php if ($errorMessage): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage); ?></div>
+                <div class="alert alert-error"><?php echo htmlspecialchars((string)($errorMessage)); ?></div>
         <?php endif; ?>
 
         <form method="POST" action="">
                 <!-- Hidden field for referral_id -->
-                <input type="text" name="referral_id" value="<?php echo htmlspecialchars($referral['referral_id']); ?>">
+                <input type="text" name="referral_id" value="<?php echo htmlspecialchars((string)($referral['referral_id'])); ?>">
 
                 <div class="form-group">
                         <label for="mat_id">MAT ID:</label>
-                        <input type="text" name="mat_id" value="<?php echo htmlspecialchars($referral['mat_id']); ?>" id="readonly-input" readonly>
+                        <input type="text" name="mat_id" value="<?php echo htmlspecialchars((string)($referral['mat_id'])); ?>" id="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                         <label for="clientName">Client Name:</label>
-                        <input type="text" name="clientName" value="<?php echo htmlspecialchars($referral['clientName']); ?>" id="readonly-input" readonly>
+                        <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($referral['clientName'])); ?>" id="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                         <label for="age">Age:</label>
-                        <input type="text" name="age" value="<?php echo htmlspecialchars($referral['age']); ?>" id="readonly-input" readonly>
+                        <input type="text" name="age" value="<?php echo htmlspecialchars((string)($referral['age'])); ?>" id="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                         <label for="sex">Sex:</label>
-                        <input type="text" id="readonly-input" readonly name="sex" value="<?php echo htmlspecialchars($referral['sex']); ?>">
+                        <input type="text" id="readonly-input" readonly name="sex" value="<?php echo htmlspecialchars((string)($referral['sex'])); ?>">
                 </div>
                 <div class="form-group">
                         <label for="refer_from">Refer from Department</label>
-                        <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars($referral['refer_from']); ?>">
+                        <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars((string)($referral['refer_from'])); ?>">
                 </div>
                 <div class="form-group">
                         <label for="mobile">Mobile Number</label>
-                        <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars($user_mobile); ?>">
+                        <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars((string)($user_mobile)); ?>">
                 </div>
                 <div class="form-group">
                         <label for="refer_to">Refer to Department</label>
@@ -179,11 +179,11 @@ $stmt->close();
                 </div>
                 <div class="form-group">
                         <label for="referral_notes">Referral Notes:</label>
-                        <textarea id="referral_notes" name="referral_notes" rows="4" required><?php echo htmlspecialchars($referral['referral_notes']); ?></textarea>
+                        <textarea id="referral_notes" name="referral_notes" rows="4" required><?php echo htmlspecialchars((string)($referral['referral_notes'])); ?></textarea>
                 </div>
                 <div class="form-group">
                         <label for="referral_name">Referring Officer Name</label>
-                        <input type="text" name="referral_name" id="readonly-input" readonly value="<?php echo htmlspecialchars($referral['referral_name']); ?>">
+                        <input type="text" name="referral_name" id="readonly-input" readonly value="<?php echo htmlspecialchars((string)($referral['referral_name'])); ?>">
                 </div>
 
                 <?php if (!$successMessage): ?>

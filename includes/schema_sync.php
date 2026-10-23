@@ -38,7 +38,7 @@ function schema_sync_split(string $sql): array
     // Trigger / routine blocks (DELIMITER $$ ... DELIMITER ;) are skipped
     $sql = preg_replace('/^DELIMITER \$\$.*?^DELIMITER ;[ \t]*$/ms', '', $sql);
 
-    $out = []; $buf = ''; $len = strlen($sql); $i = 0;
+    $out = []; $buf = ''; $len = strlen((string)($sql)); $i = 0;
     while ($i < $len) {
         $c = $sql[$i];
         if ($c === "'" || $c === '"' || $c === '`') {
@@ -61,12 +61,12 @@ function schema_sync_split(string $sql): array
             $end = strpos($sql, '*/', $i + 2); $i = ($end === false) ? $len : $end + 2; continue;
         }
         if ($c === ';') {
-            $s = trim($buf); if ($s !== '') $out[] = $s;
+            $s = trim((string)($buf)); if ($s !== '') $out[] = $s;
             $buf = ''; $i++; continue;
         }
         $buf .= $c; $i++;
     }
-    $s = trim($buf); if ($s !== '') $out[] = $s;
+    $s = trim((string)($buf)); if ($s !== '') $out[] = $s;
     return $out;
 }
 
@@ -80,7 +80,7 @@ function schema_sync_columns(string $createStmt): array
     if ($start === false || $end === false) return [];
     $body = substr($createStmt, $start + 1, $end - $start - 1);
 
-    $parts = []; $depth = 0; $cur = ''; $n = strlen($body);
+    $parts = []; $depth = 0; $cur = ''; $n = strlen((string)($body));
     for ($i = 0; $i < $n; $i++) {
         $c = $body[$i];
         if ($c === "'" || $c === '"' || $c === '`') {
@@ -94,10 +94,10 @@ function schema_sync_columns(string $createStmt): array
         }
         if ($c === '(') $depth++;
         if ($c === ')') $depth--;
-        if ($c === ',' && $depth === 0) { $parts[] = trim($cur); $cur = ''; continue; }
+        if ($c === ',' && $depth === 0) { $parts[] = trim((string)($cur)); $cur = ''; continue; }
         $cur .= $c;
     }
-    if (trim($cur) !== '') $parts[] = trim($cur);
+    if (trim((string)($cur)) !== '') $parts[] = trim((string)($cur));
 
     $cols = [];
     foreach ($parts as $p) {
@@ -136,7 +136,7 @@ function schema_sync(mysqli $conn, string $dumpFile, ?callable $progress = null)
 
     $existing = [];
     $r = $conn->query('SHOW TABLES');
-    while ($r && ($row = $r->fetch_row())) $existing[strtolower($row[0])] = $row[0];
+    while ($r && ($row = $r->fetch_row())) $existing[strtolower((string)($row[0]))] = $row[0];
 
     $run = function (string $sql, string $what) use ($conn, &$rep): bool {
         try {
@@ -150,7 +150,7 @@ function schema_sync(mysqli $conn, string $dumpFile, ?callable $progress = null)
         $i++;
         if ($progress) $progress($i, $total, $name);
 
-        if (!isset($existing[strtolower($name)])) {
+        if (!isset($existing[strtolower((string)($name))])) {
             $create = preg_replace('/^CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?/i', 'CREATE TABLE IF NOT EXISTS ', $t['create']);
             if ($run($create, "create $name")) {
                 $rep['created'][] = $name;
@@ -161,14 +161,14 @@ function schema_sync(mysqli $conn, string $dumpFile, ?callable $progress = null)
             // add missing columns, keeping the blank database's column order
             $local = [];
             $cr = $conn->query("SHOW COLUMNS FROM `$name`");
-            while ($cr && ($c = $cr->fetch_assoc())) $local[strtolower($c['Field'])] = true;
+            while ($cr && ($c = $cr->fetch_assoc())) $local[strtolower((string)($c['Field']))] = true;
             $prev = null;
             foreach ($t['cols'] as $col => $def) {
-                if (!isset($local[strtolower($col)])) {
+                if (!isset($local[strtolower((string)($col))])) {
                     $pos = $prev !== null ? "AFTER `$prev`" : 'FIRST';
                     if ($run("ALTER TABLE `$name` ADD COLUMN `$col` $def $pos", "add column $name.$col")) {
                         $rep['columns'][] = "$name.$col";
-                        $local[strtolower($col)] = true;
+                        $local[strtolower((string)($col))] = true;
                     }
                 }
                 $prev = $col;

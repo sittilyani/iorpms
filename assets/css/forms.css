@@ -25,7 +25,7 @@
         }
 
         h2 {
-            color: linear-gradient(135deg, #1a2a6c, #2b5876);
+            color: linear-gradient(135deg, #2D008A, #1d0059);
             text-align: center;
             margin-bottom: 30px;
             font-size: 1.8em;
@@ -94,7 +94,7 @@
         .custom-submit-btn {
             grid-column: 1 / -1; /* Make the button span all three columns */
             padding: 15px 25px;
-            background: linear-gradient(135deg, #1a2a6c, #2b5876);
+            background: linear-gradient(135deg, #2D008A, #1d0059);
             color: white;
             border: none;
             border-radius: 5px;

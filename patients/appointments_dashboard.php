@@ -6,7 +6,7 @@ $selectedDate = isset($_GET['filter_date']) ? $_GET['filter_date'] : date('Y-m-d
 // --- 1. Missed Appointments Trend (Last 30 Days) ---
 $trendData = [];
 for ($i = 29; $i >= 0; $i--) {
-        $date = date('Y-m-d', strtotime("-$i days"));
+        $date = date('Y-m-d', strtotime((string)("-$i days")));
         $sql = "SELECT COUNT(DISTINCT p.mat_id) as missed
                         FROM patients p
                         LEFT JOIN pharmacy ph ON p.mat_id = ph.mat_id AND DATE(ph.dispDate) = '$date'
@@ -52,13 +52,13 @@ while($r = $ageRes->fetch_assoc()) { $aLabels[] = $r['age_bracket']; $aValues[] 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
                 .card { border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-                .card-header { background-color: #2C3162; color: white; font-weight: bold; }
+                .card-header { background-color: #2D008A; color: white; font-weight: bold; }
         </style>
 </head>
 <body class="bg-light">
 <div class="container-fluid mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><span style="color: #2C3162;">Clinical Dashboard:</span> Missed Dispensing</h2>
+                <h2><span style="color: #2D008A;">Clinical Dashboard:</span> Missed Dispensing</h2>
                 <a href="view_appointment_patients.php?filter_date=<?php echo $selectedDate; ?>" class="btn btn-secondary">Back to Patient List</a>
         </div>
 
@@ -101,7 +101,7 @@ new Chart(document.getElementById('trendChart'), {
                 datasets: [{
                         label: 'Total Missed',
                         data: <?php echo json_encode(array_values($trendData)); ?>,
-                        borderColor: '#2C3162',
+                        borderColor: '#2D008A',
                         backgroundColor: 'rgba(44, 49, 98, 0.1)',
                         fill: true,
                         tension: 0.3

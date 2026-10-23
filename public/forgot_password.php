@@ -63,7 +63,7 @@ $message   = '';
 $messageOk = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
+    $email = trim((string)($_POST['email'] ?? ''));
 
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = 'Please enter a valid email address.';
@@ -93,8 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ins->execute();
             $ins->close();
 
-            $resetLink = rtrim(APP_URL, '/') . '/public/reset_password_confirm.php?token=' . $rawToken;
-            $firstName = htmlspecialchars($user['first_name'] ?: 'there');
+            $resetLink = rtrim((string)(APP_URL), '/') . '/public/reset_password_confirm.php?token=' . $rawToken;
+            $firstName = htmlspecialchars((string)($user['first_name'] ?: 'there'));
 
             $body = "
                 <p>Hi {$firstName},</p>
@@ -148,13 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p style="text-align:center;color:#555;">Enter the email address on your account and we'll send you a link to reset your password.</p>
 
         <?php if ($message): ?>
-            <div class="msg <?= $messageOk ? 'msg-ok' : 'msg-err' ?>"><?= htmlspecialchars($message) ?></div>
+            <div class="msg <?= $messageOk ? 'msg-ok' : 'msg-err' ?>"><?= htmlspecialchars((string)($message)) ?></div>
         <?php endif; ?>
 
         <?php if (!$messageOk): ?>
         <form method="post" action="forgot_password.php">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+            <input type="email" id="email" name="email" required value="<?= htmlspecialchars((string)($_POST['email'] ?? '')) ?>">
             <button type="submit" class="btn-submit">Send Reset Link</button>
         </form>
         <?php endif; ?>

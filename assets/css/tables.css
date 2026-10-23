@@ -22,14 +22,14 @@
             font-size: 16px;
         }
 
-        .search-input { background-color: grey; }
-        .cancel-input { background-color: green; }
-        #print-pdf { background-color: grey; }
-        #export-excel { background-color: green; }
+        .search-input { background-color: #2D008A; color: #fff; }
+        .cancel-input { background-color: #E41E39; color: #fff; }
+        #print-pdf { background-color: #AC80EE; }
+        #export-excel { background-color: #04B04B; }
 
         h2 {
             margin: 20px 30px;
-            color: #2C3162;
+            color: #2D008A;
         }
 
         table {
@@ -40,7 +40,7 @@
         }
 
         thead {
-            background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(22, 22, 51, 1) 29%, rgba(9, 9, 121, 1) 78%, rgba(0, 212, 255, 1) 100%);
+            background: #2D008A;
             color: white;
         }
 
@@ -65,7 +65,7 @@
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f7f3fd;
         }
 
         .pagination {
@@ -76,7 +76,7 @@
             display: inline-block;
             padding: 8px 16px;
             text-decoration: none;
-            color: #2C3162;
+            color: #2D008A;
             border: 1px solid #ddd;
             margin: 0 4px;
             border-radius: 5px;
@@ -85,9 +85,9 @@
             background-color: #f1f1f1;
         }
         .pagination span.active {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
-            border: 1px solid #2C3162;
+            border: 1px solid #2D008A;
         }
        
         /* Adjustments for print view */

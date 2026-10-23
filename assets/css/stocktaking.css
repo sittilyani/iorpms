@@ -20,17 +20,17 @@ body {
             border-bottom: 1px solid #e5e7eb;
         }
         th {
-            background-color: #f9fafb;
+            background-color: #2D008A;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #6b7280;
+            color: #ffffff;
             position: sticky;
             top: 0;
             z-index: 10;
         }
         tr:hover {
-            background-color: #f9fafb;
+            background-color: #f3effb;
         }
         input, select {
             width: 100%;
@@ -43,8 +43,8 @@ body {
         }
         input:focus, select:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #2D008A;
+            box-shadow: 0 0 0 3px rgba(45, 0, 138, 0.2);
         }
         input[type="number"] {
             width: 80px;
@@ -57,7 +57,7 @@ body {
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid #3b82f6;
+            border: 2px solid #2D008A;
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;

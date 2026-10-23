@@ -28,10 +28,10 @@ $errorMessage   = '';
 // Handle POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 
-    $next_appointment_raw = trim($_POST['next_appointment']);
-    $hcw_name             = trim($_POST['hcw_name']);
+    $next_appointment_raw = trim((string)($_POST['next_appointment']));
+    $hcw_name             = trim((string)($_POST['hcw_name']));
 
-    $next_appointment = date('Y-m-d', strtotime($next_appointment_raw));
+    $next_appointment = date('Y-m-d', strtotime((string)($next_appointment_raw)));
 
     if (!$next_appointment) {
         $errorMessage = 'Invalid appointment date.';
@@ -80,7 +80,7 @@ $hcw_name         = $currentSettings['hcw_name'] ?? '';
 
     <?php if ($successMessage): ?>
         <div class="alert alert-success">
-            <?= htmlspecialchars($successMessage) ?>
+            <?= htmlspecialchars((string)($successMessage)) ?>
         </div>
 
         <!-- 2 SECOND REDIRECT -->
@@ -93,7 +93,7 @@ $hcw_name         = $currentSettings['hcw_name'] ?? '';
 
     <?php if ($errorMessage): ?>
         <div class="alert alert-danger">
-            <?= htmlspecialchars($errorMessage) ?>
+            <?= htmlspecialchars((string)($errorMessage)) ?>
         </div>
     <?php endif; ?>
 
@@ -105,7 +105,7 @@ $hcw_name         = $currentSettings['hcw_name'] ?? '';
             <input type="date"
                    class="form-control"
                    name="next_appointment"
-                   value="<?= htmlspecialchars(date('Y-m-d', strtotime($next_appointment))) ?>"
+                   value="<?= htmlspecialchars((string)(date('Y-m-d', strtotime((string)($next_appointment))))) ?>"
                    required>
         </div>
 
@@ -113,7 +113,7 @@ $hcw_name         = $currentSettings['hcw_name'] ?? '';
             <label class="form-label">Service Provider Name</label>
             <textarea class="form-control"
                       name="hcw_name"
-                      rows="3"><?= htmlspecialchars($hcw_name) ?></textarea>
+                      rows="3"><?= htmlspecialchars((string)($hcw_name)) ?></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Appointment</button>

@@ -22,7 +22,7 @@ $error_msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['search_patient'])) {
         // Handle patient search
-        $search_term = trim($_POST['search_term'] ?? '');
+        $search_term = trim((string)($_POST['search_term'] ?? ''));
 
         if (!empty($search_term)) {
             $search_like = "%$search_term%";
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
 
                 if ($stmt->execute()) {
-                    $success_msg = "Patient referred successfully to " . htmlspecialchars($refer_to);
+                    $success_msg = "Patient referred successfully to " . htmlspecialchars((string)($refer_to));
                 } else {
                     $error_msg = "Error creating referral: " . $stmt->error;
                 }
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($stmt->execute()) {
                 if (!isset($success_msg)) {
-                    $success_msg = "Patient checked in successfully for " . htmlspecialchars($visit_type);
+                    $success_msg = "Patient checked in successfully for " . htmlspecialchars((string)($visit_type));
                 }
             } else {
                 $error_msg = "Error recording check-in: " . $stmt->error;
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             unset($selected_patient);
             $patients = [];
         } else {
-            $error_msg = "Patient not found with MAT ID: " . htmlspecialchars($mat_id);
+            $error_msg = "Patient not found with MAT ID: " . htmlspecialchars((string)($mat_id));
         }
     } elseif (isset($_POST['select_patient'])) {
         // Handle patient selection
@@ -173,7 +173,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
         }
 
         header {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #2D008A, #1d0059);
             color: white;
             padding: 20px 0;
             margin-bottom: 30px;
@@ -255,7 +255,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
         }
 
         .form-control:focus {
-            border-color: #3498db;
+            border-color: #2D008A;
             outline: none;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
@@ -274,12 +274,12 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #2D008A, #1d0059);
             color: white;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2980b9, #1f618d);
+            background: linear-gradient(135deg, #1d0059, #1f618d);
             transform: translateY(-2px);
         }
 
@@ -506,7 +506,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                 <p>Manage patient check-ins and referrals to other departments</p>
             </div>
             <div class="user-info">
-                <p>Logged in as: <strong><?php echo htmlspecialchars($user_name); ?></strong></p>
+                <p>Logged in as: <strong><?php echo htmlspecialchars((string)($user_name)); ?></strong></p>
                 <p><?php echo date('F j, Y'); ?></p>
             </div>
         </div>
@@ -544,7 +544,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                                    name="search_term"
                                    class="form-control"
                                    placeholder="Enter MAT ID or patient name..."
-                                   value="<?php echo htmlspecialchars($_POST['search_term'] ?? ''); ?>">
+                                   value="<?php echo htmlspecialchars((string)($_POST['search_term'] ?? '')); ?>">
                         </div>
                         <button type="submit" name="search_patient" class="btn btn-primary">
                             Search Patient
@@ -556,13 +556,13 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                             <?php foreach ($patients as $patient): ?>
                                 <div class="patient-item">
                                     <div class="patient-info">
-                                        <h4><?php echo htmlspecialchars($patient['clientName'] . ' ' . $patient['sname']); ?></h4>
-                                        <p>MAT ID: <?php echo htmlspecialchars($patient['mat_id']); ?> |
-                                           Age: <?php echo htmlspecialchars($patient['age']); ?> |
-                                           Sex: <?php echo htmlspecialchars($patient['sex']); ?></p>
+                                        <h4><?php echo htmlspecialchars((string)($patient['clientName'] . ' ' . $patient['sname'])); ?></h4>
+                                        <p>MAT ID: <?php echo htmlspecialchars((string)($patient['mat_id'])); ?> |
+                                           Age: <?php echo htmlspecialchars((string)($patient['age'])); ?> |
+                                           Sex: <?php echo htmlspecialchars((string)($patient['sex'])); ?></p>
                                     </div>
                                     <form method="POST" action="" style="margin: 0;">
-                                        <input type="hidden" name="select_patient" value="<?php echo htmlspecialchars($patient['mat_id']); ?>">
+                                        <input type="hidden" name="select_patient" value="<?php echo htmlspecialchars((string)($patient['mat_id'])); ?>">
                                         <button type="submit" class="btn btn-secondary btn-sm">Select</button>
                                     </form>
                                 </div>
@@ -587,13 +587,13 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                         ?>
                             <div class="checkin-item">
                                 <div class="checkin-patient">
-                                    <?php echo htmlspecialchars($checkin['clientName'] . ' ' . $checkin['sname']); ?>
+                                    <?php echo htmlspecialchars((string)($checkin['clientName'] . ' ' . $checkin['sname'])); ?>
                                 </div>
-                                <span class="checkin-type type-<?php echo strtolower($checkin['visit_type'] ?? 'revisit'); ?>">
-                                    <?php echo htmlspecialchars($checkin['visit_type'] ?? 'Revisit'); ?>
+                                <span class="checkin-type type-<?php echo strtolower((string)($checkin['visit_type'] ?? 'revisit')); ?>">
+                                    <?php echo htmlspecialchars((string)($checkin['visit_type'] ?? 'Revisit')); ?>
                                 </span>
                                 <div class="checkin-time">
-                                    <?php echo date('g:i A', strtotime($checkin['checkin_date'])); ?>
+                                    <?php echo date('g:i A', strtotime((string)($checkin['checkin_date']))); ?>
                                 </div>
                             </div>
                         <?php endwhile; ?>
@@ -615,25 +615,25 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                             <div class="detail-item">
                                 <span class="detail-label">Patient Name</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['clientName'] . ' ' . $selected_patient['sname']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['clientName'] . ' ' . $selected_patient['sname'])); ?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">MAT ID</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['mat_id']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['mat_id'])); ?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Age</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['age']); ?> years
+                                    <?php echo htmlspecialchars((string)($selected_patient['age'])); ?> years
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Sex</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['sex']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['sex'])); ?>
                                 </span>
                             </div>
                         </div>
@@ -641,7 +641,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
 
                     <!-- Check-in Form -->
                     <form method="POST" action="">
-                        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($selected_patient['mat_id']); ?>">
+                        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($selected_patient['mat_id'])); ?>">
 
                         <div class="form-group">
                             <label>Visit Type:</label>
@@ -666,8 +666,8 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                             <select id="refer_to" name="refer_to" class="form-control">
                                 <option value="">-- Select Department --</option>
                                 <?php foreach ($roles as $role): ?>
-                                    <option value="<?php echo htmlspecialchars($role); ?>">
-                                        <?php echo htmlspecialchars($role); ?>
+                                    <option value="<?php echo htmlspecialchars((string)($role)); ?>">
+                                        <?php echo htmlspecialchars((string)($role)); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -690,7 +690,7 @@ $recent_checkins_result = mysqli_query($conn, $recent_checkins_sql);
                             <button type="submit" name="submit_checkin" class="btn btn-success">
                                 Complete Check-in
                             </button>
-                            <a href="../patients/update.php?mat_id=<?php echo urlencode($selected_patient['mat_id']); ?>"
+                            <a href="../patients/update.php?mat_id=<?php echo urlencode((string)($selected_patient['mat_id'])); ?>"
                                class="btn btn-primary">
                                 Update Patient Info
                             </a>

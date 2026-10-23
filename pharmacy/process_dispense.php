@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         $conn->rollback();
-        echo "Error: " . htmlspecialchars($e->getMessage());
+        echo "Error: " . htmlspecialchars((string)($e->getMessage()));
     }
 }
 ?>

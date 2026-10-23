@@ -37,7 +37,7 @@ if ($result->num_rows > 0) {
         $is_ltfu = false;
 
         for ($i = 1; $i <= 15; $i++) {
-            $check_date = date('Y-m-d', strtotime("$today -$i day"));
+            $check_date = date('Y-m-d', strtotime((string)("$today -$i day")));
             if (!in_array($check_date, $visit_dates)) {
                 $missing_days_count++;
 

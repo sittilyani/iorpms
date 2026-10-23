@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include "../includes/config.php";
 
@@ -94,7 +94,7 @@ $stmt->close();
             font-size: 1.1em;
             color: #2c3e50;
             padding-left: 10px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2D008A;
             background-color: #f8f9fa;
             padding: 10px;
             border-radius: 4px;
@@ -163,7 +163,7 @@ $stmt->close();
         }
 
         .btn-submit {
-            background-color: #3498db;
+            background-color: #2D008A;
             color: white;
             border: none;
             padding: 12px 30px;
@@ -176,7 +176,7 @@ $stmt->close();
         }
 
         .btn-submit:hover {
-            background-color: #2980b9;
+            background-color: #1d0059;
         }
 
         .form-row {
@@ -366,8 +366,8 @@ $stmt->close();
                         foreach($marital_statuses as $status):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="marital_<?php echo strtolower(str_replace(' ', '_', $status)); ?>" name="marital_status" value="<?php echo $status; ?>" required>
-                            <label for="marital_<?php echo strtolower(str_replace(' ', '_', $status)); ?>"><?php echo $status; ?></label>
+                            <input type="radio" id="marital_<?php echo strtolower((string)(str_replace(' ', '_', $status))); ?>" name="marital_status" value="<?php echo $status; ?>" required>
+                            <label for="marital_<?php echo strtolower((string)(str_replace(' ', '_', $status))); ?>"><?php echo $status; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -399,8 +399,8 @@ $stmt->close();
                         foreach($living_options as $option):
                         ?>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="living_<?php echo strtolower(str_replace([' ', "'"], ['_', ''], $option)); ?>" name="living_arrangements_detail[]" value="<?php echo $option; ?>">
-                            <label for="living_<?php echo strtolower(str_replace([' ', "'"], ['_', ''], $option)); ?>"><?php echo $option; ?></label>
+                            <input type="checkbox" id="living_<?php echo strtolower((string)(str_replace([' ', "'"], ['_', ''], $option))); ?>" name="living_arrangements_detail[]" value="<?php echo $option; ?>">
+                            <label for="living_<?php echo strtolower((string)(str_replace([' ', "'"], ['_', ''], $option))); ?>"><?php echo $option; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -482,8 +482,8 @@ $stmt->close();
                         foreach($education_levels as $level):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="education_<?php echo strtolower($level); ?>" name="education_level" value="<?php echo $level; ?>" required>
-                            <label for="education_<?php echo strtolower($level); ?>"><?php echo $level; ?></label>
+                            <input type="radio" id="education_<?php echo strtolower((string)($level)); ?>" name="education_level" value="<?php echo $level; ?>" required>
+                            <label for="education_<?php echo strtolower((string)($level)); ?>"><?php echo $level; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -517,8 +517,8 @@ $stmt->close();
                         foreach($employment_statuses as $status):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="employment_<?php echo strtolower(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status)); ?>" name="employment_status" value="<?php echo $status; ?>" required>
-                            <label for="employment_<?php echo strtolower(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status)); ?>"><?php echo $status; ?></label>
+                            <input type="radio" id="employment_<?php echo strtolower((string)(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status))); ?>" name="employment_status" value="<?php echo $status; ?>" required>
+                            <label for="employment_<?php echo strtolower((string)(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status))); ?>"><?php echo $status; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -611,8 +611,8 @@ $stmt->close();
                             foreach($dependent_options as $option):
                             ?>
                             <div class="checkbox-item">
-                                <input type="checkbox" id="dependent_<?php echo strtolower($option); ?>" name="dependents[]" value="<?php echo $option; ?>">
-                                <label for="dependent_<?php echo strtolower($option); ?>"><?php echo $option; ?></label>
+                                <input type="checkbox" id="dependent_<?php echo strtolower((string)($option)); ?>" name="dependents[]" value="<?php echo $option; ?>">
+                                <label for="dependent_<?php echo strtolower((string)($option)); ?>"><?php echo $option; ?></label>
                             </div>
                             <?php endforeach; ?>
                         </div>
@@ -657,10 +657,10 @@ $stmt->close();
                                 ?>
                                 <tr>
                                     <td><?php echo $relationship; ?></td>
-                                    <td><input type="checkbox" name="support_cash_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                    <td><input type="checkbox" name="support_food_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                    <td><input type="checkbox" name="support_shelter_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                    <td><input type="checkbox" name="support_psychological_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
+                                    <td><input type="checkbox" name="support_cash_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                    <td><input type="checkbox" name="support_food_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                    <td><input type="checkbox" name="support_shelter_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                    <td><input type="checkbox" name="support_psychological_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -799,7 +799,7 @@ $stmt->close();
                                     "Assault", "Rape", "Murder", "Sex work", "Fraud/forgery"
                                 ];
                                 foreach($legal_cases as $case):
-                                $case_id = strtolower(str_replace(['/', ' '], ['_', '_'], $case));
+                                $case_id = strtolower((string)(str_replace(['/', ' '], ['_', '_'], $case)));
                                 ?>
                                 <tr>
                                     <td><?php echo $case; ?></td>

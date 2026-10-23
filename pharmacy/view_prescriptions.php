@@ -82,18 +82,18 @@ if ($result->num_rows > 0) {
                 <?php if (!empty($prescriptions)): ?>
                     <?php foreach ($prescriptions as $prescription): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($prescription['prescription_id']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['clientName']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['mat_id']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['prescription_date']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['prescriber_name']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['prescr_status']); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['clientName'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['mat_id'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['prescription_date'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['prescriber_name'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['prescr_status'])); ?></td>
                             <td>
-                                <a href="view_prescription_details.php?id=<?php echo htmlspecialchars($prescription['prescription_id']); ?>" class="btn btn-info btn-sm">View details</a>
-                                <a href="dispense_prescription.php?id=<?php echo htmlspecialchars($prescription['prescription_id']); ?>" class="btn btn-primary btn-sm">&#62;&#62;Next</a>
+                                <a href="view_prescription_details.php?id=<?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?>" class="btn btn-info btn-sm">View details</a>
+                                <a href="dispense_prescription.php?id=<?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?>" class="btn btn-primary btn-sm">&#62;&#62;Next</a>
 
                                 <?php if ($loggedInUserRole === 'Admin' || $loggedInUserRole === 'Pharmacist'): ?>
-                                    <a href="delete_prescription.php?id=<?php echo htmlspecialchars($prescription['prescription_id']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this prescription? This action cannot be undone.');">Delete</a>
+                                    <a href="delete_prescription.php?id=<?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this prescription? This action cannot be undone.');">Delete</a>
                                 <?php endif; ?>
                             </td>
                         </tr>

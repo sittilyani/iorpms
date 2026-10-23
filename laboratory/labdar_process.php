@@ -121,7 +121,7 @@ $conn->close();
 </head>
 <body>
     <?php if (isset($errorMessage)) : ?>
-        <p style="color: red;"><?php echo htmlspecialchars($errorMessage); ?></p>
+        <p style="color: red;"><?php echo htmlspecialchars((string)($errorMessage)); ?></p>
     <?php endif; ?>
 </body>
 </html>

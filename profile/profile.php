@@ -16,8 +16,8 @@ if (empty($_SESSION['csrf_token'])) {
 
 // Initialize variables
 $user = [];
-$success_message = isset($_GET['success']) ? htmlspecialchars($_GET['success']) : '';
-$error_message = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
+$success_message = isset($_GET['success']) ? htmlspecialchars((string)($_GET['success'])) : '';
+$error_message = isset($_GET['error']) ? htmlspecialchars((string)($_GET['error'])) : '';
 
 // Check if user_id is provided
 if (isset($_GET['user_id'])) {
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $file_tmp = $_FILES['photo']['tmp_name'];
         $file_type = $_FILES['photo']['type'];
         $file_size = $_FILES['photo']['size'];
-        $file_ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+        $file_ext = strtolower((string)(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION)));
 
         // Validate file type and size
         if (!in_array($file_type, $allowed_types)) {
@@ -103,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         }
 
         // Generate new filename: full_name_user_id_current_date
-        $full_name = str_replace(' ', '_', trim(($user['first_name'] ?? '') . '_' . ($user['last_name'] ?? '')));
+        $full_name = str_replace(' ', '_', trim((string)(($user['first_name'] ?? '') . '_' . ($user['last_name'] ?? ''))));
         $current_date = date('Ymd');
         $photo = "{$full_name}_{$user_id}_{$current_date}.{$file_ext}";
 
@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         }
     } elseif (isset($_POST['webcam_photo']) && !empty($_POST['webcam_photo'])) {
         // Handle webcam photo
-        $full_name = str_replace(' ', '_', trim(($user['first_name'] ?? '') . '_' . ($user['last_name'] ?? '')));
+        $full_name = str_replace(' ', '_', trim((string)(($user['first_name'] ?? '') . '_' . ($user['last_name'] ?? ''))));
         $current_date = date('Ymd');
         $photo = "{$full_name}_{$user_id}_{$current_date}.jpg";
 
@@ -156,19 +156,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             header("Location: profile.php?user_id=$user_id&success=Profile updated successfully");
             exit();
         } else {
-            header("Location: profile.php?user_id=$user_id&error=" . urlencode("Update failed: " . $stmt_users->error));
+            header("Location: profile.php?user_id=$user_id&error=" . urlencode((string)("Update failed: " . $stmt_users->error)));
             exit();
         }
         $stmt_users->close();
     } else {
-        header("Location: profile.php?user_id=$user_id&error=" . urlencode("Update preparation failed: " . $conn->error));
+        header("Location: profile.php?user_id=$user_id&error=" . urlencode((string)("Update preparation failed: " . $conn->error)));
         exit;
     }
 }
 
 // Helper function to safely output values
 function safeOutput($value) {
-    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
 }
 ?>
 
@@ -189,7 +189,7 @@ function safeOutput($value) {
             overflow: hidden;
         }
         .profile-header {
-            background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(22, 22, 51, 1) 29%, rgba(9, 9, 121, 1) 78%, rgba(0, 212, 255, 1) 100%);
+            background: linear-gradient(135deg,#2D008A,#4a14b8);
             color: white;
             padding: 20px;
             text-align: center;
@@ -339,7 +339,7 @@ function safeOutput($value) {
                 <div class="profile-body">
                     <form method="POST" action="" enctype="multipart/form-data">
                         <input type="hidden" name="user_id" value="<?= safeOutput($user['user_id']); ?>">
-                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']); ?>">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string)($_SESSION['csrf_token'])); ?>">
                         <input type="hidden" name="webcam_photo" id="webcam_photo">
                         <div class="form-grid">
                             <div class="form-group">

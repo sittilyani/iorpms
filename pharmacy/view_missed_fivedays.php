@@ -19,33 +19,13 @@ if (isset($_GET['mat_id'])) {
     $row_patient = $result_patient->fetch_assoc();
 
     // Get and normalize the patient's current status
-    $current_status = strtolower(trim($row_patient['current_status']));
+    $current_status = strtolower((string)(trim((string)($row_patient['current_status']))));
 
-    // Fetch the last visitDate/ dispensing date (dispDate) for the patient from the pharmacy table
-    $query_last_visit = "SELECT MAX(dispDate) AS last_comp_date FROM pharmacy WHERE mat_id = ? AND dosage > 0 AND (drugname = 'Methadone' OR drugname LIKE 'Buprenorphine%')";
-    $stmt_last_visit = $conn->prepare($query_last_visit);
-    $stmt_last_visit->bind_param("s", $mat_id);
-    $stmt_last_visit->execute();
-    $result_last_visit = $stmt_last_visit->get_result();
-    $row_last_visit = $result_last_visit->fetch_assoc();
-
-    // Check and handle the last_comp_date value
-    if ($row_last_visit && !empty($row_last_visit['last_comp_date'])) {
-        $last_comp_date = $row_last_visit['last_comp_date'];
-        echo "<p style='margin-left: 20px; background-color: yellow;  font-weight: normal; padding: 10px; width: 90%; color: red;'>Last visit/dispensed date was on " . htmlspecialchars($last_comp_date, ENT_QUOTES, 'UTF-8') . "</p>";
-    } else {
-        $last_comp_date = "No dispensing record in pharmacy";
-        echo "<p style='margin-left: 20px; background-color: yellow; padding: 10px; width: 400px; color: red;'>" . htmlspecialchars($last_comp_date, ENT_QUOTES, 'UTF-8') . "</p>";
-    }
-
+    // last visit and patient status are shown in the grid above the form; only the missed dates are listed here
     // Check current status
     if (in_array($current_status, ["active", "defaulted"])) {
         // Display missing dates for active or defaulted patients
         displayMissingDates($conn, $mat_id);
-    } else {
-        // Display status message for other statuses
-        $status_message = getStatusMessage($current_status);
-        echo "<p style='margin-left: 20px; color: red;'>Status:" . htmlspecialchars($status_message) . "</p>";
     }
 } else {
     echo "<p style='margin-left: 20px; color: red;'>Patient ID not provided.</p>";

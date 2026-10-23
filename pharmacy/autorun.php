@@ -40,7 +40,7 @@ try {
                 //$dosage = $last_visit_result['dosage'];
 
                 // Calculate the difference between the current date and the last visit date
-                $date_diff = strtotime(date('Y-m-d')) - strtotime($last_visit_date);
+                $date_diff = strtotime((string)(date('Y-m-d'))) - strtotime((string)($last_visit_date));
 
                 // Convert the date difference to number of days
                 $days_diff = floor($date_diff / (60 * 60 * 24));

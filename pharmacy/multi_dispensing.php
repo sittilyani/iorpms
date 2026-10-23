@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
         $endDate = $_POST['end_date'];
         $mat_id = $_POST['mat_id'];
 
-        if (strtotime($startDate) > strtotime($endDate)) {
+        if (strtotime((string)($startDate)) > strtotime((string)($endDate))) {
             throw new Exception("End date must be after start date.");
         }
 
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css">
     <style>
@@ -194,14 +194,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162;">Multi-Date Dispensing</h2>
+    <h2 style="color: #2D008A;">Multi-Date Dispensing</h2>
 
     <?php if (!empty($successMessages)): ?>
         <div class="alert alert-success">
             <h4>Successfully Dispensed:</h4>
             <ul>
                 <?php foreach ($successMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
             <h4>Errors:</h4>
             <ul>
                 <?php foreach ($errorMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -221,10 +221,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
         <div id="patientInfo">
             <h4>Selected Patient</h4>
             <div class="row">
-                <div class="col-md-3"><strong>MAT ID:</strong> <span id="infoMatId"><?php echo htmlspecialchars($patient['mat_id']); ?></span></div>
-                <div class="col-md-3"><strong>Name:</strong> <span id="infoName"><?php echo htmlspecialchars($patient['clientName']); ?></span></div>
-                <div class="col-md-3"><strong>Status:</strong> <span id="infoStatus"><?php echo htmlspecialchars($patient['current_status']); ?></span></div>
-                <div class="col-md-3"><strong>Drug:</strong> <span style="color: red;" id="infoDrugname"><?php echo htmlspecialchars($patient['drugname'] ?? 'Methadone'); ?></span></div>
+                <div class="col-md-3"><strong>MAT ID:</strong> <span id="infoMatId"><?php echo htmlspecialchars((string)($patient['mat_id'])); ?></span></div>
+                <div class="col-md-3"><strong>Name:</strong> <span id="infoName"><?php echo htmlspecialchars((string)($patient['clientName'])); ?></span></div>
+                <div class="col-md-3"><strong>Status:</strong> <span id="infoStatus"><?php echo htmlspecialchars((string)($patient['current_status'])); ?></span></div>
+                <div class="col-md-3"><strong>Drug:</strong> <span style="color: red;" id="infoDrugname"><?php echo htmlspecialchars((string)($patient['drugname'] ?? 'Methadone')); ?></span></div>
                 <div class="col-md-3"><strong>Dosage:</strong> <span style="color: red; font-weight: bold;" id="infoDosage"><?php echo number_format($patient['dosage'] ?? 0, 2); ?></span></div>
             </div>
         </div>
@@ -233,9 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
     <?php endif; ?>
 
     <form method="POST" action="" id="dispensingForm">
-        <input type="hidden" name="mat_id" id="formMatId" value="<?php echo htmlspecialchars($mat_id); ?>">
+        <input type="hidden" name="mat_id" id="formMatId" value="<?php echo htmlspecialchars((string)($mat_id)); ?>">
         <input type="hidden" id="patientDosage" value="<?php echo number_format($patient['dosage'] ?? 0, 2); ?>">
-        <input type="hidden" name="pharm_officer_name" value="<?php echo htmlspecialchars($pharm_officer_name); ?>">
+        <input type="hidden" name="pharm_officer_name" value="<?php echo htmlspecialchars((string)($pharm_officer_name)); ?>">
         <div class="date-range-form">
             <div class="row">
                 <div class="col-md-3">

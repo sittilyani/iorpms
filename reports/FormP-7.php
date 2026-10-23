@@ -13,8 +13,8 @@ $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : $defaultStartDat
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : $defaultEndDate;
 
 // Validate dates
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 // Sample data pulling - replace with actual queries
 // For now, using placeholders with 0
@@ -62,12 +62,12 @@ $queryFacilitySettings = "SELECT facilityname, mflcode, countyname, subcountynam
 $resultFacilitySettings = $conn->query($queryFacilitySettings);
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
-    $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
-    $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
-    $subcountyName = htmlspecialchars($rowFacilitySettings['subcountyname']);
+    $facilityName = htmlspecialchars((string)($rowFacilitySettings['facilityname']));
+    $countyName = htmlspecialchars((string)($rowFacilitySettings['countyname']));
+    $subcountyName = htmlspecialchars((string)($rowFacilitySettings['subcountyname']));
     $mflCode = $rowFacilitySettings['mflcode'];
-    $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
-    $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
+    $facilityIncharge = htmlspecialchars((string)($rowFacilitySettings['facilityincharge']));
+    $facilityPhone = htmlspecialchars((string)($rowFacilitySettings['facilityphone']));
 }
 
 // Check if the user is logged in and fetch their user_id
@@ -246,8 +246,8 @@ $stmt->close();
         <div class="signatures">
             <div class="signature-block">
                 <h4>Submitted by</h4>
-                <label>Pharmacist in charge:</label><input type="text" name="pharmacist_name" value="<?php echo htmlspecialchars($clinician_name); ?>">
-                <label>Signature:</label><input type="text" name="signature" value="<?php echo htmlspecialchars($clinician_name); ?>">
+                <label>Pharmacist in charge:</label><input type="text" name="pharmacist_name" value="<?php echo htmlspecialchars((string)($clinician_name)); ?>">
+                <label>Signature:</label><input type="text" name="signature" value="<?php echo htmlspecialchars((string)($clinician_name)); ?>">
                 <label>Mobile phone int:</label><input type="text" name="phone">
                 <label>Date:</label><input type="date" name="date_submitted">
             </div>

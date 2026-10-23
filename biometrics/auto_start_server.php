@@ -34,7 +34,7 @@ if (!empty($running_ports)) {
 }
 
 // 2. Launch server in background (Windows OS support)
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+if (strtoupper((string)(substr(PHP_OS, 0, 3))) === 'WIN') {
     // Check if SecuGen WebAPI executable exists
     $secugenWebAPI = 'C:\\Program Files\\SecuGen\\SecuGen WebAPI\\SecuGenWebAPI.exe';
     if (file_exists($secugenWebAPI) && ($scanner === 'secugen' || $scanner === 'all')) {

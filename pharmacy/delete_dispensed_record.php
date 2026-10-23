@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
     }
 
     // Redirect after successful operation
-    header("location: dispensing.php?message=" . urlencode($message));
+    header("location: dispensing.php?message=" . urlencode((string)($message)));
     exit;
 }
 
@@ -232,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_delete'])) {
     <div class="modal-overlay">
         <div class="modal-content">
             <h2>Confirm Deletion</h2>
-            <p>You are about to delete the prescription for **<?php echo htmlspecialchars($clientName); ?>** (<?php echo htmlspecialchars($drugname) . " - " . htmlspecialchars($dosage); ?>).</p>
+            <p>You are about to delete the prescription for **<?php echo htmlspecialchars((string)($clientName)); ?>** (<?php echo htmlspecialchars((string)($drugname)) . " - " . htmlspecialchars((string)($dosage)); ?>).</p>
             <form method="POST" action="">
                 <input type="hidden" name="confirm_delete" value="1">
                 <label for="deletion_reason">Reason for Deletion:</label>

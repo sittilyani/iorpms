@@ -267,7 +267,7 @@ $conn->close();
             <i class="fas fa-check-circle"></i> <?php echo $success_message; ?>
         </div>
         <h2>Add Drug Stocks</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="post" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>">
             <div class="form-group">
                 <label for="drugname">Drug Name</label>
                 <select name="drugname" class='select' id="drugname" onchange="getOpeningBal()" required>
@@ -278,7 +278,7 @@ $conn->close();
                         // Reset pointer to beginning if fetched before
                         $result_drugs->data_seek(0);
                         while ($row = $result_drugs->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($row['drugName']) . '">' . htmlspecialchars($row['drugName']) . '</option>';
+                            echo '<option value="' . htmlspecialchars((string)($row['drugName'])) . '">' . htmlspecialchars((string)($row['drugName'])) . '</option>';
                         }
                     } else {
                         echo '<option value="">No drugs found</option>';
@@ -314,7 +314,7 @@ $conn->close();
 
             <div class="form-group">
                 <label for="received_by">Received By</label>
-                <input type="text" name="received_by" class="readonly-input" readonly value="<?php echo htmlspecialchars($received_by); ?>">
+                <input type="text" name="received_by" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($received_by)); ?>">
             </div>
 
             <input type="submit" class='custom-submit-btn' name="submit" value="Add Drug Stocks">

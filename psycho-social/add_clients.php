@@ -18,11 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate and sanitize input
     $formData = [];
     foreach ($fields as $field) {
-        $formData[$field] = trim($_POST[$field] ?? '');
+        $formData[$field] = trim((string)($_POST[$field] ?? ''));
     }
 
     // Calculate age based on date of birth
-    $dob_timestamp = strtotime($formData['dob']);
+    $dob_timestamp = strtotime((string)($formData['dob']));
     $current_timestamp = time();
     $formData['age'] = date('Y', $current_timestamp) - date('Y', $dob_timestamp);
     if (date('md', $current_timestamp) < date('md', $dob_timestamp)) {
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
     if ($stmt) {
 
-    $formData['drugname'] = trim($_POST['drugname'] ?? 'buprenorphine');
+    $formData['drugname'] = trim((string)($_POST['drugname'] ?? 'buprenorphine'));
 
     $stmt->bind_param(
             "sssssssssssssssssssssssssssssss",
@@ -579,7 +579,7 @@ $stmt->close();
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         // Use htmlspecialchars to prevent potential XSS attacks
-                        echo "<option value='" . htmlspecialchars($row['drugName'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['drugName'], ENT_QUOTES, 'UTF-8') . "</option>";
+                        echo "<option value='" . htmlspecialchars((string)($row['drugName']), ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars((string)($row['drugName']), ENT_QUOTES, 'UTF-8') . "</option>";
                     }
                 } else {
                     echo "<option value=''>No drugs available</option>";
@@ -615,7 +615,7 @@ $stmt->close();
         </select>  <br>
 
         <label for="hcw_name">Name of service provider</label><br>
-        <input type="text" name="hcw_name" value="<?php echo htmlspecialchars($hcw_name); ?>" class="readonly-input readonly"><br>
+        <input type="text" name="hcw_name" value="<?php echo htmlspecialchars((string)($hcw_name)); ?>" class="readonly-input readonly"><br>
 
         <div class="form-group">
             <input type="submit" class="custom-submit-btn" value="Submit">

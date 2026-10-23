@@ -30,7 +30,7 @@ function render_product_rows($result) {
                 <td class='px-6 py-4 text-sm text-gray-500'>{$row['expiry_date']}</td>
                 <td class='px-6 py-4 text-sm text-gray-500'>{$total_qty}</td>
                 <td class='px-6 py-4 text-sm text-gray-500'>
-                    <select name='transactionType[]' class='p-2 border rounded-md focus:ring-2 focus:ring-blue-500'>
+                    <select name='transactionType[]' class='p-2 border rounded-md focus:ring-2 focus:ring-purple-700'>
                         <option value=''>Select</option>
                         <option value='Expired'>Expired</option>
                         <option value='Donated'>Donated</option>
@@ -42,7 +42,7 @@ function render_product_rows($result) {
                     </select>
                 </td>
                 <td class='px-6 py-4 text-sm text-gray-500'>
-                    <input type='number' name='quantity[]' min='1' class='w-20 p-2 border rounded-md focus:ring-2 focus:ring-blue-500' placeholder='Qty'>
+                    <input type='number' name='quantity[]' min='1' class='w-20 p-2 border rounded-md focus:ring-2 focus:ring-purple-700' placeholder='Qty'>
                     <input type='hidden' name='drugID[]' value='{$row['drugID']}'>
                     <input type='hidden' name='drugname[]' value='{$row['drugname']}'>
                     <input type='hidden' name='batch_number[]' value='{$row['batch_number']}'>
@@ -57,10 +57,10 @@ function render_product_rows($result) {
 // --- Handle GET request (search products) ---
 if (isset($_GET['q'])) {
     ob_clean();
-    $search_query = trim($_GET['q']);
+    $search_query = trim((string)($_GET['q']));
     $output = "";
 
-    if (strlen($search_query) < 2) {
+    if (strlen((string)($search_query)) < 2) {
         $output = "<tr><td colspan='6' class='px-6 py-4 text-center text-gray-500'>Enter at least 2 characters to search.</td></tr>";
     } else {
         $searchTerm = "%" . $search_query . "%";
@@ -111,10 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['drugID'])) {
 
         foreach ($_POST['drugID'] as $index => $drugID) {
             $drugID = (int)$drugID;
-            $drugname = trim($_POST['drugname'][$index]);
-            $batch_number = trim($_POST['batch_number'][$index]);
-            $expiry_date = trim($_POST['expiry_date'][$index] ?? '');
-            $transactionType = trim($_POST['transactionType'][$index]);
+            $drugname = trim((string)($_POST['drugname'][$index]));
+            $batch_number = trim((string)($_POST['batch_number'][$index]));
+            $expiry_date = trim((string)($_POST['expiry_date'][$index] ?? ''));
+            $transactionType = trim((string)($_POST['transactionType'][$index]));
             $adjustment_qty = (int)$_POST['quantity'][$index];
 
             // Only process valid entries
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['drugID'])) {
             $qty_in = 0;
             $qty_out = 0;
 
-            switch (strtolower($transactionType)) {
+            switch (strtolower((string)($transactionType))) {
                 case 'positive adjustment':
                 case 'returns':
                     $qty_in = $adjustment_qty;
@@ -250,7 +250,7 @@ $conn->close();
         <div class="mb-6 flex items-center gap-4">
             <label for="search" class="font-medium text-gray-700">Search Drugs:</label>
             <input type="text" id="search" placeholder="Search by drug name..."
-                   class="flex-grow p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                   class="flex-grow p-3 border rounded-lg focus:ring-2 focus:ring-purple-700">
         </div>
 
         <form method="POST">
@@ -260,14 +260,14 @@ $conn->close();
                 <?php endif; ?>
             </p>
             <div class="table-container border rounded-md overflow-y-auto max-h-96">
-                <table class="min-w-full divide-y divide-gray-200" style='background: blue';>
-                    <thead class="bg-gray-50 sticky top-0"> <tr>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Drug Name</th>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch Number</th>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Stock</th>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adjustment Type</th>
-                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="sticky top-0" style="background:#2D008A"> <tr>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Drug Name</th>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Batch Number</th>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Expiry Date</th>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Current Stock</th>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Adjustment Type</th>
+                            <th class="p-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="color:#fff">Quantity</th>
                         </tr>
                     </thead>
                     <tbody id="product-table-body" class="bg-white divide-y divide-gray-200">
@@ -290,7 +290,7 @@ $conn->close();
 
             <div class="flex justify-end mt-6">
                 <button type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-400"
+                        class="px-6 py-3 text-white rounded-lg hover:opacity-90 disabled:bg-gray-400" style="background:#04B04B"
                         id="submit-button">
                     Submit Adjustments
                 </button>

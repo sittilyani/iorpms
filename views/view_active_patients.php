@@ -31,7 +31,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -110,11 +110,11 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">All Active Patients List</h2>
+    <h2 style="color: #2D008A; ">All Active Patients List</h2>
 
 
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -220,8 +220,8 @@ if (isset($_GET['message'])) {
                     <td>" . $row['drugname'] . "</td>
                     <td>" . $row['dosage'] . "</td>
                     <td>" . $row['current_status'] . "</td>
-                    <td>" . (!empty($row['visitDate']) ? htmlspecialchars($row['visitDate']) :  "No visit Date") . "</td>
-                    <td>" . (!empty($row['next_appointment']) ? htmlspecialchars($row['next_appointment']) :  "No appoint Date") . "</td>
+                    <td>" . (!empty($row['visitDate']) ? htmlspecialchars((string)($row['visitDate'])) :  "No visit Date") . "</td>
+                    <td>" . (!empty($row['next_appointment']) ? htmlspecialchars((string)($row['next_appointment'])) :  "No appoint Date") . "</td>
                     <td>
                         <a href='../Psycho-social/view.php?p_id=" . $row['p_id'] . "'>View</a> &#124;
                         <a href='../Psycho-social/update.php?p_id=" . $row['p_id'] . "'>Update</a> &#124;

@@ -58,11 +58,11 @@ $rowCount = $result->num_rows;
 // Display a message above the table with the date range
 if ($rowCount > 0) {
         echo "<div style='text-align: left; margin-bottom: 20px;'>
-                        Total Scheduled Appointments between " . date('m/d/Y', strtotime($dateFrom)) . " and " . date('m/d/Y', strtotime($dateTo)) . " is: <span style='color:red; font-weight: bold;'> $rowCount  </span>
+                        Total Scheduled Appointments between " . date('m/d/Y', strtotime((string)($dateFrom))) . " and " . date('m/d/Y', strtotime((string)($dateTo))) . " is: <span style='color:red; font-weight: bold;'> $rowCount  </span>
                     </div>";
 } else {
         echo "<div style='text-align: left; font-weight: bold; color: red; margin-bottom: 20px;'>
-                        No Appointments scheduled in the date range between " . date('m/d/Y', strtotime($dateFrom)) . " and " . date('m/d/Y', strtotime($dateTo)) . ".
+                        No Appointments scheduled in the date range between " . date('m/d/Y', strtotime((string)($dateFrom))) . " and " . date('m/d/Y', strtotime((string)($dateTo))) . ".
                     </div>";
 }
 

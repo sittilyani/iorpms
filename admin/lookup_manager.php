@@ -13,11 +13,11 @@ require_once __DIR__ . '/lookup_tables.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $role = $_SESSION['userrole'] ?? '';
-if (!isset($_SESSION['user_id']) || !in_array(strtolower($role), ['admin', 'super admin', 'demo'], true)) {
+if (!isset($_SESSION['user_id']) || !in_array(strtolower((string)($role)), ['admin', 'super admin', 'demo'], true)) {
     http_response_code(403);
     exit('<div style="font-family:sans-serif;padding:50px;text-align:center;color:#c53030">Access denied - administrators only.</div>');
 }
-$canWrite = strtolower($role) !== 'demo';   // demo accounts may look but not change
+$canWrite = strtolower((string)($role)) !== 'demo';   // demo accounts may look but not change
 
 $tables = lookup_tables();
 $key = $_GET['t'] ?? $_POST['t'] ?? '';
@@ -32,14 +32,14 @@ $table = $meta['table'];
 $cols = [];       // name => ['type'=>, 'auto'=>bool, 'nullable'=>bool, 'editable'=>bool]
 $res = $conn->query("SHOW COLUMNS FROM `$table`");
 if (!$res) {
-    exit('Table "' . htmlspecialchars($table) . '" is not available in this database yet.');
+    exit('Table "' . htmlspecialchars((string)($table)) . '" is not available in this database yet.');
 }
 while ($c = $res->fetch_assoc()) {
     $isAuto = stripos($c['Extra'], 'auto_increment') !== false;
     $isStamp = (stripos($c['Default'] ?? '', 'CURRENT_TIMESTAMP') !== false)
             || in_array($c['Field'], ['date_created', 'comp_date', 'created_at', 'updated_at'], true);
     $cols[$c['Field']] = [
-        'type'     => strtolower($c['Type']),
+        'type'     => strtolower((string)($c['Type'])),
         'pk'       => $c['Key'] === 'PRI',
         'auto'     => $isAuto,
         'nullable' => $c['Null'] === 'YES',
@@ -125,7 +125,7 @@ if (isset($_GET['edit']) && $canWrite) {
     $editRow = $st->get_result()->fetch_assoc();
 }
 
-$q = trim($_GET['q'] ?? '');
+$q = trim((string)($_GET['q'] ?? ''));
 $sql = "SELECT * FROM `$table`";
 $params = []; $ptypes = '';
 if ($q !== '') {
@@ -143,30 +143,30 @@ if ($params) { $st->bind_param($ptypes, ...$params); }
 $st->execute();
 $rows = $st->get_result()->fetch_all(MYSQLI_ASSOC);
 
-$label = fn($n) => ucwords(str_replace('_', ' ', preg_replace('/([a-z])([A-Z])/', '$1 $2', $n)));
+$label = fn($n) => ucwords((string)(str_replace('_', ' ', preg_replace('/([a-z])([A-Z])/', '$1 $2', $n))));
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= htmlspecialchars($meta['label']) ?> - Settings</title>
+<title><?= htmlspecialchars((string)($meta['label'])) ?> - Settings</title>
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 <style>
  body{background:#f5f7fa;font-family:'Segoe UI',Tahoma,sans-serif;padding:20px;}
  .card-box{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:20px;margin-bottom:20px;}
- h2{color:#2C3162;font-size:1.4rem;margin-bottom:4px;} .sub{color:#666;margin-bottom:16px;}
- th{background:#2C3162;color:#fff;white-space:nowrap;} td{vertical-align:middle;}
- .btn-main{background:#2C3162;color:#fff;} .btn-main:hover{background:#82b543;color:#fff;}
+ h2{color:#2D008A;font-size:1.4rem;margin-bottom:4px;} .sub{color:#666;margin-bottom:16px;}
+ th{background:#2D008A;color:#fff;white-space:nowrap;} td{vertical-align:middle;}
+ .btn-main{background:#2D008A;color:#fff;} .btn-main:hover{background:#82b543;color:#fff;}
 </style>
 </head>
 <body>
 <a href="system_settings.php" style="text-decoration:none;">&larr; All settings</a>
-<h2><?= htmlspecialchars($meta['label']) ?></h2>
-<div class="sub"><?= htmlspecialchars($meta['help'] ?? '') ?></div>
+<h2><?= htmlspecialchars((string)($meta['label'])) ?></h2>
+<div class="sub"><?= htmlspecialchars((string)($meta['help'] ?? '')) ?></div>
 
 <?php if ($flash): ?>
-<div class="alert alert-<?= $flashOk ? 'success' : 'danger' ?>"><?= htmlspecialchars($flash) ?></div>
+<div class="alert alert-<?= $flashOk ? 'success' : 'danger' ?>"><?= htmlspecialchars((string)($flash)) ?></div>
 <?php endif; ?>
 <?php if (!$canWrite): ?>
 <div class="alert alert-info">Demo accounts can view settings but not change them.</div>
@@ -176,39 +176,39 @@ $label = fn($n) => ucwords(str_replace('_', ' ', preg_replace('/([a-z])([A-Z])/'
 <div class="card-box">
  <h5><?= $editRow ? 'Edit entry' : 'Add new' ?></h5>
  <form method="POST">
-  <input type="hidden" name="t" value="<?= htmlspecialchars($key) ?>">
+  <input type="hidden" name="t" value="<?= htmlspecialchars((string)($key)) ?>">
   <input type="hidden" name="action" value="<?= $editRow ? 'edit' : 'add' ?>">
-  <?php if ($editRow): ?><input type="hidden" name="id" value="<?= htmlspecialchars($editRow[$pk]) ?>"><?php endif; ?>
+  <?php if ($editRow): ?><input type="hidden" name="id" value="<?= htmlspecialchars((string)($editRow[$pk])) ?>"><?php endif; ?>
   <div class="row">
   <?php foreach ($editable as $n): $isText = stripos($cols[$n]['type'], 'text') !== false; ?>
    <div class="col-md-4 mb-2">
-    <label><?= htmlspecialchars($label($n)) ?><?= $cols[$n]['nullable'] ? '' : ' *' ?></label>
+    <label><?= htmlspecialchars((string)($label($n))) ?><?= $cols[$n]['nullable'] ? '' : ' *' ?></label>
     <?php if ($isText): ?>
-     <textarea class="form-control" name="f[<?= htmlspecialchars($n) ?>]" rows="2"><?= htmlspecialchars($editRow[$n] ?? '') ?></textarea>
+     <textarea class="form-control" name="f[<?= htmlspecialchars((string)($n)) ?>]" rows="2"><?= htmlspecialchars((string)($editRow[$n] ?? '')) ?></textarea>
     <?php else: ?>
-     <input class="form-control" name="f[<?= htmlspecialchars($n) ?>]" value="<?= htmlspecialchars($editRow[$n] ?? '') ?>"
+     <input class="form-control" name="f[<?= htmlspecialchars((string)($n)) ?>]" value="<?= htmlspecialchars((string)($editRow[$n] ?? '')) ?>"
             <?= lm_bind_type($cols[$n]['type']) !== 's' ? 'type="number" step="any"' : 'type="text"' ?>>
     <?php endif; ?>
    </div>
   <?php endforeach; ?>
   </div>
   <button class="btn btn-main" type="submit"><?= $editRow ? 'Save changes' : 'Add' ?></button>
-  <?php if ($editRow): ?><a class="btn btn-light" href="lookup_manager.php?t=<?= urlencode($key) ?>">Cancel</a><?php endif; ?>
+  <?php if ($editRow): ?><a class="btn btn-light" href="lookup_manager.php?t=<?= urlencode((string)($key)) ?>">Cancel</a><?php endif; ?>
  </form>
 </div>
 <?php endif; ?>
 
 <div class="card-box">
  <form method="GET" class="form-inline mb-3">
-  <input type="hidden" name="t" value="<?= htmlspecialchars($key) ?>">
-  <input class="form-control mr-2" name="q" placeholder="Search..." value="<?= htmlspecialchars($q) ?>">
+  <input type="hidden" name="t" value="<?= htmlspecialchars((string)($key)) ?>">
+  <input class="form-control mr-2" name="q" placeholder="Search..." value="<?= htmlspecialchars((string)($q)) ?>">
   <button class="btn btn-main" type="submit">Search</button>
   <span class="ml-3 text-muted"><?= count($rows) ?> record(s)</span>
  </form>
  <div class="table-responsive">
  <table class="table table-bordered table-sm">
   <thead><tr>
-   <?php foreach (array_keys($cols) as $n): ?><th><?= htmlspecialchars($label($n)) ?></th><?php endforeach; ?>
+   <?php foreach (array_keys($cols) as $n): ?><th><?= htmlspecialchars((string)($label($n))) ?></th><?php endforeach; ?>
    <?php if ($canWrite): ?><th>Action</th><?php endif; ?>
   </tr></thead>
   <tbody>
@@ -217,11 +217,11 @@ $label = fn($n) => ucwords(str_replace('_', ' ', preg_replace('/([a-z])([A-Z])/'
     <?php foreach (array_keys($cols) as $n): ?><td><?= htmlspecialchars((string)$r[$n]) ?></td><?php endforeach; ?>
     <?php if ($canWrite): ?>
     <td style="white-space:nowrap;">
-     <a class="btn btn-sm btn-outline-primary" href="lookup_manager.php?t=<?= urlencode($key) ?>&edit=<?= urlencode($r[$pk]) ?>">Edit</a>
+     <a class="btn btn-sm btn-outline-primary" href="lookup_manager.php?t=<?= urlencode((string)($key)) ?>&edit=<?= urlencode((string)($r[$pk])) ?>">Edit</a>
      <form method="POST" style="display:inline" onsubmit="return confirm('Delete this entry?');">
-      <input type="hidden" name="t" value="<?= htmlspecialchars($key) ?>">
+      <input type="hidden" name="t" value="<?= htmlspecialchars((string)($key)) ?>">
       <input type="hidden" name="action" value="delete">
-      <input type="hidden" name="id" value="<?= htmlspecialchars($r[$pk]) ?>">
+      <input type="hidden" name="id" value="<?= htmlspecialchars((string)($r[$pk])) ?>">
       <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
      </form>
     </td>

@@ -60,7 +60,7 @@ if ($selectedMonth < 1 || $selectedMonth > 12) $selectedMonth = $defaultMonth;
 if ($selectedYear < 2000 || $selectedYear > 2100) $selectedYear = $defaultYear;
 
 $startDate = "$selectedYear-$selectedMonth-01";
-$endDate   = date('Y-m-t', strtotime($startDate));
+$endDate   = date('Y-m-t', strtotime((string)($startDate)));
 
 // ---------------------------------------------------------------
 // 4. DRUG SELECTION - HARD-CODED (as per existing logic)
@@ -216,7 +216,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form P7 - Daily Summaries (<?= htmlspecialchars($drugName, ENT_QUOTES, 'UTF-8') ?>)</title>
+    <title>Form P7 - Daily Summaries (<?= htmlspecialchars((string)($drugName), ENT_QUOTES, 'UTF-8') ?>)</title>
     <style>
         /* General Reset and Base Styles */
         *{margin:0;padding:0;box-sizing:border-box}
@@ -288,7 +288,7 @@ $conn->close();
             </div>
             <div class="title-center">
                 <h2>MEDICALLY ASSISTED THERAPY</h2>
-                <p>CUSTOM DAILY SUMMARIES REPORT - <?= htmlspecialchars($drugName, ENT_QUOTES, 'UTF-8') ?></p>
+                <p>CUSTOM DAILY SUMMARIES REPORT - <?= htmlspecialchars((string)($drugName), ENT_QUOTES, 'UTF-8') ?></p>
             </div>
             <div class="form-version">
                 <p>VER. SEP. 2025</p>
@@ -300,19 +300,19 @@ $conn->close();
                 <div class="form-group-1">
                     <div>
                         <label>Facility Name:</label>
-                        <input type="text" readonly value="<?= htmlspecialchars($facilityName, ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="text" readonly value="<?= htmlspecialchars((string)($facilityName), ENT_QUOTES, 'UTF-8') ?>">
                     </div>
                     <div>
                         <label>MFL Code:</label>
-                        <input type="text" readonly value="<?= htmlspecialchars($mflCode, ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="text" readonly value="<?= htmlspecialchars((string)($mflCode), ENT_QUOTES, 'UTF-8') ?>">
                     </div>
                     <div>
                         <label>County:</label>
-                        <input type="text" readonly value="<?= htmlspecialchars($countyName, ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="text" readonly value="<?= htmlspecialchars((string)($countyName), ENT_QUOTES, 'UTF-8') ?>">
                     </div>
                     <div>
                         <label>Sub-County:</label>
-                        <input type="text" readonly value="<?= htmlspecialchars($subcountyName, ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="text" readonly value="<?= htmlspecialchars((string)($subcountyName), ENT_QUOTES, 'UTF-8') ?>">
                     </div>
                 </div>
 
@@ -357,18 +357,18 @@ $conn->close();
                     </thead>
                     <tbody>
                         <?php if (empty($periodEntries)): ?>
-                            <tr><td colspan="9" class="no-data">No data found for <?= date('F Y', strtotime($startDate)) ?>.</td></tr>
+                            <tr><td colspan="9" class="no-data">No data found for <?= date('F Y', strtotime((string)($startDate))) ?>.</td></tr>
                         <?php else: ?>
                             <?php foreach ($periodEntries as $e): ?>
                                 <tr <?= ($e['to_dispensing'] == 0 && $e['dispensed'] == 0) ? 'class="blank-row"' : '' ?>>
-                                    <td><?= date('j-M-Y', strtotime($e['date'])) ?></td>
+                                    <td><?= date('j-M-Y', strtotime((string)($e['date']))) ?></td>
                                     <td class="bal"><?= number_format($e['opening_bal'], 2) ?></td>
                                     <td class="received"><?= number_format($e['to_dispensing'], 2) ?></td>
                                     <td><?= number_format($e['dispensed'], 2) ?></td>
                                     <td class="pharm-bal"><?= number_format($e['pharm_bal'], 2) ?></td>
                                     <td class="closing"><?= number_format($e['closing_bal'], 2) ?></td>
-                                    <td style="color:#000099;"><?= htmlspecialchars($e['issuer'], ENT_QUOTES, 'UTF-8') ?></td>
-                                    <td><?= htmlspecialchars($e['receiver'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td style="color:#000099;"><?= htmlspecialchars((string)($e['issuer']), ENT_QUOTES, 'UTF-8') ?></td>
+                                    <td><?= htmlspecialchars((string)($e['receiver']), ENT_QUOTES, 'UTF-8') ?></td>
                                     <td><?= $e['clients'] ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -379,7 +379,7 @@ $conn->close();
         </div>
 
         <div class="footer">
-            <p>Report Generated By: <?= htmlspecialchars($clinician_name, ENT_QUOTES, 'UTF-8') ?> on <?= date('Y-m-d H:i:s') ?></p>
+            <p>Report Generated By: <?= htmlspecialchars((string)($clinician_name), ENT_QUOTES, 'UTF-8') ?> on <?= date('Y-m-d H:i:s') ?></p>
             <button id="print-pdf" onclick="window.print()">Print Report (PDF)</button>
         </div>
     </div>

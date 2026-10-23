@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h1>Community Quick Screening Tool (FORM 2B) Results</h1>
         <h2>Assessment Summary</h2>
-        <p><strong>Client ID / Name:</strong> <?php echo htmlspecialchars($_POST['client_id'] ?? 'N/A'); ?></p>
+        <p><strong>Client ID / Name:</strong> <?php echo htmlspecialchars((string)($_POST['client_id'] ?? 'N/A')); ?></p>
 
         <hr>
 

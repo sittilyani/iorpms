@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $conn->commit();
 
                                 // Set success message
-                                $success_message = "Edit for " . htmlspecialchars($productname) . " is successful";
+                                $success_message = "Edit for " . htmlspecialchars((string)($productname)) . " is successful";
 
                                 // Redirect after 2 seconds (handled in HTML)
                         } catch (Exception $e) {
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Edit Stock - <?= htmlspecialchars($productname); ?></title>
+        <title>Edit Stock - <?= htmlspecialchars((string)($productname)); ?></title>
         <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
         <link rel="icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
         <link rel="shortcut icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </script>
         <?php endif; ?>
 
-        <h4 style="color: green;">Edit Stock Transactions for - <span style='color:red;'><?= htmlspecialchars($productname); ?></span></h4>
+        <h4 style="color: green;">Edit Stock Transactions for - <span style='color:red;'><?= htmlspecialchars((string)($productname)); ?></span></h4>
         <!-- Stock Details Table -->
         <table class="table table-bordered">
                 <thead>
@@ -173,14 +173,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php else: ?>
                         <?php foreach ($stockDetails as $stock): ?>
                                 <tr>
-                                        <td><?= htmlspecialchars($stock['transID']); ?></td>
-                                        <td><?= htmlspecialchars($stock['transDate']); ?></td>
-                                        <td><?= htmlspecialchars($stock['batch']); ?></td>
-                                        <td><?= htmlspecialchars($stock['expiryDate']); ?></td>
+                                        <td><?= htmlspecialchars((string)($stock['transID'])); ?></td>
+                                        <td><?= htmlspecialchars((string)($stock['transDate'])); ?></td>
+                                        <td><?= htmlspecialchars((string)($stock['batch'])); ?></td>
+                                        <td><?= htmlspecialchars((string)($stock['expiryDate'])); ?></td>
                                         <td>
-                                                <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) . '?productname=' . urlencode($productname); ?>" method="post">
-                                                        <input type="number" name="new_stock_balance" value="<?= htmlspecialchars($stock['stockBalance'] ?? 0); ?>" required min="0">
-                                                        <input type="hidden" name="transID" value="<?= htmlspecialchars($stock['transID']); ?>">
+                                                <form action="<?= htmlspecialchars((string)($_SERVER["PHP_SELF"])) . '?productname=' . urlencode((string)($productname)); ?>" method="post">
+                                                        <input type="number" name="new_stock_balance" value="<?= htmlspecialchars((string)($stock['stockBalance'] ?? 0)); ?>" required min="0">
+                                                        <input type="hidden" name="transID" value="<?= htmlspecialchars((string)($stock['transID'])); ?>">
                                                         <input type="submit" class="btn btn-primary btn-sm" value="Edit Balance">
                                                 </form>
                                         </td>

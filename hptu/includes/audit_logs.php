@@ -44,10 +44,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['userrole'] !== 'Admin') {
                         $result = $conn->query($sql);
                         while ($log = $result->fetch_assoc()): ?>
                         <tr>
-                            <td><small><?= date('d/m/Y H:i', strtotime($log['created_at'])) ?></small></td>
-                            <td><strong><?= htmlspecialchars($log['full_name']) ?></strong></td>
+                            <td><small><?= date('d/m/Y H:i', strtotime((string)($log['created_at']))) ?></small></td>
+                            <td><strong><?= htmlspecialchars((string)($log['full_name'])) ?></strong></td>
                             <td><span class="badge bg-primary"><?= $log['action'] ?></span></td>
-                            <td><small><?= htmlspecialchars($log['details']) ?></small></td>
+                            <td><small><?= htmlspecialchars((string)($log['details'])) ?></small></td>
                             <td><code><?= $log['ip_address'] ?></code></td>
                         </tr>
                         <?php endwhile; ?>

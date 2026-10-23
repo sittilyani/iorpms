@@ -5,7 +5,7 @@ include('../includes/config.php');
 // Handle message display
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
-    echo "<div id='message-container'>" . htmlspecialchars($message) . "</div>";
+    echo "<div id='message-container'>" . htmlspecialchars((string)($message)) . "</div>";
 }
 ?>
 
@@ -21,10 +21,10 @@ if (isset($_GET['message'])) {
     <div class="content-main">
         <h2>Toxicology Results</h2>
 
-        <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+        <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
             <div class="header">
                 <label for="search">Search:</label>
-                <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+                <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars((string)(isset($_GET['search']) ? $_GET['search'] : '')); ?>">
                 <input type="submit" value="Search" class="search-input">
                 <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
 
@@ -112,15 +112,15 @@ if (isset($_GET['message'])) {
 
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                    <td>" . htmlspecialchars($row['tox_id'] ?? 'N/A') . "</td>
-                    <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                    <td>" . htmlspecialchars($row['clientName']) . "</td>
-                    <td>" . htmlspecialchars($row['mode_drug_use']) . "</td>
-                    <td>" . htmlspecialchars($row['date_of_test']) . "</td>
-                    <td>" . htmlspecialchars($row['visitDate']) . "</td>
-                    <td>" . htmlspecialchars($row['lab_officer_name']) . "</td>
+                    <td>" . htmlspecialchars((string)($row['tox_id'] ?? 'N/A')) . "</td>
+                    <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['mode_drug_use'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['date_of_test'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['visitDate'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['lab_officer_name'])) . "</td>
                     <td>
-                        <a href='../laboratory/view_toxicology_results_history.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>View history</a>
+                        <a href='../laboratory/view_toxicology_results_history.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>View history</a>
                     </td>
                 </tr>";
         }
@@ -144,18 +144,18 @@ if (isset($_GET['message'])) {
 
     if ($current_page > 1) {
         $prev_page = $current_page - 1;
-        echo "<a href='?page=$prev_page&search=" . urlencode($search) . "'>Previous</a> ";
+        echo "<a href='?page=$prev_page&search=" . urlencode((string)($search)) . "'>Previous</a> ";
     }
 
     // Page numbers
     for ($page = $start_range; $page <= $end_range; $page++) {
-        echo "<a href='?page=$page&search=" . urlencode($search) . "'>$page</a> ";
+        echo "<a href='?page=$page&search=" . urlencode((string)($search)) . "'>$page</a> ";
     }
 
     // Next link
     if ($current_page < $number_of_pages) {
         $next_page = $current_page + 1;
-        echo "<a href='?page=$next_page&search=" . urlencode($search) . "'>Next</a> ";
+        echo "<a href='?page=$next_page&search=" . urlencode((string)($search)) . "'>Next</a> ";
     }
 
     echo "</div>";
@@ -163,7 +163,7 @@ if (isset($_GET['message'])) {
 
     <script>
         function cancelSearch() {
-            window.location.href = '<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>';
+            window.location.href = '<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>';
         }
 
         function exportToExcel() {

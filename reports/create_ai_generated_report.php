@@ -122,7 +122,7 @@ $today = date('Y-m-d');
 $cohort = [];
 
 foreach ($patients as $matId => $p) {
-    $regDate = $p['reg_date'] ? date('Y-m-d', strtotime($p['reg_date'])) : null;
+    $regDate = $p['reg_date'] ? date('Y-m-d', strtotime((string)($p['reg_date']))) : null;
     $age = computeAge($p['dob'], $p['age']);
 
     $everLtfu = isLtfuLabel($p['current_status']);
@@ -180,14 +180,14 @@ $totalClients = count($cohort);
 
 $monthLabels = [];
 for ($i = 11; $i >= 0; $i--) {
-    $monthLabels[] = date('Y-m', strtotime("-$i months"));
+    $monthLabels[] = date('Y-m', strtotime((string)("-$i months")));
 }
 $inductionsByMonth = array_fill_keys($monthLabels, ['M' => 0, 'F' => 0, 'Other' => 0]);
 foreach ($cohort as $c) {
     if (!$c['reg_date']) continue;
-    $m = date('Y-m', strtotime($c['reg_date']));
+    $m = date('Y-m', strtotime((string)($c['reg_date'])));
     if (!isset($inductionsByMonth[$m])) continue;
-    $sx = strtoupper(substr($c['sex'], 0, 1));
+    $sx = strtoupper((string)(substr($c['sex'], 0, 1)));
     if ($sx === 'M') $inductionsByMonth[$m]['M']++;
     elseif ($sx === 'F') $inductionsByMonth[$m]['F']++;
     else $inductionsByMonth[$m]['Other']++;
@@ -204,7 +204,7 @@ foreach ($monthLabels as $m) {
 }
 foreach ($historyByMat as $matId => $rows) {
     foreach ($rows as $h) {
-        $m = date('Y-m', strtotime($h['status_change_date']));
+        $m = date('Y-m', strtotime((string)($h['status_change_date'])));
         if (!isset($statusByMonth[$m])) continue;
         foreach ($statusesTracked as $label) {
             if (stripos($h['new_status'], $label) !== false) {
@@ -261,9 +261,9 @@ $overallWeanDaysAvg = $weanDaysN ? $weanDaysSum / $weanDaysN : null;
 $prediction = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['predict'])) {
     $inAge = (int)($_POST['p_age'] ?? 0);
-    $inSex = trim($_POST['p_sex'] ?? '');
+    $inSex = trim((string)($_POST['p_sex'] ?? ''));
     $inDosage = (float)($_POST['p_dosage'] ?? 0);
-    $inDrug = trim($_POST['p_drug'] ?? '');
+    $inDrug = trim((string)($_POST['p_drug'] ?? ''));
 
     $inAgeBand = ageBand($inAge);
     $inDosageBand = dosageBand($inDosage);
@@ -341,7 +341,7 @@ function pct($x) { return $x === null ? 'n/a' : round($x * 100, 1) . '%'; }
 <title>AI-Assisted Analytics &amp; Risk Report</title>
 <style>
     body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #222; margin: 10px 20px; }
-    h2 { color: #2C3162; margin-bottom: 4px; }
+    h2 { color: #2D008A; margin-bottom: 4px; }
     h3 { color: #0A1172; border-bottom: 2px solid #0A1172; padding-bottom: 4px; margin-top: 30px; }
     .subtitle { color: #555; margin-top: 0; margin-bottom: 20px; }
     .kpi-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
@@ -400,8 +400,8 @@ foreach ($inductionsByMonth as $m => $v) {
     $total = $v['M'] + $v['F'] + $v['Other'];
     $hM = $maxInd ? round(($v['M'] / $maxInd) * 130) : 0;
     $hF = $maxInd ? round(($v['F'] / $maxInd) * 130) : 0;
-    echo "<div class='month-bar' title='" . htmlspecialchars($m) . ": $total inductions (M:{$v['M']} F:{$v['F']})'>";
-    echo "<div class='lab'>" . htmlspecialchars($m) . " ($total)</div>";
+    echo "<div class='month-bar' title='" . htmlspecialchars((string)($m)) . ": $total inductions (M:{$v['M']} F:{$v['F']})'>";
+    echo "<div class='lab'>" . htmlspecialchars((string)($m)) . " ($total)</div>";
     echo "<div class='seg f' style='height:{$hF}px'></div>";
     echo "<div class='seg m' style='height:{$hM}px'></div>";
     echo "</div>";
@@ -430,7 +430,7 @@ foreach ($inductionsByMonth as $m => $v) {
 <tr><th>Age Group</th><th>Clients</th><th>Ever LTFU</th><th>LTFU Rate</th><th></th></tr>
 <?php foreach ($byAge as $band => $d): $rate = $d['n'] ? $d['ltfu'] / $d['n'] : 0; ?>
 <tr>
-    <td><?php echo htmlspecialchars($band); ?></td>
+    <td><?php echo htmlspecialchars((string)($band)); ?></td>
     <td><?php echo $d['n']; ?></td>
     <td><?php echo $d['ltfu']; ?></td>
     <td><?php echo pct($rate); ?></td>
@@ -444,7 +444,7 @@ foreach ($inductionsByMonth as $m => $v) {
 <tr><th>Dosage Band</th><th>Clients</th><th>Ever LTFU</th><th>LTFU Rate</th><th></th></tr>
 <?php foreach ($byDosage as $band => $d): $rate = $d['n'] ? $d['ltfu'] / $d['n'] : 0; ?>
 <tr>
-    <td><?php echo htmlspecialchars($band); ?></td>
+    <td><?php echo htmlspecialchars((string)($band)); ?></td>
     <td><?php echo $d['n']; ?></td>
     <td><?php echo $d['ltfu']; ?></td>
     <td><?php echo pct($rate); ?></td>
@@ -458,7 +458,7 @@ foreach ($inductionsByMonth as $m => $v) {
 <tr><th>Sex</th><th>Clients</th><th>Ever LTFU</th><th>LTFU Rate</th><th></th></tr>
 <?php foreach ($bySex as $band => $d): $rate = $d['n'] ? $d['ltfu'] / $d['n'] : 0; ?>
 <tr>
-    <td><?php echo htmlspecialchars($band); ?></td>
+    <td><?php echo htmlspecialchars((string)($band)); ?></td>
     <td><?php echo $d['n']; ?></td>
     <td><?php echo $d['ltfu']; ?></td>
     <td><?php echo pct($rate); ?></td>
@@ -472,7 +472,7 @@ foreach ($inductionsByMonth as $m => $v) {
 <tr><th>Time in Program at LTFU</th><th>Clients who went LTFU</th><th>Share of all LTFU cases</th><th></th></tr>
 <?php foreach ($ltfuByTenure as $band => $n): $share = $totalLtfuCount ? $n / $totalLtfuCount : 0; ?>
 <tr>
-    <td><?php echo htmlspecialchars($band); ?></td>
+    <td><?php echo htmlspecialchars((string)($band)); ?></td>
     <td><?php echo $n; ?></td>
     <td><?php echo pct($share); ?></td>
     <td><div class="bar-wrap"><div class="bar-fill" style="width:<?php echo round($share * 220); ?>px"></div></div></td>
@@ -492,7 +492,7 @@ enough historical data for a very specific match, and blends the two so estimate
 <form method="post" class="predict-form">
     <div>
         <label for="p_age">Age</label>
-        <input type="number" min="10" max="100" name="p_age" id="p_age" required value="<?php echo htmlspecialchars($prediction['input']['inAge'] ?? ''); ?>">
+        <input type="number" min="10" max="100" name="p_age" id="p_age" required value="<?php echo htmlspecialchars((string)($prediction['input']['inAge'] ?? '')); ?>">
     </div>
     <div>
         <label for="p_sex">Sex</label>
@@ -503,7 +503,7 @@ enough historical data for a very specific match, and blends the two so estimate
     </div>
     <div>
         <label for="p_dosage">Induction Dosage (mg)</label>
-        <input type="number" min="0" max="300" step="0.5" name="p_dosage" id="p_dosage" required value="<?php echo htmlspecialchars($prediction['input']['inDosage'] ?? ''); ?>">
+        <input type="number" min="0" max="300" step="0.5" name="p_dosage" id="p_dosage" required value="<?php echo htmlspecialchars((string)($prediction['input']['inDosage'] ?? '')); ?>">
     </div>
     <div>
         <label for="p_drug">Drug</label>
@@ -530,7 +530,7 @@ enough historical data for a very specific match, and blends the two so estimate
     </div>
     <p style="font-size:12px;color:#555;">
         Estimate based on <b><?php echo $prediction['matchN']; ?></b> historical client(s) matched on:
-        <b><?php echo htmlspecialchars($prediction['matchLabel']); ?></b>, blended with the facility-wide average
+        <b><?php echo htmlspecialchars((string)($prediction['matchLabel'])); ?></b>, blended with the facility-wide average
         (<?php echo $totalClients; ?> ever-enrolled clients) for stability.
     </p>
     <p class="caveat">

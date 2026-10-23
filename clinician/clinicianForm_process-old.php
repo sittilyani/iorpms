@@ -25,7 +25,7 @@ $current_status = $_POST['current_status'] ?? null;
 $clinician_name = $_POST['clinician_name'] ?? null;
 
 // Validate current_status is 'Active'
-if (strtolower(trim($current_status)) !== 'active') {
+if (strtolower((string)(trim((string)($current_status)))) !== 'active') {
     die("<div style='background-color: #f2dede; color: #a94442; padding: 15px; margin: 20px; border: 1px solid #ebccd1; border-radius: 4px;'>
         <strong>Error:</strong> Please update patient status to 'Active' in patients tab before submitting clinical information.
         <br><br>
@@ -115,7 +115,7 @@ try {
     $conn->rollback();
 
     die("<div style='background-color: #f2dede; color: #a94442; padding: 15px; margin: 20px; border: 1px solid #ebccd1; border-radius: 4px;'>
-        <strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "
+        <strong>Error:</strong> " . htmlspecialchars((string)($e->getMessage())) . "
     </div>");
 }
 

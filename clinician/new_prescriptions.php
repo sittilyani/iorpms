@@ -79,30 +79,30 @@ while ($row = $result->fetch_assoc()) {
         <form id="prescriptionForm" action="process_prescription.php" method="POST">
             <div class="form-group">
                 <label>Prescription ID:</label>
-                <input type="text" class="form-control" name="prescription_id" value="<?php echo htmlspecialchars($prescription_id); ?>" readonly>
+                <input type="text" class="form-control" name="prescription_id" value="<?php echo htmlspecialchars((string)($prescription_id)); ?>" readonly>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>Client Name:</label>
-                    <input type="text" class="form-control" name="clientName" value="<?php echo htmlspecialchars($clientName); ?>" readonly>
+                    <input type="text" class="form-control" name="clientName" value="<?php echo htmlspecialchars((string)($clientName)); ?>" readonly>
                 </div>
                 <div class="form-group col-md-6">
                     <label>MAT ID:</label>
-                    <input type="text" class="form-control" name="mat_id" value="<?php echo htmlspecialchars($mat_id); ?>" readonly>
+                    <input type="text" class="form-control" name="mat_id" value="<?php echo htmlspecialchars((string)($mat_id)); ?>" readonly>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>Sex:</label>
-                    <input type="text" class="form-control" name="sex" value="<?php echo htmlspecialchars($sex); ?>" readonly>
+                    <input type="text" class="form-control" name="sex" value="<?php echo htmlspecialchars((string)($sex)); ?>" readonly>
                 </div>
                 <div class="form-group col-md-4">
                     <label>Age:</label>
-                    <input type="number" class="form-control" name="age" value="<?php echo htmlspecialchars($age); ?>" readonly>
+                    <input type="number" class="form-control" name="age" value="<?php echo htmlspecialchars((string)($age)); ?>" readonly>
                 </div>
                 <div class="form-group col-md-4">
                     <label>Prescriber Name:</label>
-                    <input type="text" class="form-control" name="prescriber_name" value="<?php echo htmlspecialchars($prescriber_name); ?>" readonly>
+                    <input type="text" class="form-control" name="prescriber_name" value="<?php echo htmlspecialchars((string)($prescriber_name)); ?>" readonly>
                 </div>
             </div>
             <div class="form-group">

@@ -10,8 +10,8 @@ $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-01', s
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-t', strtotime('last month'));
 
 // Sanitize and format dates
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 // Fetch the count of UNIQUE patients (mat_id) who:
 // 1. Are male (patients.sex = 'male')

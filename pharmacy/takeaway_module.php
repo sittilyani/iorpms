@@ -5,7 +5,7 @@ include '../includes/header.php';
 
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
-    echo '<div id="message-container" class="alert alert-info">' . htmlspecialchars($message) . '</div>';
+    echo '<div id="message-container" class="alert alert-info">' . htmlspecialchars((string)($message)) . '</div>';
 }
 ?>
 
@@ -94,7 +94,7 @@ if (isset($_GET['message'])) {
 </head>
 
     <div class="main-content">
-    <h2 style="color: #2C3162;">Drugs Dispensing Form</h2>
+    <h2 style="color: #2D008A;">Drugs Dispensing Form</h2>
 
     <!-- Search Form -->
     <div class="header">

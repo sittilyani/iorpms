@@ -16,8 +16,8 @@ $startDate = filter_input(INPUT_GET, 'start_date') ?? $defaultStartDate;
 $endDate = filter_input(INPUT_GET, 'end_date') ?? $defaultEndDate;
 
 // Validate and format dates (though prepared statements bind these as strings)
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 $average_dose_methadone = 0.00; // Initialize as a float for consistency
 

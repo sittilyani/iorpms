@@ -46,10 +46,10 @@ $pdf_path_base = '../consentsforms/';
 
     <?php if ($status === 'success'): ?>
         <div class="alert alert-success">
-            ? Form submitted and PDF **<?= htmlspecialchars($filename_msg); ?>** successfully saved!
+            ? Form submitted and PDF **<?= htmlspecialchars((string)($filename_msg)); ?>** successfully saved!
         </div>
     <?php elseif ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars((string)($error)); ?></div>
     <?php endif; ?>
 
     <div class="card">
@@ -82,21 +82,21 @@ $pdf_path_base = '../consentsforms/';
                             ?>
                                 <tr>
                                     <td><?= $index + 1; ?></td>
-                                    <td><?= htmlspecialchars($form['client_name']); ?></td>
-                                    <td><?= htmlspecialchars($form['mat_id']); ?></td>
-                                    <td><?= htmlspecialchars($form['mat_facility']); ?></td>
-                                    <td><?= htmlspecialchars($form['visit_date']); ?></td>
-                                    <td><?= htmlspecialchars($form['clinician_name']); ?></td>
-                                    <td><?= htmlspecialchars($form['counselor_name']); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['client_name'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['mat_id'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['mat_facility'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['visit_date'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['clinician_name'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['counselor_name'])); ?></td>
                                     <td class="action-btns">
                                         <?php if (!empty($pdf_filename)): ?>
-                                            <a href="<?= $pdf_path_base . urlencode($pdf_filename); ?>"
+                                            <a href="<?= $pdf_path_base . urlencode((string)($pdf_filename)); ?>"
                                                target="_blank"
                                                class="btn btn-sm btn-info"
                                                title="View PDF">
                                                 <i class="fas fa-eye"></i> View
                                             </a>
-                                            <a href="download_consent_handler.php?file=<?= urlencode($pdf_filename); ?>"
+                                            <a href="download_consent_handler.php?file=<?= urlencode((string)($pdf_filename)); ?>"
                                                class="btn btn-sm btn-success"
                                                title="Download PDF">
                                                 <i class="fas fa-download"></i> Download

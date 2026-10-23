@@ -29,7 +29,7 @@ $endDate   = isset($_GET['end_date'])   ? $_GET['end_date']   : date('Y-m-d', st
 // dispense — the underlying per-date sequential dispensing logic
 // (prisons_dispense_sequential.php → prisons_dispense_pump.php /
 // prisons_dispense_tablet.php, routed by the patient's actual drug) is unchanged.
-$searchTerm = isset($_GET['search_patient']) ? trim($_GET['search_patient']) : '';
+$searchTerm = isset($_GET['search_patient']) ? trim((string)($_GET['search_patient'])) : '';
 $searchResults = [];
 if ($searchTerm !== '') {
     $like = '%' . $searchTerm . '%';
@@ -48,7 +48,7 @@ if ($searchTerm !== '') {
 }
 
 // ── Selected patient ─────────────────────────────────────────────────────────
-$selectedMatId = isset($_GET['mat_id']) ? trim($_GET['mat_id']) : '';
+$selectedMatId = isset($_GET['mat_id']) ? trim((string)($_GET['mat_id'])) : '';
 $selectedPatient = null;
 if ($selectedMatId !== '') {
     $selStmt = $conn->prepare("SELECT * FROM patients WHERE mat_id = ?");
@@ -58,7 +58,7 @@ if ($selectedMatId !== '') {
     $selStmt->close();
 }
 
-$dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
+$dateRangeInvalid = strtotime((string)($startDate)) > strtotime((string)($endDate));
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +96,7 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
         }
 
         .results-table th {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
         }
 
@@ -120,7 +120,7 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
         .patient-card .field label {
             display: block;
             font-weight: bold;
-            color: #2C3162;
+            color: #2D008A;
             font-size: 13px;
         }
 
@@ -137,7 +137,7 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
         }
 
         .submit-btn {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -156,15 +156,15 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162;">Bulk Dispensing</h2>
+    <h2 style="color: #2D008A;">Bulk Dispensing</h2>
 
     <div class="search-form">
         <form method="GET" action="">
-            <input type="hidden" name="start_date" value="<?php echo htmlspecialchars($startDate); ?>">
-            <input type="hidden" name="end_date" value="<?php echo htmlspecialchars($endDate); ?>">
+            <input type="hidden" name="start_date" value="<?php echo htmlspecialchars((string)($startDate)); ?>">
+            <input type="hidden" name="end_date" value="<?php echo htmlspecialchars((string)($endDate)); ?>">
             <label for="search_patient">Search Patient (MAT ID, MAT Number or Name):</label>
             <input type="text" id="search_patient" name="search_patient" style="margin-left: 10px; margin-right: 10px; width: 260px;"
-                   value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="e.g. 11094MAT0002 or client name">
+                   value="<?php echo htmlspecialchars((string)($searchTerm)); ?>" placeholder="e.g. 11094MAT0002 or client name">
             <button type="submit" class="submit-btn" style="margin-top: 0;">Search</button>
         </form>
 
@@ -187,17 +187,17 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
                     <tbody>
                         <?php foreach ($searchResults as $sr): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($sr['mat_id']); ?></td>
-                                <td><?php echo htmlspecialchars($sr['mat_number']); ?></td>
-                                <td><?php echo htmlspecialchars($sr['clientName']); ?></td>
-                                <td><?php echo htmlspecialchars($sr['sex']); ?></td>
-                                <td><?php echo htmlspecialchars($sr['drugname'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($sr['current_status']); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['mat_id'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['mat_number'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['clientName'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['sex'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['drugname'] ?? '')); ?></td>
+                                <td><?php echo htmlspecialchars((string)($sr['current_status'])); ?></td>
                                 <td>
                                     <?php if ($sr['mat_id'] === $selectedMatId): ?>
                                         <span style="color:green;">✓ Selected below</span>
                                     <?php else: ?>
-                                        <a href="?start_date=<?php echo urlencode($startDate); ?>&end_date=<?php echo urlencode($endDate); ?>&search_patient=<?php echo urlencode($searchTerm); ?>&mat_id=<?php echo urlencode($sr['mat_id']); ?>"
+                                        <a href="?start_date=<?php echo urlencode((string)($startDate)); ?>&end_date=<?php echo urlencode((string)($endDate)); ?>&search_patient=<?php echo urlencode((string)($searchTerm)); ?>&mat_id=<?php echo urlencode((string)($sr['mat_id'])); ?>"
                                            class="submit-btn" style="padding: 4px 10px; font-size: 13px; margin-top:0; text-decoration:none;">Select</a>
                                     <?php endif; ?>
                                 </td>
@@ -211,42 +211,42 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
 
     <?php if ($selectedPatient): ?>
         <div class="patient-card">
-            <h3 style="color:#2C3162; margin-top:0;">
-                <?php echo htmlspecialchars($selectedPatient['clientName']); ?>
-                <small style="font-weight:normal;">(<?php echo htmlspecialchars($selectedPatient['mat_id']); ?>)</small>
+            <h3 style="color:#2D008A; margin-top:0;">
+                <?php echo htmlspecialchars((string)($selectedPatient['clientName'])); ?>
+                <small style="font-weight:normal;">(<?php echo htmlspecialchars((string)($selectedPatient['mat_id'])); ?>)</small>
             </h3>
 
             <div class="field">
                 <label>MAT Number</label>
-                <span class="value"><?php echo htmlspecialchars($selectedPatient['mat_number']); ?></span>
+                <span class="value"><?php echo htmlspecialchars((string)($selectedPatient['mat_number'])); ?></span>
             </div>
             <div class="field">
                 <label>Sex</label>
-                <span class="value"><?php echo htmlspecialchars($selectedPatient['sex']); ?></span>
+                <span class="value"><?php echo htmlspecialchars((string)($selectedPatient['sex'])); ?></span>
             </div>
             <div class="field">
                 <label>Physical Address</label>
-                <span class="value"><?php echo htmlspecialchars($selectedPatient['p_address']); ?></span>
+                <span class="value"><?php echo htmlspecialchars((string)($selectedPatient['p_address'])); ?></span>
             </div>
             <div class="field">
                 <label>Drug</label>
-                <span class="value"><?php echo htmlspecialchars($selectedPatient['drugname'] ?? ''); ?></span>
+                <span class="value"><?php echo htmlspecialchars((string)($selectedPatient['drugname'] ?? '')); ?></span>
             </div>
             <div class="field">
                 <label>Current Status</label>
-                <span class="value"><?php echo htmlspecialchars($selectedPatient['current_status']); ?></span>
+                <span class="value"><?php echo htmlspecialchars((string)($selectedPatient['current_status'])); ?></span>
             </div>
 
             <form method="GET" action="" class="date-range-form">
-                <input type="hidden" name="search_patient" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($selectedPatient['mat_id']); ?>">
+                <input type="hidden" name="search_patient" value="<?php echo htmlspecialchars((string)($searchTerm)); ?>">
+                <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($selectedPatient['mat_id'])); ?>">
                 <label for="start_date">Start Date:</label>
                 <input type="date" id="start_date" name="start_date" required
-                       value="<?php echo htmlspecialchars($startDate); ?>">
+                       value="<?php echo htmlspecialchars((string)($startDate)); ?>">
 
                 <label for="end_date" style="margin-left: 20px;">End Date:</label>
                 <input type="date" id="end_date" name="end_date" required
-                       value="<?php echo htmlspecialchars($endDate); ?>">
+                       value="<?php echo htmlspecialchars((string)($endDate)); ?>">
 
                 <button type="submit" class="submit-btn" style="margin-left: 20px;">Update Dates</button>
             </form>
@@ -255,22 +255,22 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
                 <div class="alert alert-danger">End date must be after start date.</div>
             <?php else: ?>
                 <button type="button"
-                        onclick="openDispenseModal('<?php echo htmlspecialchars($selectedPatient['mat_id'], ENT_QUOTES); ?>',
-                                                    '<?php echo htmlspecialchars($selectedPatient['clientName'], ENT_QUOTES); ?>',
-                                                    '<?php echo htmlspecialchars($startDate, ENT_QUOTES); ?>',
-                                                    '<?php echo htmlspecialchars($endDate, ENT_QUOTES); ?>')"
-                        style="background:#2C3162;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:15px;">
+                        onclick="openDispenseModal('<?php echo htmlspecialchars((string)($selectedPatient['mat_id']), ENT_QUOTES); ?>',
+                                                    '<?php echo htmlspecialchars((string)($selectedPatient['clientName']), ENT_QUOTES); ?>',
+                                                    '<?php echo htmlspecialchars((string)($startDate), ENT_QUOTES); ?>',
+                                                    '<?php echo htmlspecialchars((string)($endDate), ENT_QUOTES); ?>')"
+                        style="background:#2D008A;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:15px;">
                         DISPENSE</button>
                 &nbsp;
-                <a href="history.php?p_id=<?php echo urlencode($selectedPatient['p_id']); ?>">History</a>
+                <a href="history.php?p_id=<?php echo urlencode((string)($selectedPatient['p_id'])); ?>">History</a>
                 &nbsp;|&nbsp;
-                <a href="view-missed.php?mat_id=<?php echo urlencode($selectedPatient['mat_id']); ?>">View Missed</a>
+                <a href="view-missed.php?mat_id=<?php echo urlencode((string)($selectedPatient['mat_id'])); ?>">View Missed</a>
                 &nbsp;|&nbsp;
-                <a href="../referrals/referral.php?mat_id=<?php echo urlencode($selectedPatient['mat_id']); ?>">Refer</a>
+                <a href="../referrals/referral.php?mat_id=<?php echo urlencode((string)($selectedPatient['mat_id'])); ?>">Refer</a>
             <?php endif; ?>
         </div>
     <?php elseif ($selectedMatId !== ''): ?>
-        <div class="alert alert-danger">Patient not found: <?php echo htmlspecialchars($selectedMatId); ?></div>
+        <div class="alert alert-danger">Patient not found: <?php echo htmlspecialchars((string)($selectedMatId)); ?></div>
     <?php endif; ?>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
@@ -287,11 +287,11 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
                     style="position:absolute;top:12px;right:14px;background:none;border:none;
                            font-size:22px;cursor:pointer;color:#666;">&times;</button>
 
-            <h4 style="color:#2C3162; margin:0 0 6px;">Bulk Dispensing</h4>
+            <h4 style="color:#2D008A; margin:0 0 6px;">Bulk Dispensing</h4>
             <p id="modal-patient-name" style="font-size:1rem; color:#555; margin:0 0 18px;"></p>
 
             <div style="background:#f8f9fa; border-radius:8px; padding:14px; margin-bottom:18px;">
-                <div style="font-weight:700; color:#2C3162; margin-bottom:10px;">
+                <div style="font-weight:700; color:#2D008A; margin-bottom:10px;">
                     Dates to dispense (<span id="modal-date-count"></span>):
                 </div>
                 <div id="modal-date-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
@@ -309,7 +309,7 @@ $dateRangeInvalid = strtotime($startDate) > strtotime($endDate);
                     Cancel
                 </button>
                 <a id="modal-start-btn" href="#"
-                   style="flex:2; padding:10px; background:#2C3162; color:#fff; border:none;
+                   style="flex:2; padding:10px; background:#2D008A; color:#fff; border:none;
                           border-radius:8px; cursor:pointer; font-size:1rem; font-weight:700;
                           text-align:center; text-decoration:none; display:block;">
                     🚀 Start Dispensing

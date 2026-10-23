@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $quantityIn = 0;
             $quantityOut = 0;
             $new_stock = $current_stock;
-            $adjustmentType = strtolower($transactionType);
+            $adjustmentType = strtolower((string)($transactionType));
 
             if (in_array($adjustmentType, ['positive adjustment', 'returns'])) {
                 $new_stock = $current_stock + $quantity;

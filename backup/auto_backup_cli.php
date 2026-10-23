@@ -16,6 +16,7 @@ if ($conn->connect_error) {
     die("DB connection failed: " . $conn->connect_error . "\n");
 }
 $conn->set_charset("utf8mb4");
+require_once __DIR__ . '/../includes/backup_helpers.php';
 
 // ── Backup directory (keep last 30 days automatically) ──────────────────────
 $backup_dir = __DIR__ . '/database/';
@@ -51,7 +52,7 @@ foreach ($tables as $table) {
 $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
 
 // ── Write file ───────────────────────────────────────────────────────────────
-$filename = $backup_dir . $database . '_' . date('Y-m-d_H-i-s') . '.sql';
+$filename = $backup_dir . backup_file_name($conn); // same d-m-Y-H-i-s format that view_backups.php expects
 file_put_contents($filename, $sql);
 echo "Backup saved: $filename (" . round(filesize($filename)/1024, 1) . " KB)\n";
 

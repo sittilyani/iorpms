@@ -70,9 +70,9 @@ if (!hash_equals(PUMP_API_SECRET, $secret)) {
 }
 
 // ---- Extract and validate parameters -------------------------------------
-$port      = trim($data['port']      ?? '');
+$port      = trim((string)($data['port']      ?? ''));
 $baud      = intval($data['baud']    ?? 9600);
-$pump_cmd  = trim($data['pump_cmd']  ?? '');
+$pump_cmd  = trim((string)($data['pump_cmd']  ?? ''));
 
 if (empty($port) || empty($pump_cmd)) {
     respond(false, 'Missing required fields: port, pump_cmd');

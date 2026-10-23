@@ -242,15 +242,19 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (true): ?>
+            <iframe src="analytics.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
 
             <?php if (in_array($userrole, ['Admin', 'Super Admin', 'Clinician'])) : ?>
-                <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+                <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
             <?php else : ?>
                 <p>You have access to view referrals assigned to you. Contact your administrator for additional permissions.</p>
             <?php endif; ?>
+        <?php endif; ?>
         </div>
     </div>
 </div>

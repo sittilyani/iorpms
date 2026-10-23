@@ -266,9 +266,9 @@ function username_exists($username, $connect, $exclude_user_id = null) {
  * Sanitizes input data
  */
 function clean_input($data) {
-    $data = trim($data);
+    $data = trim((string)($data));
     $data = stripslashes($data);
-    $data = htmlspecialchars($data);
+    $data = htmlspecialchars((string)($data));
     return $data;
 }
 
@@ -286,7 +286,7 @@ function generate_random_string($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters)) - 1];
+        $randomString .= $characters[rand(0, strlen((string)($characters))) - 1];
     }
     return $randomString;
 }
@@ -426,7 +426,7 @@ function get_user_wise_total_order($connect) {
         $output .= '<thead><tr><th>User</th><th>Total Order Value</th></tr></thead>';
         $output .= '<tbody>';
         foreach ($result as $row) {
-            $output .= '<tr><td>' . htmlspecialchars($row['username']) . '</td><td>' . format_currency($row['total_order_value']) . '</td></tr>';
+            $output .= '<tr><td>' . htmlspecialchars((string)($row['username'])) . '</td><td>' . format_currency($row['total_order_value']) . '</td></tr>';
         }
         $output .= '</tbody></table>';
     } else {

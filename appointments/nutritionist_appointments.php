@@ -54,7 +54,7 @@ try {
 
 function formatDate($dateString) {
     if (empty($dateString)) return 'N/A';
-    return date('M d, Y', strtotime($dateString));
+    return date('M d, Y', strtotime((string)($dateString)));
 }
 
 $successMessage = (isset($_GET['success']) && $_GET['success'] == 1)
@@ -101,12 +101,12 @@ $successMessage = (isset($_GET['success']) && $_GET['success'] == 1)
                 <div class="col-md-4">
                     <label>Start Date</label>
                     <input type="date" class="form-control" name="startDate"
-                           value="<?= htmlspecialchars($startDate) ?>">
+                           value="<?= htmlspecialchars((string)($startDate)) ?>">
                 </div>
                 <div class="col-md-4">
                     <label>End Date</label>
                     <input type="date" class="form-control" name="endDate"
-                           value="<?= htmlspecialchars($endDate) ?>">
+                           value="<?= htmlspecialchars((string)($endDate)) ?>">
                 </div>
                 <div class="col-md-4">
                     <button class="btn btn-primary w-100">Filter Appointments</button>
@@ -120,10 +120,10 @@ $successMessage = (isset($_GET['success']) && $_GET['success'] == 1)
             </div>
             <div class="col-md-6 text-end">
                 <?php if ($successMessage): ?>
-                    <div class="alert alert-success"><?= htmlspecialchars($successMessage) ?></div>
+                    <div class="alert alert-success"><?= htmlspecialchars((string)($successMessage)) ?></div>
                 <?php endif; ?>
                 <?php if ($error): ?>
-                    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                    <div class="alert alert-danger"><?= htmlspecialchars((string)($error)) ?></div>
                 <?php endif; ?>
             </div>
         </div>
@@ -155,17 +155,17 @@ $successMessage = (isset($_GET['success']) && $_GET['success'] == 1)
             <?php else: ?>
                 <?php foreach ($appointments as $app): ?>
                     <tr>
-                        <td><?= htmlspecialchars($app['p_id']) ?></td>
+                        <td><?= htmlspecialchars((string)($app['p_id'])) ?></td>
                         <td><?= formatDate($app['comp_date']) ?></td>
-                        <td><?= htmlspecialchars($app['mat_id']) ?></td>
-                        <td><?= htmlspecialchars($app['clientName']) ?></td>
-                        <td><?= htmlspecialchars($app['hcw_name']) ?></td>
+                        <td><?= htmlspecialchars((string)($app['mat_id'])) ?></td>
+                        <td><?= htmlspecialchars((string)($app['clientName'])) ?></td>
+                        <td><?= htmlspecialchars((string)($app['hcw_name'])) ?></td>
                         <td><?= formatDate($app['nutrition_tca']) ?></td>
                         <td>
                             <span class="<?= $app['appointment_status'] === 'scheduled'
                                 ? 'status-scheduled'
                                 : 'status-unscheduled' ?>">
-                                <?= ucfirst($app['appointment_status']) ?>
+                                <?= ucfirst((string)($app['appointment_status'])) ?>
                             </span>
                         </td>
                         <td>

@@ -3949,7 +3949,7 @@ include('../includes/config.php');
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -4313,7 +4313,7 @@ include('../includes/config.php');
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -4740,7 +4740,7 @@ include('../includes/config.php');
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -4757,7 +4757,7 @@ include('../includes/config.php');
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Psycho Social Form - (Initial Registration Form)</h2>
+    <h2 style="color: #2D008A; ">Psycho Social Form - (Initial Registration Form)</h2>
 
 <!--This is the search Form -->
 
@@ -4981,7 +4981,7 @@ if (isset($_POST['export_excel'])) {
 
         .register-input{
             display: inline-block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -4994,7 +4994,7 @@ if (isset($_POST['export_excel'])) {
          h2{
              margin-top: 30px;
              margin-bottom: 20px;
-             color: #2C3162;
+             color: #2D008A;
          }
 
     </style>
@@ -14020,13 +14020,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
               font-weight: bold;
           }
           h2{
-              color: #2C3162;margin-top: 80px;
+              color: #2D008A;margin-top: 80px;
               margin-left: 50px;
           }
           #btn-submit{
               width: 250px;
               color: white;
-              background-color: #2C3162;
+              background-color: #2D008A;
               height: 35px;
               border-radius: 5px;
               border: none;
@@ -14261,7 +14261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -14269,7 +14269,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -14408,13 +14408,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
               font-weight: bold;
           }
           h2{
-              color: #2C3162;margin-top: 80px;
+              color: #2D008A;margin-top: 80px;
               margin-left: 50px;
           }
           #btn-submit{
               width: 250px;
               color: white;
-              background-color: #2C3162;
+              background-color: #2D008A;
               height: 35px;
               border-radius: 5px;
               border: none;
@@ -14787,13 +14787,13 @@ if ($userId) {
               font-weight: bold;
           }
           h2{
-              color: #2C3162;margin-top: 80px;
+              color: #2D008A;margin-top: 80px;
               margin-left: 50px;
           }
           #btn-submit{
               width: 250px;
               color: white;
-              background-color: #2C3162;
+              background-color: #2D008A;
               height: 35px;
               border-radius: 5px;
               border: none;
@@ -15105,7 +15105,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -15160,7 +15160,7 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Finger Register</h2>
+    <h2 style="color: #2D008A; ">Finger Register</h2>
 
 <!--This is the search Form -->
 
@@ -15583,7 +15583,7 @@ if ($userId) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -15591,7 +15591,7 @@ if ($userId) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -15801,7 +15801,7 @@ if ($userId) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -15809,7 +15809,7 @@ if ($userId) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -15975,7 +15975,7 @@ Copy code
     height: 40px;
     text-align: center;
     line-height: 40px; /* Center the text vertically */
-    background-color: #2C3162; /* Example background color */
+    background-color: #2D008A; /* Example background color */
     color: white;
     text-decoration: none;
     border: none;
@@ -16072,7 +16072,7 @@ if ($userId) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -16080,7 +16080,7 @@ if ($userId) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -16109,7 +16109,7 @@ if ($userId) {
             height: 40px;
             text-align: center;
             line-height: 40px; /* Center the text vertically */
-            background-color: #2C3162; /* Example background color */
+            background-color: #2D008A; /* Example background color */
             color: white;
             text-decoration: none;
             border: none;
@@ -16372,7 +16372,7 @@ if ($userId) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -16380,7 +16380,7 @@ if ($userId) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -16409,7 +16409,7 @@ if ($userId) {
             height: 40px;
             text-align: center;
             line-height: 40px; /* Center the text vertically */
-            background-color: #2C3162; /* Example background color */
+            background-color: #2D008A; /* Example background color */
             color: white;
             text-decoration: none;
             border: none;
@@ -16730,7 +16730,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -16785,7 +16785,7 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Drugs Dispensing Form</h2>
+    <h2 style="color: #2D008A; ">Drugs Dispensing Form</h2>
 
 <!--This is the search Form -->
 
@@ -17121,7 +17121,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -17176,7 +17176,7 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Drugs Dispensing Form</h2>
+    <h2 style="color: #2D008A; ">Drugs Dispensing Form</h2>
 
 <!--This is the search Form -->
 

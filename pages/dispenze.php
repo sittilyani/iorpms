@@ -17,46 +17,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $edited_by = substr($_POST["edited_by"], 0, 255); // Adjust 255 to the desired maximum length
 
         // Validate Mat id
-        $input_mat_id = trim($_POST["mat_id"]);
+        $input_mat_id = trim((string)($_POST["mat_id"]));
         if (empty($input_mat_id)) {
                 $mat_id_err = "Please enter MAT ID.";
         } else {
                 $mat_id = $input_mat_id;
         }
         //validate full name
-        $input_fname = trim($_POST['fname']);
+        $input_fname = trim((string)($_POST['fname']));
         if (empty($input_fname)) {
                 $fname_err = "Please enter Name.";
         } else {
                 $fname = $input_fname;
         }
         //validate dob
-        $input_dob = trim($_POST['dob']);
+        $input_dob = trim((string)($_POST['dob']));
         if (empty($input_dob)) {
                 $dob_err = "Please enter dob.";
         } else {
                 $dob = $input_dob;
         }
         //validate CSO
-        $input_cso = trim($_POST['cso']);
+        $input_cso = trim((string)($_POST['cso']));
         $cso = $input_cso;
 
         //validate Drug name
-        $input_drugname = trim($_POST['drugname']);
+        $input_drugname = trim((string)($_POST['drugname']));
         if (empty($input_drugname)) {
                 $drugname_err = "Please select drug.";
         } else {
                 $drugname = $input_drugname;
         }
         //validate dosage
-        $input_dosage = trim($_POST['dosage_input']);
+        $input_dosage = trim((string)($_POST['dosage_input']));
         if (empty($input_dosage)) {
                 $dosage_err = "Please enter dosage in mg.";
         } else {
                 $dosage = $input_dosage;
         }
         // Validate date of dispensing
-        $input_date_of_disp = trim($_POST['date_of_disp']);
+        $input_date_of_disp = trim((string)($_POST['date_of_disp']));
         if (empty($input_date_of_disp)) {
                 $date_of_disp_err = "Please enter date of dispensing";
         } else {
@@ -140,9 +140,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Display form
 // Check existence of id parameter before processing further
-if (isset($_GET["mat_id"]) && !empty(trim($_GET["mat_id"]))) {
+if (isset($_GET["mat_id"]) && !empty(trim((string)($_GET["mat_id"])))) {
         // Get URL parameter
-        $mat_id =  trim($_GET["mat_id"]);
+        $mat_id =  trim((string)($_GET["mat_id"]));
 
         // Prepare a select statement
         $sql = "SELECT * FROM patient WHERE mat_id= ?";
@@ -362,7 +362,7 @@ $stmt->close();
                 <div class="row">
                         <div class="col-md-4">
 
-                                <form class="form-inline" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <form class="form-inline" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
                                         <!--<div style="margin:10px;" class="form-group col-4 mb-3 <?php echo (!empty($mat_id_err)) ? 'has-error' : ''; ?>"> -->
                                         <label>MAT ID</label><br>
                                         <input type="text" name="mat_id" class="form-control" value="<?php echo $mat_id; ?>" readonly>
@@ -389,12 +389,12 @@ $stmt->close();
                         <div class="col-md-4">
                                 <!--<div style="margin:10px;" class="form-group col-4 mb-3"> -->
                                 <label>Last visit date</label><br>
-                                <input type="date" name="ldate" class="form-control" value="<?php echo htmlspecialchars($last_dispensing_date); ?>" readonly> <br>
+                                <input type="date" name="ldate" class="form-control" value="<?php echo htmlspecialchars((string)($last_dispensing_date)); ?>" readonly> <br>
 
                                 <!--</div>
                                                 <div style="margin:10px;" class="form-group col-4 mb-3">-->
                                 <label>Last Dose(Mg)</label><br>
-                                <input type="number" name="ldosage" class="form-control" value="<?php echo htmlspecialchars($last_dosage); ?>" readonly> <br>
+                                <input type="number" name="ldosage" class="form-control" value="<?php echo htmlspecialchars((string)($last_dosage)); ?>" readonly> <br>
 
 
                                 <br>

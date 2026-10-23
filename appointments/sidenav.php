@@ -54,7 +54,7 @@ $full_name = getUserFullName();
     <a href="../dashboard/dashboard.php" class="home-link">
         <i class="fa fa-home"></i>Home
     </a>
-    <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+    <a href="../appointments/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i>Dashboard</a>
     <a href="../backup/backup.php" class="nav-link">
         <i class="fa fa-database"></i>Backup System</a>
@@ -93,7 +93,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -113,10 +113,28 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (in_array(strtolower((string)($userrole ?? ($_SESSION['userrole'] ?? ''))), array (
+  0 => 'admin',
+  1 => 'super admin',
+  2 => 'hrio',
+  3 => 'data manager',
+  4 => 'receptionist',
+  5 => 'clinician',
+  6 => 'pharmacist',
+  7 => 'nursing',
+  8 => 'psychologist',
+  9 => 'psychiatrist',
+  10 => 'peer educator',
+  11 => 'laboratory scientist',
+  12 => 'demo',
+), true)): ?>
+            <iframe src="dashboard.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+        <?php endif; ?>
         </div>
     </div>
 </div>

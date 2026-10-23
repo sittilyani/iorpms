@@ -82,7 +82,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -102,7 +102,7 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
-            <?php include 'dashboard.php'; ?>
+            <iframe src="dashboard.php" style="width:100%;height:calc(100vh - 130px);border:0;background:transparent" title="Health records dashboard"></iframe>
         </div>
     </div>
 </div>

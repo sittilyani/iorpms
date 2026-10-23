@@ -15,7 +15,7 @@ if ($result) {
     if ($result->num_rows > 0) {
         // Loop through each row
         while ($row = $result->fetch_assoc()) {
-            $current_date = strtotime($row['trans_date']);
+            $current_date = strtotime((string)($row['trans_date']));
 
             if (!$stockout_period) {
                 // If not in a stockout period, start counting

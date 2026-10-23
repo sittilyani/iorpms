@@ -15,7 +15,7 @@ if(isset($_POST["btnUpdatePict"])){
     $target_file = $target_dir . basename($_FILES["file"]["name"]);
 
     // Select file type
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $imageFileType = strtolower((string)(pathinfo($target_file,PATHINFO_EXTENSION)));
 
     // Valid file extensions
     $extensions_arr = array("jpg","jpeg","png","gif");
@@ -78,7 +78,7 @@ if(isset($_POST["btnUpdatePict"])){
         </div>
         <div class="col-md-6">
         <p>Please fill out this form to reset your password.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"  enctype='multipart/form-data'>
+        <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post"  enctype='multipart/form-data'>
 
             <div class="form-group">
                 <label>Update Picture</label>

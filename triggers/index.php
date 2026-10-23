@@ -45,7 +45,7 @@
             font-size: 1.1em;
             color: #2c3e50;
             padding-left: 10px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2D008A;
         }
 
         .form-group {
@@ -104,7 +104,7 @@
         }
 
         .btn-submit {
-            background-color: #3498db;
+            background-color: #2D008A;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -116,7 +116,7 @@
         }
 
         .btn-submit:hover {
-            background-color: #2980b9;
+            background-color: #1d0059;
         }
 
         .form-row {
@@ -235,8 +235,8 @@
                         foreach($marital_statuses as $status):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="marital_<?php echo strtolower(str_replace(' ', '_', $status)); ?>" name="marital_status" value="<?php echo $status; ?>">
-                            <label for="marital_<?php echo strtolower(str_replace(' ', '_', $status)); ?>"><?php echo $status; ?></label>
+                            <input type="radio" id="marital_<?php echo strtolower((string)(str_replace(' ', '_', $status))); ?>" name="marital_status" value="<?php echo $status; ?>">
+                            <label for="marital_<?php echo strtolower((string)(str_replace(' ', '_', $status))); ?>"><?php echo $status; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -268,8 +268,8 @@
                         foreach($living_options as $option):
                         ?>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="living_<?php echo strtolower(str_replace([' ', "'"], ['_', ''], $option)); ?>" name="living_arrangements_detail[]" value="<?php echo $option; ?>">
-                            <label for="living_<?php echo strtolower(str_replace([' ', "'"], ['_', ''], $option)); ?>"><?php echo $option; ?></label>
+                            <input type="checkbox" id="living_<?php echo strtolower((string)(str_replace([' ', "'"], ['_', ''], $option))); ?>" name="living_arrangements_detail[]" value="<?php echo $option; ?>">
+                            <label for="living_<?php echo strtolower((string)(str_replace([' ', "'"], ['_', ''], $option))); ?>"><?php echo $option; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -351,8 +351,8 @@
                         foreach($education_levels as $level):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="education_<?php echo strtolower($level); ?>" name="education_level" value="<?php echo $level; ?>">
-                            <label for="education_<?php echo strtolower($level); ?>"><?php echo $level; ?></label>
+                            <input type="radio" id="education_<?php echo strtolower((string)($level)); ?>" name="education_level" value="<?php echo $level; ?>">
+                            <label for="education_<?php echo strtolower((string)($level)); ?>"><?php echo $level; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -386,8 +386,8 @@
                         foreach($employment_statuses as $status):
                         ?>
                         <div class="checkbox-item">
-                            <input type="radio" id="employment_<?php echo strtolower(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status)); ?>" name="employment_status" value="<?php echo $status; ?>">
-                            <label for="employment_<?php echo strtolower(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status)); ?>"><?php echo $status; ?></label>
+                            <input type="radio" id="employment_<?php echo strtolower((string)(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status))); ?>" name="employment_status" value="<?php echo $status; ?>">
+                            <label for="employment_<?php echo strtolower((string)(str_replace([' ', '(', ')', '<'], ['_', '', '', ''], $status))); ?>"><?php echo $status; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -479,8 +479,8 @@
                         foreach($dependent_options as $option):
                         ?>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="dependent_<?php echo strtolower($option); ?>" name="dependents[]" value="<?php echo $option; ?>">
-                            <label for="dependent_<?php echo strtolower($option); ?>"><?php echo $option; ?></label>
+                            <input type="checkbox" id="dependent_<?php echo strtolower((string)($option)); ?>" name="dependents[]" value="<?php echo $option; ?>">
+                            <label for="dependent_<?php echo strtolower((string)($option)); ?>"><?php echo $option; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -522,10 +522,10 @@
                             ?>
                             <tr>
                                 <td><?php echo $relationship; ?></td>
-                                <td><input type="checkbox" name="support_cash_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                <td><input type="checkbox" name="support_food_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                <td><input type="checkbox" name="support_shelter_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
-                                <td><input type="checkbox" name="support_psychological_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $relationship)); ?>" value="1"></td>
+                                <td><input type="checkbox" name="support_cash_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                <td><input type="checkbox" name="support_food_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                <td><input type="checkbox" name="support_shelter_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
+                                <td><input type="checkbox" name="support_psychological_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship))); ?>" value="1"></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -567,8 +567,8 @@
                         foreach($case_options as $option):
                         ?>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="dependent_<?php echo strtolower($option); ?>" name="dependents[]" value="<?php echo $option; ?>">
-                            <label for="crime_<?php echo strtolower($option); ?>"><?php echo $option; ?></label>
+                            <input type="checkbox" id="dependent_<?php echo strtolower((string)($option)); ?>" name="dependents[]" value="<?php echo $option; ?>">
+                            <label for="crime_<?php echo strtolower((string)($option)); ?>"><?php echo $option; ?></label>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -607,8 +607,8 @@
                             ?>
                             <tr>
                                 <td><?php echo $case; ?></td>
-                                <td><input type="checkbox" name="case_committed_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $case)); ?>" value="1"></td>
-                                <td><input type="checkbox" name="case_arrested_<?php echo strtolower(str_replace(['/', ' '], ['_', '_'], $case)); ?>" value="1"></td>
+                                <td><input type="checkbox" name="case_committed_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $case))); ?>" value="1"></td>
+                                <td><input type="checkbox" name="case_arrested_<?php echo strtolower((string)(str_replace(['/', ' '], ['_', '_'], $case))); ?>" value="1"></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

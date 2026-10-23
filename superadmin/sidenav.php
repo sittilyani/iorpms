@@ -81,7 +81,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -103,8 +103,8 @@ $full_name = getUserFullName();
         <div class="welcome-message" id="welcomeMessage">
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, you can view and all forms that you can access</p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, you can view and all forms that you can access</p>
         </div>
     </div>
 </div>

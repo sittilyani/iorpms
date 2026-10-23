@@ -212,7 +212,7 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
                 $updateStatusStmt->close();
 
                 // If this is methadone and dosage > 0, trigger pump
-                if (strtolower($drugname) === 'methadone' && $dosage > 0) {
+                if (strtolower((string)($drugname)) === 'methadone' && $dosage > 0) {
                     error_log("Methadone dispensing detected. Dosage: {$dosage}mg");
 
                     // Convert dosage to ml for the pump
@@ -250,7 +250,7 @@ if ($mat_id && isset($_POST['drugname']) && !empty($_POST['drugname'])) {
         }
     } catch (Exception $e) {
         $conn->rollback();
-        $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars($e->getMessage());
+        $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars((string)($e->getMessage()));
         error_log("Routine dispensing exception: " . $e->getMessage());
     }
 
@@ -355,7 +355,7 @@ if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['q
 
         } catch (Exception $e) {
             $conn->rollback();
-            $otherPrescriptionErrors[] = "Other Prescriptions Dispensing Failed (Error in dispensing process): " . htmlspecialchars($e->getMessage());
+            $otherPrescriptionErrors[] = "Other Prescriptions Dispensing Failed (Error in dispensing process): " . htmlspecialchars((string)($e->getMessage()));
             error_log("Other prescriptions dispensing error: " . $e->getMessage());
         } finally {
             $stmt_fetch_drug->close();

@@ -454,7 +454,7 @@ if ($mat_id) {
     $mainDrugName = $currentSettings['drugname'] ?? 'MAT drug';
 
     // ARV (HIV positive patients)
-    if (!empty($vlData['hiv_status']) && strtolower($vlData['hiv_status']) === 'positive'
+    if (!empty($vlData['hiv_status']) && strtolower((string)($vlData['hiv_status'])) === 'positive'
         && !empty($vlData['art_regimen'])) {
         $artDrug = $vlData['art_regimen'];
         $chkArv  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
@@ -574,7 +574,7 @@ if ($statusResult->num_rows > 0) {
     while ($statusRow = $statusResult->fetch_assoc()) {
         $statusName = $statusRow['status_name'];
         $selected = (isset($currentSettings['current_status']) && $statusName == $currentSettings['current_status']) ? 'selected' : '';
-        $statusOptions .= "<option value='" . htmlspecialchars($statusName) . "' $selected>" . htmlspecialchars($statusName) . "</option>";
+        $statusOptions .= "<option value='" . htmlspecialchars((string)($statusName)) . "' $selected>" . htmlspecialchars((string)($statusName)) . "</option>";
     }
 } else {
     $statusOptions = "<option value=''>No status found</option>";
@@ -620,12 +620,12 @@ if (isset($_SESSION['dispensing_successes'])) {
 
 
         .container { width: 90%; margin: 0; }
-        h2 { color: #2C3162; margin: 20px 0; text-align: center; }
+        h2 { color: #2D008A; margin: 20px 0; text-align: center; }
         .stats-container { display: flex; min-width: 1400px; justify-content: space-between; background-color: #deffee; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .stat-item { text-align: center; padding: 10px; border-radius: 6px; flex: 1; margin: 0 10px; }
         .stat-days { background-color: #deffee; color: green; border: 1px solid #a3d9b1; }
         .stat-missed { background-color: #fff9c4; color: #d32f2f; border: 1px solid #ffd54f; }
-        .stat-appointment { background-color: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; }
+        .stat-appointment { background-color: #f3effb; color: #2D008A; border: 1px solid #cfc6ea; }
         .stat-prescription { background-color: #FF7575; color: #FFFFFF; border: 1px solid #000000; }
         .stat-prescription a { color: #FFFFFF; text-decoration: none; }
         .stat-visit { background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
@@ -635,12 +635,12 @@ if (isset($_SESSION['dispensing_successes'])) {
         .stat-label { font-size: 14px; margin-top: 5px; }
         .form-container { display: grid; grid-template-columns: repeat(4, 1fr) 200px; gap: 20px; background-color: #deffee; height: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #2C3162; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #2D008A; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
         .readonly-input { background-color: #FFFF94; cursor: not-allowed; }
-        .photo-container { grid-column: 5; grid-row: 1 / span 100; display: flex; flex-direction: column; align-items: center; border: 2px dotted #2C3162; padding: 10px; border-radius: 8px; background-color: white; height: fit-content; }
+        .photo-container { grid-column: 5; grid-row: 1 / span 100; display: flex; flex-direction: column; align-items: center; border: 2px dotted #2D008A; padding: 10px; border-radius: 8px; background-color: white; height: fit-content; }
         .photo-container img { max-width: 180px; max-height: 180px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-        .submit-btn { background-color: #2C3162; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 10px; transition: background-color 0.3s, transform 0.1s; letter-spacing: 0.5px; }
+        .submit-btn { background-color: #2D008A; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 10px; transition: background-color 0.3s, transform 0.1s; letter-spacing: 0.5px; }
         .submit-btn:hover { background-color: #82b543; color: white; transform: translateY(-1px); }
         .submit-btn:active { transform: translateY(0); }
         .regimen-line { font-size: 12px; margin-bottom: 4px; }
@@ -650,7 +650,7 @@ if (isset($_SESSION['dispensing_successes'])) {
             display: grid;
             grid-template-columns: repeat(5, 1fr) 300px;
             gap: 20px;
-            background-color: #66ccff;
+            background-color: #EFE9FB;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -666,7 +666,7 @@ if (isset($_SESSION['dispensing_successes'])) {
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 2px dotted #2C3162;
+            border: 2px dotted #2D008A;
             padding: 10px;
             border-radius: 8px;
             background-color: white;
@@ -692,10 +692,10 @@ if (isset($_SESSION['dispensing_successes'])) {
         .prescriptions-table input[type="number"] { width: 80px; padding: 5px; }
         .prescriptions-table input[type="checkbox"] { transform: scale(1.2); }
         /* Co-medications panel */
-        .co-meds-section { background:#fff; border:2px solid #2C3162; border-radius:8px; padding:14px 18px; margin-bottom:14px; }
-        .co-meds-section h4 { color:#2C3162; margin:0 0 10px; font-size:1rem; }
+        .co-meds-section { background:#fff; border:2px solid #2D008A; border-radius:8px; padding:14px 18px; margin-bottom:14px; }
+        .co-meds-section h4 { color:#2D008A; margin:0 0 10px; font-size:1rem; }
         .co-meds-table { width:100%; border-collapse:collapse; }
-        .co-meds-table th { background:#2C3162; color:#fff; padding:8px 10px; font-size:.85rem; text-align:left; }
+        .co-meds-table th { background:#2D008A; color:#fff; padding:8px 10px; font-size:.85rem; text-align:left; }
         .co-meds-table td { padding:8px 10px; border-bottom:1px solid #e0e0e0; font-size:.88rem; vertical-align:middle; }
         .co-meds-table tr:last-child td { border-bottom:none; }
         .co-meds-table input[type=checkbox] { transform:scale(1.3); cursor:pointer; }
@@ -703,7 +703,7 @@ if (isset($_SESSION['dispensing_successes'])) {
         .co-badge-danger  { background:#ffe0e0; color:#c00; }
         .co-badge-warning { background:#fff3cd; color:#7a5c00; }
         .co-badge-success { background:#e8f5e9; color:#2e7d32; }
-        .co-badge-info    { background:#e3f2fd; color:#1565c0; }
+        .co-badge-info    { background:#f3effb; color:#2D008A; }
         .co-done { color:#388e3c; font-weight:bold; font-size:.82rem; }
         .custom-alert { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: yellow; color: red; border: 2px solid red; padding: 20px; width: 300px; text-align: center; z-index: 1000; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .custom-alert button { margin-top: 10px; padding: 8px 16px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer; }
@@ -721,9 +721,9 @@ if (isset($_SESSION['dispensing_successes'])) {
 .form-group2 input[type="text"].readonly-input {
     width: 220px;
     height: 160px;
-    background-color: #007bff; /* Blue background */
+    background-color: #2D008A; /* brand purple */
     color: white;
-    border: 2px solid #0056b3;
+    border: 2px solid #1d0059;
     border-radius: 8px;
     text-align: center;
     font-size: 4.2rem;
@@ -740,15 +740,19 @@ if (isset($_SESSION['dispensing_successes'])) {
 
 /* Optional: Add hover effect */
 .form-group2 input[type="text"].readonly-input:hover {
-    background-color: #0056b3;
-    box-shadow: 0 6px 12px rgba(0, 91, 187, 0.3);
+    background-color: #1d0059;
+    box-shadow: 0 6px 12px rgba(45, 0, 138, 0.3);
     transform: translateY(-2px);
 }
 
 /* Optional: Add label if needed */
+.form-group2.bup-tiles { flex-direction: row; gap: 14px; justify-content: center; }
+.form-group2.bup-tiles .tile { display: flex; flex-direction: column; align-items: center; }
+.form-group2.bup-tiles input[type="text"].readonly-input { width: 150px; height: 120px; font-size: 3.4rem; }
+.form-group2.bup-tiles small { color: #555; font-size: .78rem; text-align: center; max-width: 150px; min-height: 1.2em; }
 .form-group2 label {
     font-weight: 600;
-    color: #007bff;
+    color: #2D008A;
     margin-bottom: 5px;
     font-size: 0.9rem;
 }
@@ -765,7 +769,7 @@ if (isset($_SESSION['dispensing_successes'])) {
             </div>
             <div class="stat-item stat-missed">
 
-                <a href='../pharmacy/view-missed.php?mat_id=<?php echo htmlspecialchars($currentSettings['mat_id'] ?? $userId); ?>'><span class="stat-value"><?php echo $new_num_rows; ?></span></a>
+                <a href='../pharmacy/view-missed.php?mat_id=<?php echo htmlspecialchars((string)($currentSettings['mat_id'] ?? $userId)); ?>'><span class="stat-value"><?php echo $new_num_rows; ?></span></a>
                 <span class="stat-label">Days Missed</span>
             </div>
 
@@ -774,16 +778,16 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <?php
                     if ($isMissed && !empty($appointmentInfo['date'])) {
                         echo "<span style='color: red; font-size: 14px;'>" .
-                             htmlspecialchars($appointmentInfo['appointmentType']) . "<br>" .
-                             htmlspecialchars($appointmentInfo['date']) . "</span>";
+                             htmlspecialchars((string)($appointmentInfo['appointmentType'])) . "<br>" .
+                             htmlspecialchars((string)($appointmentInfo['date'])) . "</span>";
                     } elseif (!empty($appointmentInfo['date'])) {
-                        echo htmlspecialchars($appointmentInfo['date']);
+                        echo htmlspecialchars((string)($appointmentInfo['date']));
                     } else {
                         echo "No Appointment";
                     }
                     ?>
                 </span>
-                <span class="stat-label"><?php echo htmlspecialchars($appointmentInfo['message']); ?></span>
+                <span class="stat-label"><?php echo htmlspecialchars((string)($appointmentInfo['message'])); ?></span>
             </div>
 
             <!--*******************************************
@@ -800,7 +804,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                         // Get the ID of the first unique prescription for the 'View details' link
                         $firstPrescriptionId = array_key_first($groupedPrescriptions);
                     ?>
-                    <a href="view_prescription_details.php?id=<?php echo htmlspecialchars($firstPrescriptionId); ?>" class="btn btn-info btn-sm">found view details</a>
+                    <a href="view_prescription_details.php?id=<?php echo htmlspecialchars((string)($firstPrescriptionId)); ?>" class="btn btn-info btn-sm">found view details</a>
                 <?php else: ?>
                     <span class="stat-label">0 Prescription found</span>
                 <?php endif; ?>
@@ -810,16 +814,12 @@ if (isset($_SESSION['dispensing_successes'])) {
             End of diplay of other prescriptions here
             *******************************************-->
 
-            <div class="stat-item stat-visit">
-                <span class="stat-value"><?php echo htmlspecialchars($lastvisitDate); ?></span>
-                <span class="stat-label">Last disp Date</span>
-            </div>
             <div class="stat-item stat-days-next">
                 <span class="stat-value">
                     <?php
                     if ($isMissed) {
                         echo "<span style='color: red; font-size: 16px;'>MISSED<br>Refer to " .
-                             htmlspecialchars($appointmentInfo['referTo']) . "</span>";
+                             htmlspecialchars((string)($appointmentInfo['referTo'])) . "</span>";
                     } else {
                         echo $daysToAppointment;
                     }
@@ -828,7 +828,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                 <span class="stat-label">
                     <?php
                     if ($isMissed) {
-                        echo htmlspecialchars($appointmentInfo['appointmentType']) . " Appointment";
+                        echo htmlspecialchars((string)($appointmentInfo['appointmentType'])) . " Appointment";
                     } else {
                         echo "Days To Next Appointment";
                     }
@@ -837,11 +837,11 @@ if (isset($_SESSION['dispensing_successes'])) {
             </div>
             <div class="stat-item stat-photo">
                 <span class="stat-value"><i class="fas fa-camera"></i></span>
-                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars($currentSettings['p_id']); ?>">Capture Photo</a>
+                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars((string)($currentSettings['p_id'])); ?>">Capture Photo</a>
             </div>
             <div class="stat-item stat-photo">
                 <span class="stat-value"><i class="fas fa-camera"></i></span>
-                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars($currentSettings['p_id']); ?>&action=update" class="update-link">Update Photo</a>
+                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars((string)($currentSettings['p_id'])); ?>&action=update" class="update-link">Update Photo</a>
             </div>
         </div>
 
@@ -851,7 +851,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php foreach ($successMessages as $msg): ?>
-                    <p><strong>✓</strong> <?php echo htmlspecialchars($msg); ?></p>
+                    <p><strong>✓</strong> <?php echo htmlspecialchars((string)($msg)); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0 text-muted" style="font-size:.85rem;">
                     <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_countdown">3</strong>s…
@@ -876,7 +876,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php foreach ($errorMessages as $error): ?>
-                    <p><?php echo htmlspecialchars($error); ?></p>
+                    <p><?php echo htmlspecialchars((string)($error)); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0" style="font-size:.85rem;">
                     <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="nopump_err_countdown">3</strong>s…
@@ -898,8 +898,8 @@ if (isset($_SESSION['dispensing_successes'])) {
         <?php if ($doseBlocked): ?>
             <div class="alert alert-danger" style="font-size:1.05rem; margin-bottom:12px;">
                 <i class="fa fa-ban"></i>
-                <strong>Dispensing Blocked:</strong> <?= htmlspecialchars($doseBlockMsg) ?>
-                <br><a href="../clinician/update_dose.php?mat_id=<?= urlencode($userId) ?>" target="_blank" class="btn btn-sm btn-warning mt-2">
+                <strong>Dispensing Blocked:</strong> <?= htmlspecialchars((string)($doseBlockMsg)) ?>
+                <br><a href="../clinician/update_dose.php?mat_id=<?= urlencode((string)($userId)) ?>" target="_blank" class="btn btn-sm btn-warning mt-2">
                     <i class="fa fa-clone"></i> Update Dose Schedule
                 </a>
             </div>
@@ -908,10 +908,16 @@ if (isset($_SESSION['dispensing_successes'])) {
         <?php if ($doseExpiring): ?>
             <div class="alert alert-warning" style="font-size:1rem; margin-bottom:12px;">
                 <i class="fa fa-exclamation-triangle"></i>
-                <?= htmlspecialchars($doseExpireMsg) ?>
+                <?= htmlspecialchars((string)($doseExpireMsg)) ?>
             </div>
         <?php endif; ?>
 
+        <?php include __DIR__ . '/_dispensing_status_grid.php'; ?>
+        <style>
+.form-container{grid-template-columns:repeat(4,minmax(0,1fr)) 260px!important;min-width:0!important;width:100%!important;height:auto!important;background:linear-gradient(135deg,#EFE9FB,#F8F5FF)!important;border:1px solid #d9cdf5;border-left:6px solid #2D008A;box-sizing:border-box;align-items:start}
+.form-container .photo-container{grid-column:5!important;grid-row:1 / span 2!important;align-self:start}
+.form-container .full-width-section{grid-column:1 / 5!important}
+</style>
         <form id="dispenseForm" action="dispensingData_process.php" method="post" onsubmit="return validateForm()"
               <?php if ($doseBlocked): ?>style="pointer-events:none;opacity:.5;"<?php endif; ?>>
         <div class="form-container">
@@ -923,53 +929,53 @@ if (isset($_SESSION['dispensing_successes'])) {
                 </div>
                 <div class="form-group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>">
+                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="mat_number">MAT Number</label>
-                    <input type="text" name="mat_number" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_number']) ? htmlspecialchars($currentSettings['mat_number']) : ''; ?>">
+                    <input type="text" name="mat_number" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_number']) ? htmlspecialchars((string)($currentSettings['mat_number'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="clientName">Client Name</label>
-                    <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>">
+                    <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>">
                 </div>
             </div>
 
             <div class="form-group-column">
                 <div class="form-group">
                     <label for="nickName">Nick Name</label>
-                    <input type="text" name="nickName" class="readonly-input" value="<?php echo isset($currentSettings['nickName']) ? htmlspecialchars($currentSettings['nickName']) : ''; ?>">
+                    <input type="text" name="nickName" class="readonly-input" value="<?php echo isset($currentSettings['nickName']) ? htmlspecialchars((string)($currentSettings['nickName'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="age">Age</label>
-                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars($currentSettings['age']) : ''; ?>">
+                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars((string)($currentSettings['age'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="sex">Gender</label>
-                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>">
+                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars((string)($currentSettings['sex'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="p_address">Residence</label>
-                    <input type="text" name="p_address" class="readonly-input" value="<?php echo isset($currentSettings['p_address']) ? htmlspecialchars($currentSettings['p_address']) : ''; ?>">
+                    <input type="text" name="p_address" class="readonly-input" value="<?php echo isset($currentSettings['p_address']) ? htmlspecialchars((string)($currentSettings['p_address'])) : ''; ?>">
                 </div>
             </div>
 
             <div class="form-group-column">
                 <div class="form-group">
                     <label for="cso">CSO</label>
-                    <input type="text" name="cso" class="readonly-input" readonly value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars($currentSettings['cso']) : ''; ?>">
+                    <input type="text" name="cso" class="readonly-input" readonly value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars((string)($currentSettings['cso'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="drugname">Drug</label>
-                    <input type="text" name="drugname" class="readonly-input" readonly value="<?php echo isset($currentSettings['drugname']) ? htmlspecialchars($currentSettings['drugname']) : ''; ?>">
+                    <input type="text" name="drugname" class="readonly-input" readonly value="<?php echo isset($currentSettings['drugname']) ? htmlspecialchars((string)($currentSettings['drugname'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="dosage">Dosage</label>
-                    <input type="text" name="dosage" class="readonly-input" readonly value="<?php echo isset($currentSettings['dosage']) ? htmlspecialchars($currentSettings['dosage']) : ''; ?>">
+                    <input type="text" name="dosage" class="readonly-input" readonly value="<?php echo isset($currentSettings['dosage']) ? htmlspecialchars((string)($currentSettings['dosage'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="reasons">Dose Adjustments Reasons</label>
-                    <input type="text" name="reasons" class="readonly-input" readonly value="<?php echo isset($currentSettings['reasons']) ? htmlspecialchars($currentSettings['reasons']) : ''; ?>">
+                    <input type="text" name="reasons" class="readonly-input" readonly value="<?php echo isset($currentSettings['reasons']) ? htmlspecialchars((string)($currentSettings['reasons'])) : ''; ?>">
                 </div>
             </div>
 
@@ -982,7 +988,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                 </div>
                 <div class="form-group">
                     <label for="pharm_officer_name">Dispensing Officer Name</label>
-                    <input type="text" name="pharm_officer_name" class="readonly-input" value="<?php echo htmlspecialchars($pharm_office_name); ?>">
+                    <input type="text" name="pharm_officer_name" class="readonly-input" value="<?php echo htmlspecialchars((string)($pharm_office_name)); ?>">
                 </div>
                 <!--<?php
                 // Calculate mls value once
@@ -996,24 +1002,50 @@ if (isset($_SESSION['dispensing_successes'])) {
                 // Calculate mls value only if drug is methadone
                 $mlsValue = '';
                 if (isset($currentSettings['drugname']) &&
-                    strtolower($currentSettings['drugname']) === 'methadone' &&
+                    strtolower((string)($currentSettings['drugname'])) === 'methadone' &&
                     isset($currentSettings['dosage']) &&
                     is_numeric($currentSettings['dosage'])) {
                     $mlsValue = number_format(floatval($currentSettings['dosage']) / 5, 2);
                 }
                 ?>
 
-                <div class="form-group2">
-                    <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars($mlsValue); ?>">
+                <?php $isBupDrug = !empty($currentSettings['drugname']) && stripos($currentSettings['drugname'], 'buprenorphine') !== false; ?>
+                <?php if ($isBupDrug): ?>
+                <div class="form-group2 bup-tiles">
+                    <div class="tile"><label>Dosage (mg)</label><input type="text" id="bupDoseTile" class="readonly-input" readonly value="<?php echo htmlspecialchars(rtrim(rtrim(number_format((float)($currentSettings['dosage'] ?? 0), 2, '.', ''), '0'), '.')); ?>"></div>
+                    <div class="tile"><label>Tablets</label><input type="text" id="bupTabletsTile" class="readonly-input" readonly value="-"><small id="bupTabletsSub"></small></div>
                 </div>
+                <?php else: ?>
+                <div class="form-group2">
+                    <label>Volume (mL)</label>
+                    <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($mlsValue)); ?>">
+                </div>
+                <?php endif; ?>
 
                 <?php if (!empty($currentSettings['drugname']) && stripos($currentSettings['drugname'], 'buprenorphine') !== false):
                     $bup_mat_id = $currentSettings['mat_id'];
                     $bup_dose_mg = (float)($currentSettings['dosage'] ?? 0);
                     include '../includes/bup_selector.php';
                 endif; ?>
+                <?php if ($isBupDrug): ?>
+                <script>
+                // Tablets tile follows the strengths picked in the selector: total tablets and the split, e.g. 3 = 2 x 4mg + 1 x 2mg
+                (function () {
+                    function paint() {
+                        var total = 0, parts = [];
+                        document.querySelectorAll('.bup-tab-input').forEach(function (i) {
+                            var n = parseFloat(i.value) || 0; if (n > 0) { total += n; parts.push(n + ' x ' + i.closest('label').firstChild.textContent.replace('tablets', '').trim()); }
+                        });
+                        document.getElementById('bupTabletsTile').value = total || '-';
+                        document.getElementById('bupTabletsSub').textContent = parts.join(' + ');
+                    }
+                    document.querySelectorAll('.bup-tab-input').forEach(function (i) { i.addEventListener('input', paint); });
+                    paint();
+                })();
+                </script>
+                <?php endif; ?>
 
-                <?php if (isset($currentSettings['drugname']) && strtolower($currentSettings['drugname']) === 'methadone'): ?>
+                <?php if (isset($currentSettings['drugname']) && strtolower((string)($currentSettings['drugname'])) === 'methadone'): ?>
                 <div class="form-group">
                     <label for="pump_device">Reservoir Used (syringe draw — for stock tracking)</label>
                     <select id="pump_device" name="pump_device" required>
@@ -1023,7 +1055,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                         <?php foreach ($devices as $row): ?>
                             <option value="<?php echo $row['id'] ?>"
                                 <?php echo ($row['id'] == $savedPumpId) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($row['label']) ?> (<?php echo htmlspecialchars($row['port']) ?>)
+                                <?php echo htmlspecialchars((string)($row['label'])) ?> (<?php echo htmlspecialchars((string)($row['port'])) ?>)
                                 <?php echo ($row['id'] == $savedPumpId) ? '✓' : ''; ?>
                             </option>
                         <?php endforeach; ?>
@@ -1033,8 +1065,8 @@ if (isset($_SESSION['dispensing_successes'])) {
 
                 <input type="hidden" name="daysToNextAppointment" value="<?php echo $daysToAppointment; ?>">
                 <input type="hidden" name="isMissed" value="<?php echo $isMissed ? 'true' : 'false'; ?>">
-                <input type="hidden" name="appointmentType" value="<?php echo htmlspecialchars($appointmentInfo['appointmentType']); ?>">
-                <input type="hidden" name="referTo" value="<?php echo htmlspecialchars($appointmentInfo['referTo']); ?>">
+                <input type="hidden" name="appointmentType" value="<?php echo htmlspecialchars((string)($appointmentInfo['appointmentType'])); ?>">
+                <input type="hidden" name="referTo" value="<?php echo htmlspecialchars((string)($appointmentInfo['referTo'])); ?>">
                 <div class="form-group">
                     <input type="hidden" name="dispense_mat" value="0">
                     <label style="display:flex;gap:8px;align-items:center;">
@@ -1072,7 +1104,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                             <?php
                                 $prev_prescription_id = '';
                                 foreach ($otherPrescriptions as $index => $drug):
-                                    $current_prescription_id = htmlspecialchars($drug['prescription_id']);
+                                    $current_prescription_id = htmlspecialchars((string)($drug['prescription_id']));
                                     $is_new_prescription = ($current_prescription_id !== $prev_prescription_id);
                                     $prev_prescription_id = $current_prescription_id;
                             ?>
@@ -1082,12 +1114,12 @@ if (isset($_SESSION['dispensing_successes'])) {
                                         <a href="view_prescription_details.php?id=<?php echo $current_prescription_id; ?>" class="btn btn-sm btn-info" style="font-size: 10px;"><?php echo $current_prescription_id; ?></a>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($drug['drugName']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['dosage']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['routetype']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['duration']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['totalDose']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['prescr_status']); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['drugName'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['dosage'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['routetype'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['duration'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['totalDose'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['prescr_status'])); ?></td>
                                 <td><input type="number" name="quantity[<?php echo $drug['id']; ?>]" min="0" value="0"></td>
                                 <td>
                                     <input type="checkbox" name="dispense[<?php echo $drug['id']; ?>]" value="<?php echo $current_prescription_id; ?>">
@@ -1123,10 +1155,10 @@ if (isset($_SESSION['dispensing_successes'])) {
                                     <?php else: ?>
                                         <input type="checkbox" name="co_meds[<?= $ci ?>][dispense]" value="1" checked>
                                     <?php endif; ?>
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars($cm['drugname']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars((string)($cm['drugname'])) ?>">
                                     <input type="hidden" name="co_meds[<?= $ci ?>][dosage]"   value="<?= (int)$cm['dosage'] ?>">
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars($cm['reasons']) ?>">
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars($cm['type']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars((string)($cm['reasons'])) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars((string)($cm['type'])) ?>">
                                     <?php if (!empty($cm['prescription_drug_id'])): ?>
                                     <input type="hidden" name="co_meds[<?= $ci ?>][prescription_drug_id]" value="<?= (int)$cm['prescription_drug_id'] ?>">
                                     <?php endif; ?>
@@ -1136,14 +1168,14 @@ if (isset($_SESSION['dispensing_successes'])) {
                                         <?= $cm['icon'] ?> <?= $cm['label'] ?>
                                     </span>
                                 </td>
-                                <td><strong><?= htmlspecialchars($cm['drugname']) ?></strong></td>
+                                <td><strong><?= htmlspecialchars((string)($cm['drugname'])) ?></strong></td>
                                 <td>1 daily dose</td>
-                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars($cm['note'] ?? '') ?></td>
+                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars((string)($cm['note'] ?? '')) ?></td>
                                 <td>
                                     <?php if ($cm['done']): ?>
                                         <span class="co-done">✓ Already dispensed today</span>
                                     <?php else: ?>
-                                        <span style="color:#2C3162;font-size:.82rem">Will be dispensed</span>
+                                        <span style="color:#2D008A;font-size:.82rem">Will be dispensed</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -1166,13 +1198,13 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <?php
                     // ── HIV / ART (from viral_load table) ─────────────────
                     $hivPositive = !empty($vlData['hiv_status']) &&
-                                   strtolower($vlData['hiv_status']) === 'positive';
+                                   strtolower((string)($vlData['hiv_status'])) === 'positive';
                     ?>
                     <?php if ($hivPositive): ?>
                         <div class="regimen-line" style="background:#ffe0e0;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
                             <strong style='color:#cc0000;'><i class="fa fa-medkit"></i> HIV+</strong>
                             <?php if (!empty($vlData['art_regimen'])): ?>
-                                &nbsp;| ART: <strong><?php echo htmlspecialchars($vlData['art_regimen']); ?></strong>
+                                &nbsp;| ART: <strong><?php echo htmlspecialchars((string)($vlData['art_regimen'])); ?></strong>
                             <?php else: ?>
                                 &nbsp;<em style="color:#888;">(No ART regimen recorded)</em>
                             <?php endif; ?>
@@ -1182,24 +1214,24 @@ if (isset($_SESSION['dispensing_successes'])) {
                     <?php if ($showTB && !empty($regimenData['tb_regimen'])): ?>
                         <div class="regimen-line" style="background:#fff3cd;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
                             <strong style='color:#856404;'><i class="fa fa-lungs"></i> TB+</strong>
-                            &nbsp;| <?php echo htmlspecialchars($regimenData['tb_regimen']); ?>
-                            (<?php echo htmlspecialchars($regimenData['tb_start_date']); ?> –
-                            <?php echo htmlspecialchars($regimenData['tb_end_date']); ?>)
+                            &nbsp;| <?php echo htmlspecialchars((string)($regimenData['tb_regimen'])); ?>
+                            (<?php echo htmlspecialchars((string)($regimenData['tb_start_date'])); ?> –
+                            <?php echo htmlspecialchars((string)($regimenData['tb_end_date'])); ?>)
                         </div>
                     <?php endif; ?>
 
                     <?php if ($showTPT && !empty($regimenData['tpt_regimen'])): ?>
                         <div class="regimen-line" style="background:#e8f5e9;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
                             <strong style='color:#2e7d32;'>TPT:</strong>
-                            <?php echo htmlspecialchars($regimenData['tpt_regimen']); ?>
-                            (<?php echo htmlspecialchars($regimenData['tpt_start_date']); ?> –
-                            <?php echo htmlspecialchars($regimenData['tpt_end_date']); ?>)
+                            <?php echo htmlspecialchars((string)($regimenData['tpt_regimen'])); ?>
+                            (<?php echo htmlspecialchars((string)($regimenData['tpt_start_date'])); ?> –
+                            <?php echo htmlspecialchars((string)($regimenData['tpt_end_date'])); ?>)
                         </div>
                     <?php endif; ?>
 
                     <?php
                     $hepcPositive = !empty($lastregimenRow['hepc_status']) &&
-                                    strtolower($lastregimenRow['hepc_status']) === 'positive';
+                                    strtolower((string)($lastregimenRow['hepc_status'])) === 'positive';
                     ?>
                     <?php if ($hepcPositive): ?>
                         <div class="regimen-line" style="background:#f3e0ff;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
@@ -1286,5 +1318,6 @@ if (isset($_SESSION['dispensing_successes'])) {
             document.getElementById('customAlert').style.display = 'none';
         }
     </script>
+<?php include __DIR__ . '/_dose_modal.php'; ?>
 </body>
 </html>

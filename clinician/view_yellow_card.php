@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include '../includes/config.php';
 
@@ -51,7 +51,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #50b89a;
-            --dark-color: #2C3162;
+            --dark-color: #2D008A;
             --light-bg: #f8f9fa;
             --white: #ffffff;
             --border-color: #dcdcdc;
@@ -320,35 +320,35 @@ $page_title = 'Yellow Card - Patient Treatment Record';
             <div class="patient-info-grid">
                 <div class="info-item">
                     <label>MAT ID</label>
-                    <span><?php echo htmlspecialchars($patient['mat_id']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['mat_id'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>MAT Number</label>
-                    <span><?php echo htmlspecialchars($patient['mat_number']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['mat_number'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Client Name</label>
-                    <span><?php echo htmlspecialchars($patient['clientName']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['clientName'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Nickname</label>
-                    <span><?php echo htmlspecialchars($patient['nickName']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['nickName'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Age / Sex</label>
-                    <span><?php echo htmlspecialchars($patient['age'] . ' / ' . $patient['sex']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['age'] . ' / ' . $patient['sex'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Current Drug</label>
-                    <span><?php echo htmlspecialchars($patient['drugname']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['drugname'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Current Dosage</label>
-                    <span><?php echo htmlspecialchars($patient['dosage']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['dosage'])); ?></span>
                 </div>
                 <div class="info-item">
                     <label>Status</label>
-                    <span><?php echo htmlspecialchars($patient['current_status']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($patient['current_status'])); ?></span>
                 </div>
             </div>
         </div>
@@ -358,7 +358,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                 <i class="fas fa-arrow-left"></i> Back to Search
             </a>
             <div>
-                <a href="yellow_card_form.php?mat_id=<?php echo urlencode($mat_id); ?>" class="btn btn-success">
+                <a href="yellow_card_form.php?mat_id=<?php echo urlencode((string)($mat_id)); ?>" class="btn btn-success">
                     <i class="fas fa-plus"></i> Add New Visit
                 </a>
                 <button onclick="window.print()" class="btn btn-primary">
@@ -370,7 +370,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
         <div class="visits-summary">
             <h3><i class="fas fa-chart-line"></i> Total Visits: <?php echo count($visits); ?></h3>
             <?php if (count($visits) > 0): ?>
-                <span>Latest Visit: <?php echo date('d M Y', strtotime($visits[0]['consultation_date'])); ?></span>
+                <span>Latest Visit: <?php echo date('d M Y', strtotime((string)($visits[0]['consultation_date']))); ?></span>
             <?php endif; ?>
         </div>
 
@@ -379,7 +379,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                 <div class="visit-card">
                     <div class="visit-header">
                         <h3><i class="fas fa-stethoscope"></i> Visit #<?php echo count($visits) - $index; ?></h3>
-                        <span class="visit-date"><?php echo date('d M Y', strtotime($visit['consultation_date'])); ?></span>
+                        <span class="visit-date"><?php echo date('d M Y', strtotime((string)($visit['consultation_date']))); ?></span>
                     </div>
 
                     <!-- Basic Visit Information -->
@@ -390,15 +390,15 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                         <div class="data-grid">
                             <div class="data-item">
                                 <label>Consultation Date</label>
-                                <span><?php echo $visit['consultation_date'] ? date('d M Y', strtotime($visit['consultation_date'])) : 'N/A'; ?></span>
+                                <span><?php echo $visit['consultation_date'] ? date('d M Y', strtotime((string)($visit['consultation_date']))) : 'N/A'; ?></span>
                             </div>
                             <div class="data-item">
                                 <label>MAT Start Date</label>
-                                <span><?php echo $visit['mat_start_date'] ? date('d M Y', strtotime($visit['mat_start_date'])) : 'N/A'; ?></span>
+                                <span><?php echo $visit['mat_start_date'] ? date('d M Y', strtotime((string)($visit['mat_start_date']))) : 'N/A'; ?></span>
                             </div>
                             <div class="data-item">
                                 <label>Next Visit Date</label>
-                                <span><?php echo $visit['next_visit_date'] ? date('d M Y', strtotime($visit['next_visit_date'])) : 'N/A'; ?></span>
+                                <span><?php echo $visit['next_visit_date'] ? date('d M Y', strtotime((string)($visit['next_visit_date']))) : 'N/A'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -469,19 +469,19 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                             <?php if ($visit['complaints']): ?>
                                 <div class="data-item data-full">
                                     <label>Complaints</label>
-                                    <span><?php echo nl2br(htmlspecialchars($visit['complaints'])); ?></span>
+                                    <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['complaints'])))); ?></span>
                                 </div>
                             <?php endif; ?>
                             <?php if ($visit['signs_overdose']): ?>
                                 <div class="data-item data-full">
                                     <label>Signs of Overdose</label>
-                                    <span><?php echo nl2br(htmlspecialchars($visit['signs_overdose'])); ?></span>
+                                    <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['signs_overdose'])))); ?></span>
                                 </div>
                             <?php endif; ?>
                             <?php if ($visit['dose_adjustment_reason']): ?>
                                 <div class="data-item data-full">
                                     <label>Reason for Dose Adjustment</label>
-                                    <span><?php echo nl2br(htmlspecialchars($visit['dose_adjustment_reason'])); ?></span>
+                                    <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['dose_adjustment_reason'])))); ?></span>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -494,7 +494,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                                 <i class="fas fa-exclamation-triangle"></i> Treatment for Side Effects
                             </div>
                             <div class="data-item data-full">
-                                <span><?php echo nl2br(htmlspecialchars($visit['side_effects_treatment'])); ?></span>
+                                <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['side_effects_treatment'])))); ?></span>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -516,55 +516,55 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                                 <?php if ($visit['mental_health_treatment']): ?>
                                     <div class="data-item data-full">
                                         <label>Mental Health Treatment</label>
-                                        <span><?php echo nl2br(htmlspecialchars($visit['mental_health_treatment'])); ?></span>
+                                        <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['mental_health_treatment'])))); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['art_regimen']): ?>
                                     <div class="data-item">
                                         <label>ART Regimen</label>
-                                        <span><?php echo htmlspecialchars($visit['art_regimen']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['art_regimen'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['viral_load_results']): ?>
                                     <div class="data-item">
                                         <label>Viral Load Results</label>
-                                        <span><?php echo htmlspecialchars($visit['viral_load_results']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['viral_load_results'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['prep_pep']): ?>
                                     <div class="data-item">
                                         <label>PrEP/PEP</label>
-                                        <span><?php echo htmlspecialchars($visit['prep_pep']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['prep_pep'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['tb_screening_treatment']): ?>
                                     <div class="data-item">
                                         <label>TB Screening/Treatment</label>
-                                        <span><?php echo htmlspecialchars($visit['tb_screening_treatment']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['tb_screening_treatment'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['hepatitis_b_regimen']): ?>
                                     <div class="data-item">
                                         <label>Hepatitis B Regimen</label>
-                                        <span><?php echo htmlspecialchars($visit['hepatitis_b_regimen']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['hepatitis_b_regimen'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['hepatitis_c_regimen']): ?>
                                     <div class="data-item">
                                         <label>Hepatitis C Regimen</label>
-                                        <span><?php echo htmlspecialchars($visit['hepatitis_c_regimen']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['hepatitis_c_regimen'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['sti_treatment']): ?>
                                     <div class="data-item">
                                         <label>STI Treatment</label>
-                                        <span><?php echo htmlspecialchars($visit['sti_treatment']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['sti_treatment'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['other_comorbidity']): ?>
                                     <div class="data-item data-full">
                                         <label>Other</label>
-                                        <span><?php echo nl2br(htmlspecialchars($visit['other_comorbidity'])); ?></span>
+                                        <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['other_comorbidity'])))); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -586,43 +586,43 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                                 <?php if ($visit['pregnant']): ?>
                                     <div class="data-item">
                                         <label>Pregnant</label>
-                                        <span><?php echo htmlspecialchars($visit['pregnant']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['pregnant'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['lmp']): ?>
                                     <div class="data-item">
                                         <label>LMP</label>
-                                        <span><?php echo date('d M Y', strtotime($visit['lmp'])); ?></span>
+                                        <span><?php echo date('d M Y', strtotime((string)($visit['lmp']))); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['edd']): ?>
                                     <div class="data-item">
                                         <label>EDD</label>
-                                        <span><?php echo date('d M Y', strtotime($visit['edd'])); ?></span>
+                                        <span><?php echo date('d M Y', strtotime((string)($visit['edd']))); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['cervical_cancer_screening']): ?>
                                     <div class="data-item">
                                         <label>Cervical Cancer Screening</label>
-                                        <span><?php echo htmlspecialchars($visit['cervical_cancer_screening']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['cervical_cancer_screening'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['on_fp']): ?>
                                     <div class="data-item">
                                         <label>On Family Planning</label>
-                                        <span><?php echo htmlspecialchars($visit['on_fp']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['on_fp'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['fp_method']): ?>
                                     <div class="data-item">
                                         <label>FP Method</label>
-                                        <span><?php echo htmlspecialchars($visit['fp_method']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['fp_method'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['gbv_screening']): ?>
                                     <div class="data-item data-full">
                                         <label>GBV Screening</label>
-                                        <span><?php echo nl2br(htmlspecialchars($visit['gbv_screening'])); ?></span>
+                                        <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['gbv_screening'])))); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -647,67 +647,67 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                                 <?php if ($visit['psychosocial_support']): ?>
                                     <div class="data-item">
                                         <label>Psychosocial Support</label>
-                                        <span><?php echo htmlspecialchars($visit['psychosocial_support']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['psychosocial_support'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['psychiatric_support']): ?>
                                     <div class="data-item">
                                         <label>Psychiatric Support</label>
-                                        <span><?php echo htmlspecialchars($visit['psychiatric_support']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['psychiatric_support'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['nutritional_support']): ?>
                                     <div class="data-item">
                                         <label>Nutritional Support</label>
-                                        <span><?php echo htmlspecialchars($visit['nutritional_support']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['nutritional_support'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['vaccination_service']): ?>
                                     <div class="data-item">
                                         <label>Vaccination Service</label>
-                                        <span><?php echo htmlspecialchars($visit['vaccination_service']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['vaccination_service'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['sexual_reproductive_health']): ?>
                                     <div class="data-item">
                                         <label>Sexual & Reproductive Health</label>
-                                        <span><?php echo htmlspecialchars($visit['sexual_reproductive_health']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['sexual_reproductive_health'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['radiology_service']): ?>
                                     <div class="data-item">
                                         <label>Radiology Service</label>
-                                        <span><?php echo htmlspecialchars($visit['radiology_service']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['radiology_service'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['laboratory_service']): ?>
                                     <div class="data-item">
                                         <label>Laboratory Service</label>
-                                        <span><?php echo htmlspecialchars($visit['laboratory_service']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['laboratory_service'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['legal_paralegal_services']): ?>
                                     <div class="data-item">
                                         <label>Legal/Paralegal Services</label>
-                                        <span><?php echo htmlspecialchars($visit['legal_paralegal_services']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['legal_paralegal_services'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['social_protection']): ?>
                                     <div class="data-item">
                                         <label>Social Protection</label>
-                                        <span><?php echo htmlspecialchars($visit['social_protection']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['social_protection'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['gbv_services']): ?>
                                     <div class="data-item">
                                         <label>GBV Services</label>
-                                        <span><?php echo htmlspecialchars($visit['gbv_services']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($visit['gbv_services'])); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($visit['other_referrals']): ?>
                                     <div class="data-item data-full">
                                         <label>Other Referrals</label>
-                                        <span><?php echo nl2br(htmlspecialchars($visit['other_referrals'])); ?></span>
+                                        <span><?php echo nl2br((string)(htmlspecialchars((string)($visit['other_referrals'])))); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -722,15 +722,15 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                         <div class="data-grid">
                             <div class="data-item">
                                 <label>Clinician Name</label>
-                                <span><?php echo htmlspecialchars($visit['clinician_name']); ?></span>
+                                <span><?php echo htmlspecialchars((string)($visit['clinician_name'])); ?></span>
                             </div>
                             <div class="data-item">
                                 <label>Signature</label>
-                                <span><?php echo htmlspecialchars($visit['clinician_signature']); ?></span>
+                                <span><?php echo htmlspecialchars((string)($visit['clinician_signature'])); ?></span>
                             </div>
                             <div class="data-item">
                                 <label>Date Recorded</label>
-                                <span><?php echo date('d M Y H:i', strtotime($visit['created_at'])); ?></span>
+                                <span><?php echo date('d M Y H:i', strtotime((string)($visit['created_at']))); ?></span>
                             </div>
                         </div>
                     </div>
@@ -741,7 +741,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                 <i class="fas fa-clipboard"></i>
                 <h2>No Clinical Visits Recorded</h2>
                 <p>This patient has no recorded clinical follow-up visits yet.</p>
-                <a href="yellow_card_form.php?mat_id=<?php echo urlencode($mat_id); ?>" class="btn btn-success" style="margin-top: 20px;">
+                <a href="yellow_card_form.php?mat_id=<?php echo urlencode((string)($mat_id)); ?>" class="btn btn-success" style="margin-top: 20px;">
                     <i class="fas fa-plus"></i> Add First Visit
                 </a>
             </div>

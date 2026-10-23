@@ -10,7 +10,7 @@ $source_name_err = "";
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate source name
-    $input_source_name = trim($_POST["source_name"]);
+    $input_source_name = trim((string)($_POST["source_name"]));
     if (empty($input_source_name)) {
         $source_name_err = "Please enter a source name.";
     } else {

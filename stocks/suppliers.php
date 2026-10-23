@@ -195,46 +195,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_PO
 <body>
 <div class="main-content">
         <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="alert alert-success mt-3"><?php echo htmlspecialchars($_SESSION['success_message']); ?></div>
+            <div class="alert alert-success mt-3"><?php echo htmlspecialchars((string)($_SESSION['success_message'])); ?></div>
             <?php unset($_SESSION['success_message']); ?>
         <?php endif; ?>
         <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="alert alert-danger"><?php echo htmlspecialchars($_SESSION['error_message']); ?></div>
+            <div class="alert alert-danger"><?php echo htmlspecialchars((string)($_SESSION['error_message'])); ?></div>
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
-        <h2><?php echo htmlspecialchars($page_title); ?></h2>
+        <h2><?php echo htmlspecialchars((string)($page_title)); ?></h2>
 
                         <form id="supplier-form" method="POST">
 
-                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string)($_SESSION['csrf_token'])); ?>">
 
                             <div class="from-group">
                                 <label for="name" class="form-label">Supplier Name</label>
                                 <input type="text" class="form-control" id="name" name="name"
-                                       value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>" required>
+                                       value="<?php echo isset($_POST['name']) ? htmlspecialchars((string)($_POST['name'])) : ''; ?>" required>
                             </div>
 
                             <div class="from-group">
                                 <label for="contact_person" class="form-label">Contact Person</label>
                                 <input type="text" class="form-control" id="contact_person" name="contact_person"
-                                       value="<?php echo isset($_POST['contact_person']) ? htmlspecialchars($_POST['contact_person']) : ''; ?>" required>
+                                       value="<?php echo isset($_POST['contact_person']) ? htmlspecialchars((string)($_POST['contact_person'])) : ''; ?>" required>
                             </div>
 
                             <div class="from-group">
                                 <label for="phone" class="form-label">Phone</label>
                                 <input type="tel" class="form-control" id="phone" name="phone"
-                                       value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>" required>
+                                       value="<?php echo isset($_POST['phone']) ? htmlspecialchars((string)($_POST['phone'])) : ''; ?>" required>
                             </div>
 
                             <div class="from-group">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email"
-                                       value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                                       value="<?php echo isset($_POST['email']) ? htmlspecialchars((string)($_POST['email'])) : ''; ?>">
                             </div>
 
                             <div class="from-group">
                                 <label for="address" class="form-label">Address</label>
-                                <textarea class="form-control" id="address" name="address" rows="2" ><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
+                                <textarea class="form-control" id="address" name="address" rows="2" ><?php echo isset($_POST['address']) ? htmlspecialchars((string)($_POST['address'])) : ''; ?></textarea>
                             </div>
                             <div class="from-group">
                                 <button type="submit" class="custom-submit-btn">Add Supplier</button>

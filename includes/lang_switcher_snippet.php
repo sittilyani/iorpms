@@ -16,9 +16,9 @@ $_lop = ['en' => '🇬🇧 EN', 'fr' => '🇫🇷 FR', 'pt' => '🇵🇹 PT'];
         ['lang' => $_lcode]
     ));
     $_lst  = ($_lc === $_lcode)
-        ? 'background:#fff;color:#1a2a6c;font-weight:700;'
+        ? 'background:#fff;color:#2D008A;font-weight:700;'
         : 'background:rgba(255,255,255,.15);color:#fff;'; ?>
-    <a href="<?= htmlspecialchars($_lurl) ?>"
+    <a href="<?= htmlspecialchars((string)($_lurl)) ?>"
        style="<?= $_lst ?>border:1px solid rgba(255,255,255,.4);padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;text-decoration:none;">
         <?= $_llabel ?>
     </a>

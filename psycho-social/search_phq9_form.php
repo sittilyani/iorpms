@@ -7,7 +7,7 @@ include('../includes/config.php');
 if (isset($_GET['message'])) {
     // Added a container ID for the message to allow the JS function to hide it
     $message = urldecode($_GET['message']);
-    echo "<div id='message-container' style='color: green; font-weight: bold; padding: 10px; border: 1px solid green; background-color: #e6ffe6; margin-bottom: 15px;'>" . htmlspecialchars($message) . "</div>";
+    echo "<div id='message-container' style='color: green; font-weight: bold; padding: 10px; border: 1px solid green; background-color: #e6ffe6; margin-bottom: 15px;'>" . htmlspecialchars((string)($message)) . "</div>";
 }
 ?>
 
@@ -35,19 +35,19 @@ if (isset($_GET['message'])) {
             background-color: #f4f4f4;
         }
         .pagination span.active {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
-            border: 1px solid #2C3162;
+            border: 1px solid #2D008A;
         }
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">PHQ - 9 form search</h2>
+    <h2 style="color: #2D008A; ">PHQ - 9 form search</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
-            <input type="text" class="search-entry" id="search" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <input type="text" class="search-entry" id="search" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>">
             <input type="submit" value="Search" class="search-input">
             <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
 
@@ -95,17 +95,17 @@ if (isset($_GET['message'])) {
 
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                        <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                        <td>" . htmlspecialchars($row['clientName']) . "</td>
-                        <td>" . htmlspecialchars($row['age']) . "</td>
-                        <td>" . htmlspecialchars($row['sex']) . "</td>
-                        <td>" . htmlspecialchars($row['p_address']) . "</td>
-                        <td>" . htmlspecialchars($row['drugname']) . "</td>
-                        <td>" . htmlspecialchars($row['dosage']) . "</td>
-                        <td>" . htmlspecialchars($row['current_status']) . "</td>
+                        <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['age'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['p_address'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['drugname'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['dosage'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['current_status'])) . "</td>
                         <td>
-                            <a href='../patients/view_patient.php?p_id=" . htmlspecialchars($row['p_id']) . "'>View</a> |
-                            <a href='phq9_form.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>Check In (PHQ-9)</a>
+                            <a href='../patients/view_patient.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>View</a> |
+                            <a href='phq9_form.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>Check In (PHQ-9)</a>
                         </td>
                     </tr>";
         }
@@ -114,14 +114,14 @@ if (isset($_GET['message'])) {
         // Pagination Links
         echo "<div class='pagination'>";
         if ($current_page > 1) {
-            echo "<a href='?page=" . ($current_page - 1) . "&search=" . urlencode($search) . "'>Previous</a>";
+            echo "<a href='?page=" . ($current_page - 1) . "&search=" . urlencode((string)($search)) . "'>Previous</a>";
         }
         // Only show links for pages near the current page for better UI
         $start_page = max(1, $current_page - 2);
         $end_page = min($total_pages, $current_page + 2);
 
         if ($start_page > 1) {
-            echo "<a href='?page=1&search=" . urlencode($search) . "'>1</a>";
+            echo "<a href='?page=1&search=" . urlencode((string)($search)) . "'>1</a>";
             if ($start_page > 2) {
                 echo "<span>...</span>";
             }
@@ -131,7 +131,7 @@ if (isset($_GET['message'])) {
             if ($i == $current_page) {
                 echo "<span class='active'>$i</span>";
             } else {
-                echo "<a href='?page=$i&search=" . urlencode($search) . "'>$i</a>";
+                echo "<a href='?page=$i&search=" . urlencode((string)($search)) . "'>$i</a>";
             }
         }
 
@@ -139,11 +139,11 @@ if (isset($_GET['message'])) {
             if ($end_page < $total_pages - 1) {
                 echo "<span>...</span>";
             }
-            echo "<a href='?page=$total_pages&search=" . urlencode($search) . "'>$total_pages</a>";
+            echo "<a href='?page=$total_pages&search=" . urlencode((string)($search)) . "'>$total_pages</a>";
         }
 
         if ($current_page < $total_pages) {
-            echo "<a href='?page=" . ($current_page + 1) . "&search=" . urlencode($search) . "'>Next</a>";
+            echo "<a href='?page=" . ($current_page + 1) . "&search=" . urlencode((string)($search)) . "'>Next</a>";
         }
         echo "</div>";
 

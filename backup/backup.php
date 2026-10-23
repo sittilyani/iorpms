@@ -1,6 +1,7 @@
 <?php
 ob_start();
 include '../includes/config.php';
+require_once '../includes/backup_helpers.php';
 // include '../includes/session_check.php';
 
 // Set timezone to East Africa Time (Nairobi)
@@ -102,7 +103,7 @@ if (!empty($sqlScript)) {
     }
 
     // Save the SQL script to a backup file with database name included
-    $backup_file_name = $backup_dir . $database . '_' . date('d-m-Y-H-i-s') . '.sql';
+    $backup_file_name = $backup_dir . backup_file_name($conn); // <Facility>_methadone_<date>.sql
     $fileHandler = fopen($backup_file_name, 'w+');
 
     // Check if the file was opened successfully
@@ -125,8 +126,8 @@ if (!empty($sqlScript)) {
     echo '<div class="container mt-5">';
     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
     echo '<strong><i class="bi bi-check-circle-fill"></i> Backup Successful!</strong><br>';
-    echo 'Database: <strong>' . htmlspecialchars($database) . '</strong><br>';
-    echo 'Backup saved at: <code>' . htmlspecialchars($backup_file_name) . '</code><br>';
+    echo 'Database: <strong>' . htmlspecialchars((string)($database)) . '</strong><br>';
+    echo 'Backup saved at: <code>' . htmlspecialchars((string)($backup_file_name)) . '</code><br>';
     echo 'File size: <strong>' . $fileSizeFormatted . '</strong><br>';
     echo 'Date: ' . date('Y-m-d H:i:s') . '<br>';
     echo '<hr>';

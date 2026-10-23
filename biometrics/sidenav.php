@@ -55,6 +55,7 @@ $full_name = getUserFullName();
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
+    <a href="../biometrics/dashboard.php" target="contentFrame" class="nav-link" style="background:#FFC12E;color:#000;margin:10px 0"><i class="fa fa-tachometer"></i>Dashboard</a>
 
     <a href="../photos/client_search.php" target="contentFrame" class="nav-link">
         <i class="fa fa-camera"></i>Capture Photos</a>
@@ -72,7 +73,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -92,10 +93,25 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (in_array(strtolower((string)($userrole ?? ($_SESSION['userrole'] ?? ''))), array (
+  0 => 'admin',
+  1 => 'super admin',
+  2 => 'receptionist',
+  3 => 'hrio',
+  4 => 'data manager',
+  5 => 'peer educator',
+  6 => 'pharmacist',
+  7 => 'clinician',
+  8 => 'nursing',
+  9 => 'demo',
+), true)): ?>
+            <iframe src="dashboard.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+        <?php endif; ?>
         </div>
     </div>
 </div>

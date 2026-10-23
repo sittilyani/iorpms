@@ -25,6 +25,11 @@
 session_start();
 include 'includes/config.php';
 
+// ─── 12-hour prime + calibrate compliance gate ───────────────────────────────
+require_once __DIR__ . '/includes/pump_guard.php';
+$__pumpState = pump_readiness($conn);
+if (!$__pumpState['ready']) { pump_block_page($__pumpState, ''); }
+
 // ─── Defaults ────────────────────────────────────────────────────────────────
 // 400 = 4000-unit prime pulse ÷ 10 mL calibration target.
 // Always overridden by the active pump_calibration DB record for the
@@ -125,7 +130,7 @@ function buildPumpCommand(float $ml_float, bool $is_reversed): string {
 function executePumpLocal(string $port, string $pump_cmd_str): void {
     $commands = explode('|', $pump_cmd_str);
     foreach ($commands as $cmd) {
-        $cmd = trim($cmd);
+        $cmd = trim((string)($cmd));
         if ($cmd === '') continue;
         $command    = "pumpAPI.exe " . escapeshellarg($port) . " 9600 raw " . escapeshellarg($cmd);
         $output     = [];
@@ -146,7 +151,7 @@ function executePumpLocal(string $port, string $pump_cmd_str): void {
 function executePumpRemote(string $pump_host, string $port, string $pump_cmd_str, string $api_secret): void {
     $commands = explode('|', $pump_cmd_str);
     foreach ($commands as $cmd) {
-        $cmd = trim($cmd);
+        $cmd = trim((string)($cmd));
         if ($cmd === '') continue;
 
         $url     = "http://{$pump_host}/iorpms/pump/local_pump_api.php";
@@ -160,7 +165,7 @@ function executePumpRemote(string $pump_host, string $port, string $pump_cmd_str
         $ctx = stream_context_create([
             'http' => [
                 'method'  => 'POST',
-                'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($payload) . "\r\n",
+                'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen((string)($payload)) . "\r\n",
                 'content' => $payload,
                 'timeout' => 30,
             ],
@@ -322,7 +327,7 @@ try {
     $pump_cmd = buildPumpCommand($ml, $is_reversed);
 
     // ── Fire pump: local (server) or remote (client machine) ────────────────
-    $is_local = in_array(strtolower($pump_host), ['localhost', '127.0.0.1', '::1'], true);
+    $is_local = in_array(strtolower((string)($pump_host)), ['localhost', '127.0.0.1', '::1'], true);
 
     if ($is_local) {
         executePumpLocal($pump_port, $pump_cmd);
@@ -382,9 +387,9 @@ try {
         foreach ($_POST['co_meds'] as $ci => $cmed) {
             if (empty($cmed['dispense']) || $cmed['dispense'] !== '1') continue;
 
-            $co_drug    = trim($cmed['drugname'] ?? '');
+            $co_drug    = trim((string)($cmed['drugname'] ?? ''));
             $co_dosage  = (float)($cmed['dosage'] ?? 1);
-            $co_reasons = trim($cmed['reasons']  ?? 'Auto-dispensed with MAT drug');
+            $co_reasons = trim((string)($cmed['reasons']  ?? 'Auto-dispensed with MAT drug'));
             $co_prescription_drug_id = !empty($cmed['prescription_drug_id']) ? (int)$cmed['prescription_drug_id'] : null;
 
             if (!$co_drug) continue;
@@ -474,7 +479,7 @@ try {
 
             } catch (Exception $coEx) {
                 $conn->rollback();
-                $successMessages[] = "⚠ Co-medication error ({$co_drug}): " . htmlspecialchars($coEx->getMessage());
+                $successMessages[] = "⚠ Co-medication error ({$co_drug}): " . htmlspecialchars((string)($coEx->getMessage()));
             }
         }
     }
@@ -556,13 +561,13 @@ try {
                 $stmt_update_prescr->close();
             } catch (Exception $e) {
                 $conn->rollback();
-                $successMessages[] = "⚠ Other Prescriptions Dispensing Failed: " . htmlspecialchars($e->getMessage());
+                $successMessages[] = "⚠ Other Prescriptions Dispensing Failed: " . htmlspecialchars((string)($e->getMessage()));
             }
         }
     }
 
     $_SESSION['successMessages'] = $successMessages;
-    header("Location: pharmacy/dispensingData_pump.php?mat_id=" . urlencode($mat_id));
+    header("Location: pharmacy/dispensingData_pump.php?mat_id=" . urlencode((string)($mat_id)));
     exit;
 
 } catch (Exception $e) {
@@ -572,7 +577,7 @@ try {
     // Redirect back to the patient's dispensing page if mat_id is known,
     // otherwise fall back to the referer so errors are always visible.
     $back = !empty($mat_id)
-        ? 'pharmacy/dispensingData_pump.php?mat_id=' . urlencode($mat_id)
+        ? 'pharmacy/dispensingData_pump.php?mat_id=' . urlencode((string)($mat_id))
         : ($_SERVER['HTTP_REFERER'] ?? 'pharmacy/dispensingData_pump.php');
     header("Location: $back");
     exit;

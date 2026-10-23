@@ -39,13 +39,13 @@ if (isset($_SESSION['dispensing_successes'])) {
             </button>
 
             <?php foreach ($successMessages as $success): ?>
-                <p><?php echo htmlspecialchars($success); ?></p>
+                <p><?php echo htmlspecialchars((string)($success)); ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-    <h2 style="color: #2C3162; ">Dispensing without Pump</h2>
+    <h2 style="color: #2D008A; ">Dispensing without Pump</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry"name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">

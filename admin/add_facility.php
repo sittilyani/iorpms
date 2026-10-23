@@ -5,18 +5,18 @@ include '../includes/config.php';
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $facilityname = trim($_POST["facilityname"]);
-        $mflcode = trim($_POST["mflcode"]);
-        $countyname = trim($_POST["countyname"]);
-        $subcountyname = trim($_POST["subcountyname"]);
-        $owner = trim($_POST["owner"]);
-        $sdp = trim($_POST["sdp"]);
-        $agency = trim($_POST["agency"]);
-        $emr = trim($_POST["emr"]);
-        $emrstatus = trim($_POST["emrstatus"]);
-        $infrastructuretype = trim($_POST["infrastructuretype"]);
-        $latitude = trim($_POST["latitude"]);
-        $longitude = trim($_POST["longitude"]);
+        $facilityname = trim((string)($_POST["facilityname"]));
+        $mflcode = trim((string)($_POST["mflcode"]));
+        $countyname = trim((string)($_POST["countyname"]));
+        $subcountyname = trim((string)($_POST["subcountyname"]));
+        $owner = trim((string)($_POST["owner"]));
+        $sdp = trim((string)($_POST["sdp"]));
+        $agency = trim((string)($_POST["agency"]));
+        $emr = trim((string)($_POST["emr"]));
+        $emrstatus = trim((string)($_POST["emrstatus"]));
+        $infrastructuretype = trim((string)($_POST["infrastructuretype"]));
+        $latitude = trim((string)($_POST["latitude"]));
+        $longitude = trim((string)($_POST["longitude"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO facilities (facilityname, mflcode, countyname, subcountyname, owner, sdp, emr, emrstatus, infrastructuretype, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="content-main">
 
         <h2>Add New Facility</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="post" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>">
 
             <div class="form-group">
                 <label for="facilityname">Facility Name</label>
@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['county_name']) . "'>" . htmlspecialchars($row['county_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['county_name'])) . "'>" . htmlspecialchars((string)($row['county_name'])) . "</option>";
                         }
                     }
                     ?>
@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['sub_county_name']) . "'>" . htmlspecialchars($row['sub_county_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['sub_county_name'])) . "'>" . htmlspecialchars((string)($row['sub_county_name'])) . "</option>";
                         }
                     }
                     ?>

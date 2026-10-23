@@ -54,6 +54,7 @@ $full_name = getUserFullName();
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
+    <a href="../pharmacovigilance/dashboard.php" target="contentFrame" class="nav-link" style="background:#FFC12E;color:#000;margin:10px 0"><i class="fa fa-tachometer"></i>Dashboard</a>
 
                 <a href="https://pv.pharmacyboardkenya.org/" target="contentFrame" class="nav-link">
                     <i class="fa fa-search"></i>Report ADRs and PQHPTs</a>
@@ -69,7 +70,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -89,10 +90,25 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (in_array(strtolower((string)($userrole ?? ($_SESSION['userrole'] ?? ''))), array (
+  0 => 'admin',
+  1 => 'super admin',
+  2 => 'pharmacist',
+  3 => 'clinician',
+  4 => 'nursing',
+  5 => 'hrio',
+  6 => 'data manager',
+  7 => 'laboratory scientist',
+  8 => 'psychiatrist',
+  9 => 'demo',
+), true)): ?>
+            <iframe src="dashboard.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the Pharmacy and Poisons Board Website</h3>
             <p>Do Not Be Certain, always Be Suscipicous></p>
             <p>Report all suspected adverse drug reactions and poor quality health products and technologies</p>
+        <?php endif; ?>
         </div>
     </div>
 </div>

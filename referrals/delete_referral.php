@@ -4,12 +4,12 @@ include('../includes/config.php');
 var_dump($_GET['mat_id']);
 
 // Check if 'mat_id' is set and not empty in the URL
-if (!isset($_GET['mat_id']) || trim($_GET['mat_id']) === '') {
+if (!isset($_GET['mat_id']) || trim((string)($_GET['mat_id'])) === '') {
         die("MAT ID is required.");
 }
 
 // Sanitize the input
-$mat_id = trim($_GET['mat_id']);
+$mat_id = trim((string)($_GET['mat_id']));
 
 // Prepare the DELETE query
 $sql = "DELETE FROM referral WHERE mat_id = ?";

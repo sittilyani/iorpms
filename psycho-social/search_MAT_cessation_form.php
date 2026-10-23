@@ -10,7 +10,7 @@ if (!$conn) {
 // Handle success/error message from URL
 $message = '';
 if (isset($_GET['message'])) {
-    $message = htmlspecialchars(urldecode($_GET['message']), ENT_QUOTES, 'UTF-8');
+    $message = htmlspecialchars((string)(urldecode($_GET['message'])), ENT_QUOTES, 'UTF-8');
 }
 ?>
 
@@ -24,7 +24,7 @@ if (isset($_GET['message'])) {
     <link rel="stylesheet" href="../assets/css/tables.css">
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
-        h2 { color: #2C3162; margin-bottom: 20px; }
+        h2 { color: #2D008A; margin-bottom: 20px; }
         .header {
             margin-bottom: 20px;
             display: flex;
@@ -40,7 +40,7 @@ if (isset($_GET['message'])) {
         }
         .search-input, .cancel-input {
             padding: 10px 15px;
-            background: #2C3162;
+            background: #2D008A;
             color: white;
             border: none;
             border-radius: 4px;
@@ -66,9 +66,9 @@ if (isset($_GET['message'])) {
         .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #2C3162; color: white; }
+        th { background-color: #2D008A; color: white; }
         tr:hover { background-color: #f5f5f5; }
-        a { color: #2C3162; text-decoration: none; font-weight: bold; }
+        a { color: #2D008A; text-decoration: none; font-weight: bold; }
         a:hover { text-decoration: underline; }
         .pagination {
             margin-top: 30px;
@@ -80,13 +80,13 @@ if (isset($_GET['message'])) {
             border: 1px solid #ddd;
             border-radius: 4px;
             text-decoration: none;
-            color: #2C3162;
+            color: #2D008A;
         }
         .pagination a:hover { background-color: #f0f0f0; }
         .pagination .active {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
-            border-color: #2C3162;
+            border-color: #2D008A;
         }
         @keyframes fadeOut {
             0% { opacity: 1; }
@@ -109,11 +109,11 @@ if (isset($_GET['message'])) {
         </div>
     <?php endif; ?>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search"><strong>Search:</strong></label>
             <input type="text" class="search-entry" id="search" name="search"
-                   value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                   value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>"
                    placeholder="Enter MAT ID, Name, Age, Dosage, etc...">
             <input type="submit" value="Search" class="search-input">
             <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
@@ -126,7 +126,7 @@ if (isset($_GET['message'])) {
 
     <?php
     // Sanitize and prepare search term
-    $search_term = isset($_GET['search']) ? trim($_GET['search']) : '';
+    $search_term = isset($_GET['search']) ? trim((string)($_GET['search'])) : '';
     $records_per_page = 15;
     $current_page = (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1;
     $offset = ($current_page - 1) * $records_per_page;
@@ -192,17 +192,17 @@ if (isset($_GET['message'])) {
                     ]);
                 ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['mat_id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['clientName']); ?></td>
-                        <td><?php echo htmlspecialchars($row['age']); ?></td>
-                        <td><?php echo htmlspecialchars($row['sex']); ?></td>
-                        <td><?php echo htmlspecialchars($row['p_address']); ?></td>
-                        <td><?php echo htmlspecialchars($row['drugname']); ?></td>
-                        <td><?php echo htmlspecialchars($row['dosage']); ?></td>
-                        <td><?php echo htmlspecialchars($row['current_status']); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['mat_id'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['clientName'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['age'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['sex'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['p_address'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['drugname'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['dosage'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['current_status'])); ?></td>
                         <td>
-                            <a href='../patients/view_patient.php?p_id=<?php echo urlencode($row['p_id']); ?>'>View</a> |
-                            <a href='<?php echo htmlspecialchars($cessation_url); ?>'>Check In (Cessation)</a>
+                            <a href='../patients/view_patient.php?p_id=<?php echo urlencode((string)($row['p_id'])); ?>'>View</a> |
+                            <a href='<?php echo htmlspecialchars((string)($cessation_url)); ?>'>Check In (Cessation)</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
@@ -213,7 +213,7 @@ if (isset($_GET['message'])) {
         <?php if ($total_pages > 1): ?>
             <div class="pagination">
                 <?php if ($current_page > 1): ?>
-                    <a href="?page=<?php echo $current_page - 1; ?>&search=<?php echo urlencode($search_term); ?>">« Previous</a>
+                    <a href="?page=<?php echo $current_page - 1; ?>&search=<?php echo urlencode((string)($search_term)); ?>">« Previous</a>
                 <?php endif; ?>
 
                 <?php
@@ -221,23 +221,23 @@ if (isset($_GET['message'])) {
                 $end = min($total_pages, $current_page + 2);
 
                 if ($start > 1) {
-                    echo '<a href="?page=1&search=' . urlencode($search_term) . '">1</a> ... ';
+                    echo '<a href="?page=1&search=' . urlencode((string)($search_term)) . '">1</a> ... ';
                 }
 
                 for ($i = $start; $i <= $end; $i++):
                     if ($i == $current_page): ?>
                         <span class="active"><?php echo $i; ?></span>
                     <?php else: ?>
-                        <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search_term); ?>"><?php echo $i; ?></a>
+                        <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode((string)($search_term)); ?>"><?php echo $i; ?></a>
                     <?php endif;
                 endfor;
 
                 if ($end < $total_pages):
-                    echo ' ... <a href="?page=' . $total_pages . '&search=' . urlencode($search_term) . '">' . $total_pages . '</a>';
+                    echo ' ... <a href="?page=' . $total_pages . '&search=' . urlencode((string)($search_term)) . '">' . $total_pages . '</a>';
                 endif;
 
                 if ($current_page < $total_pages): ?>
-                    <a href="?page=<?php echo $current_page + 1; ?>&search=<?php echo urlencode($search_term); ?>">Next »</a>
+                    <a href="?page=<?php echo $current_page + 1; ?>&search=<?php echo urlencode((string)($search_term)); ?>">Next »</a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -248,7 +248,7 @@ if (isset($_GET['message'])) {
 
     <script>
         function cancelSearch() {
-            window.location.href = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>";
+            window.location.href = "<?php echo htmlspecialchars((string)($_SERVER['PHP_SELF'])); ?>";
         }
 
         function exportToExcel() {

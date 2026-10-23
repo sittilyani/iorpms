@@ -63,7 +63,7 @@ if ($isLoggedIn) {
     <style>
         /* Reset only for header elements to prevent conflicts */
         .header {
-            background-color: #004AAD;
+            background-color: #2D008A;
             color: #2D008A;
             padding: 15px 30px;
             display: flex;
@@ -175,13 +175,13 @@ if ($isLoggedIn) {
         }
         .lang-btn.lang-active {
             background: white;
-            color: #2C3162;
+            color: #2D008A;
             border-color: white;
             font-weight: 700;
         }
         .lang-btn.lang-active:hover {
             background: #f0f0f0;
-            color: #2C3162;
+            color: #2D008A;
         }
         .user-menu {
             display: none;
@@ -191,7 +191,7 @@ if ($isLoggedIn) {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #CCFF33;
+            background: #FFC12E;
             color: #E41E39;
             padding: 15px;
             border-radius: 8px;
@@ -242,7 +242,7 @@ if ($isLoggedIn) {
     <div class="header">
         <div class="logo-container">
             <div class="logo">
-                <img src="../assets/images/EasyFlow-L_white.png" width="469" height="238" alt="">
+                <img src="../assets/images/EasyFlow-L_white.png" width="469" height="238" alt=""> <span style="color: yellow; font-size:1.1rem;font-weight:700;">Pro version</span>
             </div>
 
             <div class="system-name" style="font-size: 18px; color: #FFFFFF;"><?php echo $text['system_name']; ?></div>
@@ -251,13 +251,13 @@ if ($isLoggedIn) {
 
         <div class="user-info">
             <?php if ($isLoggedIn): ?>
-                <div class="user-details"><span class="user-name"><?php echo htmlspecialchars($full_name); ?></span></div>
-                <div class="user-details"><span class="user-id"><?php echo $text['usernname']; ?>:&nbsp;<?php echo htmlspecialchars($username); ?></span></div>
-                <div class="user-details"><span class="user-role"><?php echo $text['rolle']; ?>:&nbsp;&nbsp;<?php echo htmlspecialchars($userrole); ?></span></div>
+                <div class="user-details"><span class="user-name"><?php echo htmlspecialchars((string)($full_name)); ?></span></div>
+                <div class="user-details"><span class="user-id"><?php echo $text['usernname']; ?>:&nbsp;<?php echo htmlspecialchars((string)($username)); ?></span></div>
+                <div class="user-details"><span class="user-role"><?php echo $text['rolle']; ?>:&nbsp;&nbsp;<?php echo htmlspecialchars((string)($userrole)); ?></span></div>
                 <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -293,9 +293,9 @@ if ($isLoggedIn) {
                         $lurl    = '?' . http_build_query(array_merge($_GET ?? [], ['lang' => $lc]));
                         $active  = ($current_lang === $lc) ? ' lang-active' : '';
                     ?>
-                    <a href="<?php echo htmlspecialchars($lurl); ?>"
+                    <a href="<?php echo htmlspecialchars((string)($lurl)); ?>"
                        class="lang-btn<?php echo $active; ?>"
-                       title="<?php echo htmlspecialchars($lopt['label']); ?>">
+                       title="<?php echo htmlspecialchars((string)($lopt['label'])); ?>">
                         <?php echo $lopt['flag']; ?> <?php echo $lopt['label']; ?>
                     </a>
                     <?php endforeach; ?>

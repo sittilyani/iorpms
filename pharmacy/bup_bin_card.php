@@ -26,7 +26,7 @@ if ($drug !== '') {
     $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 }
-$fmt = fn($n) => rtrim(rtrim(number_format((float)$n, 2, '.', ''), '0'), '.');
+$fmt = fn($n) => rtrim((string)(rtrim((string)(number_format((float)$n, 2, '.', '')), '0')), '.');
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,17 +37,17 @@ $fmt = fn($n) => rtrim(rtrim(number_format((float)$n, 2, '.', ''), '0'), '.');
     <link rel="stylesheet" href="../assets/css/tables.css" type="text/css">
 </head>
 <body>
-<h2 style="color:#2C3162;">Buprenorphine Bin Card</h2>
+<h2 style="color:#2D008A;">Buprenorphine Bin Card</h2>
 <form method="GET" class="header" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
     <label>Strength
         <select name="drug">
             <?php foreach ($strengths as $name => $s): ?>
-                <option value="<?= htmlspecialchars($name) ?>" <?= $name === $drug ? 'selected' : '' ?>><?= htmlspecialchars($name) ?></option>
+                <option value="<?= htmlspecialchars((string)($name)) ?>" <?= $name === $drug ? 'selected' : '' ?>><?= htmlspecialchars((string)($name)) ?></option>
             <?php endforeach; ?>
         </select>
     </label>
-    <label>From <input type="date" name="from" value="<?= htmlspecialchars($from) ?>"></label>
-    <label>To <input type="date" name="to" value="<?= htmlspecialchars($to) ?>"></label>
+    <label>From <input type="date" name="from" value="<?= htmlspecialchars((string)($from)) ?>"></label>
+    <label>To <input type="date" name="to" value="<?= htmlspecialchars((string)($to)) ?>"></label>
     <button type="submit" class="search-input">View</button>
     <button type="button" onclick="window.print()">Print</button>
 </form>
@@ -71,10 +71,10 @@ $fmt = fn($n) => rtrim(rtrim(number_format((float)$n, 2, '.', ''), '0'), '.');
     <tbody>
     <?php foreach ($rows as $r): ?>
         <tr>
-            <td><?= htmlspecialchars(date('d-m-Y', strtotime($r['trans_date']))) ?></td>
-            <td><?= htmlspecialchars($r['mat_id']) ?></td>
+            <td><?= htmlspecialchars((string)(date('d-m-Y', strtotime((string)($r['trans_date']))))) ?></td>
+            <td><?= htmlspecialchars((string)($r['mat_id'])) ?></td>
             <td><?= htmlspecialchars((string)$r['batch_number']) ?></td>
-            <td><?= htmlspecialchars($r['received_from']) ?></td>
+            <td><?= htmlspecialchars((string)($r['received_from'])) ?></td>
             <td><?= $fmt($r['opening_balance']) ?></td>
             <td><?= $r['qty_out_tablets'] !== null ? $fmt($r['qty_out_tablets']) . ' (' . $fmt($r['qty_out_mg']) . 'mg)' : '' ?></td>
             <td><?= $fmt($r['stock_balance']) ?></td>

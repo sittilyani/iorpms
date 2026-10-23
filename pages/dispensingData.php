@@ -58,7 +58,7 @@ if ($userId) {
         }
 
         h2 {
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 80px;
             margin-left: 50px;
         }
@@ -66,7 +66,7 @@ if ($userId) {
         #btn-submit {
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -95,7 +95,7 @@ if ($userId) {
             height: 40px;
             text-align: center;
             line-height: 40px; /* Center the text vertically */
-            background-color: #2C3162; /* Example background color */
+            background-color: #2D008A; /* Example background color */
             color: white;
             text-decoration: none;
             border: none;

@@ -14,7 +14,7 @@ require_once '../includes/update_alert.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $role = $_SESSION['userrole'] ?? '';
-if (!isset($_SESSION['user_id']) || !in_array(strtolower($role), ['admin', 'super admin'], true)) {
+if (!isset($_SESSION['user_id']) || !in_array(strtolower((string)($role)), ['admin', 'super admin'], true)) {
     http_response_code(403);
     exit('<div style="font-family:sans-serif;padding:50px;text-align:center;color:#c53030">Access denied - administrators only.</div>');
 }
@@ -25,7 +25,7 @@ if (!$conn->query("SHOW TABLES LIKE 'update_contacts'")->num_rows) {
 // ── AJAX: facility search ────────────────────────────────────────────────────
 if (($_GET['ajax'] ?? '') === 'fac') {
     header('Content-Type: application/json');
-    $like = '%' . trim($_GET['q'] ?? '') . '%';
+    $like = '%' . trim((string)($_GET['q'] ?? '')) . '%';
     $st = $conn->prepare("SELECT id, facilityname, mflcode, countyname FROM facilities
                           WHERE facilityname LIKE ? OR mflcode LIKE ? ORDER BY facilityname LIMIT 20");
     $st->bind_param('ss', $like, $like);
@@ -62,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? '';
         if ($action === 'add') {
             $fid  = (int)($_POST['facility_id'] ?? 0);
-            $name = trim($_POST['contact_name'] ?? '');
-            $mail = trim($_POST['email'] ?? '');
+            $name = trim((string)($_POST['contact_name'] ?? ''));
+            $mail = trim((string)($_POST['email'] ?? ''));
             if (!$fid || $name === '' || !filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception('Select a facility and enter a name and a valid email address.');
             }
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 throw new Exception('Tick at least one contact, or choose "Everyone who is not up to date".');
             }
-            $note = trim($_POST['note'] ?? '');
+            $note = trim((string)($_POST['note'] ?? ''));
             $kind = ($_POST['kind'] ?? '') === 'incomplete' ? 'incomplete' : 'available';
             $sent = 0; $fail = [];
             foreach ($targets as $t) {
@@ -138,9 +138,9 @@ $h = fn($s) => htmlspecialchars((string)$s);
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 <style>
  body{background:#f5f7fa;font-family:'Segoe UI',Tahoma,sans-serif;padding:20px;}
- h2{color:#2C3162;font-size:1.4rem;} h5{color:#2C3162;}
+ h2{color:#2D008A;font-size:1.4rem;} h5{color:#2D008A;}
  .card-box{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:20px;margin-bottom:20px;}
- th{background:#2C3162;color:#fff;white-space:nowrap;} .btn-main{background:#2C3162;color:#fff;} .btn-main:hover{background:#82b543;color:#fff;}
+ th{background:#2D008A;color:#fff;white-space:nowrap;} .btn-main{background:#2D008A;color:#fff;} .btn-main:hover{background:#82b543;color:#fff;}
  #facResults{position:absolute;z-index:10;background:#fff;border:1px solid #ccc;width:100%;max-height:220px;overflow:auto;display:none;}
  #facResults div{padding:6px 10px;cursor:pointer;} #facResults div:hover{background:#eef1f8;}
  .b-ok{background:#d4edda;color:#155724;} .b-late{background:#fff3cd;color:#856404;} .b-never{background:#e2e3e5;color:#383d41;} .b-fail{background:#f8d7da;color:#721c24;}

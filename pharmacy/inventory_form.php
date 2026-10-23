@@ -17,7 +17,7 @@ function getUserFullName($conn, $userId) {
     $stmt->execute();
     $result = $stmt->get_result();
     if ($row = $result->fetch_assoc()) {
-        return htmlspecialchars($row['full_name']);
+        return htmlspecialchars((string)($row['full_name']));
     }
     return "Unknown User";
 }
@@ -67,14 +67,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 1. Sanitize common fields
     $drugId = intval($_POST['drug_id'] ?? 0);
-    $drugName = trim($_POST['drugname_text'] ?? 'Unknown Drug');
+    $drugName = trim((string)($_POST['drugname_text'] ?? 'Unknown Drug'));
     $transactionType = $_POST['transaction_type'] ?? '';
 
     // Get Requester Name (Always the logged-in user in this system design)
     $requesterName = $loggedInUserName;
 
     // Date Formatting (Robust fix)
-    $transactionDateRaw = trim($_POST['transaction_date'] ?? '');
+    $transactionDateRaw = trim((string)($_POST['transaction_date'] ?? ''));
     if (!empty($transactionDateRaw)) {
         $transactionDate = str_replace('T', ' ', $transactionDateRaw);
         if (substr_count($transactionDate, ':') === 1) $transactionDate .= ':00';
@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($transactionType === 'receipt') {
         $quantity = intval($_POST['from_supplier'] ?? 0);
-        $supplierName = trim($_POST['supplier_name'] ?? '');
+        $supplierName = trim((string)($_POST['supplier_name'] ?? ''));
         $fromSupplier = $quantity;
         $receivedBy = $requesterName; // Logged-in user receives the stock
 
@@ -205,7 +205,7 @@ if (isset($conn) && !$conn->connect_error) $conn->close();
     <h2>Daily Drug Inventory Transaction Log</h2>
     <?php echo $message; ?>
 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form method="post" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>">
 
         <div class="form-group">
             <label for="transaction_type">Transaction Type:</label>
@@ -222,7 +222,7 @@ if (isset($conn) && !$conn->connect_error) $conn->close();
                 <option value="">Select Drug</option>
                 <?php
                 foreach ($drugs as $drug) {
-                    echo "<option value='{$drug['drugID']}' data-name='{$drug['drugname']}'>" . htmlspecialchars($drug['drugname']) . "</option>";
+                    echo "<option value='{$drug['drugID']}' data-name='{$drug['drugname']}'>" . htmlspecialchars((string)($drug['drugname'])) . "</option>";
                 }
                 ?>
             </select>
@@ -247,7 +247,7 @@ if (isset($conn) && !$conn->connect_error) $conn->close();
                     <option value="">Select Supplier</option>
                     <?php
                     foreach ($suppliers as $supplier) {
-                        echo "<option value='" . htmlspecialchars($supplier) . "'>" . htmlspecialchars($supplier) . "</option>";
+                        echo "<option value='" . htmlspecialchars((string)($supplier)) . "'>" . htmlspecialchars((string)($supplier)) . "</option>";
                     }
                     ?>
                 </select>
@@ -275,7 +275,7 @@ if (isset($conn) && !$conn->connect_error) $conn->close();
                     <option value="">Select Issuer</option>
                     <?php
                     foreach ($allUsers as $user_name) {
-                        echo "<option value='" . htmlspecialchars($user_name) . "'>" . htmlspecialchars($user_name) . "</option>";
+                        echo "<option value='" . htmlspecialchars((string)($user_name)) . "'>" . htmlspecialchars((string)($user_name)) . "</option>";
                     }
                     ?>
                 </select>
@@ -287,7 +287,7 @@ if (isset($conn) && !$conn->connect_error) $conn->close();
                     <option value="">Select Receiver</option>
                     <?php
                     foreach ($allUsers as $user_name) {
-                        echo "<option value='" . htmlspecialchars($user_name) . "'>" . htmlspecialchars($user_name) . "</option>";
+                        echo "<option value='" . htmlspecialchars((string)($user_name)) . "'>" . htmlspecialchars((string)($user_name)) . "</option>";
                     }
                     ?>
                 </select>

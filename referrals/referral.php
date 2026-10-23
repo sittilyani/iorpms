@@ -35,11 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $referral_notes = $_POST['referral_notes'];
     $referral_name = $_POST['referral_name'];
 
-    $insert_sql = "INSERT INTO referral (mat_id, clientName, age, sex, referral_notes, refer_to, refer_from, referral_name)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    require_once '../includes/clinic_helpers.php';
+    $from_department = referral_department_for_role($_SESSION['userrole'] ?? '');
+    $to_department = referral_destination_department($refer_to);
+    $insert_sql = "INSERT INTO referral (mat_id, clientName, age, sex, referral_notes, refer_to, refer_from, referral_name, from_department, to_department)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $insert_stmt = $conn->prepare($insert_sql);
     $insert_stmt->bind_param(
-        "ssssssss",
+        "ssssssssss",
         $mat_id,
         $clientName,
         $age,
@@ -47,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $referral_notes,
         $refer_to,
         $refer_from,
-        $referral_name
+        $referral_name,
+        $from_department,
+        $to_department
     );
 
     if ($insert_stmt->execute()) {
@@ -117,27 +122,27 @@ $stmt->close();
     <form method="POST" action="">
         <div class="form-group">
             <label for="mat_id">MAT ID:</label>  
-            <input type="text"  name="mat_id" value="<?php echo htmlspecialchars($patient['mat_id']); ?>" id="readonly-input" readonly>
+            <input type="text"  name="mat_id" value="<?php echo htmlspecialchars((string)($patient['mat_id'])); ?>" id="readonly-input" readonly>
         </div>
         <div class="form-group">
             <label for="clientName">Client Name:</label> 
-            <input type="text"  name="clientName" value="<?php echo htmlspecialchars($patient['clientName']); ?>" id="readonly-input" readonly>
+            <input type="text"  name="clientName" value="<?php echo htmlspecialchars((string)($patient['clientName'])); ?>" id="readonly-input" readonly>
         </div>
         <div class="form-group">
             <label for="age">Age:</label>  
-            <input type="text"  name="age" value="<?php echo htmlspecialchars($patient['age']); ?>" id="readonly-input" readonly>
+            <input type="text"  name="age" value="<?php echo htmlspecialchars((string)($patient['age'])); ?>" id="readonly-input" readonly>
         </div>
         <div class="form-group">
             <label for="sex">Sex:</label>  
-            <input type="text"  id="readonly-input" readonly name="sex" value="<?php echo htmlspecialchars($patient['sex']); ?>" >
+            <input type="text"  id="readonly-input" readonly name="sex" value="<?php echo htmlspecialchars((string)($patient['sex'])); ?>" >
         </div>
         <div class="form-group">
             <label for="refer_from">Refer from Department</label>
-            <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars($user_role); ?>">
+            <input type="text" id="refer_from" name="refer_from" class="form-control" readonly value="<?php echo htmlspecialchars((string)($user_role)); ?>">
         </div>
         <div class="form-group">
             <label for="mobile">Mobile Number</label>
-            <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars($user_mobile); ?>">
+            <input type="text" id="mobile" name="mobile" class="form-control" readonly value="<?php echo htmlspecialchars((string)($user_mobile)); ?>">
         </div>
         <div class="form-group">
             <label for="refer_to">Refer to Department</label>
@@ -164,7 +169,7 @@ $stmt->close();
         </div>
         <div class="form-group">
             <label for="referral_name">Referring Officer Name</label>
-            <input type="text" name="referral_name" id="readonly-input" readonly value="<?php echo htmlspecialchars($referral_name); ?>" >
+            <input type="text" name="referral_name" id="readonly-input" readonly value="<?php echo htmlspecialchars((string)($referral_name)); ?>" >
         </div>
         <button type="submit" class="custom-submit-btn">Submit for review</button>
         </form>

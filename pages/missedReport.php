@@ -34,7 +34,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 <div class="page-header centered clearfix">
  <h2 class="pull-left">Missed Doses Report</h2>
 
-        <form class="form-inline" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" style="text-align:center">
+        <form class="form-inline" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post" style="text-align:center">
             <label>From:</label>
             <input type="date" class="form-control" placeholder="Enter Start date"  name="date1"style="margin:10px;"/>
             <label>To:</label>
@@ -92,7 +92,7 @@ foreach ($mat_ids as $mat_id) {
         if (!in_array($current_date, $filtered_dates)) {
             $missing[] = $current_date;
         }
-        $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
+        $current_date = date('Y-m-d', strtotime((string)($current_date . ' +1 day')));
     }
 
     // Store the missed appointments for the current mat_id

@@ -33,6 +33,12 @@ $singleDrugs = [
     'bup8'        => 'Buprenorphine 8mg',
     'bup4'        => 'Buprenorphine 4mg',
     'bup2'        => 'Buprenorphine 2mg',
+    'bn8'        => 'Buprenorphine 8mg/Naloxone 2mg',
+    'bn4'        => 'Buprenorphine 4mg/Naloxone 1mg',
+    'bn2'        => 'Buprenorphine 2mg/Naloxone 0.5mg',
+    'bn12'        => 'Buprenorphine 12mg/Naloxone 3mg',
+    'bn14'        => 'Buprenorphine 1.4mg/Naloxone 0.36mg sublingual tab',
+    'bn57'        => 'Buprenorphine 5.7mg/Naloxone 1.4mg sublingual tab',
 ];
 
 if (isset($singleDrugs[$drugCategory])) {
@@ -66,17 +72,23 @@ echo "<div class='filter-form-container'  width: 90%;'>";
 echo "<h3 style='color: #1a5276; margin-bottom: 10px;'>Drugs Dispensed By Date</h3>";
 echo "<form method='get' style='padding: 15px; border-radius: 5px;'>";
 echo "<label for='dateFrom'>Date From:</label>";
-echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateFrom' value='" . htmlspecialchars($dateFrom) . "'>";
+echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateFrom' value='" . htmlspecialchars((string)($dateFrom)) . "'>";
 echo "<label for='dateTo'>Date To:</label>";
-echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateTo' value='" . htmlspecialchars($dateTo) . "'>";
+echo "<input type='date' style='margin-left: 10px; margin-right: 10px;' name='dateTo' value='" . htmlspecialchars((string)($dateTo)) . "'>";
 echo "<label for='drugCategory'>Drugs Category:</label>";
 echo "<select style='margin-left: 10px; margin-right: 10px; padding: 6px;' name='drugCategory' id='drugCategory'>";
 echo "<option value='all'" . ($drugCategory === 'all' ? ' selected' : '') . ">All Drugs</option>";
-echo "<option value='controlled'" . ($drugCategory === 'controlled' ? ' selected' : '') . ">Controlled (Methadone &amp; Buprenorphine)</option>";
+echo "<option value='controlled'" . ($drugCategory === 'controlled' ? ' selected' : '') . ">Controlled (Methadone, Buprenorphine &amp; Buprenorphine/Naloxone)</option>";
 echo "<option value='methadone'" . ($drugCategory === 'methadone' ? ' selected' : '') . ">Methadone</option>";
 echo "<option value='bup8'" . ($drugCategory === 'bup8' ? ' selected' : '') . ">Buprenorphine 8mg</option>";
 echo "<option value='bup4'" . ($drugCategory === 'bup4' ? ' selected' : '') . ">Buprenorphine 4mg</option>";
 echo "<option value='bup2'" . ($drugCategory === 'bup2' ? ' selected' : '') . ">Buprenorphine 2mg</option>";
+echo "<option value='bn8'" . ($drugCategory === 'bn8' ? ' selected' : '') . ">Buprenorphine 8mg/Naloxone 2mg</option>";
+echo "<option value='bn4'" . ($drugCategory === 'bn4' ? ' selected' : '') . ">Buprenorphine 4mg/Naloxone 1mg</option>";
+echo "<option value='bn2'" . ($drugCategory === 'bn2' ? ' selected' : '') . ">Buprenorphine 2mg/Naloxone 0.5mg</option>";
+echo "<option value='bn12'" . ($drugCategory === 'bn12' ? ' selected' : '') . ">Buprenorphine 12mg/Naloxone 3mg</option>";
+echo "<option value='bn14'" . ($drugCategory === 'bn14' ? ' selected' : '') . ">Buprenorphine 1.4mg/Naloxone 0.36mg sublingual tab</option>";
+echo "<option value='bn57'" . ($drugCategory === 'bn57' ? ' selected' : '') . ">Buprenorphine 5.7mg/Naloxone 1.4mg sublingual tab</option>";
 echo "<option value='other'" . ($drugCategory === 'other' ? ' selected' : '') . ">Other Drugs</option>";
 echo "</select>";
 echo "<input type='submit' value='Filter' style='background-color: #abebc6; color: black; margin-left: 20px; border-radius: 5px; border: none; padding: 8px 16px; cursor: pointer;'>";

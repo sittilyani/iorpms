@@ -33,9 +33,9 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // ── Params ────────────────────────────────────────────────────────────────────
-$mat_id     = isset($_GET['mat_id'])     ? trim($_GET['mat_id'])     : '';
-$start_date = isset($_GET['start_date']) ? trim($_GET['start_date']) : '';
-$end_date   = isset($_GET['end_date'])   ? trim($_GET['end_date'])   : '';
+$mat_id     = isset($_GET['mat_id'])     ? trim((string)($_GET['mat_id']))     : '';
+$start_date = isset($_GET['start_date']) ? trim((string)($_GET['start_date'])) : '';
+$end_date   = isset($_GET['end_date'])   ? trim((string)($_GET['end_date']))   : '';
 $step       = isset($_GET['step'])       ? (int)$_GET['step']        : 0;
 
 if (!$mat_id || !$start_date || !$end_date) {
@@ -72,9 +72,9 @@ if ($step >= $totalDates) {
                 box-shadow:0 8px 30px rgba(0,0,0,.12);
             }
             .done-icon { font-size:72px; color:#28a745; }
-            h2 { color:#2C3162; margin:20px 0 10px; }
+            h2 { color:#2D008A; margin:20px 0 10px; }
             .sub { color:#555; font-size:1rem; margin-bottom:30px; }
-            .btn-home { background:#2C3162; color:#fff; padding:12px 32px;
+            .btn-home { background:#2D008A; color:#fff; padding:12px 32px;
                         border:none; border-radius:8px; font-size:1rem; cursor:pointer; }
             .btn-home:hover { background:#82b543; }
         </style>
@@ -84,9 +84,9 @@ if ($step >= $totalDates) {
             <div class="done-icon">✓</div>
             <h2>All Dates Dispensed Successfully!</h2>
             <p class="sub">
-                <?= htmlspecialchars($totalDates) ?> date(s) processed for
-                <strong><?= htmlspecialchars($mat_id) ?></strong><br>
-                (<?= htmlspecialchars($start_date) ?> – <?= htmlspecialchars($end_date) ?>)
+                <?= htmlspecialchars((string)($totalDates)) ?> date(s) processed for
+                <strong><?= htmlspecialchars((string)($mat_id)) ?></strong><br>
+                (<?= htmlspecialchars((string)($start_date)) ?> – <?= htmlspecialchars((string)($end_date)) ?>)
             </p>
             <p id="countdown" style="color:#888; font-size:.9rem;">Returning to dispensing list in <strong id="secs">3</strong>s…</p>
             <button class="btn-home" onclick="window.location='prisons_module.php'">Search for Other patient</button>
@@ -118,9 +118,9 @@ $dupCheck->close();
 
 // If already dispensed, auto-skip to next step
 if ($dupCount > 0) {
-    $skipUrl = "prisons_dispense_sequential.php?mat_id=" . urlencode($mat_id)
-             . "&start_date=" . urlencode($start_date)
-             . "&end_date="   . urlencode($end_date)
+    $skipUrl = "prisons_dispense_sequential.php?mat_id=" . urlencode((string)($mat_id))
+             . "&start_date=" . urlencode((string)($start_date))
+             . "&end_date="   . urlencode((string)($end_date))
              . "&step="       . $nextStep
              . "&skipped=1";
     header("Location: $skipUrl");
@@ -135,7 +135,7 @@ $patient = $patStmt->get_result()->fetch_assoc();
 $patStmt->close();
 
 if (!$patient) {
-    die("Patient not found: " . htmlspecialchars($mat_id));
+    die("Patient not found: " . htmlspecialchars((string)($mat_id)));
 }
 
 // ── A prescription must be in place for this date ─────────────────────────────
@@ -145,9 +145,9 @@ if (!$patient) {
 // explicit skip dates) are skipped automatically.
 $schedule = dsh_active_schedule_on_date($conn, $mat_id, $currentDate);
 if (!$schedule) {
-    $skipUrl = "prisons_dispense_sequential.php?mat_id=" . urlencode($mat_id)
-             . "&start_date=" . urlencode($start_date)
-             . "&end_date="   . urlencode($end_date)
+    $skipUrl = "prisons_dispense_sequential.php?mat_id=" . urlencode((string)($mat_id))
+             . "&start_date=" . urlencode((string)($start_date))
+             . "&end_date="   . urlencode((string)($end_date))
              . "&step="       . $nextStep . "&skipped=1";
     ?>
     <!DOCTYPE html>
@@ -156,20 +156,20 @@ if (!$schedule) {
     <body style="background:#f4f7fb;font-family:'Segoe UI',Arial,sans-serif;">
     <div style="max-width:560px;margin:80px auto;background:#fff;border-radius:14px;padding:34px;box-shadow:0 8px 30px rgba(0,0,0,.12);text-align:center;">
         <div style="font-size:54px;color:#dc3545;">&#9888;</div>
-        <h3 style="color:#2C3162;">No prescription in place</h3>
-        <p><strong><?= htmlspecialchars($patient['clientName']) ?></strong> (<?= htmlspecialchars($mat_id) ?>)
-           has no active dose schedule covering <strong><?= htmlspecialchars(date('d M Y', strtotime($currentDate))) ?></strong>,
+        <h3 style="color:#2D008A;">No prescription in place</h3>
+        <p><strong><?= htmlspecialchars((string)($patient['clientName'])) ?></strong> (<?= htmlspecialchars((string)($mat_id)) ?>)
+           has no active dose schedule covering <strong><?= htmlspecialchars((string)(date('d M Y', strtotime((string)($currentDate))))) ?></strong>,
            so nothing can be dispensed for this date.</p>
         <p style="color:#666;font-size:.9rem;">Ask the clinician to set a dose period that covers it, then dispense again.</p>
-        <a class="btn btn-secondary" href="prisons_module.php?mat_id=<?= urlencode($mat_id) ?>&start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>">Back</a>
-        <a class="btn btn-warning" href="<?= htmlspecialchars($skipUrl) ?>">Skip this date &rarr;</a>
+        <a class="btn btn-secondary" href="prisons_module.php?mat_id=<?= urlencode((string)($mat_id)) ?>&start_date=<?= urlencode((string)($start_date)) ?>&end_date=<?= urlencode((string)($end_date)) ?>">Back</a>
+        <a class="btn btn-warning" href="<?= htmlspecialchars((string)($skipUrl)) ?>">Skip this date &rarr;</a>
     </div></body></html>
     <?php
     exit;
 }
 if (!isDoseDueOnDate($schedule, $currentDate)) {
-    header("Location: prisons_dispense_sequential.php?mat_id=" . urlencode($mat_id)
-         . "&start_date=" . urlencode($start_date) . "&end_date=" . urlencode($end_date)
+    header("Location: prisons_dispense_sequential.php?mat_id=" . urlencode((string)($mat_id))
+         . "&start_date=" . urlencode((string)($start_date)) . "&end_date=" . urlencode((string)($end_date))
          . "&step=" . $nextStep . "&skipped=1");
     exit;
 }
@@ -253,25 +253,25 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bulk Sequential Dispensing – <?= htmlspecialchars($patient['clientName']) ?></title>
+    <title>Bulk Sequential Dispensing – <?= htmlspecialchars((string)($patient['clientName'])) ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; background: #f4f7fb; font-family: "Segoe UI", Arial, sans-serif; color: #263238; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        h2 { color: #2C3162; text-align: center; font-weight: 700; margin: 10px 0 20px; }
+        h2 { color: #2D008A; text-align: center; font-weight: 700; margin: 10px 0 20px; }
 
         /* Progress bar */
         .progress-section { margin-bottom: 20px; }
-        .progress-label { font-weight: 600; color: #2C3162; margin-bottom: 6px; }
+        .progress-label { font-weight: 600; color: #2D008A; margin-bottom: 6px; }
         .progress { height: 22px; border-radius: 10px; background: #dde3f0; }
-        .progress-bar { background: #2C3162; border-radius: 10px; font-size: .85rem; line-height: 22px; }
+        .progress-bar { background: #2D008A; border-radius: 10px; font-size: .85rem; line-height: 22px; }
         .date-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
         .date-chip {
             padding: 4px 12px; border-radius: 20px; font-size: .78rem; font-weight: 600;
         }
         .chip-done    { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .chip-current { background: #2C3162; color: #fff; }
+        .chip-current { background: #2D008A; color: #fff; }
         .chip-pending { background: #e9ecef; color: #6c757d; border: 1px solid #dee2e6; }
 
         /* Form grid */
@@ -287,13 +287,13 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
         }
         .form-group-column { min-width: 0; }
         .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; color: #2C3162; font-weight: 700; margin-bottom: 5px; }
+        .form-group label { display: block; color: #2D008A; font-weight: 700; margin-bottom: 5px; }
         .form-group input, .form-group select {
             width: 100%; height: 40px; padding: 8px 10px;
             border-radius: 8px; border: 1px solid #ccd6e0; background: white; outline: none;
         }
         .form-group input:focus, .form-group select:focus {
-            border-color: #2C3162; box-shadow: 0 0 0 2px rgba(44,49,98,.15);
+            border-color: #2D008A; box-shadow: 0 0 0 2px rgba(44,49,98,.15);
         }
         .readonly-input { background: #ffff94 !important; }
 
@@ -307,7 +307,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
         /* Photo column */
         .photo-container {
             grid-column: 5; display: flex; flex-direction: column; align-items: center;
-            background: white; border: 2px dashed #2C3162; border-radius: 12px;
+            background: white; border: 2px dashed #2D008A; border-radius: 12px;
             padding: 15px; gap: 10px;
         }
         .photo-container img, .photo-placeholder {
@@ -328,7 +328,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
 
         /* Step badge */
         .step-badge {
-            display: inline-block; background: #2C3162; color: white;
+            display: inline-block; background: #2D008A; color: white;
             padding: 6px 18px; border-radius: 20px; font-size: .95rem; font-weight: 700;
             margin-bottom: 12px;
         }
@@ -349,23 +349,23 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
     <?php if ($skipped): ?>
         <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Skipped:</strong> Already dispensed for <?= htmlspecialchars($dateRange[$step > 0 ? $step - 1 : 0]) ?>. Moving to next date.
+            <strong>Skipped:</strong> Already dispensed for <?= htmlspecialchars((string)($dateRange[$step > 0 ? $step - 1 : 0])) ?>. Moving to next date.
         </div>
     <?php endif; ?>
 
     <?php if ($prevError): ?>
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?= htmlspecialchars($prevError) ?>
+            <?= htmlspecialchars((string)($prevError)) ?>
         </div>
     <?php endif; ?>
 
     <!-- Progress section -->
     <div class="progress-section">
         <div class="progress-label">
-            <?= htmlspecialchars($patient['clientName']) ?> (<?= htmlspecialchars($mat_id) ?>) &mdash;
+            <?= htmlspecialchars((string)($patient['clientName'])) ?> (<?= htmlspecialchars((string)($mat_id)) ?>) &mdash;
             <span class="step-badge">Step <?= $step + 1 ?> of <?= $totalDates ?></span>
-            Dispensing for <strong><?= date('D, d M Y', strtotime($currentDate)) ?></strong>
+            Dispensing for <strong><?= date('D, d M Y', strtotime((string)($currentDate))) ?></strong>
         </div>
         <div class="progress">
             <div class="progress-bar" style="width:<?= round(($step / $totalDates) * 100) ?>%">
@@ -380,7 +380,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 elseif ($i === $step) $chipClass = 'chip-current';
                 ?>
                 <span class="date-chip <?= $chipClass ?>">
-                    <?= date('d M', strtotime($d)) ?>
+                    <?= date('d M', strtotime((string)($d))) ?>
                     <?= $i < $step ? '✓' : '' ?>
                 </span>
             <?php endforeach; ?>
@@ -391,11 +391,11 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
     <form id="dispenseForm" action="<?= $isMethadone ? 'prisons_dispense_pump.php' : 'prisons_dispense_tablet.php' ?>" method="POST" onsubmit="return validateForm()">
 
         <!-- Hidden sequencing fields -->
-        <input type="hidden" name="start_date" value="<?= htmlspecialchars($start_date) ?>">
-        <input type="hidden" name="end_date"   value="<?= htmlspecialchars($end_date) ?>">
+        <input type="hidden" name="start_date" value="<?= htmlspecialchars((string)($start_date)) ?>">
+        <input type="hidden" name="end_date"   value="<?= htmlspecialchars((string)($end_date)) ?>">
         <input type="hidden" name="step"       value="<?= $step ?>">
         <input type="hidden" name="total_dates" value="<?= $totalDates ?>">
-        <input type="hidden" name="mat_id"     value="<?= htmlspecialchars($mat_id) ?>">
+        <input type="hidden" name="mat_id"     value="<?= htmlspecialchars((string)($mat_id)) ?>">
         <input type="hidden" name="daysToNextAppointment" value="999"><!-- skip appt check for bulk -->
         <input type="hidden" name="isMissed" value="false"><!-- skip missed check for bulk -->
 
@@ -406,23 +406,23 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 <div class="form-group">
                     <label>Visit Date</label>
                     <input type="date" name="visitDate"
-                           value="<?= htmlspecialchars($currentDate) ?>"
+                           value="<?= htmlspecialchars((string)($currentDate)) ?>"
                            style="background:#fff3cd; font-weight:700;">
                 </div>
                 <div class="form-group">
                     <label>MAT ID</label>
                     <input type="text" name="mat_id_display" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['mat_id'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['mat_id'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>MAT Number</label>
                     <input type="text" name="mat_number" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['mat_number'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['mat_number'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Client Name</label>
                     <input type="text" name="clientName" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['clientName'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['clientName'] ?? '')) ?>">
                 </div>
             </div>
 
@@ -431,22 +431,22 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 <div class="form-group">
                     <label>Nick Name</label>
                     <input type="text" name="nickName" class="readonly-input"
-                           value="<?= htmlspecialchars($patient['nickName'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['nickName'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Age</label>
                     <input type="text" name="age" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['age'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['age'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Gender</label>
                     <input type="text" name="sex" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['sex'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['sex'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Residence</label>
                     <input type="text" name="p_address" class="readonly-input"
-                           value="<?= htmlspecialchars($patient['p_address'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['p_address'] ?? '')) ?>">
                 </div>
             </div>
 
@@ -455,17 +455,17 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 <div class="form-group">
                     <label>CSO</label>
                     <input type="text" name="cso" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['cso'] ?? '') ?>">
+                           value="<?= htmlspecialchars((string)($patient['cso'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Drug</label>
                     <input type="text" name="drugname" class="readonly-input" readonly
-                           value="<?= htmlspecialchars($patient['drugname'] ?? 'Methadone') ?>">
+                           value="<?= htmlspecialchars((string)($patient['drugname'] ?? 'Methadone')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Dosage (mg)<?= $isMethadone ? '' : ' — tablet total' ?></label>
                     <input type="number" name="dosage" class="readonly-input"
-                           value="<?= htmlspecialchars($patient['dosage'] ?? '') ?>"
+                           value="<?= htmlspecialchars((string)($patient['dosage'] ?? '')) ?>"
                            min="0" step="0.5">
                 </div>
                 <div class="form-group">
@@ -480,17 +480,17 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 <div class="form-group">
                     <label>Current Status</label>
                     <input type="text" name="current_status" class="readonly-input"
-                           value="<?= htmlspecialchars($patient['current_status'] ?? 'Active') ?>">
+                           value="<?= htmlspecialchars((string)($patient['current_status'] ?? 'Active')) ?>">
                 </div>
                 <div class="form-group">
                     <label>Dispensing Officer</label>
                     <input type="text" name="pharm_officer_name" class="readonly-input"
-                           value="<?= htmlspecialchars($pharmName) ?>">
+                           value="<?= htmlspecialchars((string)($pharmName)) ?>">
                 </div>
                 <?php if ($isMethadone): ?>
                 <div class="form-group" style="margin-bottom:8px;">
                     <input type="text" class="mls-display" readonly
-                           value="<?= htmlspecialchars($mlsValue) ?>" title="mL to dispense">
+                           value="<?= htmlspecialchars((string)($mlsValue)) ?>" title="mL to dispense">
                 </div>
                 <div class="form-group">
                     <label>Pump Device</label>
@@ -501,7 +501,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                         <?php foreach ($devices as $dev): ?>
                             <option value="<?= $dev['id'] ?>"
                                 <?= ($dev['id'] == $savedPumpId) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($dev['label']) ?> (<?= htmlspecialchars($dev['port']) ?>)
+                                <?= htmlspecialchars((string)($dev['label'])) ?> (<?= htmlspecialchars((string)($dev['port'])) ?>)
                                 <?= ($dev['id'] == $savedPumpId) ? '✓' : '' ?>
                             </option>
                         <?php endforeach; ?>
@@ -510,7 +510,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
                 <?php else: ?>
                 <div class="form-group">
                     <div style="background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:10px;color:#7a5c00;font-size:.85rem;">
-                        <strong><?= htmlspecialchars($mainDrug) ?></strong> is dispensed as a tablet count —
+                        <strong><?= htmlspecialchars((string)($mainDrug)) ?></strong> is dispensed as a tablet count —
                         no pump is used for this drug.
                     </div>
                 </div>
@@ -525,19 +525,19 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
             <!-- Photo column -->
             <div class="photo-container">
                 <?php if ($photoPath): ?>
-                    <img src="<?= htmlspecialchars($photoPath) ?>" alt="Patient Photo">
+                    <img src="<?= htmlspecialchars((string)($photoPath)) ?>" alt="Patient Photo">
                 <?php else: ?>
                     <div class="photo-placeholder"><span>No photo</span></div>
                 <?php endif; ?>
                 <small style="color:#555; text-align:center;">
-                    <?= htmlspecialchars($patient['clientName'] ?? '') ?><br>
-                    <?= htmlspecialchars($patient['mat_id'] ?? '') ?>
+                    <?= htmlspecialchars((string)($patient['clientName'] ?? '')) ?><br>
+                    <?= htmlspecialchars((string)($patient['mat_id'] ?? '')) ?>
                 </small>
             </div>
 
             <!-- Full-width submit -->
             <button type="submit" class="submit-btn">
-                🚀 Dispense <?= date('d M Y', strtotime($currentDate)) ?>
+                🚀 Dispense <?= date('d M Y', strtotime((string)($currentDate))) ?>
                 &nbsp;(<?= $step + 1 ?>/<?= $totalDates ?>)
             </button>
 
@@ -545,10 +545,10 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
     </form>
 
     <div style="margin-top:15px; text-align:center;">
-        <a href="prisons_module.php?start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>"
+        <a href="prisons_module.php?start_date=<?= urlencode((string)($start_date)) ?>&end_date=<?= urlencode((string)($end_date)) ?>"
            style="color:#6c757d; font-size:.9rem;">← Back to bulk dispensing list</a>
         &nbsp;|&nbsp;
-        <a href="prisons_dispense_sequential.php?mat_id=<?= urlencode($mat_id) ?>&start_date=<?= urlencode($start_date) ?>&end_date=<?= urlencode($end_date) ?>&step=<?= $nextStep ?>&skipped=1"
+        <a href="prisons_dispense_sequential.php?mat_id=<?= urlencode((string)($mat_id)) ?>&start_date=<?= urlencode((string)($start_date)) ?>&end_date=<?= urlencode((string)($end_date)) ?>&step=<?= $nextStep ?>&skipped=1"
            style="color:#dc3545; font-size:.9rem;">Skip this date →</a>
     </div>
 </div>

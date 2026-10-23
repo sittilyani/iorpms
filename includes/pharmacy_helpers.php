@@ -34,6 +34,14 @@ if (!function_exists('ph_is_buprenorphine')) {
     }
 }
 
+if (!function_exists('ph_is_controlled')) {
+    /** Controlled drugs: methadone and every buprenorphine product, including buprenorphine/naloxone combinations. */
+    function ph_is_controlled(?string $drugname): bool
+    {
+        return $drugname !== null && (stripos($drugname, 'methadone') === 0 || stripos($drugname, 'buprenorphine') !== false);
+    }
+}
+
 if (!function_exists('ph_strength_from_name')) {
     /** "Buprenorphine 8mg" -> 8.0 ; no strength in the name -> null */
     function ph_strength_from_name(?string $drugname): ?float
@@ -125,7 +133,7 @@ if (!function_exists('bup_describe')) {
         foreach ($strengths as $name => $s) {
             $t = (float)($components[$name] ?? 0);
             if ($t > 0) {
-                $parts[] = rtrim(rtrim(number_format($t, 2, '.', ''), '0'), '.') . ' x ' . rtrim(rtrim(number_format($s['mg'], 2, '.', ''), '0'), '.') . 'mg';
+                $parts[] = rtrim((string)(rtrim((string)(number_format($t, 2, '.', '')), '0')), '.') . ' x ' . rtrim((string)(rtrim((string)(number_format($s['mg'], 2, '.', '')), '0')), '.') . 'mg';
             }
         }
         return implode(' + ', array_reverse($parts));
@@ -300,5 +308,86 @@ if (!function_exists('bup_dispense')) {
         }
 
         return $detail;
+    }
+}
+
+
+if (!function_exists('bup_stock_available')) {
+    /**
+     * Tablets currently in stock per strength, from the latest stock_movements line: [drugname => tablets].
+     * A strength with no stock line at all is left out (unknown), so callers can treat it as "not tracked".
+     */
+    function bup_stock_available(mysqli $conn, array $strengths): array
+    {
+        $out = [];
+        foreach ($strengths as $name => $s) {
+            $st = $conn->prepare("SELECT total_qty FROM stock_movements WHERE drugname = ? ORDER BY trans_date DESC, trans_id DESC LIMIT 1");
+            $st->bind_param('s', $name);
+            $st->execute();
+            $row = $st->get_result()->fetch_assoc();
+            $st->close();
+            if ($row) { $out[$name] = (float)$row['total_qty']; }
+        }
+        return $out;
+    }
+}
+
+if (!function_exists('bup_last_dispensed_split')) {
+    /**
+     * How this client's most recent Buprenorphine dose was actually issued, e.g. 10 mg = 2 x 4mg + 1 x 2mg:
+     * [drugname => tablets]. Empty when the client has never been dispensed Buprenorphine.
+     */
+    function bup_last_dispensed_split(mysqli $conn, string $mat_id, array $strengths): array
+    {
+        $st = $conn->prepare("SELECT dispDate, dispense_group, TRIM(drugname) drugname, dosage, conversion FROM pharmacy WHERE mat_id = ? AND drugname LIKE 'Buprenorphine%' ORDER BY dispDate DESC, disp_id DESC LIMIT 12");
+        $st->bind_param('s', $mat_id);
+        $st->execute();
+        $rows = $st->get_result()->fetch_all(MYSQLI_ASSOC);
+        $st->close();
+        if (!$rows) { return []; }
+        // the rows that belong to the latest dispensing: same group id, else the same day
+        $first = $rows[0]; $out = [];
+        foreach ($rows as $r) {
+            $same = !empty($first['dispense_group']) ? ($r['dispense_group'] === $first['dispense_group']) : (substr($r['dispDate'], 0, 10) === substr($first['dispDate'], 0, 10));
+            if (!$same || !isset($strengths[$r['drugname']])) { continue; }
+            $mg = (float)$strengths[$r['drugname']]['mg'];
+            $tabs = $r['conversion'] !== null ? (float)$r['conversion'] : ((float)$r['dosage'] / $mg);
+            $out[$r['drugname']] = ($out[$r['drugname']] ?? 0) + round($tabs * 2) / 2;
+        }
+        return $out;
+    }
+}
+
+if (!function_exists('bup_stock_split')) {
+    /**
+     * Default split when the client has no history: mostly 4 mg and 2 mg tablets (what clinics normally hold),
+     * limited to what is actually in stock; 8 mg (or any other strength) only when 4 and 2 cannot make up the dose.
+     * Half tablets are allowed. Returns [] if the dose cannot be made up.
+     */
+    function bup_stock_split(float $dose_mg, array $strengths, array $stock): array
+    {
+        $rank = function (array $s) { return $s['mg'] == 4.0 ? 0 : ($s['mg'] == 2.0 ? 1 : 2); };
+        $order = array_keys($strengths);
+        usort($order, fn($a, $b) => [$rank($strengths[$a]), -$strengths[$a]['mg']] <=> [$rank($strengths[$b]), -$strengths[$b]['mg']]);
+        $try = function (array $names) use ($dose_mg, $strengths, $stock) {
+            $left = round($dose_mg, 2); $out = [];
+            $avail = function (string $name) use ($stock) { return array_key_exists($name, $stock) ? floor($stock[$name] * 2) / 2 : INF; };   // untracked = unlimited
+            // pass 1: whole tablets only, in the preferred order (4 mg, then 2 mg ...)
+            foreach ($names as $name) {
+                $mg = (float)$strengths[$name]['mg'];
+                if ($avail($name) <= 0) { continue; }
+                $n = min(floor(($left + 1e-9) / $mg), floor($avail($name)));
+                if ($n > 0) { $out[$name] = (float)$n; $left = round($left - $n * $mg, 2); }
+            }
+            // pass 2: a half tablet of the smallest available strength closes any gap (e.g. 3 mg = 1.5 x 2mg)
+            if ($left > 0.001) {
+                $smallest = null;
+                foreach ($names as $name) { if ($avail($name) > ($out[$name] ?? 0) && ($smallest === null || $strengths[$name]['mg'] < $strengths[$smallest]['mg'])) { $smallest = $name; } }
+                if ($smallest !== null && abs($left - $strengths[$smallest]['mg'] / 2) < 0.001) { $out[$smallest] = ($out[$smallest] ?? 0) + 0.5; $left = 0.0; }
+            }
+            return $left > 0.001 ? null : $out;
+        };
+        $core = array_values(array_filter($order, fn($n) => $strengths[$n]['mg'] == 4.0 || $strengths[$n]['mg'] == 2.0));
+        return ($core ? $try($core) : null) ?? $try($order) ?? [];
     }
 }

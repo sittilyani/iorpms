@@ -51,16 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Step 2: Insert the new facility settings, including the new fields
-        $insert_sql = "INSERT INTO facility_settings (facility_id, facilityname, countyname, subcountyname, facilityincharge, facilityphone, email)
-                       VALUES (?, ?, ?, ?, ?, ?, ?)"; // Added facilityname, countyname, subcountyname placeholders
+        $insert_sql = "INSERT INTO facility_settings (facility_id, mflcode, facilityname, countyname, subcountyname, facilityincharge, facilityphone, email)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)"; // Added facilityname, countyname, subcountyname placeholders
         $stmt_insert = $conn->prepare($insert_sql);
         if (!$stmt_insert) {
             throw new Exception("Error preparing insert statement: " . $conn->error);
         }
         // Step 3: Update bind_param to include the new fields
         // 'issssss' -> i for facility_id (int), s for facilityname (string), s for countyname (string), s for subcountyname (string), s for facilityincharge (string), s for facilityphone (string), s for email (string)
-        $stmt_insert->bind_param("issssss",
+        $stmt_insert->bind_param("isssssss",
             $selected_facility_id,
+            $facility_data['mflcode'],
             $facilityname_to_insert,
             $countyname_to_insert,
             $subcountyname_to_insert,
@@ -105,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         echo "<script>
                 setTimeout(function() {
-                    window.location.href = '../dashboard/dashboard.php';
+                    // Facility changed: log out completely and return to the main login page (break out of the content iframe)
+                    window.top.location.href = '../public/signout.php';
                 }, 3000);
             </script>";
         exit();
@@ -270,72 +272,72 @@ ob_end_flush();
 
                 <div class="form-group">
                     <label for="mflcode">MFL Code:</label>
-                    <input type="text" name="mflcode" id="mflcode" readonly value="<?php echo htmlspecialchars($current_mfl_code); ?>">
+                    <input type="text" name="mflcode" id="mflcode" readonly value="<?php echo htmlspecialchars((string)($current_mfl_code)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="countyname">County Name:</label>
-                    <input type="text" name="countyname" id="countyname" readonly value="<?php echo htmlspecialchars($current_county); ?>">
+                    <input type="text" name="countyname" id="countyname" readonly value="<?php echo htmlspecialchars((string)($current_county)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="subcountyname">Sub-County Name:</label>
-                    <input type="text" name="subcountyname" id="subcountyname" readonly value="<?php echo htmlspecialchars($current_subcounty); ?>">
+                    <input type="text" name="subcountyname" id="subcountyname" readonly value="<?php echo htmlspecialchars((string)($current_subcounty)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="owner">Owner:</label>
-                    <input type="text" name="owner" id="owner" readonly value="<?php echo htmlspecialchars($current_owner); ?>">
+                    <input type="text" name="owner" id="owner" readonly value="<?php echo htmlspecialchars((string)($current_owner)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="sdp">SDP:</label>
-                    <input type="text" name="sdp" id="sdp" readonly value="<?php echo htmlspecialchars($current_sdp); ?>">
+                    <input type="text" name="sdp" id="sdp" readonly value="<?php echo htmlspecialchars((string)($current_sdp)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="agency">Agency:</label>
-                    <input type="text" name="agency" id="agency" readonly value="<?php echo htmlspecialchars($current_agency); ?>">
+                    <input type="text" name="agency" id="agency" readonly value="<?php echo htmlspecialchars((string)($current_agency)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="emr">EMR:</label>
-                    <input type="text" name="emr" id="emr" readonly value="<?php echo htmlspecialchars($current_emr); ?>">
+                    <input type="text" name="emr" id="emr" readonly value="<?php echo htmlspecialchars((string)($current_emr)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="emrstatus">EMR Status:</label>
-                    <input type="text" name="emrstatus" id="emrstatus" readonly value="<?php echo htmlspecialchars($current_emr_status); ?>">
+                    <input type="text" name="emrstatus" id="emrstatus" readonly value="<?php echo htmlspecialchars((string)($current_emr_status)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="infrastructuretype">Infrastructure Type:</label>
-                    <input type="text" name="infrastructuretype" id="infrastructuretype" readonly value="<?php echo htmlspecialchars($current_infrastructure_type); ?>">
+                    <input type="text" name="infrastructuretype" id="infrastructuretype" readonly value="<?php echo htmlspecialchars((string)($current_infrastructure_type)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="latitude">Latitude:</label>
-                    <input type="text" name="latitude" id="latitude" readonly value="<?php echo htmlspecialchars($current_latitude); ?>">
+                    <input type="text" name="latitude" id="latitude" readonly value="<?php echo htmlspecialchars((string)($current_latitude)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="longitude">Longitude:</label>
-                    <input type="text" name="longitude" id="longitude" readonly value="<?php echo htmlspecialchars($current_longitude); ?>">
+                    <input type="text" name="longitude" id="longitude" readonly value="<?php echo htmlspecialchars((string)($current_longitude)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="facilityincharge">Name of Facility Incharge:</label>
-                    <input type="text" name="facilityincharge" id="facilityincharge" required value="<?php echo htmlspecialchars($current_setup_incharge); ?>">
+                    <input type="text" name="facilityincharge" id="facilityincharge" required value="<?php echo htmlspecialchars((string)($current_setup_incharge)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="facilityphone">Facility Phone:</label>
-                    <input type="tel" name="facilityphone" id="facilityphone" required value="<?php echo htmlspecialchars($current_setup_phone); ?>">
+                    <input type="tel" name="facilityphone" id="facilityphone" required value="<?php echo htmlspecialchars((string)($current_setup_phone)); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" required value="<?php echo htmlspecialchars($current_setup_email); ?>">
+                    <input type="email" name="email" id="email" required value="<?php echo htmlspecialchars((string)($current_setup_email)); ?>">
                 </div>
 
                 <div class="form-group note-message">

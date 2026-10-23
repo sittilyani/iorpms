@@ -22,12 +22,12 @@ function demoEmailWrap(string $title, string $body): string
   body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;padding:20px;}
   .box{max-width:560px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;
        box-shadow:0 4px 20px rgba(0,0,0,.1);}
-  .header{background:#2C3162;color:#fff;padding:28px 32px;}
+  .header{background:#2D008A;color:#fff;padding:28px 32px;}
   .header h1{margin:0;font-size:1.3rem;}
   .body{padding:28px 32px;color:#263238;font-size:.95rem;line-height:1.7;}
   .btn{display:inline-block;background:#82b543;color:#fff !important;padding:12px 28px;
        border-radius:8px;text-decoration:none;font-weight:700;margin:16px 0;}
-  .cred{background:#f4f7fb;border:1px dashed #2C3162;border-radius:8px;padding:14px 18px;
+  .cred{background:#f4f7fb;border:1px dashed #2D008A;border-radius:8px;padding:14px 18px;
         font-family:Consolas,monospace;font-size:1.05rem;margin:14px 0;}
   .footer{background:#f4f7fb;padding:16px 32px;font-size:.78rem;color:#888;text-align:center;}
   table{width:100%;border-collapse:collapse;margin:12px 0;}
@@ -50,7 +50,7 @@ function generateTempPassword(): string
     $word  = $words[random_int(0, count($words) - 1)];
     $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no confusing 0/O/1/I
     $rand  = '';
-    for ($i = 0; $i < 4; $i++) $rand .= $chars[random_int(0, strlen($chars) - 1)];
+    for ($i = 0; $i < 4; $i++) $rand .= $chars[random_int(0, strlen((string)($chars)) - 1)];
     return $word . '-' . $rand . '-' . random_int(10, 99);
 }
 
@@ -87,7 +87,7 @@ function approveDemoRequest(mysqli $conn, int $id, string $mode = 'approve'): ar
         $uq->execute();
         $username = $uq->get_result()->fetch_assoc()['username'] ?? '';
     } else {
-        $base = strtolower(preg_replace('/[^a-z0-9]/i', '', explode('@', $r['email'])[0]));
+        $base = strtolower((string)(preg_replace('/[^a-z0-9]/i', '', explode('@', $r['email'])[0])));
         if ($base === '') $base = 'demo';
         $username = $base; $n = 0;
         while (true) {
@@ -118,7 +118,7 @@ function approveDemoRequest(mysqli $conn, int $id, string $mode = 'approve'): ar
     $ex->bind_param('i', $id);
     $ex->execute();
     $expires = $ex->get_result()->fetch_assoc()['expires_at'];
-    $expLabel = date('j M Y', strtotime($expires));
+    $expLabel = date('j M Y', strtotime((string)($expires)));
 
     $lang = in_array($r['lang'] ?? 'en', ['en', 'fr', 'pt'], true) ? $r['lang'] : 'en';
     $first = $r['first_name']; $clinic = $r['clinic_name'];
@@ -167,6 +167,6 @@ function approveDemoRequest(mysqli $conn, int $id, string $mode = 'approve'): ar
     return [
         'success' => true, 'username' => $username, 'expires_at' => $expires,
         'email_sent' => (bool)$mail['success'], 'email_error' => $mail['success'] ? '' : ($mail['error'] ?? 'unknown error'),
-        'wa_link' => $waPhone ? 'https://wa.me/' . $waPhone . '?text=' . rawurlencode($waText) : '',
+        'wa_link' => $waPhone ? 'https://wa.me/' . $waPhone . '?text=' . rawurlencode((string)($waText)) : '',
     ];
 }

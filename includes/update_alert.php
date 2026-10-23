@@ -20,19 +20,19 @@ function updateLinkUrl(): string
 function sendUpdateAlert(mysqli $conn, array $t, string $kind = 'available', string $note = '', string $detail = ''): array
 {
     $link = updateLinkUrl();
-    $fac  = htmlspecialchars($t['facility_name']);
+    $fac  = htmlspecialchars((string)($t['facility_name']));
     if ($kind === 'incomplete') {
         $subject = 'Action needed: system update not complete - ' . $t['facility_name'];
         $lead = '<p>The system update for <strong>' . $fac . '</strong> is <strong>not complete</strong>'
-              . ($detail !== '' ? ' (' . htmlspecialchars($detail) . ')' : '') . '. Please run it again.</p>';
+              . ($detail !== '' ? ' (' . htmlspecialchars((string)($detail)) . ')' : '') . '. Please run it again.</p>';
     } else {
         $subject = 'System update available - ' . $t['facility_name'];
         $lead = '<p>A new system update is available for <strong>' . $fac . '</strong>.</p>';
     }
-    $body = '<p>Dear ' . htmlspecialchars($t['contact_name']) . ',</p>' . $lead
-          . ($note !== '' ? '<p>' . nl2br(htmlspecialchars($note)) . '</p>' : '')
+    $body = '<p>Dear ' . htmlspecialchars((string)($t['contact_name'])) . ',</p>' . $lead
+          . ($note !== '' ? '<p>' . nl2br((string)(htmlspecialchars((string)($note)))) . '</p>' : '')
           . '<p>On the computer that runs the system (Laragon must be running and the computer connected to the internet), open this link and wait until the progress bar reaches 100%:</p>'
-          . '<p><a href="' . $link . '" style="background:#2C3162;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;">Run the update</a><br><small>' . $link . '</small></p>'
+          . '<p><a href="' . $link . '" style="background:#2D008A;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;">Run the update</a><br><small>' . $link . '</small></p>'
           . '<p>Client photos and your data are not changed or removed. When it finishes, the administrator is notified automatically.</p>'
           . '<p>Thank you.</p>';
     // SMTP only: the mail() fallback in sendAppMail reports success on a PC without a mail server although nothing is delivered.

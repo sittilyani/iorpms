@@ -35,24 +35,24 @@ if (!isset($_SESSION['user_id'])) {
 define('PRISON_TABLET_MAX_DOSAGE_MG', 300);
 
 // ─── POST data ────────────────────────────────────────────────────────────────
-$visitDate          = trim($_POST['visitDate']          ?? '');
-$mat_id             = trim($_POST['mat_id']             ?? '');
-$mat_number         = trim($_POST['mat_number']         ?? '');
-$clientName         = trim($_POST['clientName']         ?? '');
-$nickName           = trim($_POST['nickName']           ?? '');
-$age                = trim($_POST['age']                ?? '');
-$sex                = trim($_POST['sex']                ?? '');
-$p_address          = trim($_POST['p_address']          ?? '');
-$cso                = trim($_POST['cso']                ?? '');
-$drugname           = trim($_POST['drugname']           ?? '');
+$visitDate          = trim((string)($_POST['visitDate']          ?? ''));
+$mat_id             = trim((string)($_POST['mat_id']             ?? ''));
+$mat_number         = trim((string)($_POST['mat_number']         ?? ''));
+$clientName         = trim((string)($_POST['clientName']         ?? ''));
+$nickName           = trim((string)($_POST['nickName']           ?? ''));
+$age                = trim((string)($_POST['age']                ?? ''));
+$sex                = trim((string)($_POST['sex']                ?? ''));
+$p_address          = trim((string)($_POST['p_address']          ?? ''));
+$cso                = trim((string)($_POST['cso']                ?? ''));
+$drugname           = trim((string)($_POST['drugname']           ?? ''));
 $dosage             = (float)($_POST['dosage']          ?? 0);
-$reasons            = trim($_POST['reasons']            ?? 'Prison bulk dispensing');
-$current_status     = trim($_POST['current_status']     ?? 'Active');
-$pharm_officer_name = trim($_POST['pharm_officer_name'] ?? '');
+$reasons            = trim((string)($_POST['reasons']            ?? 'Prison bulk dispensing'));
+$current_status     = trim((string)($_POST['current_status']     ?? 'Active'));
+$pharm_officer_name = trim((string)($_POST['pharm_officer_name'] ?? ''));
 
 // Sequencing
-$start_date  = trim($_POST['start_date']  ?? '');
-$end_date    = trim($_POST['end_date']    ?? '');
+$start_date  = trim((string)($_POST['start_date']  ?? ''));
+$end_date    = trim((string)($_POST['end_date']    ?? ''));
 $step        = (int)($_POST['step']       ?? 0);
 $total_dates = (int)($_POST['total_dates'] ?? 1);
 $next_step   = $step + 1;
@@ -60,9 +60,9 @@ $next_step   = $step + 1;
 // ─── Return URL builder ────────────────────────────────────────────────────────
 function prisonTabletReturnUrl(string $mat_id, string $start, string $end, int $step): string {
     return 'prisons_dispense_sequential.php'
-         . '?mat_id='     . urlencode($mat_id)
-         . '&start_date=' . urlencode($start)
-         . '&end_date='   . urlencode($end)
+         . '?mat_id='     . urlencode((string)($mat_id))
+         . '&start_date=' . urlencode((string)($start))
+         . '&end_date='   . urlencode((string)($end))
          . '&step='       . $step;
 }
 

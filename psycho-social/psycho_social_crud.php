@@ -36,7 +36,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -91,11 +91,11 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Initial Registration Form</h2>
+    <h2 style="color: #2D008A; ">Initial Registration Form</h2>
 
 <!--This is the search Form -->
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">

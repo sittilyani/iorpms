@@ -381,7 +381,7 @@ class SimpleXLSXGen
                 $BR_KEYS = [0 => 0];
 
                 foreach ($this->NF as $k => $v) {
-                    $NF[] = '<numFmt numFmtId="' . $k . '" formatCode="' . htmlspecialchars($v, ENT_QUOTES) . '"/>';
+                    $NF[] = '<numFmt numFmtId="' . $k . '" formatCode="' . htmlspecialchars((string)($v), ENT_QUOTES) . '"/>';
                 }
 
                 foreach ($this->XF as $xf) {
@@ -461,7 +461,7 @@ class SimpleXLSXGen
                                 } else {
                                     $c = $va[0];
                                 }
-                                if (strlen($c) === 6) {
+                                if (strlen((string)($c)) === 6) {
                                     $c = 'FF' . $c;
                                 }
 
@@ -666,23 +666,23 @@ class SimpleXLSXGen
                                     if (preg_match('/ color="([^"]+)"/', $m[1], $m2)) {
 
                                         $F += self::F_COLOR;
-                                        $c = ltrim($m2[1], '#');
-                                        $C = strlen($c) === 8 ? $c : ('FF' . $c);
+                                        $c = ltrim((string)($m2[1]), '#');
+                                        $C = strlen((string)($c)) === 8 ? $c : ('FF' . $c);
                                     }
                                     if (preg_match('/ bgcolor="([^"]+)"/', $m[1], $m2)) {
                                         $FL += self::FL_COLOR;
-                                        $c = ltrim($m2[1], '#');
-                                        $BG = strlen($c) === 8 ? $c : ('FF' . $c);
+                                        $c = ltrim((string)($m2[1]), '#');
+                                        $BG = strlen((string)($c)) === 8 ? $c : ('FF' . $c);
                                     }
                                     if (preg_match('/ height="([^"]+)"/', $m[1], $m2)) {
                                         $RH = $m2[1];
                                     }
                                     if (preg_match('/ nf="([^"]+)"/', $m[1], $m2)) {
-                                        $c = htmlspecialchars_decode($m2[1], ENT_QUOTES);
+                                        $c = htmlspecialchars_decode((string)($m2[1]), ENT_QUOTES);
                                         $N = $this->getNumFmtId($c);
                                     }
                                     if (preg_match('/ border="([^"]+)"/', $m[1], $m2)) {
-                                        $b = htmlspecialchars_decode($m2[1], ENT_QUOTES);
+                                        $b = htmlspecialchars_decode((string)($m2[1]), ENT_QUOTES);
                                         if ($b && $b !== 'none') {
                                             $BR = $b;
                                         }
@@ -725,38 +725,38 @@ class SimpleXLSXGen
                                     $F += self::F_HYPERLINK; // internal hyperlink
                                 }
                                 if (preg_match('/<f([^>]*)>/', $v, $m)) {
-                                    $cf = strip_tags($v);
+                                    $cf = strip_tags((string)($v));
                                     $v = 'formula';
                                     if (preg_match('/ v="([^"]+)"/', $m[1], $m2)) {
                                         $v = $m2[1];
                                     }
                                 } else {
-                                    $v = strip_tags($v);
+                                    $v = strip_tags((string)($v));
                                 }
                             } // tags
                             $vl = mb_strlen($v);
                             if ($N) {
-                                $cv = ltrim($v, '+');
+                                $cv = ltrim((string)($v), '+');
                             } elseif ($v === '0' || preg_match('/^[-+]?[1-9]\d{0,14}$/', $v)) { // Integer as General
-                                $cv = ltrim($v, '+');
+                                $cv = ltrim((string)($v), '+');
                                 if ($vl > 10) {
                                     $N = self::N_INT; // [1] 0
                                 }
                             } elseif (preg_match('/^[-+]?(0|[1-9]\d*)\.(\d+)$/', $v, $m)) {
-                                $cv = ltrim($v, '+');
-                                if (strlen($m[2]) < 3) {
+                                $cv = ltrim((string)($v), '+');
+                                if (strlen((string)($m[2])) < 3) {
                                     $N = self::N_DEC;
                                 }
                             } elseif (preg_match('/^\$[-+]?[0-9\.]+$/', $v)) { // currency $?
                                 $N = self::N_DOLLAR;
-                                $cv = ltrim($v, '+$');
+                                $cv = ltrim((string)($v), '+$');
                             } elseif (preg_match('/^[-+]?[0-9\.]+( ₽| €)$/u', $v, $m)) { // currency ₽ €?
                                 if ($m[1] === ' ₽') {
                                     $N = self::N_RUB;
                                 } elseif ($m[1] === ' €') {
                                     $N = self::N_EURO;
                                 }
-                                $cv = trim($v, ' +₽€');
+                                $cv = trim((string)($v), ' +₽€');
                             } elseif (preg_match('/^([-+]?\d+)%$/', $v, $m)) {
                                 $cv = round($m[1] / 100, 2);
                                 $N = self::N_PERCENT_INT; // [9] 0%

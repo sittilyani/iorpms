@@ -4,11 +4,11 @@ include '../includes/config.php';
 
 // Calculate the date range for the last 12 months from end of last month
 $endDate = date('Y-m-t', strtotime('last month')); // Last day of last month
-$startDate = date('Y-m-01', strtotime('-12 months', strtotime($endDate))); // 12 months before end date
+$startDate = date('Y-m-01', strtotime('-12 months', strtotime((string)($endDate)))); // 12 months before end date
 
 // Format dates
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 $sql = "SELECT COUNT(mat_id) AS last_vl_12Count
         FROM viral_load

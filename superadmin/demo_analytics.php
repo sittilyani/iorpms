@@ -71,7 +71,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon_io/favicon-32x32.png">
 <style>
   *{box-sizing:border-box;} body{margin:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;color:#263238;}
-  .top{background:#2C3162;color:#fff;padding:20px 4%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+  .top{background:#2D008A;color:#fff;padding:20px 4%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
   .top h1{margin:0;font-size:1.3rem;} .top a{color:#c9d4ff;text-decoration:none;font-size:.9rem;}
   .wrap{max-width:1200px;margin:26px auto;padding:0 20px;}
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:26px;}
@@ -83,7 +83,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
   .hbar .lbl{width:190px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .hbar .bar{height:18px;background:#82b543;border-radius:4px;margin:0 8px;min-width:2px;}
   .cols{display:flex;align-items:flex-end;gap:4px;height:140px;}
-  .col{flex:1;background:#2C3162;border-radius:3px 3px 0 0;position:relative;min-width:6px;}
+  .col{flex:1;background:#2D008A;border-radius:3px 3px 0 0;position:relative;min-width:6px;}
   .col:hover{background:#82b543;}
   .col .tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
             background:#263238;color:#fff;font-size:.7rem;padding:3px 7px;border-radius:4px;white-space:nowrap;margin-bottom:4px;}
@@ -91,12 +91,12 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
   .two{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
   @media(max-width:820px){.two{grid-template-columns:1fr;}}
   table{width:100%;border-collapse:collapse;font-size:.82rem;}
-  th{background:#f0f3fa;color:#2C3162;text-align:left;padding:8px 10px;}
+  th{background:#f0f3fa;color:#2D008A;text-align:left;padding:8px 10px;}
   td{padding:7px 10px;border-bottom:1px solid #eef1f7;}
   .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.72rem;font-weight:bold;}
-  .b-demo{background:#e8f3d9;color:#4a7a1e;} .b-staff{background:#e3e7fb;color:#2C3162;}
+  .b-demo{background:#e8f3d9;color:#4a7a1e;} .b-staff{background:#e3e7fb;color:#2D008A;}
   .b-approved{background:#e6f4ea;color:#276749;} .b-pending{background:#fff4d9;color:#9a6b00;} .b-rejected{background:#fdecec;color:#c53030;} .b-expired{background:#e2e3e5;color:#4a4f55;}
-  .act{border:1px solid #2C3162;background:#fff;color:#2C3162;border-radius:5px;padding:3px 10px;font-size:.76rem;cursor:pointer;}
+  .act{border:1px solid #2D008A;background:#fff;color:#2D008A;border-radius:5px;padding:3px 10px;font-size:.76rem;cursor:pointer;}
   .act.ok{background:#82b543;border-color:#82b543;color:#fff;} .act.no{border-color:#c53030;color:#c53030;} .act:disabled{opacity:.5;cursor:wait;}
   .empty{color:#90a4ae;font-size:.86rem;font-style:italic;}
 </style>
@@ -107,7 +107,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
   <h1><i class="fa fa-chart-line"></i>&nbsp;Demo Analytics Dashboard</h1>
   <div>
     <a href="../dashboard/dashboard.php"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
-    &nbsp;·&nbsp; Logged in as <strong><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></strong>
+    &nbsp;·&nbsp; Logged in as <strong><?php echo htmlspecialchars((string)($_SESSION['username'] ?? '')); ?></strong>
   </div>
 </div>
 
@@ -134,7 +134,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
       <?php if (!$byCountry): ?><p class="empty">No demo requests yet.</p><?php endif; ?>
       <?php foreach ($byCountry as $row): ?>
         <div class="hbar">
-          <span class="lbl"><?php echo htmlspecialchars($row['country']); ?></span>
+          <span class="lbl"><?php echo htmlspecialchars((string)($row['country'])); ?></span>
           <div class="bar" style="width:<?php echo round(100 * $row['n'] / $maxCountry); ?>%;"></div>
           <strong><?php echo (int)$row['n']; ?></strong>
         </div>
@@ -149,7 +149,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
       <div class="cols">
         <?php foreach ($reqDaily as $row): ?>
           <div class="col" style="height:<?php echo max(4, round(100 * $row['n'] / $maxReqD)); ?>%;">
-            <span class="tip"><?php echo htmlspecialchars($row['d']); ?>: <?php echo (int)$row['n']; ?></span>
+            <span class="tip"><?php echo htmlspecialchars((string)($row['d'])); ?>: <?php echo (int)$row['n']; ?></span>
           </div>
         <?php endforeach; ?>
       </div>
@@ -165,7 +165,7 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
     <div class="cols">
       <?php foreach ($loginDaily as $row): ?>
         <div class="col" style="height:<?php echo max(4, round(100 * $row['n'] / $maxLogD)); ?>%;">
-          <span class="tip"><?php echo htmlspecialchars($row['d']); ?>: <?php echo (int)$row['n']; ?></span>
+          <span class="tip"><?php echo htmlspecialchars((string)($row['d'])); ?>: <?php echo (int)$row['n']; ?></span>
         </div>
       <?php endforeach; ?>
     </div>
@@ -182,21 +182,21 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
       <tr><th>Name</th><th>Clinic</th><th>Email</th><th>Phone</th><th>Country</th><th>Plan</th><th>Status</th><th>Requested</th><th>Expires</th><th>Action</th></tr>
       <?php foreach ($recentReqs as $r): ?>
       <tr>
-        <td><?php echo htmlspecialchars($r['first_name'] . ' ' . $r['last_name']); ?></td>
-        <td><?php echo htmlspecialchars($r['clinic_name']); ?></td>
-        <td><?php echo htmlspecialchars($r['email']); ?></td>
-        <td><?php echo htmlspecialchars($r['phone']); ?></td>
-        <td><?php echo htmlspecialchars($r['country']); ?></td>
-        <td><?php echo htmlspecialchars($r['plan']); ?></td>
-        <td><span class="badge b-<?php echo htmlspecialchars($r['status']); ?>"><?php echo htmlspecialchars($r['status']); ?></span></td>
-        <td><?php echo htmlspecialchars($r['created_at']); ?></td>
-        <td><?php echo $r['expires_at'] ? htmlspecialchars(substr($r['expires_at'], 0, 10)) : '-'; ?></td>
+        <td><?php echo htmlspecialchars((string)($r['first_name'] . ' ' . $r['last_name'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['clinic_name'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['email'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['phone'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['country'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['plan'])); ?></td>
+        <td><span class="badge b-<?php echo htmlspecialchars((string)($r['status'])); ?>"><?php echo htmlspecialchars((string)($r['status'])); ?></span></td>
+        <td><?php echo htmlspecialchars((string)($r['created_at'])); ?></td>
+        <td><?php echo $r['expires_at'] ? htmlspecialchars((string)(substr($r['expires_at'], 0, 10))) : '-'; ?></td>
         <td style="white-space:nowrap;">
           <?php if ($r['status'] === 'pending'): ?>
             <button class="act ok" data-id="<?php echo (int)$r['id']; ?>" data-a="approve">Approve</button>
             <button class="act no" data-id="<?php echo (int)$r['id']; ?>" data-a="reject">Reject</button>
           <?php elseif ($r['status'] === 'expired'): ?>
-            <?php if ($r['reactivation_requested_at']): ?><span class="badge b-pending" title="<?php echo htmlspecialchars($r['reactivation_requested_at']); ?>">reactivation requested</span><?php endif; ?>
+            <?php if ($r['reactivation_requested_at']): ?><span class="badge b-pending" title="<?php echo htmlspecialchars((string)($r['reactivation_requested_at'])); ?>">reactivation requested</span><?php endif; ?>
             <button class="act ok" data-id="<?php echo (int)$r['id']; ?>" data-a="reactivate">Reactivate</button>
           <?php elseif ($r['status'] === 'approved'): ?>
             <button class="act" data-id="<?php echo (int)$r['id']; ?>" data-a="resend" title="New temporary password by email + WhatsApp">Resend credentials</button>
@@ -219,12 +219,12 @@ $maxLogD    = max(array_merge([1], array_map('intval', array_column($loginDaily,
       <tr><th>Username</th><th>Role</th><th>Type</th><th>Country</th><th>IP Address</th><th>Time</th></tr>
       <?php foreach ($recentLogins as $r): ?>
       <tr>
-        <td><?php echo htmlspecialchars($r['username']); ?></td>
-        <td><?php echo htmlspecialchars($r['userrole']); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['username'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['userrole'])); ?></td>
         <td><span class="badge <?php echo $r['is_demo'] ? 'b-demo' : 'b-staff'; ?>"><?php echo $r['is_demo'] ? 'Demo' : 'Staff'; ?></span></td>
-        <td><?php echo htmlspecialchars($r['country']); ?></td>
-        <td><?php echo htmlspecialchars($r['ip_address']); ?></td>
-        <td><?php echo htmlspecialchars($r['login_time']); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['country'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['ip_address'])); ?></td>
+        <td><?php echo htmlspecialchars((string)($r['login_time'])); ?></td>
       </tr>
       <?php endforeach; ?>
     </table>

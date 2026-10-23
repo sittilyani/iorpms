@@ -32,7 +32,7 @@ $page_title = 'Search Clients';
                                    name="search_term"
                                    class="form-control"
                                    placeholder="Enter MAT ID or patient name..."
-                                   value="<?php echo htmlspecialchars($_POST['search_term'] ?? ''); ?>">
+                                   value="<?php echo htmlspecialchars((string)($_POST['search_term'] ?? '')); ?>">
                         </div>
                         <button type="submit" name="search_patient" class="btn btn-primary">
                             Search Patient
@@ -44,13 +44,13 @@ $page_title = 'Search Clients';
                             <?php foreach ($patients as $patient): ?>
                                 <div class="patient-item">
                                     <div class="patient-info">
-                                        <h4><?php echo htmlspecialchars($patient['clientName'] . ' ' . $patient['sname']); ?></h4>
-                                        <p>MAT ID: <?php echo htmlspecialchars($patient['mat_id']); ?> |
-                                           Age: <?php echo htmlspecialchars($patient['age']); ?> |
-                                           Sex: <?php echo htmlspecialchars($patient['sex']); ?></p>
+                                        <h4><?php echo htmlspecialchars((string)($patient['clientName'] . ' ' . $patient['sname'])); ?></h4>
+                                        <p>MAT ID: <?php echo htmlspecialchars((string)($patient['mat_id'])); ?> |
+                                           Age: <?php echo htmlspecialchars((string)($patient['age'])); ?> |
+                                           Sex: <?php echo htmlspecialchars((string)($patient['sex'])); ?></p>
                                     </div>
                                     <form method="POST" action="" style="margin: 0;">
-                                        <input type="hidden" name="select_patient" value="<?php echo htmlspecialchars($patient['mat_id']); ?>">
+                                        <input type="hidden" name="select_patient" value="<?php echo htmlspecialchars((string)($patient['mat_id'])); ?>">
                                         <button type="submit" class="btn btn-secondary btn-sm">Select</button>
                                     </form>
                                 </div>
@@ -71,13 +71,13 @@ $page_title = 'Search Clients';
                         <?php while ($checkin = mysqli_fetch_assoc($recent_checkins_result)): ?>
                             <div class="checkin-item">
                                 <div class="checkin-patient">
-                                    <?php echo htmlspecialchars($checkin['clientName'] . ' ' . $checkin['sname']); ?>
+                                    <?php echo htmlspecialchars((string)($checkin['clientName'] . ' ' . $checkin['sname'])); ?>
                                 </div>
-                                <span class="checkin-type type-<?php echo strtolower($checkin['visit_type'] ?? 'revisit'); ?>">
-                                    <?php echo htmlspecialchars($checkin['visit_type'] ?? 'Revisit'); ?>
+                                <span class="checkin-type type-<?php echo strtolower((string)($checkin['visit_type'] ?? 'revisit')); ?>">
+                                    <?php echo htmlspecialchars((string)($checkin['visit_type'] ?? 'Revisit')); ?>
                                 </span>
                                 <div class="checkin-time">
-                                    <?php echo date('g:i A', strtotime($checkin['checkin_date'])); ?>
+                                    <?php echo date('g:i A', strtotime((string)($checkin['checkin_date']))); ?>
                                 </div>
                             </div>
                         <?php endwhile; ?>
@@ -99,25 +99,25 @@ $page_title = 'Search Clients';
                             <div class="detail-item">
                                 <span class="detail-label">Patient Name</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['clientName'] . ' ' . $selected_patient['sname']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['clientName'] . ' ' . $selected_patient['sname'])); ?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">MAT ID</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['mat_id']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['mat_id'])); ?>
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Age</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['age']); ?> years
+                                    <?php echo htmlspecialchars((string)($selected_patient['age'])); ?> years
                                 </span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Sex</span>
                                 <span class="detail-value">
-                                    <?php echo htmlspecialchars($selected_patient['sex']); ?>
+                                    <?php echo htmlspecialchars((string)($selected_patient['sex'])); ?>
                                 </span>
                             </div>
                         </div>
@@ -125,7 +125,7 @@ $page_title = 'Search Clients';
 
                     <!-- Check-in Form -->
                     <form method="POST" action="">
-                        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($selected_patient['mat_id']); ?>">
+                        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($selected_patient['mat_id'])); ?>">
 
                         <div class="form-group">
                             <label>Visit Type:</label>
@@ -150,8 +150,8 @@ $page_title = 'Search Clients';
                             <select id="refer_to" name="refer_to" class="form-control">
                                 <option value="">-- Select Department --</option>
                                 <?php foreach ($roles as $role): ?>
-                                    <option value="<?php echo htmlspecialchars($role); ?>">
-                                        <?php echo htmlspecialchars($role); ?>
+                                    <option value="<?php echo htmlspecialchars((string)($role)); ?>">
+                                        <?php echo htmlspecialchars((string)($role)); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -174,7 +174,7 @@ $page_title = 'Search Clients';
                             <button type="submit" name="submit_checkin" class="btn btn-success">
                                 Complete Check-in
                             </button>
-                            <a href="../patients/update.php?mat_id=<?php echo urlencode($selected_patient['mat_id']); ?>"
+                            <a href="../patients/update.php?mat_id=<?php echo urlencode((string)($selected_patient['mat_id'])); ?>"
                                class="btn btn-primary">
                                 Update Patient Info
                             </a>

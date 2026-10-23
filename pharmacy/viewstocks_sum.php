@@ -17,7 +17,7 @@ $page_title = "Available stock_movements";
 if (!isset($_SESSION['username'])) {
     $error_message = 'User not logged in. Please log in to access this page.';
     error_log("Stock Summary Error: " . $error_message);
-    header('Location: ../login.php?error=' . urlencode($error_message));
+    header('Location: ../login.php?error=' . urlencode((string)($error_message)));
     exit;
 }
 
@@ -70,20 +70,20 @@ try {
 }
 
 // --- AJAX Response for Live Search ---
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'])) === 'xmlhttprequest') {
     // This is an AJAX request, so we only return the table rows
     $html = '';
     if (!empty($stock_movements)) {
         foreach ($stock_movements as $stock) {
             $html .= '<tr class="table-row">';
-            $html .= '<td>' . htmlspecialchars($stock['trans_id']) . '</td>';
+            $html .= '<td>' . htmlspecialchars((string)($stock['trans_id'])) . '</td>';
             // Need drugID in the AJAX response too, as the main table expects it
-            $html .= '<td>' . htmlspecialchars($stock['drugID']) . '</td>';
-            $html .= '<td>' . htmlspecialchars($stock['drugname']) . '</td>';
-            $html .= '<td>' . htmlspecialchars($stock['total_qty']) . '</td>';
+            $html .= '<td>' . htmlspecialchars((string)($stock['drugID'])) . '</td>';
+            $html .= '<td>' . htmlspecialchars((string)($stock['drugname'])) . '</td>';
+            $html .= '<td>' . htmlspecialchars((string)($stock['total_qty'])) . '</td>';
             // Action buttons for display/AJAX are included here
             $html .= '<td class="action-buttons">';
-            $html .= '<a href="view_transactions.php?drugname=' . urlencode($stock['drugname']) . '" class="btn btn-view"><i class="fas fa-eye"></i> View Bin Card</a>';
+            $html .= '<a href="view_transactions.php?drugname=' . urlencode((string)($stock['drugname'])) . '" class="btn btn-view"><i class="fas fa-eye"></i> View Bin Card</a>';
             $html .= '</td>';
             $html .= '</tr>';
         }
@@ -120,7 +120,7 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="../assets/css/fontawesome.min.css">
     <script src="../assets/js/bootstrap.min.js"></script>
@@ -128,8 +128,8 @@ if (isset($_GET['error'])) {
     <style>
         /* ... (Your original CSS styles remain here) ... */
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #2D008A;
+            --secondary-color: #1d0059;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
             --warning-color: #f39c12;
@@ -300,12 +300,12 @@ if (isset($_GET['error'])) {
                     <?php else: ?>
                         <?php foreach ($stock_movements as $stock): ?>
                             <tr class="table-row">
-                                <td><?php echo htmlspecialchars($stock['trans_id']); ?></td>
-                                <td><?php echo htmlspecialchars($stock['drugID']); ?></td>
-                                <td><?php echo htmlspecialchars($stock['drugname']); ?></td>
-                                <td><?php echo htmlspecialchars($stock['total_qty']); ?></td>
+                                <td><?php echo htmlspecialchars((string)($stock['trans_id'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($stock['drugID'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($stock['drugname'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($stock['total_qty'])); ?></td>
                                 <td class="action-buttons action-cell no-print">
-                                    <a href="view_transactions.php?drugname=<?php echo urlencode($stock['drugname']); ?>" class="btn btn-view"><i class="fas fa-eye"></i> View Bin Card</a>
+                                    <a href="view_transactions.php?drugname=<?php echo urlencode((string)($stock['drugname'])); ?>" class="btn btn-view"><i class="fas fa-eye"></i> View Bin Card</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

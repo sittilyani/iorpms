@@ -16,7 +16,7 @@ if(isset($_POST["mat_id"]) && !empty($_POST["mat_id"])){
     $mat_id = $_POST["mat_id"];
 
     // Validate Mat id
-    $input_mat_id = trim($_POST["mat_id"]);
+    $input_mat_id = trim((string)($_POST["mat_id"]));
     if(empty($input_mat_id)){
         $mat_id_err = "Please enter MAT ID.";
     } elseif(!filter_var($input_mat_id, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z0-9\s]+$/")))){
@@ -25,42 +25,42 @@ if(isset($_POST["mat_id"]) && !empty($_POST["mat_id"])){
         $mat_id = $input_mat_id;
     }
     //validate first name
-    $input_fname = trim($_POST['fname']);
+    $input_fname = trim((string)($_POST['fname']));
     if(empty($input_fname)){
         $fname_err = "Please enter First name.";
     } else{
         $fname = $input_fname;
     }
     //validate dob
-    $input_dob = trim($_POST['dob']);
+    $input_dob = trim((string)($_POST['dob']));
     if(empty($input_dob)){
         $dob_err = "Please enter dob.";
     } else{
         $dob = $input_dob;
     }
     //validate CSO
-    $input_cso = trim($_POST['cso']);
+    $input_cso = trim((string)($_POST['cso']));
     if(empty($input_cso)){
         $cso_err = "Please enter CSO.";
     } else{
         $cso = $input_cso;
     }
     //validate Drug name
-    $input_drugname = trim($_POST['drugname']);
+    $input_drugname = trim((string)($_POST['drugname']));
     if(empty($input_drugname)){
         $drugname_err = "Please select drug.";
     } else{
         $drugname = $input_drugname;
     }
     //validate dosage
-    $input_dosage = trim($_POST['dosage']);
+    $input_dosage = trim((string)($_POST['dosage']));
     if(empty($input_dosage)){
         $dosage_err = "Please enter dosage in ml.";
     } else{
         $dosage = $input_dosage;
     }
     // Validate date of dispensing
-    $input_date_of_disp = trim($_POST['date_of_disp']);
+    $input_date_of_disp = trim((string)($_POST['date_of_disp']));
     if(empty($input_date_of_disp)){
         $date_of_disp_err = "Please enter date of dispensing";
     } else{
@@ -85,7 +85,7 @@ if(isset($_POST["mat_id"]) && !empty($_POST["mat_id"])){
             $stmt->bindParam(":comments", $param_comments);
 
             // Set parameters
-            $param_mat_id = trim($_POST["mat_id"]);
+            $param_mat_id = trim((string)($_POST["mat_id"]));
             $param_fname = $fname;
             $param_drugname = $drugname;
             $param_dosage = $dosage;
@@ -114,9 +114,9 @@ if(isset($_POST["mat_id"]) && !empty($_POST["mat_id"])){
     unset($pdo);
 } else{
     // Check existence of id parameter before processing further
-    if(isset($_GET["mat_id"]) && !empty(trim($_GET["mat_id"]))){
+    if(isset($_GET["mat_id"]) && !empty(trim((string)($_GET["mat_id"])))){
         // Get URL parameter
-        $mat_id =  trim($_GET["mat_id"]);
+        $mat_id =  trim((string)($_GET["mat_id"]));
 
         // Prepare a select statement
         $sql = "SELECT * FROM patient WHERE mat_id= :mat_id";
@@ -182,7 +182,7 @@ if(isset($_POST["mat_id"]) && !empty($_POST["mat_id"])){
         </div>
         <div class="col-md-6">
                     <p>Please dispense drugs to the client.</p>
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
                         <div class="form-group <?php echo (!empty($mat_id_err)) ? 'has-error' : ''; ?>">
                             <label>MAT ID</label>
                             <input type="text" name="mat_id" class="form-control" value="<?php echo $mat_id; ?>" readonly>

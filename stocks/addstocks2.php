@@ -344,14 +344,14 @@ $mysqli->close();
             <i class="fas fa-check-circle"></i> <?php echo $success_message; ?>
         </div>
         <h2>Add products Stocks</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="post" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>">
 
             <div class="form-group">
                 <label for="transactionType">Transaction Type</label>
                 <select name="transactionType" required>
                     <?php foreach ($transactionTypesOptions as $type): ?>
-                        <option value="<?php echo htmlspecialchars($type); ?>" <?php echo ($type === 'purchase') ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($type); ?>
+                        <option value="<?php echo htmlspecialchars((string)($type)); ?>" <?php echo ($type === 'purchase') ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string)($type)); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -365,7 +365,7 @@ $mysqli->close();
                     if ($result_products && $result_products->num_rows > 0) {
                         $result_products->data_seek(0);
                         while ($row = $result_products->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($row['brandname']) . '" data-productname="' . htmlspecialchars($row['productname']) . '">' . htmlspecialchars($row['brandname']) . '</option>';
+                            echo '<option value="' . htmlspecialchars((string)($row['brandname'])) . '" data-productname="' . htmlspecialchars((string)($row['productname'])) . '">' . htmlspecialchars((string)($row['brandname'])) . '</option>';
                         }
                     } else {
                         echo '<option value="">No products found</option>';
@@ -398,7 +398,7 @@ $mysqli->close();
                     if ($result_suppliers && $result_suppliers->num_rows > 0) {
                         $result_suppliers->data_seek(0);
                         while ($row = $result_suppliers->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($row['name']) . '">' . htmlspecialchars($row['name']) . '</option>';
+                            echo '<option value="' . htmlspecialchars((string)($row['name'])) . '">' . htmlspecialchars((string)($row['name'])) . '</option>';
                         }
                     } else {
                         echo '<option value="">No suppliers found</option>';
@@ -419,7 +419,7 @@ $mysqli->close();
 
             <div class="form-group">
                 <label for="transBy">Received By</label>
-                <input type="text" name="transBy" class="readonly-input" readonly value="<?php echo htmlspecialchars($transBy); ?>">
+                <input type="text" name="transBy" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($transBy)); ?>">
             </div>
 
             <input type="submit" class='custom-submit-btn' name="submit" value="Add products Stocks">

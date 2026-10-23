@@ -94,11 +94,11 @@ $end = date('Y-m-d'); // current date
 $missing = array();
 while ($start <= $end) {
                 // If the current date is not in the dates array and is within the range of the current month and year
-                if (!in_array($start, $dates) && date('Y', strtotime($start)) == date('Y')) {
+                if (!in_array($start, $dates) && date('Y', strtotime((string)($start))) == date('Y')) {
                                 $missing[] = $start;
                 }
                 // Move to the next date
-                $start = date('Y-m-d', strtotime($start . ' +0 day'));
+                $start = date('Y-m-d', strtotime((string)($start . ' +0 day')));
 }
 
 // Output the number of missing dates

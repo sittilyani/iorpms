@@ -55,9 +55,11 @@ $full_name = getUserFullName();
                 <a href="../dashboard/dashboard.php" class="nav-link home-link">
                     <i class="fa fa-home"></i>Home
                 </a>
-                <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+                <a href="../laboratory/toxicology_dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
                     <i class="fa fa-pump-medical"></i>Dashboard</a>
                     
+                <a href="../laboratory/lab_queue.php" target="contentFrame" class="nav-link" style="background:#04B04B;color:#fff">
+                    <i class="fa fa-flask"></i>Lab Requests (queue)</a>
                 <a href="../laboratory/view_all_patients.php" target="contentFrame" class="nav-link">
                     <i class="fa fa-users"></i>Perform a test?</a>
                 <a href="../laboratory/toxicology_results.php" target="contentFrame"  class="nav-link">
@@ -75,7 +77,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -95,10 +97,24 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (in_array(strtolower((string)($userrole ?? ($_SESSION['userrole'] ?? ''))), array (
+  0 => 'admin',
+  1 => 'super admin',
+  2 => 'clinician',
+  3 => 'psychiatrist',
+  4 => 'psychologist',
+  5 => 'laboratory scientist',
+  6 => 'hrio',
+  7 => 'data manager',
+  8 => 'demo',
+), true)): ?>
+            <iframe src="toxicology_dashboard.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+        <?php endif; ?>
         </div>
     </div>
 </div>

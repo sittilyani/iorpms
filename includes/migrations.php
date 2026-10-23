@@ -46,7 +46,7 @@ if (!function_exists('mig_table_exists')) {
     function mig_exec(mysqli $conn, string $sql): void
     {
         if (!$conn->query($sql)) {
-            throw new Exception($conn->error . ' [' . substr(trim($sql), 0, 120) . ']');
+            throw new Exception($conn->error . ' [' . substr(trim((string)($sql)), 0, 120) . ']');
         }
     }
 }
@@ -86,9 +86,9 @@ function run_migrations(mysqli $conn, string $dir): array
             if (substr($name, -4) === '.sql') {
                 $sql = file_get_contents($file);
                 foreach (preg_split('/;\s*[\r\n]+/', $sql) as $stmt) {
-                    $stmt = trim(preg_replace('/^\s*--.*$/m', '', $stmt));
+                    $stmt = trim((string)(preg_replace('/^\s*--.*$/m', '', $stmt)));
                     if ($stmt !== '') {
-                        mig_exec($conn, rtrim($stmt, ';'));
+                        mig_exec($conn, rtrim((string)($stmt), ';'));
                     }
                 }
             } else {

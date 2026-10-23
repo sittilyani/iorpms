@@ -36,7 +36,7 @@ if (file_exists($sqlFile)) {
     $success = true;
     
     foreach ($queries as $query) {
-        $query = trim($query);
+        $query = trim((string)($query));
         if (empty($query)) continue;
         
         if (!$conn->query($query)) {

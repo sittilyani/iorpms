@@ -34,6 +34,21 @@ $result = $stmt->get_result();
 $patient = $result->fetch_assoc();
 $stmt->close();
 
+// ---- Auto-derived values (no clinician input needed) ----
+$isMale        = isset($patient['sex']) && strcasecmp(trim((string)($patient['sex'])), 'Male') === 0;
+$matStartDate  = substr((string)($patient['reg_date'] ?? ''), 0, 10);
+// Days missed = days since the last dispensing, not counting today (from table pharmacy)
+$lastDisp = $conn->prepare("SELECT DATE(MAX(dispDate)) FROM pharmacy WHERE mat_id = ?");
+$lastDisp->bind_param('s', $mat_id); $lastDisp->execute(); $lastDisp->bind_result($lastDispDate); $lastDisp->fetch(); $lastDisp->close();
+$daysMissed = $lastDispDate ? max(0, (int)floor((strtotime((string)(date('Y-m-d'))) - strtotime((string)($lastDispDate))) / 86400) - 1) : 0;
+// Family-planning methods by sex: men -> Male Condoms / Vasectomy only; women -> all the others
+$fpMethods = [];
+$fpRes = $conn->query("SELECT method_name FROM family_planning_methods WHERE is_active = 1 ORDER BY method_id");
+while ($fpRes && ($fpRow = $fpRes->fetch_assoc())) {
+    $isMaleMethod = in_array($fpRow['method_name'], ['Male Condoms', 'Vasectomy (Male Sterilization)'], true);
+    if ($isMaleMethod === $isMale) { $fpMethods[] = $fpRow['method_name']; }
+}
+
 if (!$patient) {
     die("Patient not found");
 }
@@ -82,7 +97,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #50b89a;
-            --dark-color: #2C3162;
+            --dark-color: #2D008A;
             --light-bg: #f8f9fa;
             --white: #ffffff;
             --border-color: #dcdcdc;
@@ -301,14 +316,14 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
         <?php if ($successMessage): ?>
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i>
-                <span><?php echo htmlspecialchars($successMessage); ?></span>
+                <span><?php echo htmlspecialchars((string)($successMessage)); ?></span>
             </div>
         <?php endif; ?>
         
         <?php if ($errorMessage): ?>
             <div class="alert alert-error">
                 <i class="fas fa-exclamation-circle"></i>
-                <span><?php echo htmlspecialchars($errorMessage); ?></span>
+                <span><?php echo htmlspecialchars((string)($errorMessage)); ?></span>
             </div>
         <?php endif; ?>
 
@@ -320,28 +335,28 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
         <div class="patient-info">
             <div class="patient-info-item">
                 <label>MAT ID</label>
-                <span><?php echo htmlspecialchars($patient['mat_id']); ?></span>
+                <span><?php echo htmlspecialchars((string)($patient['mat_id'])); ?></span>
             </div>
             <div class="patient-info-item">
                 <label>Client Name</label>
-                <span><?php echo htmlspecialchars($patient['clientName']); ?></span>
+                <span><?php echo htmlspecialchars((string)($patient['clientName'])); ?></span>
             </div>
             <div class="patient-info-item">
                 <label>Age / Sex</label>
-                <span><?php echo htmlspecialchars($patient['age'] . ' / ' . $patient['sex']); ?></span>
+                <span><?php echo htmlspecialchars((string)($patient['age'] . ' / ' . $patient['sex'])); ?></span>
             </div>
             <div class="patient-info-item">
                 <label>Current Drug</label>
-                <span><?php echo htmlspecialchars($patient['drugname']); ?></span>
+                <span><?php echo htmlspecialchars((string)($patient['drugname'])); ?></span>
             </div>
             <div class="patient-info-item">
                 <label>Current Dosage</label>
-                <span><?php echo htmlspecialchars($patient['dosage']); ?></span>
+                <span><?php echo htmlspecialchars((string)($patient['dosage'])); ?></span>
             </div>
         </div>
 
         <form action="submit_yellow_card.php" method="POST">
-            <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($mat_id); ?>">
+            <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($mat_id)); ?>">
 
             <!-- Basic Visit Information -->
             <div class="section">
@@ -355,7 +370,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                     </div>
                     <div class="form-group">
                         <label for="mat_start_date">Date Started on MAT</label>
-                        <input type="date" name="mat_start_date" id="mat_start_date" value="<?php echo htmlspecialchars($patient['reg_date']); ?>" required>
+                        <input type="date" name="mat_start_date" id="mat_start_date" value="<?php echo htmlspecialchars((string)($matStartDate)); ?>" readonly required title="Auto-filled from the patient record">
                     </div>
                 </div>
             </div>
@@ -401,11 +416,11 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="current_dose">Current Dose</label>
-                        <input type="text" name="current_dose" id="current_dose" value="<?php echo htmlspecialchars($patient['dosage']); ?>">
+                        <input type="text" name="current_dose" id="current_dose" value="<?php echo htmlspecialchars((string)($patient['dosage'])); ?>">
                     </div>
                     <div class="form-group">
                         <label for="days_missed_doses">Days Missed Doses</label>
-                        <input type="text" name="days_missed_doses" id="days_missed_doses">
+                        <input type="text" name="days_missed_doses" id="days_missed_doses" value="<?php echo (int)$daysMissed; ?>" readonly title="Pulled from pharmacy dispensing records (last dispensed: <?php echo htmlspecialchars((string)($lastDispDate ?: 'never')); ?>)">
                     </div>
                     <div class="form-group">
                         <label for="cows_score">COWS Score</label>
@@ -461,7 +476,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                     </div>
                     <div class="form-group">
                         <label for="art_regimen">ART Regimen (All HIV +ve clients)</label>
-                        <input type="text" name="art_regimen" id="art_regimen" value="<?php echo htmlspecialchars($medical_history['art_regimen'] ?? 'Not on ART'); ?>">
+                        <input type="text" name="art_regimen" id="art_regimen" value="<?php echo htmlspecialchars((string)($medical_history['art_regimen'] ?? 'Not on ART')); ?>">
                     </div>
                     <div class="form-group">
                         <label for="viral_load_results">Viral Load Results</label>
@@ -502,40 +517,40 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="pregnant">Pregnant (Yes/No/NA)</label>
-                        <select name="pregnant" id="pregnant">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="NA">N/A</option>
+                        <select name="pregnant" id="pregnant" <?php echo $isMale ? 'disabled' : ''; ?>>
+                            <?php if ($isMale): ?><option value="NA" selected>N/A</option><?php else: ?>
+                            <option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><?php endif; ?>
                         </select>
+                        <?php if ($isMale): ?><input type="hidden" name="pregnant" value="NA"><?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="lmp">LMP (Last Menstrual Period)</label>
-                        <input type="date" name="lmp" id="lmp">
+                        <input type="date" name="lmp" id="lmp" <?php echo $isMale ? 'disabled placeholder="N/A"' : ''; ?>>
                     </div>
                     <div class="form-group">
                         <label for="edd">EDD (Expected Delivery Date)</label>
-                        <input type="date" name="edd" id="edd">
+                        <input type="date" name="edd" id="edd" <?php echo $isMale ? 'disabled placeholder="N/A"' : ''; ?>>
                     </div>
                     <div class="form-group">
-                        <label for="cervical_cancer_screening">Cervical Cancer Screening (Y/N)</label>
-                        <select name="cervical_cancer_screening" id="cervical_cancer_screening">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
+                        <label for="cervical_cancer_screening">Cervical Cancer Screening</label>
+                        <select name="cervical_cancer_screening" id="cervical_cancer_screening" <?php echo $isMale ? 'disabled' : ''; ?>>
+                            <?php if ($isMale): ?><option value="NA" selected>N/A</option><?php else: ?>
+                            <option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="NA">N/A</option><?php endif; ?>
                         </select>
+                        <?php if ($isMale): ?><input type="hidden" name="cervical_cancer_screening" value="NA"><?php endif; ?>
                     </div>
                     <div class="form-group">
-                        <label for="on_fp">On Family Planning (Y/N)</label>
-                        <select name="on_fp" id="on_fp">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
+                        <label for="on_fp">On Family Planning</label>
+                        <select name="on_fp" id="on_fp" onchange="document.getElementById('fp_method').disabled = this.value !== 'Yes'; if (this.value !== 'Yes') document.getElementById('fp_method').value = '';">
+                            <option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="fp_method">FP Method</label>
-                        <input type="text" name="fp_method" id="fp_method">
+                        <select name="fp_method" id="fp_method" disabled>
+                            <option value="">Select method</option>
+                            <?php foreach ($fpMethods as $m): ?><option value="<?php echo htmlspecialchars((string)($m)); ?>"><?php echo htmlspecialchars((string)($m)); ?></option><?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="form-group full-width">
                         <label for="gbv_screening">GBV Screening Results</label>
@@ -609,7 +624,7 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
                     </div>
                     <div class="form-group">
                         <label for="clinician_name">Clinician Name</label>
-                        <input type="text" name="clinician_name" id="clinician_name" value="<?php echo htmlspecialchars($clinician_name); ?>" readonly>
+                        <input type="text" name="clinician_name" id="clinician_name" value="<?php echo htmlspecialchars((string)($clinician_name)); ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label for="clinician_signature">Clinician Signature</label>

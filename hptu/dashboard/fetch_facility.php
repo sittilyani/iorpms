@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$facilityname = trim($_POST['facilityname'] ?? '');
+$facilityname = trim((string)($_POST['facilityname'] ?? ''));
 
 if (empty($facilityname)) {
     echo json_encode([]);

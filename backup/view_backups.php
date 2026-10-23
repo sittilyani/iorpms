@@ -70,7 +70,7 @@ if (!isset($error)) {
                             'datetime' => $backupDateTime,
                             'size' => $fileSize,
                             'size_formatted' => formatFileSize($fileSize),
-                            'path' => '../backup/database/' . rawurlencode($file)
+                            'path' => '../backup/database/' . rawurlencode((string)($file))
                         ];
                     }
                 }
@@ -112,14 +112,14 @@ if (isset($_GET['email']) && isset($_GET['file'])) {
 
     $filePath = $backupsDir . '/' . $fileToEmail;
     if (file_exists($filePath) && strpos(realpath($filePath), $backupsDir) === 0) {
-        $message = "Backup file '" . htmlspecialchars($fileToEmail) . "' has been sent to " . $email;
+        $message = "Backup file '" . htmlspecialchars((string)($fileToEmail)) . "' has been sent to " . $email;
     } else {
         $error = "Invalid file specified for email.";
     }
 
     // Clean output buffer before redirect
     ob_end_clean();
-    header("Location: view_backups.php" . ($filterApplied ? "?start_date=$startDate&end_date=$endDate" : "") . (isset($message) ? "&message=" . urlencode($message) : ""));
+    header("Location: view_backups.php" . ($filterApplied ? "?start_date=$startDate&end_date=$endDate" : "") . (isset($message) ? "&message=" . urlencode((string)($message)) : ""));
     exit();
 }
 
@@ -425,7 +425,7 @@ function formatFileSize($bytes) {
     <?php if (isset($_GET['message'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i>
-            <?php echo htmlspecialchars(urldecode($_GET['message'])); ?>
+            <?php echo htmlspecialchars((string)(urldecode($_GET['message']))); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
@@ -433,7 +433,7 @@ function formatFileSize($bytes) {
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <?php echo htmlspecialchars($error); ?>
+            <?php echo htmlspecialchars((string)($error)); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
@@ -448,12 +448,12 @@ function formatFileSize($bytes) {
                 <div class="col-md-3">
                     <label for="start_date" class="form-label">From Date</label>
                     <input type="date" class="form-control" id="start_date" name="start_date"
-                           value="<?php echo htmlspecialchars($startDate); ?>">
+                           value="<?php echo htmlspecialchars((string)($startDate)); ?>">
                 </div>
                 <div class="col-md-3">
                     <label for="end_date" class="form-label">To Date</label>
                     <input type="date" class="form-control" id="end_date" name="end_date"
-                           value="<?php echo htmlspecialchars($endDate); ?>">
+                           value="<?php echo htmlspecialchars((string)($endDate)); ?>">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <div>
@@ -474,7 +474,7 @@ function formatFileSize($bytes) {
         <?php if (isset($error)): ?>
             <div class="text-center py-5">
                 <i class="bi bi-exclamation-circle" style="font-size: 48px; color: #b91c1c;"></i>
-                <p class="mt-3 text-danger"><?php echo htmlspecialchars($error); ?></p>
+                <p class="mt-3 text-danger"><?php echo htmlspecialchars((string)($error)); ?></p>
             </div>
         <?php elseif (empty($backupFiles)): ?>
             <div class="text-center py-5">
@@ -505,7 +505,7 @@ function formatFileSize($bytes) {
                             <td>
                                 <span class="db-badge">
                                     <i class="bi bi-database"></i>
-                                    <?php echo htmlspecialchars($backup['dbname']); ?>
+                                    <?php echo htmlspecialchars((string)($backup['dbname'])); ?>
                                 </span>
                             </td>
                             <td>
@@ -524,10 +524,10 @@ function formatFileSize($bytes) {
                                         <i class="bi bi-download"></i> Download
                                     </a>
                                     <a href="#" class="btn-action btn-email js-gdrive-send"
-                                       data-file="<?php echo htmlspecialchars($backup['filename']); ?>">
+                                       data-file="<?php echo htmlspecialchars((string)($backup['filename'])); ?>">
                                         <i class="bi bi-cloud-upload"></i> Send to Drive
                                     </a>
-                                    <a href="?delete=1&file=<?php echo urlencode($backup['filename']); ?><?php echo $filterApplied ? "&start_date=$startDate&end_date=$endDate" : ""; ?>"
+                                    <a href="?delete=1&file=<?php echo urlencode((string)($backup['filename'])); ?><?php echo $filterApplied ? "&start_date=$startDate&end_date=$endDate" : ""; ?>"
                                        class="btn-action btn-delete"
                                        onclick="return confirm('Are you sure you want to delete this backup?')">
                                         <i class="bi bi-trash"></i> Delete

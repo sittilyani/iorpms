@@ -94,8 +94,8 @@ $first_name = $_SESSION['first_name'] ?? '';
         <div class="welcome-message" id="welcomeMessage">
             <i class="fas fa-users"></i>
             <h3>Welcome to HR Management System</h3>
-            <p>Select an option from the side navigation to manage settings. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, you can view and all forms that you can access</p>
+            <p>Select an option from the side navigation to manage settings. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, you can view and all forms that you can access</p>
         </div>
     </div>
 </div>

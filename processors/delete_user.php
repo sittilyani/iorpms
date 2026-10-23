@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Demo/evaluation accounts have full read access but cannot delete users.
-if (strtolower($_SESSION['userrole'] ?? '') === 'demo') {
+if (strtolower((string)($_SESSION['userrole'] ?? '')) === 'demo') {
     header("Location: ../public/userslist.php?error=" . urlencode("Demo accounts cannot delete users."));
     exit();
 }

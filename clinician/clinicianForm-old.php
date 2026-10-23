@@ -92,7 +92,7 @@ $today = date('Y-m-d');
 // Check the retrieved next_appointment date
 if (!empty($combinedData['next_appointment'])) {
     // If the retrieved date is in the past, override it with today's date
-    if (strtotime($combinedData['next_appointment']) < strtotime($today)) {
+    if (strtotime((string)($combinedData['next_appointment'])) < strtotime((string)($today))) {
         $combinedData['next_appointment'] = $today;
     }
 } else {
@@ -129,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .grid-container{display:grid;grid-template-columns:repeat(5,1fr);grid-gap:20px;background-color:#9FB;margin:0 50px;padding:20px}
         .form-control,input,select{width:80%;height:30px;margin-bottom:15px;margin-top:10px}
         label{font-weight:bold}
-        h2{color:#2C3162;margin-top:20px;margin-left:50px}
-        #btn-submit{width:250px;color:#fff;background-color:#2C3162;height:35px;border-radius:5px;border:none;cursor:pointer}
+        h2{color:#2D008A;margin-top:20px;margin-left:50px}
+        #btn-submit{width:250px;color:#fff;background-color:#2D008A;height:35px;border-radius:5px;border:none;cursor:pointer}
         .readonly-input{background-color:#E8E8E8;cursor:not-allowed}
         textarea{width:80%;height:80px}
         .alert{padding:15px;margin:20px 50px;border:1px solid transparent;border-radius:4px}
@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4>Success:</h4>
             <ul>
                 <?php foreach ($successMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4>Errors:</h4>
             <ul>
                 <?php foreach ($errorMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -205,41 +205,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if (!empty($combinedData['p_id'])): ?>
         <form action="clinicianForm_process-old.php" method="post" class="post">
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($combinedData['p_id']); ?>">
-            <input type="hidden" name="current_status_hidden" value="<?php echo htmlspecialchars($combinedData['current_status']); ?>">
-            <input type="hidden" name="clinician_name" value="<?php echo htmlspecialchars($clinician_name); ?>">
+            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($combinedData['p_id'])); ?>">
+            <input type="hidden" name="current_status_hidden" value="<?php echo htmlspecialchars((string)($combinedData['current_status'])); ?>">
+            <input type="hidden" name="clinician_name" value="<?php echo htmlspecialchars((string)($clinician_name)); ?>">
             <div class="grid-container">
                 <div class="grid-item">
                     <label for="visitDate">Visit Date</label><br>
                     <input type="text" name="visitDate" class="readonly-input" readonly value="<?php echo date('Y-m-d'); ?>"><br>
 
                     <label for="mat_id">MAT ID</label><br>
-                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['mat_id']); ?>"><br>
+                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['mat_id'])); ?>"><br>
 
                     <label for="clientName">Client Name</label><br>
-                    <input type="text" name="clientName" value="<?php echo htmlspecialchars($combinedData['clientName']); ?>" required><br>
+                    <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($combinedData['clientName'])); ?>" required><br>
 
                     <label for="nickName">Nick Name</label><br>
-                    <input type="text" name="nickName" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['nickName'] ?? ''); ?>"><br>
+                    <input type="text" name="nickName" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['nickName'] ?? '')); ?>"><br>
 
                     <label for="sname">Sur Name</label><br>
-                    <input type="text" name="sname" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['sname'] ?? ''); ?>"><br>
+                    <input type="text" name="sname" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['sname'] ?? '')); ?>"><br>
                 </div>
                 <div class="grid-item">
                     <label for="dob">Date of Birth</label><br>
-                    <input type="text" name="dob" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['dob']); ?>"><br>
+                    <input type="text" name="dob" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['dob'])); ?>"><br>
 
                     <label for="age">Age</label><br>
-                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['age']); ?>"><br>
+                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['age'])); ?>"><br>
 
                     <label for="reg_date">Enrolment Date</label><br>
-                    <input type="text" name="reg_date" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['reg_date']); ?>"><br>
+                    <input type="text" name="reg_date" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['reg_date'])); ?>"><br>
 
                     <label for="sex">Gender</label><br>
-                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['sex']); ?>"><br>
+                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['sex'])); ?>"><br>
 
                     <label for="marital_status">Marital Status</label><br>
-                    <input type="text" name="marital_status" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['marital_status'] ?? ''); ?>"><br>
+                    <input type="text" name="marital_status" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['marital_status'] ?? '')); ?>"><br>
                 </div>
                 <div class="grid-item">
                     <label for="hiv_status">HIV Status</label><br>
@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             while ($row = $result->fetch_assoc()) {
                                 // Default selection logic remains as 'Negative' if no actual data is present
                                 $selected = ($row['hiv_status_name'] == 'Negative') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['hiv_status_name']) . "' $selected>" . htmlspecialchars($row['hiv_status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['hiv_status_name'])) . "' $selected>" . htmlspecialchars((string)($row['hiv_status_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No status found</option>";
@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['regimen_name'] == 'None') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['regimen_name']) . "' $selected>" . htmlspecialchars($row['regimen_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['regimen_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No regimen found</option>";
@@ -286,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['regimen_type_name'] == 'None') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['regimen_type_name']) . "' $selected>" . htmlspecialchars($row['regimen_type_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['regimen_type_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_type_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No type found</option>";
@@ -303,7 +303,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == 'Unknown') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No status found</option>";
@@ -321,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == 'Unknown') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No status found</option>";
@@ -337,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == 'None') ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value=''>No status found</option>";
@@ -349,22 +349,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="clinical_notes" id="clinical_notes" cols="30" rows="4" required></textarea><br>
 
                     <label for="current_status">Current Status</label><br>
-                    <input type="text" name="current_status" class="readonly-input" readonly value="<?php echo htmlspecialchars($combinedData['current_status']); ?>"><br>
+                    <input type="text" name="current_status" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['current_status'])); ?>"><br>
                 </div>
                 <div class="grid-item">
                     <label for="last_vlDate">Last VL Date</label><br>
-                    <input type="date" name="last_vlDate" value="<?php echo htmlspecialchars($combinedData['last_vlDate']); ?>"><br>
+                    <input type="date" name="last_vlDate" value="<?php echo htmlspecialchars((string)($combinedData['last_vlDate'])); ?>"><br>
 
                     <label for="results">VL Results</label><br>
-                    <input type="text" name="results" value="<?php echo htmlspecialchars($combinedData['results'] ?? ''); ?>"><br>
+                    <input type="text" name="results" value="<?php echo htmlspecialchars((string)($combinedData['results'] ?? '')); ?>"><br>
 
                     <label for="clinician_name">Clinician Name</label><br>
-                    <input type="text" name="clinician_name" value="<?php echo htmlspecialchars($clinician_name); ?>" class="readonly-input" readonly><br>
+                    <input type="text" name="clinician_name" value="<?php echo htmlspecialchars((string)($clinician_name)); ?>" class="readonly-input" readonly><br>
 
                     <label for="next_appointment">Next Appointment Date</label><br>
                     <!-- IMPORTANT CHANGE: Added 'min' attribute and used the possibly updated value from PHP -->
                     <input type="date" name="next_appointment"
-                           value="<?php echo htmlspecialchars($combinedData['next_appointment']); ?>"
+                           value="<?php echo htmlspecialchars((string)($combinedData['next_appointment'])); ?>"
                            min="<?php echo date('Y-m-d'); ?>"><br>
 
                     <button type="submit" name="submit" id="btn-submit">Submit</button>

@@ -186,9 +186,9 @@ $mysqli->close();
         </div>
         <h3>Add Product Stocks</h3>
         <button type="button" class="add-item-btn" onclick="addStockRow()">Add Another Item</button>
-        <form id="stock-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form id="stock-form" method="post" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>">
             <input type="hidden" name="items" id="items">
-            <input type="hidden" name="receivedBy" value="<?php echo htmlspecialchars($receivedBy); ?>">
+            <input type="hidden" name="receivedBy" value="<?php echo htmlspecialchars((string)($receivedBy)); ?>">
             <div id="stock-rows">
                 <!-- Initial row will be added by JavaScript -->
             </div>

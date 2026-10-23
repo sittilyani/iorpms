@@ -6,7 +6,7 @@ include('../includes/header.php');
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $status_name = trim($_POST["status_name"]);
+        $status_name = trim((string)($_POST["status_name"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO tb_status (status_name) VALUES (?)";

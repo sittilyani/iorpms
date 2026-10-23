@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 require_once '../includes/config.php';
 
@@ -22,7 +22,7 @@ $stmt->close();
 $clinician_name = $loggedInUser['full_name'];
 $first_name = $loggedInUser['first_name'];
 $last_name = $loggedInUser['last_name'];
-$clinician_signature = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
+$clinician_signature = strtoupper((string)(substr($first_name, 0, 1) . substr($last_name, 0, 1)));
 
 // Fetch facility details
 $queryFacilitySettings = "SELECT facilityname, mflcode, countyname, subcountyname, facilityincharge, facilityphone FROM facility_settings LIMIT 1";
@@ -30,12 +30,12 @@ $resultFacilitySettings = $conn->query($queryFacilitySettings);
 $facilityName = '';
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
-    $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
-    $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
-    $subcountyName = htmlspecialchars($rowFacilitySettings['subcountyname']);
+    $facilityName = htmlspecialchars((string)($rowFacilitySettings['facilityname']));
+    $countyName = htmlspecialchars((string)($rowFacilitySettings['countyname']));
+    $subcountyName = htmlspecialchars((string)($rowFacilitySettings['subcountyname']));
     $mflCode = $rowFacilitySettings['mflcode'];
-    $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
-    $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
+    $facilityIncharge = htmlspecialchars((string)($rowFacilitySettings['facilityincharge']));
+    $facilityPhone = htmlspecialchars((string)($rowFacilitySettings['facilityphone']));
 }
 
 // Fetch clinicians and counselors from tblusers
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group {display: flex; align-items: center; margin-bottom: 20px;}
         .form-group label {width: 250px; font-weight: bold; color: #2c3e50;}
         .form-group input, .form-group select, .form-group textarea {width: 350px; padding: 10px; border: 1px solid #dcdcdc; border-radius: 5px; font-size: 14px; transition: border-color 0.3s;}
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {border-color: #3498db; outline: none;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {border-color: #2D008A; outline: none;}
         .checkbox-group {margin: 20px 0;}
         .checkbox-group label {display: block; margin-bottom: 12px; color: #34495e;}
         .checkbox-group input[type="checkbox"] {margin-right: 10px;}
@@ -170,10 +170,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .radio-group input[type="radio"] {margin-right: 10px;}
         .signature-table {width: 100%; border-collapse: collapse; margin-top: 20px;}
         .signature-table th, .signature-table td {border: 1px solid #dcdcdc; padding: 12px; text-align: left; font-size: 14px;}
-        .signature-table th {background-color: #3498db; color: #fff;}
+        .signature-table th {background-color: #2D008A; color: #fff;}
         .signature-table td {background-color: #f9f9f9;}
-        .submit-button {display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;}
-        .submit-button:hover {background-color: #2980b9;}
+        .submit-button {display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #2D008A; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;}
+        .submit-button:hover {background-color: #1d0059;}
         .readonly-input {cursor: not-allowed; background: #FFCCFF;}
         .alert {padding: 15px; margin-bottom: 20px; border-radius: 5px;}
         .alert-success {background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724;}
@@ -203,15 +203,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label for="client_name">Name of Client:</label>
-                <input type="text" id="client_name" name="client_name" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars($client['clientName']) : ''; ?>" required>
+                <input type="text" id="client_name" name="client_name" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars((string)($client['clientName'])) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="mat_id">MAT ID No.:</label>
-                <input type="text" id="mat_id" name="mat_id" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars($client['mat_id']) : ''; ?>" required>
+                <input type="text" id="mat_id" name="mat_id" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars((string)($client['mat_id'])) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="enroll_date">Date Enrolled:</label>
-                <input type="date" id="enroll_date" name="enroll_date" class='readonly-input' readonly value="<?php echo ($client && !empty($client['reg_date'])) ? htmlspecialchars($client['reg_date']) : ''; ?>" required>
+                <input type="date" id="enroll_date" name="enroll_date" class='readonly-input' readonly value="<?php echo ($client && !empty($client['reg_date'])) ? htmlspecialchars((string)($client['reg_date'])) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="discontinue_date">Date Commenced on Involuntary Discontinuation:</label>
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <tr>
                     <td>MAT Clinician</td>
                     <td>
-                        <input type="text" name="clinician_name" class="readonly-input" readonly value="<?php echo htmlspecialchars($clinician_name); ?>" required>
+                        <input type="text" name="clinician_name" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($clinician_name)); ?>" required>
                     </td>
                     <td>
                         <input type="text" name="clinician_org" class='readonly-input' readonly value="<?php echo $facilityName; ?>" required>
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <select name="counselor_name" required>
                             <option value="">Select Counselor</option>
                             <?php foreach ($clinicians as $clinician): ?>
-                                <option value="<?php echo htmlspecialchars($clinician); ?>"><?php echo htmlspecialchars($clinician); ?></option>
+                                <option value="<?php echo htmlspecialchars((string)($clinician)); ?>"><?php echo htmlspecialchars((string)($clinician)); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>
@@ -286,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <select name="cso_name" required>
                             <option value="">Select CSO Clinician</option>
                             <?php foreach ($clinicians as $clinician): ?>
-                                <option value="<?php echo htmlspecialchars($clinician); ?>"><?php echo htmlspecialchars($clinician); ?></option>
+                                <option value="<?php echo htmlspecialchars((string)($clinician)); ?>"><?php echo htmlspecialchars((string)($clinician)); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>

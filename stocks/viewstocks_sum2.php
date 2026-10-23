@@ -52,7 +52,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
             h1 { text-align: center; color: #333; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             th, td { border: 1px solid #333; padding: 8px; text-align: left; }
-            th { background-color: #667eea; color: white; }
+            th { background-color: #AC80EE; color: white; }
             .totals { margin-top: 20px; }
             .header-img { text-align: center; margin-bottom: 20px; }
         </style>
@@ -73,9 +73,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
     foreach ($stocks as $stock) {
         $html .= '
             <tr>
-                <td>' . htmlspecialchars($stock['id']) . '</td>
-                <td>' . htmlspecialchars($stock['productname']) . '</td>
-                <td>' . htmlspecialchars($stock['total_stockqty']) . '</td>
+                <td>' . htmlspecialchars((string)($stock['id'])) . '</td>
+                <td>' . htmlspecialchars((string)($stock['productname'])) . '</td>
+                <td>' . htmlspecialchars((string)($stock['total_stockqty'])) . '</td>
             </tr>';
     }
 
@@ -99,7 +99,7 @@ if (isset($_POST['export_excel'])) {
 
     echo "Product ID\tProduct Name\tStock on Hand\n";
     foreach ($stocks as $stock) {
-        echo htmlspecialchars($stock['id']) . "\t" . htmlspecialchars($stock['productname']) . "\t" . htmlspecialchars($stock['total_stockqty']) . "\n";
+        echo htmlspecialchars((string)($stock['id'])) . "\t" . htmlspecialchars((string)($stock['productname'])) . "\t" . htmlspecialchars((string)($stock['total_stockqty'])) . "\n";
     }
     exit;
 }
@@ -110,15 +110,15 @@ if (isset($_POST['export_excel'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #2D008A;
+            --secondary-color: #1d0059;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
             --warning-color: #f39c12;
@@ -139,7 +139,7 @@ if (isset($_POST['export_excel'])) {
         }
 
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             border-radius: 15px;
@@ -207,7 +207,7 @@ if (isset($_POST['export_excel'])) {
         }
 
         .add-product-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 12px 25px;
@@ -249,7 +249,7 @@ if (isset($_POST['export_excel'])) {
         }
 
         thead {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #AC80EE, #764ba2);
             color: white;
         }
 
@@ -423,12 +423,12 @@ if (isset($_POST['export_excel'])) {
                 <tbody id="stocks-table">
                     <?php foreach ($stocks as $stock): ?>
                         <tr class="table-row">
-                            <td><?php echo htmlspecialchars($stock['id']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['productname']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['stockBalance']); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['id'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['productname'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['stockBalance'])); ?></td>
                             <td class="action-buttons">
-                                <a href="editstock.php?productname=<?php echo urlencode($stock['productname']); ?>" class="btn btn-update"><i class="fas fa-edit"></i> Edit</a>
-                                <a href="view_transactions.php?productname=<?php echo urlencode($stock['productname']); ?>" class="btn btn-view"><i class="fas fa-eye"></i> View Transactions</a>
+                                <a href="editstock.php?productname=<?php echo urlencode((string)($stock['productname'])); ?>" class="btn btn-update"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="view_transactions.php?productname=<?php echo urlencode((string)($stock['productname'])); ?>" class="btn btn-view"><i class="fas fa-eye"></i> View Transactions</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

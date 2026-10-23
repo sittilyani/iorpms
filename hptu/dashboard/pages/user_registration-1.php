@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $_SESSION['error_message'] = "Invalid CSRF token.";
     } else {
-        $username      = trim($_POST['username'] ?? '');
-        $first_name    = trim($_POST['first_name'] ?? '');
-        $last_name     = trim($_POST['last_name'] ?? '');
-        $email         = trim($_POST['email'] ?? '');
+        $username      = trim((string)($_POST['username'] ?? ''));
+        $first_name    = trim((string)($_POST['first_name'] ?? ''));
+        $last_name     = trim((string)($_POST['last_name'] ?? ''));
+        $email         = trim((string)($_POST['email'] ?? ''));
         $gender        = $_POST['gendername'] ?? '';
-        $mobile        = trim($_POST['mobile'] ?? '');
+        $mobile        = trim((string)($_POST['mobile'] ?? ''));
         $userrole      = $_POST['userrole'] ?? '';
         $cadre         = $_POST['cadre'] ?? '';
         $department    = $_POST['department'] ?? '';
@@ -138,7 +138,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
     $full_name = preg_replace('/[^a-zA-Z0-9]/', '_', $first_name . '_' . $last_name);
     $timestamp = date('Ymd_His');
     $extension = $extension_map[$mime_type] ?? 'jpg';
-    return strtolower($full_name . '_' . $timestamp . '.' . $extension);
+    return strtolower((string)($full_name . '_' . $timestamp . '.' . $extension));
 }
 ?>
 
@@ -196,7 +196,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
             <?php if ($created_by_name): ?>
                 <div class="creator-badge">
                     <i class="fas fa-user-shield"></i>
-                    <span>Creating as: <strong><?= htmlspecialchars($created_by_name) ?></strong></span>
+                    <span>Creating as: <strong><?= htmlspecialchars((string)($created_by_name)) ?></strong></span>
                 </div>
             <?php endif; ?>
         </div>
@@ -205,7 +205,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
             <?php if (isset($_SESSION['error_message'])): ?>
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <span><?= htmlspecialchars($_SESSION['error_message']) ?></span>
+                    <span><?= htmlspecialchars((string)($_SESSION['error_message'])) ?></span>
                 </div>
                 <?php unset($_SESSION['error_message']); ?>
             <?php endif; ?>
@@ -220,7 +220,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
             <?php endif; ?>
 
             <form method="post" action="" enctype="multipart/form-data">
-                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string)($_SESSION['csrf_token'])) ?>">
 
                 <!-- Personal Information -->
                 <div class="form-section">
@@ -253,7 +253,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT gendername FROM gender ORDER BY gendername");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['gendername']) . "'>" . htmlspecialchars($row['gendername']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['gendername'])) . "'>" . htmlspecialchars((string)($row['gendername'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -287,7 +287,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT role FROM userroles ORDER BY role");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['role']) . "'>" . htmlspecialchars($row['role']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['role'])) . "'>" . htmlspecialchars((string)($row['role'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -299,7 +299,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT cadrename FROM cadres ORDER BY cadrename");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['cadrename']) . "'>" . htmlspecialchars($row['cadrename']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['cadrename'])) . "'>" . htmlspecialchars((string)($row['cadrename'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -311,7 +311,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT departmentname FROM departments ORDER BY departmentname");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['departmentname']) . "'>" . htmlspecialchars($row['departmentname']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['departmentname'])) . "'>" . htmlspecialchars((string)($row['departmentname'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -325,7 +325,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT positionname FROM positions ORDER BY positionname");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['positionname']) . "'>" . htmlspecialchars($row['positionname']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['positionname'])) . "'>" . htmlspecialchars((string)($row['positionname'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -337,7 +337,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT full_name FROM tblusers WHERE full_name IS NOT NULL AND full_name != '' AND (userrole LIKE '%County%' OR userrole = 'Admin') ORDER BY full_name");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['full_name']) . "'>" . htmlspecialchars($row['full_name']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['full_name'])) . "'>" . htmlspecialchars((string)($row['full_name'])) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -358,7 +358,7 @@ function generateFileName($first_name, $last_name, $mime_type) {
                                 <?php
                                 $result = $conn->query("SELECT facilityname FROM facilities ORDER BY facilityname");
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['facilityname']) . "'>" . htmlspecialchars($row['facilityname']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['facilityname'])) . "'>" . htmlspecialchars((string)($row['facilityname'])) . "</option>";
                                 }
                                 ?>
                             </select>

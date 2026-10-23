@@ -30,7 +30,7 @@ $mat_id = $referral['mat_id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Referral - <?php echo htmlspecialchars($referral['mat_id']); ?></title>
+    <title>View Referral - <?php echo htmlspecialchars((string)($referral['mat_id'])); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <style>
         .container {
@@ -231,38 +231,38 @@ $mat_id = $referral['mat_id'];
         <div class="detail-group">
             <div class="detail-row">
                 <span class="detail-label">Referral ID:</span>
-                <span class="detail-value mat-id-value"><?php echo htmlspecialchars($referral['referral_id']); ?></span>
+                <span class="detail-value mat-id-value"><?php echo htmlspecialchars((string)($referral['referral_id'])); ?></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">MAT ID:</span>
-                <span class="detail-value mat-id-value"><?php echo htmlspecialchars($referral['mat_id']); ?></span>
+                <span class="detail-value mat-id-value"><?php echo htmlspecialchars((string)($referral['mat_id'])); ?></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Client Name:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['clientName']); ?></span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['clientName'])); ?></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Age:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['age']); ?> years</span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['age'])); ?> years</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Sex:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['sex']); ?></span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['sex'])); ?></span>
             </div>
         </div>
 
         <div class="detail-group">
             <div class="detail-row">
                 <span class="detail-label">Refer From:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['refer_from']); ?></span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['refer_from'])); ?></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Refer To:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['refer_to']); ?></span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['refer_to'])); ?></span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Referring Officer:</span>
-                <span class="detail-value"><?php echo htmlspecialchars($referral['referral_name']); ?></span>
+                <span class="detail-value"><?php echo htmlspecialchars((string)($referral['referral_name'])); ?></span>
             </div>
         </div>
 
@@ -270,12 +270,12 @@ $mat_id = $referral['mat_id'];
             <div class="detail-row">
                 <span class="detail-label">Status:</span>
                 <span class="detail-value">
-                    <span class="status-value"><?php echo htmlspecialchars($referral['status']); ?></span>
+                    <span class="status-value"><?php echo htmlspecialchars((string)($referral['status'])); ?></span>
                 </span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Date:</span>
-                <span class="detail-value date-value"><?php echo htmlspecialchars($referral['referral_date']); ?></span>
+                <span class="detail-value date-value"><?php echo htmlspecialchars((string)($referral['referral_date'])); ?></span>
             </div>
         </div>
 
@@ -284,7 +284,7 @@ $mat_id = $referral['mat_id'];
                 <span class="detail-label">Referral Notes:</span>
                 <div class="detail-value">
                     <div class="notes-value">
-                        <?php echo nl2br(htmlspecialchars($referral['referral_notes'])); ?>
+                        <?php echo nl2br((string)(htmlspecialchars((string)($referral['referral_notes'])))); ?>
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@ $mat_id = $referral['mat_id'];
         <a href="referral_dashboard.php" class="btn-custom btn-primary-custom">
             ← Back to Dashboard
         </a>
-        <a href="edit_referral_pending.php?referral_id=<?php echo urlencode($referral_id); ?>" class="btn-custom btn-secondary-custom">
+        <a href="edit_referral_pending.php?referral_id=<?php echo urlencode((string)($referral_id)); ?>" class="btn-custom btn-secondary-custom">
             Edit Referral →
         </a>
     </div>

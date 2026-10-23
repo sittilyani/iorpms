@@ -21,7 +21,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 
 // Demo/evaluation accounts get full read access to explore the system, but
 // cannot delete users or reset another user's password.
-$isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
+$isDemoUser = strtolower((string)($_SESSION['userrole'] ?? '')) === 'demo';
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +36,8 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
 
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #2D008A;
+            --secondary-color: #1d0059;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
             --warning-color: #f39c12;
@@ -78,7 +78,7 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
         }
 
         thead {
-            background: linear-gradient(135deg, #1a2a6c, #2b5876);;
+            background: linear-gradient(135deg, #2D008A, #1d0059);;
             color: white;
         }
 
@@ -101,7 +101,7 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
             background-color: rgba(52, 152, 219, 0.05);
         }
         h4{
-            color: linear-gradient(135deg, #1a2a6c, #2b5876);
+            color: linear-gradient(135deg, #2D008A, #1d0059);
         }
 
         .btn {
@@ -236,15 +236,20 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
 
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success" role="alert">
-                <?php echo htmlspecialchars($_GET['success']); ?>
+                <?php echo htmlspecialchars((string)($_GET['success'])); ?>
             </div>
         <?php endif; ?>
         <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger" role="alert">
-                <?php echo htmlspecialchars($_GET['error']); ?>
+                <?php echo htmlspecialchars((string)($_GET['error'])); ?>
             </div>
         <?php endif; ?>
-        <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+        <?php if (isset($_GET['info'])): ?>
+            <div class="alert alert-info" role="alert">
+                <?php echo htmlspecialchars((string)($_GET['info'])); ?>
+            </div>
+        <?php endif; ?>
+        <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -282,16 +287,16 @@ $isDemoUser = strtolower($_SESSION['userrole'] ?? '') === 'demo';
             <tbody>
                 <?php foreach ($users as $user) : ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($user['user_id']); ?></td>
-                        <td><?php echo htmlspecialchars($user['username']); ?></td>
-                        <td><?php echo htmlspecialchars($user['first_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['last_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['full_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['email']); ?></td>
-                        <td><?php echo htmlspecialchars($user['gender']); ?></td>
-                        <td><?php echo htmlspecialchars($user['mobile']); ?></td>
-                        <td><?php echo htmlspecialchars($user['userrole']); ?></td>
-                        <td><?php echo date('M d, Y', strtotime($user['date_created'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['user_id'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['username'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['first_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['last_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['full_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['email'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['gender'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['mobile'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['userrole'])); ?></td>
+                        <td><?php echo date('M d, Y', strtotime((string)($user['date_created']))); ?></td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-update" onclick="location.href='../public/update_user.php?id=<?php echo $user['user_id']; ?>'">

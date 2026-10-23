@@ -56,7 +56,7 @@ try {
     <h2 class="mb-4">Client Transfer Forms Documentation</h2>
 
     <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars((string)($error)); ?></div>
     <?php endif; ?>
 
     <div class="card">
@@ -90,7 +90,7 @@ try {
                                 $pdf_filename = $form['pdf_filename'] ?? '';
                                 // Fallback/Cleaning Logic (kept for robustness)
                                 if (empty($pdf_filename) && !empty($form['mat_id']) && !empty($form['created_at'])) {
-                                    $date_part = date('Y-m-d', strtotime($form['created_at']));
+                                    $date_part = date('Y-m-d', strtotime((string)($form['created_at'])));
                                     $pdf_filename = $form['mat_id'] . '_' . $date_part . '.pdf';
                                 } else {
                                      // Ensure the .pdf extension is added if the column is just the base name
@@ -104,23 +104,23 @@ try {
                             ?>
                                 <tr>
                                     <td><?= $index + 1; ?></td>
-                                    <td><?= htmlspecialchars($form['facilityname']); ?></td>
-                                    <td><?= htmlspecialchars($form['clientName']); ?></td>
-                                    <td><?= htmlspecialchars($form['mat_id']); ?></td>
-                                    <td><?= htmlspecialchars($form['type_of_movement']); ?></td>
-                                    <td><?= htmlspecialchars($form['from_site']); ?></td>
-                                    <td><?= htmlspecialchars($form['to_site']); ?></td>
-                                    <td><?= htmlspecialchars($form['referral_date']); ?></td>
-                                    <td><?= htmlspecialchars(date('Y-m-d H:i', strtotime($form['created_at']))); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['facilityname'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['clientName'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['mat_id'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['type_of_movement'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['from_site'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['to_site'])); ?></td>
+                                    <td><?= htmlspecialchars((string)($form['referral_date'])); ?></td>
+                                    <td><?= htmlspecialchars((string)(date('Y-m-d H:i', strtotime((string)($form['created_at']))))); ?></td>
                                     <td class="action-btns">
                                         <?php if (!empty($pdf_filename)): ?>
-                                            <a href="<?= $file_path_base . urlencode($pdf_filename); ?>"
+                                            <a href="<?= $file_path_base . urlencode((string)($pdf_filename)); ?>"
                                                target="_blank"
                                                class="btn btn-sm btn-info"
                                                title="View PDF">
                                                 <i class="fas fa-eye"></i> View
                                             </a>
-                                            <a href="download_handler.php?file=<?= urlencode($pdf_filename); ?>"
+                                            <a href="download_handler.php?file=<?= urlencode((string)($pdf_filename)); ?>"
                                                class="btn btn-sm btn-success"
                                                title="Download PDF">
                                                 <i class="fas fa-download"></i> Download

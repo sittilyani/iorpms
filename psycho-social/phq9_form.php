@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 // NOTE: Ensure your config.php path is correct relative to this file
 include "../includes/config.php";
@@ -33,7 +33,7 @@ if ($p_id) {
 // 2. If p_id is not set or failed to fetch, try fetching by mat_id
 else if ($mat_id) {
     // Sanitize mat_id for use in prepared statement
-    $mat_id_sanitized = htmlspecialchars($mat_id);
+    $mat_id_sanitized = htmlspecialchars((string)($mat_id));
 
     $query = "SELECT * FROM patients WHERE mat_id = ?";
     $stmt = $conn->prepare($query);
@@ -50,7 +50,7 @@ $patient_p_id = isset($currentSettings['p_id']) ? $currentSettings['p_id'] : nul
 // Handle case where patient data couldn't be found
 if (!$currentSettings && ($p_id || $mat_id)) {
     $message = "Error: Patient not found.";
-    header("Location: search_phq9.php?message=" . urlencode($message));
+    header("Location: search_phq9.php?message=" . urlencode((string)($message)));
     exit();
 }
 ?>
@@ -228,9 +228,9 @@ if (!$currentSettings && ($p_id || $mat_id)) {
 
         <h2>General Information</h2>
         <form action="process_phq9.php" method="POST">
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($patient_p_id); ?>">
-            <input type="hidden" name="therapist_id" value="<?php echo htmlspecialchars($loggedInUserId); ?>">
-            <input type="hidden" name="therapist_name_submit" value="<?php echo htmlspecialchars($therapists_name); ?>">
+            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($patient_p_id)); ?>">
+            <input type="hidden" name="therapist_id" value="<?php echo htmlspecialchars((string)($loggedInUserId)); ?>">
+            <input type="hidden" name="therapist_name_submit" value="<?php echo htmlspecialchars((string)($therapists_name)); ?>">
 
             <div class="social-demographic-grid">
                 <div class="section-column">
@@ -242,28 +242,28 @@ if (!$currentSettings && ($p_id || $mat_id)) {
                         </div>
                         <div class="form-group">
                             <label for="clientName">Client Name</label>
-                            <input type="text" name="clientName" id="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>">
+                            <input type="text" name="clientName" id="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="mat_id">MAT ID</label>
-                            <input type="text" name="mat_id" id="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>">
+                            <input type="text" name="mat_id" id="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="dob">Date of Birth</label>
-                            <input type="date" name="dob" id="dob" class="readonly-input" readonly value="<?php echo isset($currentSettings['dob']) ? htmlspecialchars($currentSettings['dob']) : ''; ?>">
+                            <input type="date" name="dob" id="dob" class="readonly-input" readonly value="<?php echo isset($currentSettings['dob']) ? htmlspecialchars((string)($currentSettings['dob'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="age">Age</label>
-                            <input type="text" name="age" id="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars($currentSettings['age']) : ''; ?>">
+                            <input type="text" name="age" id="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars((string)($currentSettings['age'])) : ''; ?>">
                         </div>
 
                         <div class="form-group">
                             <label for="occupation">Occupation</label>
-                            <input type="text" name="occupation" value="<?php echo isset($currentSettings['occupation']) ? htmlspecialchars($currentSettings['occupation']) : ''; ?>">
+                            <input type="text" name="occupation" value="<?php echo isset($currentSettings['occupation']) ? htmlspecialchars((string)($currentSettings['occupation'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="sex">Gender</label>
-                            <input type="text" name="sex" id="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>">
+                            <input type="text" name="sex" id="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars((string)($currentSettings['sex'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="kp_type">KP Type</label>
@@ -289,11 +289,11 @@ if (!$currentSettings && ($p_id || $mat_id)) {
 
                         <div class="form-group">
                             <label for="kp_hotspot">KP Hotspot</label>
-                            <input type="text" name="kp_hotspot" value="<?php echo isset($currentSettings['kp_hotspot']) ? htmlspecialchars($currentSettings['kp_hotspot']) : ''; ?>">
+                            <input type="text" name="kp_hotspot" value="<?php echo isset($currentSettings['kp_hotspot']) ? htmlspecialchars((string)($currentSettings['kp_hotspot'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="contact_phone">Contact</label>
-                            <input type="text" name="contact_phone" value="<?php echo isset($currentSettings['contact_phone']) ? htmlspecialchars($currentSettings['contact_phone']) : ''; ?>">
+                            <input type="text" name="contact_phone" value="<?php echo isset($currentSettings['contact_phone']) ? htmlspecialchars((string)($currentSettings['contact_phone'])) : ''; ?>">
                         </div>
 
                     </div>

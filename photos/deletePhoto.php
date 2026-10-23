@@ -51,6 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['p_id'])) {
 $conn->close();
 
 // Redirect back to read.php with message
-header("Location: client_search.php?message=" . urlencode($message) . "&status=" . $status);
+header("Location: client_search.php?message=" . urlencode((string)($message)) . "&status=" . $status);
 exit();
 ?>

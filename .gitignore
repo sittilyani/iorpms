@@ -18,3 +18,35 @@ includes/config-iorpms.php
 # Production secrets kept outside public_html - never commit
 config-easyflow.php
 **/config-easyflow.php
+includes/mail_debug.log
+
+# Patient-data database dumps and spreadsheets: never pushed to GitHub, never sent to other clinics.
+# Only the blank schema (blankDB/), migrations and the small schema-fix scripts below are tracked.
+*.sql
+!blankDB/*.sql
+!tableupdates/*.sql
+!triggers/*.sql
+!updates/**/*.sql
+!sql_queries/add_pharmacy_indexes.sql
+!sql_queries/dose_schedules.sql
+!sql_queries/foreignKeys.sql
+!sql_queries/indexKeys.sql
+!sql_queries/missed_doses.sql
+!sql_queries/run_1_pump_calibration.sql
+!sql_queries/run_2_dose_schedules.sql
+!sql_queries/run_3_triggers.sql
+!sql_queries/triggers.sql
+*.xls
+*.csv
+/reports/*.xlsx
+/countsLaboratory/*.xlsx
+includes/config-*.php
+!includes/config-easyflow.example.php
+!includes/config-iorpms.example.php
+
+# Google Drive secrets must never be committed
+**/credentials.json
+**/token.json
+
+# KHIS credentials
+config/khis.php

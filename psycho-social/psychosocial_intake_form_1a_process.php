@@ -7,16 +7,16 @@ $conn->set_charset("utf8mb4");
 // Function to sanitize input data
 function sanitize_input($data) {
     if ($data === null) return null;
-    $data = trim($data);
+    $data = trim((string)($data));
     $data = stripslashes($data);
-    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    $data = htmlspecialchars((string)($data), ENT_QUOTES, 'UTF-8');
     return $data;
 }
 
 // Function to generate MAT ID
 function generate_mat_id($mat_id, $visit_type) {
     $timestamp = time();
-    $visit_code = (strtolower($visit_type) == 'initial') ? 'INIT' : 'FUP';
+    $visit_code = (strtolower((string)($visit_type)) == 'initial') ? 'INIT' : 'FUP';
     return "MAT_" . $mat_id . "_" . $visit_code . "_" . $timestamp;
 }
 
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "Child", "Peer educator/Outreach worker", "Other"
         ];
         foreach ($support_relationships as $relationship) {
-            $rel_key = strtolower(str_replace(['/', ' '], ['_', '_'], $relationship));
+            $rel_key = strtolower((string)(str_replace(['/', ' '], ['_', '_'], $relationship)));
             $support_data[$relationship] = [
                 'cash' => isset($_POST["support_cash_$rel_key"]) ? 1 : 0,
                 'food' => isset($_POST["support_food_$rel_key"]) ? 1 : 0,
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "Assault", "Rape", "Murder", "Sex work", "Fraud/forgery"
         ];
         foreach ($legal_cases as $case) {
-            $case_key = strtolower(str_replace(['/', ' '], ['_', '_'], $case));
+            $case_key = strtolower((string)(str_replace(['/', ' '], ['_', '_'], $case)));
             $legal_cases_data[$case] = [
                 'committed' => isset($_POST["case_committed_$case_key"]) ? 1 : 0,
                 'arrested' => isset($_POST["case_arrested_$case_key"]) ? 1 : 0

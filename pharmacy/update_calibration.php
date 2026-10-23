@@ -34,8 +34,8 @@ $pump_id       = intval($_POST['pump_id'] ?? 0);
 $concentration = floatval($_POST['concentration']   ?? 5.00);
 $temperature   = floatval($_POST['temperature']     ?? 20.0);
 $density       = floatval($_POST['density']         ?? 1.02);
-$tube_code     = trim($_POST['tube_type_code']      ?? '');
-$notes         = trim($_POST['notes']               ?? '');
+$tube_code     = trim((string)($_POST['tube_type_code']      ?? ''));
+$notes         = trim((string)($_POST['notes']               ?? ''));
 $calibrated_by = $_SESSION['username'] ?? ($_SESSION['user_name'] ?? 'Unknown User');
 $target_ml     = 10.0;   // Fixed calibration target volume
 

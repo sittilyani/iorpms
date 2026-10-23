@@ -93,7 +93,7 @@ $page_title = $page_title ?? 'HPTU LMIS';
     <link rel="icon" type="image/ico" sizes="32x32" href="../assets/favicons/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
     <link rel="manifest" href="../assets/favicons/site.webmanifest">
-    <title><?= htmlspecialchars($page_title) ?></title>
+    <title><?= htmlspecialchars((string)($page_title)) ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css">
     <style>
@@ -405,7 +405,7 @@ $page_title = $page_title ?? 'HPTU LMIS';
                 </div>
 
                 <div class="location-display" id="currentLocation">
-                    <span class="location-badge"><?= htmlspecialchars($location) ?></span>
+                    <span class="location-badge"><?= htmlspecialchars((string)($location)) ?></span>
                 </div>
             </div>
 
@@ -450,13 +450,13 @@ $page_title = $page_title ?? 'HPTU LMIS';
                             <?php if (!empty($notifications)): ?>
                                 <?php foreach ($notifications as $notification): ?>
                                     <div class="notification-item <?= empty($notification['is_read']) ? 'unread' : '' ?>"
-                                         onclick="openNotification('<?= htmlspecialchars($notification['link'], ENT_QUOTES) ?>', <?= (int)$notification['id'] ?>)">
+                                         onclick="openNotification('<?= htmlspecialchars((string)($notification['link']), ENT_QUOTES) ?>', <?= (int)$notification['id'] ?>)">
                                         <div class="notification-title">
-                                            <span><?= htmlspecialchars($notification['title']) ?></span>
-                                            <span class="notification-type"><?= htmlspecialchars($notification['notification_type']) ?></span>
+                                            <span><?= htmlspecialchars((string)($notification['title'])) ?></span>
+                                            <span class="notification-type"><?= htmlspecialchars((string)($notification['notification_type'])) ?></span>
                                         </div>
-                                        <div class="notification-message"><?= htmlspecialchars($notification['message']) ?></div>
-                                        <div class="notification-time"><?= htmlspecialchars($notification['created_at']) ?></div>
+                                        <div class="notification-message"><?= htmlspecialchars((string)($notification['message'])) ?></div>
+                                        <div class="notification-time"><?= htmlspecialchars((string)($notification['created_at'])) ?></div>
                                     </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -470,10 +470,10 @@ $page_title = $page_title ?? 'HPTU LMIS';
                 </div><!-- .notifications -->
 
                 <!-- User summary -->
-                <div class="user-info" title="<?= htmlspecialchars($full_name) ?>">
+                <div class="user-info" title="<?= htmlspecialchars((string)($full_name)) ?>">
                     <div class="user-text">
-                        <div class="user-name"><?= htmlspecialchars($full_name) ?></div>
-                        <div class="user-role"><?= htmlspecialchars($userrole) ?></div>
+                        <div class="user-name"><?= htmlspecialchars((string)($full_name)) ?></div>
+                        <div class="user-role"><?= htmlspecialchars((string)($userrole)) ?></div>
                     </div>
 
                     <?php if(!empty($_SESSION['photo'])): ?>

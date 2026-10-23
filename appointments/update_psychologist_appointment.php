@@ -30,11 +30,11 @@ $errorMessage   = '';
 // Handle POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 
-    $psycho_social_tca_raw = trim($_POST['psycho_social_tca']);
-    $hcw_name            = trim($_POST['hcw_name']);
+    $psycho_social_tca_raw = trim((string)($_POST['psycho_social_tca']));
+    $hcw_name            = trim((string)($_POST['hcw_name']));
 
     // Normalize date (handles DATE or DATETIME)
-    $psycho_social_tca = date('Y-m-d', strtotime($psycho_social_tca_raw));
+    $psycho_social_tca = date('Y-m-d', strtotime((string)($psycho_social_tca_raw)));
 
     if (!$psycho_social_tca) {
         $errorMessage = 'Invalid p_id appointment date.';
@@ -78,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
     if ($user) {
-        $therapists_name = trim($user['first_name'] . ' ' . $user['last_name']);
+        $therapists_name = trim((string)($user['first_name'] . ' ' . $user['last_name']));
     }
     $stmt->close();
 }
@@ -100,7 +100,7 @@ $hcw_name        = $currentSettings['hcw_name'] ?? '';
     <h3 class="mb-4">Update Psychologist Appointment</h3>
 
     <?php if ($errorMessage): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($errorMessage) ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars((string)($errorMessage)) ?></div>
     <?php endif; ?>
 
     <form method="POST">
@@ -109,12 +109,12 @@ $hcw_name        = $currentSettings['hcw_name'] ?? '';
         <div class="mb-3">
             <label class="form-label">Next Appointment</label>
             <input type="date" class="form-control" name="psycho_social_tca"
-                   value="<?= htmlspecialchars(date('Y-m-d', strtotime($psycho_social_tca))) ?>" required>
+                   value="<?= htmlspecialchars((string)(date('Y-m-d', strtotime((string)($psycho_social_tca))))) ?>" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Service Provider Name</label>
-            <textarea class="form-control" name="hcw_name" rows="3"><?= htmlspecialchars($hcw_name) ?></textarea>
+            <textarea class="form-control" name="hcw_name" rows="3"><?= htmlspecialchars((string)($hcw_name)) ?></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Appointment</button>

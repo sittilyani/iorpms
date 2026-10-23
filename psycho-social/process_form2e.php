@@ -56,17 +56,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $error_message = "Error: Please answer all 19 questions on the form.";
-            header("Location: mat_cessation_form.php?message=" . urlencode($error_message));
+            header("Location: mat_cessation_form.php?message=" . urlencode((string)($error_message)));
             exit();
         }
     }
 
     // 4. Extract other form data
-    $name = htmlspecialchars($_POST['name'] ?? 'N/A');
-    $mat_id = htmlspecialchars($_POST['mat_id'] ?? 'N/A');
-    $age = htmlspecialchars($_POST['age'] ?? 'N/A');
-    $assessment_date = htmlspecialchars($_POST['assessment_date'] ?? date('Y-m-d'));
-    $clinician = htmlspecialchars($_POST['clinician'] ?? $_SESSION['full_name'] ?? 'N/A');
+    $name = htmlspecialchars((string)($_POST['name'] ?? 'N/A'));
+    $mat_id = htmlspecialchars((string)($_POST['mat_id'] ?? 'N/A'));
+    $age = htmlspecialchars((string)($_POST['age'] ?? 'N/A'));
+    $assessment_date = htmlspecialchars((string)($_POST['assessment_date'] ?? date('Y-m-d')));
+    $clinician = htmlspecialchars((string)($_POST['clinician'] ?? $_SESSION['full_name'] ?? 'N/A'));
     $total_questions = count($question_keys);
 
     // Calculate percentage
@@ -196,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .score-card.percentage {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            background: linear-gradient(135deg, #2D008A 0%, #1d0059 100%);
             color: white;
         }
 
@@ -383,7 +383,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="info-item">
                     <strong>Assessment Date:</strong>
-                    <span><?php echo date('F d, Y', strtotime($assessment_date)); ?></span>
+                    <span><?php echo date('F d, Y', strtotime((string)($assessment_date))); ?></span>
                 </div>
                 <div class="info-item">
                     <strong>Assessed By:</strong>
@@ -439,7 +439,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ?>
                     <tr>
                         <td><?php echo $question_num; ?></td>
-                        <td><?php echo htmlspecialchars($question_text); ?></td>
+                        <td><?php echo htmlspecialchars((string)($question_text)); ?></td>
                         <td class="<?php echo $response_class; ?>"><?php echo $response_text; ?></td>
                     </tr>
                     <?php

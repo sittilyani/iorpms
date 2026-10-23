@@ -31,8 +31,8 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #2D008A;
+            --secondary-color: #1d0059;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
             --warning-color: #f39c12;
@@ -252,14 +252,14 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
             <tbody>
                 <?php foreach ($users as $user) : ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($user['user_id']); ?></td>
-                        <td><?php echo htmlspecialchars($user['first_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['last_name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['email']); ?></td>
-                        <td><?php echo htmlspecialchars($user['gender']); ?></td>
-                        <td><?php echo htmlspecialchars($user['mobile']); ?></td>
-                        <td><?php echo htmlspecialchars($user['userrole']); ?></td>
-                        <td><?php echo date('M d, Y', strtotime($user['date_created'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['user_id'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['first_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['last_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['email'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['gender'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['mobile'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($user['userrole'])); ?></td>
+                        <td><?php echo date('M d, Y', strtotime((string)($user['date_created']))); ?></td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-update" onclick="location.href='../processors/update_user.php?id=<?php echo $user['user_id']; ?>'">

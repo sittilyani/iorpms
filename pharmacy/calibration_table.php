@@ -39,7 +39,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
         }
 
         .header {
-            background: linear-gradient(135deg, #2C3162 0%, #4B0082 100%);
+            background: linear-gradient(135deg, #2D008A 0%, #4B0082 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -99,7 +99,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
         .stat-card {
             flex: 1;
             min-width: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -140,7 +140,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
         }
 
         thead {
-            background: linear-gradient(135deg, #2C3162 0%, #4B0082 100%);
+            background: linear-gradient(135deg, #2D008A 0%, #4B0082 100%);
             color: white;
         }
 
@@ -181,7 +181,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
         .pump-badge {
             display: inline-block;
             padding: 6px 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
             border-radius: 20px;
             font-weight: 600;
@@ -269,11 +269,11 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
                 <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                     <i class="fa fa-calendar"></i>
                     <div class="stat-info">
-                        <h3><?php echo !empty($calibration_history) ? date('M d', strtotime($calibration_history[0]['calibrated_at'])) : 'N/A'; ?></h3>
+                        <h3><?php echo !empty($calibration_history) ? date('M d', strtotime((string)($calibration_history[0]['calibrated_at']))) : 'N/A'; ?></h3>
                         <p>Latest Calibration</p>
                     </div>
                 </div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="stat-card" style="background: linear-gradient(135deg, #FFC12E 0%, #00f2fe 100%);">
                     <i class="fa fa-forumbee"></i>
                     <div class="stat-info">
                         <h3><?php echo !empty($calibration_history) ? count(array_unique(array_column($calibration_history, 'pump_id'))) : 0; ?></h3>
@@ -302,7 +302,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
                         <tr>
                             <td>
                                 <span class="pump-badge">
-                                    <?php echo htmlspecialchars($history['pump_label']); ?>
+                                    <?php echo htmlspecialchars((string)($history['pump_label'])); ?>
                                 </span>
                             </td>
                             <td>
@@ -316,24 +316,24 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
                             <td>
                                 <span class="tubing-type">
                                     <i class="fas fa-circle-check"></i>
-                                    <?php echo htmlspecialchars(isset($history['tubing_type']) ? $history['tubing_type'] : 'system'); ?>
+                                    <?php echo htmlspecialchars((string)(isset($history['tubing_type']) ? $history['tubing_type'] : 'system')); ?>
                                 </span>
                             </td>
                             <td>
-                                <i class="fas fa-user-gear" style="color: #667eea; margin-right: 5px;"></i>
-                                <?php echo htmlspecialchars($history['calibrated_by']); ?>
+                                <i class="fas fa-user-gear" style="color: #AC80EE; margin-right: 5px;"></i>
+                                <?php echo htmlspecialchars((string)($history['calibrated_by'])); ?>
                             </td>
                             <td class="date-cell">
                                 <i class="far fa-calendar" style="margin-right: 5px;"></i>
-                                <?php echo date('M d, Y', strtotime($history['calibrated_at'])); ?>
+                                <?php echo date('M d, Y', strtotime((string)($history['calibrated_at']))); ?>
                                 <br>
                                 <small style="color: #adb5bd;">
                                     <i class="far fa-clock" style="margin-right: 3px;"></i>
-                                    <?php echo date('H:i', strtotime($history['calibrated_at'])); ?>
+                                    <?php echo date('H:i', strtotime((string)($history['calibrated_at']))); ?>
                                 </small>
                             </td>
-                            <td class="notes-cell" title="<?php echo htmlspecialchars($history['notes']); ?>">
-                                <?php echo htmlspecialchars($history['notes']); ?>
+                            <td class="notes-cell" title="<?php echo htmlspecialchars((string)($history['notes'])); ?>">
+                                <?php echo htmlspecialchars((string)($history['notes'])); ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

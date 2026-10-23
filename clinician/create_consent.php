@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include "../includes/config.php";
 
@@ -137,17 +137,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <div class="section-title">Client Information</div>
-                        <div class="data-pair"><span>Date:</span> ' . htmlspecialchars($visitDate_raw) . '</div>
-                        <div class="data-pair"><span>Name of Client:</span> ' . htmlspecialchars($client_name) . '</div>
-                        <div class="data-pair"><span>MAT ID:</span> ' . htmlspecialchars($mat_id) . '</div>
-                        <div class="data-pair"><span>Sex:</span> ' . htmlspecialchars($sex) . '</div>
-                        <div class="data-pair"><span>CSO:</span> ' . htmlspecialchars($cso) . '</div>
+                        <div class="data-pair"><span>Date:</span> ' . htmlspecialchars((string)($visitDate_raw)) . '</div>
+                        <div class="data-pair"><span>Name of Client:</span> ' . htmlspecialchars((string)($client_name)) . '</div>
+                        <div class="data-pair"><span>MAT ID:</span> ' . htmlspecialchars((string)($mat_id)) . '</div>
+                        <div class="data-pair"><span>Sex:</span> ' . htmlspecialchars((string)($sex)) . '</div>
+                        <div class="data-pair"><span>CSO:</span> ' . htmlspecialchars((string)($cso)) . '</div>
 
                         <div class="section-title">Client Declaration</div>
-                        <p>I <span class="signature-line">' . htmlspecialchars($client_name) . '</span> of telephone number <span class="signature-line">' . htmlspecialchars($declaration_phone) . '</span> and ID number <span class="signature-line">' . htmlspecialchars($national_id) . '</span></p>
-                        <p><span class="red-text">(where the client is under the age of 18 years, state the age of the patient)</span> Age: <span class="signature-line">' . htmlspecialchars($client_age) . '</span></p>
-                        <p>and accompanied by <span class="signature-line">' . htmlspecialchars($guardian_accompany) . '</span></p>
-                        <p>Guardian Name: <span class="signature-line">' . htmlspecialchars($guardian_name) . '</span>, Guardian ID: <span class="signature-line">' . htmlspecialchars($guardian_id) . '</span></p>
+                        <p>I <span class="signature-line">' . htmlspecialchars((string)($client_name)) . '</span> of telephone number <span class="signature-line">' . htmlspecialchars((string)($declaration_phone)) . '</span> and ID number <span class="signature-line">' . htmlspecialchars((string)($national_id)) . '</span></p>
+                        <p><span class="red-text">(where the client is under the age of 18 years, state the age of the patient)</span> Age: <span class="signature-line">' . htmlspecialchars((string)($client_age)) . '</span></p>
+                        <p>and accompanied by <span class="signature-line">' . htmlspecialchars((string)($guardian_accompany)) . '</span></p>
+                        <p>Guardian Name: <span class="signature-line">' . htmlspecialchars((string)($guardian_name)) . '</span>, Guardian ID: <span class="signature-line">' . htmlspecialchars((string)($guardian_id)) . '</span></p>
 
                         <div class="section-title">Consent Agreement</div>
                         <p class="blue-text" style="font-size: 11pt;">I do hereby willingly consent to the following:</p>
@@ -175,17 +175,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p>22. I understand that consenting to the above listed rules will apply to the mobile van. I will also be bound by all MAT clinic regulations.</p>
                         </div>
 
-                        <p style="margin-top: 15px;">I FREELY and VOLUNTARILY agree to undergo MAT at <span class="signature-line">' . htmlspecialchars($mat_facility) . '</span> or any other MAT outlet.</p>
+                        <p style="margin-top: 15px;">I FREELY and VOLUNTARILY agree to undergo MAT at <span class="signature-line">' . htmlspecialchars((string)($mat_facility)) . '</span> or any other MAT outlet.</p>
 
                         <div style="margin-top: 15px;">
-                            <span>Client\'s Signature or Left thumb print:</span> <span class="signature-line">' . htmlspecialchars($client_signature) . '</span>
+                            <span>Client\'s Signature or Left thumb print:</span> <span class="signature-line">' . htmlspecialchars((string)($client_signature)) . '</span>
                         </div>
 
                         <div class="section-title">Treatment Team</div>
                         <table>
                             <tr><th>Designation</th><th>Name</th><th>Organization</th><th>Signature</th><th>Date</th></tr>
-                            <tr><td>MAT Clinician</td><td>' . htmlspecialchars($clinician_name) . '</td><td>' . htmlspecialchars($clinician_org) . '</td><td>' . htmlspecialchars($clinician_signature) . '</td><td>' . htmlspecialchars($clinician_date_raw) . '</td></tr>
-                            <tr><td>MAT Counselor</td><td>' . htmlspecialchars($counselor_name) . '</td><td>' . htmlspecialchars($counselor_org) . '</td><td>' . htmlspecialchars($counselor_signature) . '</td><td>' . htmlspecialchars($counselor_date_raw) . '</td></tr>
+                            <tr><td>MAT Clinician</td><td>' . htmlspecialchars((string)($clinician_name)) . '</td><td>' . htmlspecialchars((string)($clinician_org)) . '</td><td>' . htmlspecialchars((string)($clinician_signature)) . '</td><td>' . htmlspecialchars((string)($clinician_date_raw)) . '</td></tr>
+                            <tr><td>MAT Counselor</td><td>' . htmlspecialchars((string)($counselor_name)) . '</td><td>' . htmlspecialchars((string)($counselor_org)) . '</td><td>' . htmlspecialchars((string)($counselor_signature)) . '</td><td>' . htmlspecialchars((string)($counselor_date_raw)) . '</td></tr>
                         </table>
                     </div>
                 </body>
@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Redirect after successful submission and PDF creation
-            header("Location: ../reports/view_consents.php?status=success&file=" . urlencode($pdf_filename));
+            header("Location: ../reports/view_consents.php?status=success&file=" . urlencode((string)($pdf_filename)));
             exit();
 
         } else {
@@ -303,17 +303,17 @@ if ($counselorResult) {
         .form-group { display: flex; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
         .form-group label { width: 250px; font-weight: bold; color: #2c3e50; margin-right: 15px; }
         .form-group input, .form-group select, .form-group textarea { width: 350px; padding: 10px; border: 1px solid #dcdcdc; border-radius: 5px; font-size: 14px; transition: border-color 0.3s; box-sizing: border-box; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #3498db; outline: none; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #2D008A; outline: none; }
         .form-groups { margin: 20px 0; }
         .form-groups p { margin: 12px 0; padding: 8px 0; }
         .form-groups input[type="text"] { padding: 6px 10px; border: 1px solid #dcdcdc; border-radius: 4px; margin: 0 5px; min-width: 150px; }
         .signature-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
         .signature-table th, .signature-table td { border: 1px solid #dcdcdc; padding: 12px; text-align: left; }
-        .signature-table th { background-color: #3498db; color: #fff; font-weight: bold; }
+        .signature-table th { background-color: #2D008A; color: #fff; font-weight: bold; }
         .signature-table td { background-color: #f9f9f9; }
         .signature-table select, .signature-table input { width: 100%; padding: 8px; border: 1px solid #dcdcdc; border-radius: 4px; box-sizing: border-box; }
-        .submit-button { display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s; }
-        .submit-button:hover { background-color: #2980b9; }
+        .submit-button { display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #2D008A; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s; }
+        .submit-button:hover { background-color: #1d0059; }
         .readonly-input { cursor: not-allowed; background-color: #FFCCFF; }
         .required-field::after { content: " *"; color: red; }
         .section-title { color: #2c3e50; font-size: 20px; margin: 25px 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid #ecf0f1; }
@@ -330,12 +330,12 @@ if ($counselorResult) {
     <div class="form-container">
         <?php if ($success_message): ?>
             <div style="padding: 10px; margin-bottom: 15px; border: 1px solid #d4edda; color: #155724; background-color: #d4edda; border-radius: 5px;">
-                <?= htmlspecialchars($success_message); ?>
+                <?= htmlspecialchars((string)($success_message)); ?>
             </div>
         <?php endif; ?>
         <?php if ($error_message): ?>
             <div style="padding: 10px; margin-bottom: 15px; border: 1px solid #f5c6cb; color: #721c24; background-color: #f8d7da; border-radius: 5px;">
-                <?= htmlspecialchars($error_message); ?>
+                <?= htmlspecialchars((string)($error_message)); ?>
             </div>
         <?php endif; ?>
 
@@ -350,7 +350,7 @@ if ($counselorResult) {
 
         <form method="POST">
             <?php if (isset($_GET['p_id'])): ?>
-                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($_GET['p_id']); ?>">
+                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($_GET['p_id'])); ?>">
             <?php endif; ?>
 
             <div class="section-title" style="color: blue; font-weight: bold; font-size: 18px;">Client Information</div>
@@ -363,40 +363,40 @@ if ($counselorResult) {
             <div class="form-group">
                 <label for="client_name" class="required-field">Name of Client:</label>
                 <input type="text" id="client_name" name="client_name" class="readonly-input" readonly
-                        value="<?php echo $client ? htmlspecialchars($client['clientName']) : ''; ?>" required>
+                        value="<?php echo $client ? htmlspecialchars((string)($client['clientName'])) : ''; ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="mat_id" class="required-field">MAT ID:</label>
                 <input type="text" id="mat_id" name="mat_id" class="readonly-input" readonly
-                        value="<?php echo $client ? htmlspecialchars($client['mat_id']) : ''; ?>" required>
+                        value="<?php echo $client ? htmlspecialchars((string)($client['mat_id'])) : ''; ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="sex" class="required-field">Sex:</label>
                 <input type="text" id="sex" name="sex" class="readonly-input" readonly
-                        value="<?php echo $client ? htmlspecialchars($client['sex']) : ''; ?>" required>
+                        value="<?php echo $client ? htmlspecialchars((string)($client['sex'])) : ''; ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="cso" >CSO:</label>
                 <input type="text" id="cso" name="cso"
-                        value="<?php echo htmlspecialchars($client['cso'] ?? ''); ?>">
+                        value="<?php echo htmlspecialchars((string)($client['cso'] ?? '')); ?>">
             </div>
 
             <div class="section-title" style="color: blue; font-weight: bold; font-size: 18px;">Client Declaration</div>
 
             <div class="form-groups">
                 <p>I <input type="text" name="declaration_name" class="readonly-input" readonly
-                             value="<?php echo $client ? htmlspecialchars($client['clientName']) : ''; ?>" required>
+                             value="<?php echo $client ? htmlspecialchars((string)($client['clientName'])) : ''; ?>" required>
                     &nbsp;&nbsp; of telephone number&nbsp;
-                    <input type="text" name="client_phone" value="<?php echo $client ? htmlspecialchars($client['client_phone']) : ''; ?>">
+                    <input type="text" name="client_phone" value="<?php echo $client ? htmlspecialchars((string)($client['client_phone'])) : ''; ?>">
                 </p>
 
                 <p>and ID number&nbsp; <input type="text" name="nat_id"></p>
 
                 <p><span class="red-text italic-text">(where the client is under the age of 18 years, state the age of the patient)</span>
-                    <input type="text" name="age" value="<?php echo $client ? htmlspecialchars($client['age']) : ''; ?>">
+                    <input type="text" name="age" value="<?php echo $client ? htmlspecialchars((string)($client['age'])) : ''; ?>">
                 </p>
 
                 <p>and accompanied by&nbsp;
@@ -446,14 +446,14 @@ if ($counselorResult) {
 
                 <p>I FREELY and VOLUNTARILY agree to undergo MAT at
                     <input type="text" name="facilityname"
-                            value="<?php echo htmlspecialchars($facilityname); ?>" required>
+                            value="<?php echo htmlspecialchars((string)($facilityname)); ?>" required>
                     or any other MAT outlet:
                 </p>
             </div>
 
             <div class="form-group">
                 <label for="thumb_print" class="required-field">Client's Signature or Left thumb print:</label>
-                <a href="../clinician/fingerprint_capture.php?mat_id=<?php echo htmlspecialchars($mat_id_for_fingerprint); ?>">Capture Fingerprint</a>
+                <a href="../clinician/fingerprint_capture.php?mat_id=<?php echo htmlspecialchars((string)($mat_id_for_fingerprint)); ?>">Capture Fingerprint</a>
                 <input type="text" name="client_signature" placeholder="Client signature/initials" required>
             </div>
 
@@ -476,13 +476,13 @@ if ($counselorResult) {
                             <select name="clinician_name" required>
                                 <option value="">Select Clinician</option>
                                 <?php foreach ($clinicians as $clinician): ?>
-                                    <option value="<?php echo htmlspecialchars($clinician); ?>">
-                                        <?php echo htmlspecialchars($clinician); ?>
+                                    <option value="<?php echo htmlspecialchars((string)($clinician)); ?>">
+                                        <?php echo htmlspecialchars((string)($clinician)); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="text" name="clinician_org" value="<?php echo htmlspecialchars($facilityname); ?>" required></td>
+                        <td><input type="text" name="clinician_org" value="<?php echo htmlspecialchars((string)($facilityname)); ?>" required></td>
                         <td><input type="text" name="clinician_signature" placeholder="Clinician's signature" required></td>
                         <td><input type="text" name="clinician_date" placeholder="DD/MM/YYYY" value="<?php echo date('d/m/Y'); ?>" required></td>
                     </tr>
@@ -492,13 +492,13 @@ if ($counselorResult) {
                             <select name="counselor_name" required>
                                 <option value="">Select Counselor</option>
                                 <?php foreach ($counselors as $counselor): ?>
-                                    <option value="<?php echo htmlspecialchars($counselor); ?>">
-                                        <?php echo htmlspecialchars($counselor); ?>
+                                    <option value="<?php echo htmlspecialchars((string)($counselor)); ?>">
+                                        <?php echo htmlspecialchars((string)($counselor)); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="text" name="counselor_org" value="<?php echo htmlspecialchars($facilityname); ?>" required></td>
+                        <td><input type="text" name="counselor_org" value="<?php echo htmlspecialchars((string)($facilityname)); ?>" required></td>
                         <td><input type="text" name="counselor_signature" placeholder="Counselor's signature" required></td>
                         <td><input type="text" name="counselor_date" placeholder="DD/MM/YYYY" value="<?php echo date('d/m/Y'); ?>" required></td>
                     </tr>

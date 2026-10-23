@@ -4,7 +4,7 @@ require_once('../includes/config.php');
 
 header('Content-Type: application/json');
 
-if (!isset($_GET['term']) || strlen($_GET['term']) < 2) {
+if (!isset($_GET['term']) || strlen((string)($_GET['term'])) < 2) {
         echo json_encode([]);
         exit;
 }

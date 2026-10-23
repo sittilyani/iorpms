@@ -248,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
         h2 {
             margin-left: 60px;
             margin-top: 10px;
-            color: #2C3162;
+            color: #2D008A;
         }
         .alert {
             padding: 15px;
@@ -277,7 +277,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             text-align: left;
         }
         .prescription-table th {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
         }
         .other-drug {
@@ -330,8 +330,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                         <select name="other_drugs[${drugIndex}][drugname]" class="form-control drug-input" required>
                             <option value="">Select Drug</option>
                             <?php foreach ($drugsOptions as $drug): ?>
-                                <option value="<?php echo htmlspecialchars($drug); ?>">
-                                    <?php echo htmlspecialchars($drug); ?>
+                                <option value="<?php echo htmlspecialchars((string)($drug)); ?>">
+                                    <?php echo htmlspecialchars((string)($drug)); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -341,8 +341,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                         <select name="other_drugs[${drugIndex}][routetype]" class="form-control route-input" required>
                             <option value="">Select Route</option>
                             <?php foreach ($routesOptions as $route): ?>
-                                <option value="<?php echo htmlspecialchars($route); ?>">
-                                    <?php echo htmlspecialchars($route); ?>
+                                <option value="<?php echo htmlspecialchars((string)($route)); ?>">
+                                    <?php echo htmlspecialchars((string)($route)); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -352,8 +352,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                         <select name="other_drugs[${drugIndex}][dosage]" class="form-control dosage-input" required>
                             <option value="">Select Dosage</option>
                             <?php foreach ($dosagesOptions as $dosage): ?>
-                                <option value="<?php echo htmlspecialchars($dosage); ?>">
-                                    <?php echo htmlspecialchars($dosage); ?>
+                                <option value="<?php echo htmlspecialchars((string)($dosage)); ?>">
+                                    <?php echo htmlspecialchars((string)($dosage)); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -368,8 +368,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                         <select name="other_drugs[${drugIndex}][duration]" class="form-control duration-input" required>
                             <option value="">Select Duration</option>
                             <?php foreach ($durationsOptions as $duration): ?>
-                                <option value="<?php echo htmlspecialchars($duration); ?>">
-                                    <?php echo htmlspecialchars($duration); ?>
+                                <option value="<?php echo htmlspecialchars((string)($duration)); ?>">
+                                    <?php echo htmlspecialchars((string)($duration)); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -398,7 +398,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                 <h4>Success:</h4>
                 <ul>
                     <?php foreach ($successMessages as $msg): ?>
-                        <li><?php echo htmlspecialchars($msg); ?></li>
+                        <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -408,7 +408,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                 <h4>Errors:</h4>
                 <ul>
                     <?php foreach ($errorMessages as $msg): ?>
-                        <li><?php echo htmlspecialchars($msg); ?></li>
+                        <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -430,13 +430,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                     </tr>
                     <?php foreach ($prescriptions as $prescription): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($prescription['drugName']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['dosage']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['routetype'] ?? 'N/A'); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['duration']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['durationUnit']); ?></td
-                            <td><?php echo htmlspecialchars($prescription['totalDose']); ?></td>
-                            <td><?php echo htmlspecialchars($prescription['date_created']); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['drugName'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['dosage'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['routetype'] ?? 'N/A')); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['duration'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['durationUnit'])); ?></td
+                            <td><?php echo htmlspecialchars((string)($prescription['totalDose'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($prescription['date_created'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
@@ -448,38 +448,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                 <div class="grid-container">
                     <div class="grid-item">
                         <label for="p_id">Patient Entry ID</label><br>
-                        <input type="text" name="userId" value="<?php echo htmlspecialchars($userId); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="userId" value="<?php echo htmlspecialchars((string)($userId)); ?>" class="readonly-input" readonly><br>
                         <label for="mat_id">MAT ID</label><br>
-                        <input type="text" name="mat_id" value="<?php echo htmlspecialchars($currentSettings['mat_id']); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="mat_id" value="<?php echo htmlspecialchars((string)($currentSettings['mat_id'])); ?>" class="readonly-input" readonly><br>
                         <label for="mat_number">MAT Number</label><br>
-                        <input type="text" name="mat_number" value="<?php echo htmlspecialchars($currentSettings['mat_number']); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="mat_number" value="<?php echo htmlspecialchars((string)($currentSettings['mat_number'])); ?>" class="readonly-input" readonly><br>
                         <label for="clientName">Client Name</label><br>
-                        <input type="text" name="clientName" value="<?php echo htmlspecialchars($currentSettings['clientName']); ?>" required><br>
+                        <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($currentSettings['clientName'])); ?>" required><br>
                     </div>
                     <div class="grid-item">
                         <label for="sname">Sur Name</label><br>
-                        <input type="text" name="sname" value="<?php echo htmlspecialchars($currentSettings['sname']); ?>"><br>
+                        <input type="text" name="sname" value="<?php echo htmlspecialchars((string)($currentSettings['sname'])); ?>"><br>
                         <label for="dob">Date of Birth</label><br>
-                        <input type="text" name="dob" value="<?php echo htmlspecialchars($currentSettings['dob']); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="dob" value="<?php echo htmlspecialchars((string)($currentSettings['dob'])); ?>" class="readonly-input" readonly><br>
                         <label for="sex">Sex</label><br>
-                        <input type="text" name="sex" value="<?php echo htmlspecialchars($currentSettings['sex']); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="sex" value="<?php echo htmlspecialchars((string)($currentSettings['sex'])); ?>" class="readonly-input" readonly><br>
                         <label for="p_address">Current Residence</label><br>
-                        <input type="text" name="p_address" value="<?php echo htmlspecialchars($currentSettings['p_address']); ?>" class="readonly-input"><br>
+                        <input type="text" name="p_address" value="<?php echo htmlspecialchars((string)($currentSettings['p_address'])); ?>" class="readonly-input"><br>
                     </div>
                     <div class="grid-item">
                         <label for="drugname">Drug</label><br>
-                        <input type="text" name="drugname" value="<?php echo htmlspecialchars($currentSettings['drugname'] ?? 'Methadone'); ?>" class="readonly-input" readonly><br>
+                        <input type="text" name="drugname" value="<?php echo htmlspecialchars((string)($currentSettings['drugname'] ?? 'Methadone')); ?>" class="readonly-input" readonly><br>
                         <label for="dosage">New Dosage</label><br>
-                        <input type="text" name="dosage" value="<?php echo htmlspecialchars($currentSettings['dosage']); ?>" required><br>
+                        <input type="text" name="dosage" value="<?php echo htmlspecialchars((string)($currentSettings['dosage'])); ?>" required><br>
                         <label for="reasons">Reasons for dose adjustment</label><br>
-                        <textarea name="reasons" cols="30" rows="6" required><?php echo htmlspecialchars($currentSettings['reasons'] ?? ''); ?></textarea>
+                        <textarea name="reasons" cols="30" rows="6" required><?php echo htmlspecialchars((string)($currentSettings['reasons'] ?? '')); ?></textarea>
                     </div>
                     <div class="grid-item">
                         <label for="current_status">Current Patient Status</label><br>
                         <select name="current_status" id="current_status" required>
                             <?php foreach ($statusOptions as $status): ?>
-                                <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $status == ($currentSettings['current_status'] ?? '') ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($status); ?>
+                                <option value="<?php echo htmlspecialchars((string)($status)); ?>" <?php echo $status == ($currentSettings['current_status'] ?? '') ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars((string)($status)); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select><br>
@@ -495,8 +495,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                                 <select name="other_drugs[0][drugname]" class="form-control drug-input" required>
                                     <option value="">Select Drug</option>
                                     <?php foreach ($drugsOptions as $drug): ?>
-                                        <option value="<?php echo htmlspecialchars($drug); ?>">
-                                            <?php echo htmlspecialchars($drug); ?>
+                                        <option value="<?php echo htmlspecialchars((string)($drug)); ?>">
+                                            <?php echo htmlspecialchars((string)($drug)); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -506,8 +506,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                                 <select name="other_drugs[0][routetype]" class="form-control route-input" required>
                                     <option value="">Select Route</option>
                                     <?php foreach ($routesOptions as $route): ?>
-                                        <option value="<?php echo htmlspecialchars($route); ?>">
-                                            <?php echo htmlspecialchars($route); ?>
+                                        <option value="<?php echo htmlspecialchars((string)($route)); ?>">
+                                            <?php echo htmlspecialchars((string)($route)); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -517,8 +517,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                                 <select name="other_drugs[0][dosage]" class="form-control dosage-input" required>
                                     <option value="">Select Dosage</option>
                                     <?php foreach ($dosagesOptions as $dosage): ?>
-                                        <option value="<?php echo htmlspecialchars($dosage); ?>">
-                                            <?php echo htmlspecialchars($dosage); ?>
+                                        <option value="<?php echo htmlspecialchars((string)($dosage)); ?>">
+                                            <?php echo htmlspecialchars((string)($dosage)); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -532,8 +532,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                                 <select name="other_drugs[0][duration]" class="form-control duration-input" required>
                                     <option value="">Select Duration</option>
                                     <?php foreach ($durationsOptions as $duration): ?>
-                                        <option value="<?php echo htmlspecialchars($duration); ?>">
-                                            <?php echo htmlspecialchars($duration); ?>
+                                        <option value="<?php echo htmlspecialchars((string)($duration)); ?>">
+                                            <?php echo htmlspecialchars((string)($duration)); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

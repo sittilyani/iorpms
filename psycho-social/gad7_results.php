@@ -12,7 +12,7 @@ $results = $_SESSION['gad7_results'];
 unset($_SESSION['gad7_results']); // Clear session data after use
 
 // Determine severity class for styling
-$severity_class = strtolower(str_replace(' ', '-', $results['severity']));
+$severity_class = strtolower((string)(str_replace(' ', '-', $results['severity'])));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +46,7 @@ $severity_class = strtolower(str_replace(' ', '-', $results['severity']));
         .score-display {
             font-size: 2.5em;
             font-weight: bold;
-            color: #2C3162;
+            color: #2D008A;
             text-align: center;
             margin: 20px 0;
             padding: 20px;
@@ -83,7 +83,7 @@ $severity_class = strtolower(str_replace(' ', '-', $results['severity']));
             text-align: center;
         }
         .results-table th {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
         }
         .btn-group {
@@ -119,19 +119,19 @@ $severity_class = strtolower(str_replace(' ', '-', $results['severity']));
     <div class="container">
         <?php if (isset($results['success_message'])): ?>
             <div class="success-alert">
-                ? <?php echo htmlspecialchars($results['success_message']); ?>
+                ? <?php echo htmlspecialchars((string)($results['success_message'])); ?>
             </div>
         <?php endif; ?>
 
-        <h1 class="text-center" style="color: #2C3162;">GAD-7 Assessment Results</h1>
+        <h1 class="text-center" style="color: #2D008A;">GAD-7 Assessment Results</h1>
 
         <div class="patient-info" style="background-color: #f8f9fa; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
             <h3>Patient Information</h3>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                <div><strong>Client Name:</strong> <?php echo htmlspecialchars($results['clientName']); ?></div>
-                <div><strong>MAT ID:</strong> <?php echo htmlspecialchars($results['mat_id']); ?></div>
-                <div><strong>Age:</strong> <?php echo htmlspecialchars($results['age']); ?> Years</div>
-                <div><strong>Assessment Date:</strong> <?php echo htmlspecialchars($results['visitDate']); ?></div>
+                <div><strong>Client Name:</strong> <?php echo htmlspecialchars((string)($results['clientName'])); ?></div>
+                <div><strong>MAT ID:</strong> <?php echo htmlspecialchars((string)($results['mat_id'])); ?></div>
+                <div><strong>Age:</strong> <?php echo htmlspecialchars((string)($results['age'])); ?> Years</div>
+                <div><strong>Assessment Date:</strong> <?php echo htmlspecialchars((string)($results['visitDate'])); ?></div>
             </div>
         </div>
 
@@ -216,13 +216,13 @@ $severity_class = strtolower(str_replace(' ', '-', $results['severity']));
         </table>
 
         <div class="btn-group">
-            <a href="gad7_form.php?mat_id=<?php echo urlencode($results['mat_id']); ?>" class="btn btn-primary">
+            <a href="gad7_form.php?mat_id=<?php echo urlencode((string)($results['mat_id'])); ?>" class="btn btn-primary">
                 ?? New Assessment for Same Client
             </a>
             <a href="search_gad7_form.php" class="btn btn-secondary">
                 ?? Back to Search
             </a>
-            <a href="../patients/view_patient.php?mat_id=<?php echo urlencode($results['mat_id']); ?>" class="btn btn-success">
+            <a href="../patients/view_patient.php?mat_id=<?php echo urlencode((string)($results['mat_id'])); ?>" class="btn btn-success">
                 ?? View Patient Profile
             </a>
             <button onclick="window.print()" class="btn" style="background-color: #17a2b8; color: white;">

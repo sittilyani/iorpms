@@ -20,7 +20,7 @@ try {
         // Bind variables to the prepared statement as parameters
         $stmt->bindParam(":dispense_id", $param_dispense_id);
         // Set parameters
-        $param_dispense_id = trim($_POST["dispense_id"]);
+        $param_dispense_id = trim((string)($_POST["dispense_id"]));
         // Attempt to execute the prepared statement
         $stmt->execute();
 
@@ -65,7 +65,7 @@ try {
                             // Check existence of id parameter before processing further
                             if(isset($_GET["dispense_id"])){
                                 // Get URL parameter
-                                $dispense_id =  trim($_GET["dispense_id"]);
+                                $dispense_id =  trim((string)($_GET["dispense_id"]));
                                 // Prepare a select statement
                                 $sql = "SELECT * FROM dispence WHERE dispense_id = :dispense_id";
                                 if($stmt = $pdo->prepare($sql)){
@@ -131,12 +131,12 @@ try {
                         <h1>Delete Record</h1>
                     </div>
                     <div class="alert alert-danger fade in">
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
 
 
 
                         <div>
-                            <input type="hidden" name="dispense_id" value="<?php echo trim($_GET["dispense_id"]); ?>"/>
+                            <input type="hidden" name="dispense_id" value="<?php echo trim((string)($_GET["dispense_id"])); ?>"/>
             <div class="input-group mb-3 col-sm-7" style="margin: 10px;">
                 <label>MAT ID</label></br>
                 <input type="text" name="mat_id" class="form-control" value="<?php echo $mat_id; ?>"readonly>

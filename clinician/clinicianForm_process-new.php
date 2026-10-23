@@ -95,7 +95,7 @@ try {
     }
 
     // Insert into viral_load table only if hiv_status is 'Positive'
-    if (strtolower($hiv_status) === 'positive') {
+    if (strtolower((string)($hiv_status)) === 'positive') {
         $query2 = "INSERT INTO viral_load (mat_id, clientName, dob, reg_date, sex, hiv_status, art_regimen, regimen_type, clinical_notes, last_vlDate, results, clinician_name, next_appointment)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt2 = $conn->prepare($query2);
@@ -163,7 +163,7 @@ try {
     // Rollback transaction on error
     $conn->rollback();
     echo "<div style='color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; border: 1px solid red;'>
-            <strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "
+            <strong>Error:</strong> " . htmlspecialchars((string)($e->getMessage())) . "
           </div>";
 } finally {
     // Close statements and connection

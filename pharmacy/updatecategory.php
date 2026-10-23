@@ -17,7 +17,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     $id = $_POST["id"];
 
     // Validate name
-    $input_name = trim($_POST["catname"]);
+    $input_name = trim((string)($_POST["catname"]));
     if(empty($input_name)){
         $catname_err = "Please enter a name.";
     } elseif(!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
@@ -27,7 +27,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     }
 
     // Validate address address
-    $input_descr = trim($_POST["descr"]);
+    $input_descr = trim((string)($_POST["descr"]));
     if(empty($input_descr)){
         $descr_err = "Please enter an descr.";
     } else{
@@ -69,9 +69,9 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     unset($pdo);
 } else{
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    if(isset($_GET["id"]) && !empty(trim((string)($_GET["id"])))){
         // Get URL parameter
-        $id =  trim($_GET["id"]);
+        $id =  trim((string)($_GET["id"]));
 
         // Prepare a select statement
         $sql = "SELECT * FROM category WHERE catID = :id";
@@ -134,7 +134,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         </div>
         <div class="col-md-6">
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)(basename($_SERVER['REQUEST_URI']))); ?>" method="post">
 
                     <div class="form-group <?php echo (!empty($catname_err)) ? 'has-error' : ''; ?>">
                     <label>Category Name</label>

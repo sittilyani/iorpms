@@ -54,7 +54,7 @@ if (file_exists($sqlFile) || (is_dir($filesDir) && count(array_diff(scandir($fil
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --primary:#2C3162;--primary-dark:#1a1d3d;
+  --primary:#2D008A;--primary-dark:#1a1d3d;
   --accent:#82b543;--accent-dark:#6a9438;
   --light:#f4f7fb;--text:#263238;--muted:#607d8b;
   --white:#fff;--border:#dde3f0;
@@ -266,7 +266,7 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 <nav class="navbar" id="navbar">
   <div class="nav-logo">
     <div class="nav-logo-badge"><img src="assets/images/lvctlogonew.png" alt="lvcthealth logo"></div>
-    <span class="nav-logo-text">EasyFlow-L</span>
+    <span class="nav-logo-text">EasyFlow-L</span><span style="color: yellow; font-size:1.1rem;font-weight:700;">Pro version</span>
   </div>
   <div class="nav-links" id="navLinks">
     <a href="#features" data-i18n="nav_features">Features</a>
@@ -307,6 +307,15 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
       <div><div class="hero-stat-num">5,000+</div><div class="hero-stat-lbl" data-i18n="stat_clients">Clients Managed</div></div>
       <div><div class="hero-stat-num">99.9%</div><div class="hero-stat-lbl" data-i18n="stat_uptime">Uptime</div></div>
       <div><div class="hero-stat-num">KHIS</div><div class="hero-stat-lbl" data-i18n="stat_khis">Integrated</div></div>
+    </div>
+    <div class="hero-reach" style="margin-top:22px;text-align:center;color:#ffffff">
+      <div style="font-weight:700;font-size:19px;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,.35)">9 clinics in 4 counties in Kenya</div>
+      <div style="display:flex;gap:26px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:12px">
+        <img src="assets/images/kilifi_county.png" alt="Kilifi County" style="height:64px;background:#ffffff;padding:6px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25)" onerror="this.style.display='none'">
+        <img src="assets/images/mombasa_county.png" alt="Mombasa County" style="height:64px;background:#ffffff;padding:6px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25)" onerror="this.style.display='none'">
+        <img src="assets/images/kwale_county.png" alt="Kwale County" style="height:64px;background:#ffffff;padding:6px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25)" onerror="this.style.display='none'">
+        <img src="assets/images/kiambu_county.png" alt="Kiambu County" style="height:64px;background:#ffffff;padding:6px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25)" onerror="this.style.display='none'">
+      </div>
     </div>
   </div>
 </section>
@@ -476,6 +485,7 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
 
 <!-- FOOTER -->
 <footer>
+  <div style="text-align:center;padding:10px 16px;font-size:13px;opacity:.9">Created with funds from the U.S. Department of State &mdash; U.S. Government &mdash; and LVCT Health.</div>
   <div class="footer-grid">
     <div>
       <div class="footer-brand"><div class="footer-brand-icon"><img src="assets/images/lvctlogonew.png" alt="lvcthealth logo"></div>EasyFlow-L</div>
@@ -539,7 +549,7 @@ footer p{font-size:.84rem;line-height:1.7;margin-bottom:14px;}
         <select name="country" required>
           <option value="" data-i18n="sel_country">Select country…</option>
           <?php foreach ($landingCountries as $cName): ?>
-          <option value="<?php echo htmlspecialchars($cName); ?>"><?php echo htmlspecialchars($cName); ?></option>
+          <option value="<?php echo htmlspecialchars((string)($cName)); ?>"><?php echo htmlspecialchars((string)($cName)); ?></option>
           <?php endforeach; ?>
         </select>
       </div>

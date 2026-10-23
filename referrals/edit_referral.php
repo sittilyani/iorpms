@@ -1,14 +1,17 @@
 <?php
 include('../includes/config.php');
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mat_id = $_POST['mat_id'];
         $status = $_POST['status'];
 
         // Update the referral status
-        $sql = "UPDATE referral SET status = ?, referral_date = NOW() WHERE mat_id = ?";
+        // The original referral_date is kept (it starts the response-time clock); acted_at records when the referral was first acted on.
+        $actor = $_SESSION['full_name'] ?? 'User';
+        $sql = "UPDATE referral SET status = ?, acted_at = COALESCE(acted_at, NOW()), acted_by = COALESCE(acted_by, ?) WHERE mat_id = ? AND status <> ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $status, $mat_id);
+        $stmt->bind_param("ssss", $status, $actor, $mat_id, $status);
 
         if ($stmt->execute()) {
                 echo "<script>

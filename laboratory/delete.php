@@ -28,6 +28,6 @@ if (isset($_GET['p_id'])) {
 }
 
 // Redirect back to the main page
-header("Location: psycho_social_crud.php?message=" . urlencode($message));
+header("Location: psycho_social_crud.php?message=" . urlencode((string)($message)));
 exit();
 ?>

@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (empty($_POST['password'])) {
         $error_message = "Password is required";
     } else {
-        $username = trim($_POST['username']);
-        $password = trim($_POST['password']);
+        $username = trim((string)($_POST['username']));
+        $password = trim((string)($_POST['password']));
 
         // Make sure demo columns/tables exist (must_change_password, is_demo, login_logs)
         include_once '../includes/demo_schema.php';

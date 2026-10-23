@@ -34,7 +34,7 @@ function displayMessagesAndRedirect($conn, $successes, $errors, $mat_id) {
         // Redirect back to the patient page so the success banner is shown
         // there for 2 seconds before auto-redirecting to the dispensing list.
         $back = !empty($mat_id)
-            ? 'dispensingData.php?mat_id=' . urlencode($mat_id)
+            ? 'dispensingData.php?mat_id=' . urlencode((string)($mat_id))
             : 'dispensing.php';
         header("Location: $back");
         exit();
@@ -200,7 +200,7 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
         } // end: not already dispensed today
     } catch (Exception $e) {
         $conn->rollback();
-        $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars($e->getMessage());
+        $routineErrors[] = "Routine Dispensing Failed (DB/System Error): " . htmlspecialchars((string)($e->getMessage()));
     }
 
     // ===========================================================================
@@ -213,9 +213,9 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
             // Skip unchecked rows
             if (empty($cmed['dispense']) || $cmed['dispense'] !== '1') continue;
 
-            $co_drug    = trim($cmed['drugname'] ?? '');
+            $co_drug    = trim((string)($cmed['drugname'] ?? ''));
             $co_dosage  = (float)($cmed['dosage'] ?? 1);
-            $co_reasons = trim($cmed['reasons']  ?? 'Auto-dispensed with MAT drug');
+            $co_reasons = trim((string)($cmed['reasons']  ?? 'Auto-dispensed with MAT drug'));
             $co_prescription_drug_id = !empty($cmed['prescription_drug_id']) ? (int)$cmed['prescription_drug_id'] : null;
 
             if (!$co_drug) continue;
@@ -324,7 +324,7 @@ if ($dispenseMat && $mat_id && isset($_POST['drugname']) && !empty($_POST['drugn
 
             } catch (Exception $coEx) {
                 $conn->rollback();
-                $errorMessages[] = "Co-medication error ({$co_drug}): " . htmlspecialchars($coEx->getMessage());
+                $errorMessages[] = "Co-medication error ({$co_drug}): " . htmlspecialchars((string)($coEx->getMessage()));
             }
         }
     }
@@ -485,7 +485,7 @@ if (isset($_POST['dispense']) && is_array($_POST['dispense']) && isset($_POST['q
 
         } catch (Exception $e) {
             $conn->rollback();
-            $otherPrescriptionErrors[] = "Other Prescriptions Dispensing Failed (Error in dispensing process): " . htmlspecialchars($e->getMessage());
+            $otherPrescriptionErrors[] = "Other Prescriptions Dispensing Failed (Error in dispensing process): " . htmlspecialchars((string)($e->getMessage()));
         } finally {
             // Close prepared statements for Part 2
             $stmt_fetch_drug->close();

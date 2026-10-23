@@ -29,7 +29,7 @@ if (isset($_GET['brandname'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Transactions - <?= htmlspecialchars($brandname); ?></title>
+    <title>View Transactions - <?= htmlspecialchars((string)($brandname)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link rel="icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="../assets/favicons/favicon.ico" type="image/x-icon">
@@ -65,8 +65,8 @@ if (isset($_GET['brandname'])) {
     <h2>Bin Card</h2>
     <div class="bin-card-header">
         <div>
-            Product: <span class="product-name"><?= htmlspecialchars($productname); ?></span> &nbsp;&nbsp;
-            Brand: <span class="brand-name"><?= htmlspecialchars($brandname); ?></span>
+            Product: <span class="product-name"><?= htmlspecialchars((string)($productname)); ?></span> &nbsp;&nbsp;
+            Brand: <span class="brand-name"><?= htmlspecialchars((string)($brandname)); ?></span>
         </div>
     </div>
 
@@ -96,26 +96,26 @@ if (isset($_GET['brandname'])) {
             <?php else: ?>
                 <?php foreach ($transactions as $transaction): ?>
                     <tr>
-                        <td><?= htmlspecialchars($transaction['stockID'] ?? 'N/A'); ?></td>
-                        <td><?= htmlspecialchars($transaction['transactionType'] ?? ''); ?></td>
-                        <td><?= htmlspecialchars($transaction['openingBalance'] ?? 0); ?></td>
-                        <td><?= htmlspecialchars($transaction['quantityin'] ?? 0); ?></td>
-                        <td><?= htmlspecialchars($transaction['batch'] ?? ''); ?></td>
-                        <td><?= htmlspecialchars($transaction['expiryDate'] ?? ''); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['stockID'] ?? 'N/A')); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['transactionType'] ?? '')); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['openingBalance'] ?? 0)); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['quantityin'] ?? 0)); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['batch'] ?? '')); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['expiryDate'] ?? '')); ?></td>
                         <td>
                             <?php
                             if (($transaction['receivedFrom'] ?? '') === '(adjustments)') {
-                                echo '<span style="color:red;">' . htmlspecialchars($transaction['receivedFrom']) . '</span>';
+                                echo '<span style="color:red;">' . htmlspecialchars((string)($transaction['receivedFrom'])) . '</span>';
                             } else {
-                                echo htmlspecialchars($transaction['receivedFrom'] ?? '');
+                                echo htmlspecialchars((string)($transaction['receivedFrom'] ?? ''));
                             }
                             ?>
                         </td>
-                        <td><?= htmlspecialchars($transaction['quantityOut'] ?? 0); ?></td>
-                        <td><?= htmlspecialchars($transaction['transDate'] ?? ''); ?></td>
-                        <td><b><?= htmlspecialchars($transaction['stockBalance'] ?? 0); ?></b></td>
-                        <td><?= htmlspecialchars($transaction['status'] ?? ''); ?></td>
-                        <td><?= htmlspecialchars($transaction['transBy'] ?? ''); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['quantityOut'] ?? 0)); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['transDate'] ?? '')); ?></td>
+                        <td><b><?= htmlspecialchars((string)($transaction['stockBalance'] ?? 0)); ?></b></td>
+                        <td><?= htmlspecialchars((string)($transaction['status'] ?? '')); ?></td>
+                        <td><?= htmlspecialchars((string)($transaction['transBy'] ?? '')); ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

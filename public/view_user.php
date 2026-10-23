@@ -103,16 +103,16 @@ ob_end_flush(); // End output buffering and send output to the browser
         </div>
         <div class="card-body">
             <?php if (!empty($user)): ?>
-                <p><strong>User ID:</strong> <?php echo htmlspecialchars($user['user_id']); ?></p>
-                <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
-                <p><strong>First Name:</strong> <?php echo htmlspecialchars($user['first_name']); ?></p>
-                <p><strong>Last Name:</strong> <?php echo htmlspecialchars($user['last_name']); ?></p>
-                <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
-                <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-                <p><strong>Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
-                <p><strong>Mobile:</strong> <?php echo htmlspecialchars($user['mobile']); ?></p>
-                <p><strong>User Role:</strong> <?php echo htmlspecialchars($user['userrole']); ?></p>
-                <p><strong>Date Created:</strong> <?php echo htmlspecialchars($user['date_created']); ?></p>
+                <p><strong>User ID:</strong> <?php echo htmlspecialchars((string)($user['user_id'])); ?></p>
+                <p><strong>Username:</strong> <?php echo htmlspecialchars((string)($user['username'])); ?></p>
+                <p><strong>First Name:</strong> <?php echo htmlspecialchars((string)($user['first_name'])); ?></p>
+                <p><strong>Last Name:</strong> <?php echo htmlspecialchars((string)($user['last_name'])); ?></p>
+                <p><strong>Full Name:</strong> <?php echo htmlspecialchars((string)($user['full_name'])); ?></p>
+                <p><strong>Email:</strong> <?php echo htmlspecialchars((string)($user['email'])); ?></p>
+                <p><strong>Gender:</strong> <?php echo htmlspecialchars((string)($user['gender'])); ?></p>
+                <p><strong>Mobile:</strong> <?php echo htmlspecialchars((string)($user['mobile'])); ?></p>
+                <p><strong>User Role:</strong> <?php echo htmlspecialchars((string)($user['userrole'])); ?></p>
+                <p><strong>Date Created:</strong> <?php echo htmlspecialchars((string)($user['date_created'])); ?></p>
             <?php else: ?>
                 <div class="alert alert-danger text-center" role="alert">
                     User not found.

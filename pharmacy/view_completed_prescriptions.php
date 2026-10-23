@@ -71,7 +71,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
     <div class="content-main">
         <?php if (!empty($message)): ?>
             <div class="alert alert-success" role="alert">
-                <?php echo htmlspecialchars($message); ?>
+                <?php echo htmlspecialchars((string)($message)); ?>
             </div>
         <?php endif; ?>
 

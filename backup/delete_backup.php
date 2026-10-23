@@ -73,11 +73,11 @@ if (!isset($_GET['confirm']) || $_GET['confirm'] !== 'yes') {
                 <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
                 <h3>Confirm Deletion</h3>
                 <p class="mt-3">Are you sure you want to delete this backup?</p>
-                <p class="text-muted"><strong><?php echo htmlspecialchars(basename($fileToDelete)); ?></strong></p>
+                <p class="text-muted"><strong><?php echo htmlspecialchars((string)(basename($fileToDelete))); ?></strong></p>
                 <p class="text-danger"><small><i class="bi bi-info-circle"></i> This action cannot be undone!</small></p>
             </div>
             <div class="d-flex justify-content-center gap-3 mt-4">
-                <a href="delete_backup.php?file=<?php echo urlencode($fileToDelete); ?>&confirm=yes"
+                <a href="delete_backup.php?file=<?php echo urlencode((string)($fileToDelete)); ?>&confirm=yes"
                    class="btn btn-danger">
                     <i class="bi bi-trash"></i> Yes, Delete
                 </a>
@@ -94,7 +94,7 @@ if (!isset($_GET['confirm']) || $_GET['confirm'] !== 'yes') {
 
 // User confirmed deletion - proceed to delete the file
 if (unlink($filePath)) {
-    header("Location: view_backups.php?message=" . urlencode("Backup deleted successfully: " . basename($fileToDelete)));
+    header("Location: view_backups.php?message=" . urlencode((string)("Backup deleted successfully: " . basename($fileToDelete))));
 } else {
     header("Location: view_backups.php?error=" . urlencode("Failed to delete backup file."));
 }

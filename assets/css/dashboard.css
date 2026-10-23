@@ -8,7 +8,7 @@
 
 body {
 
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #FDFCF9;
     min-height: 100vh;
 }
 
@@ -32,7 +32,7 @@ body {
     top: 20px;
     right: 20px;
     z-index: 1001;
-    background: #667eea;
+    background: #2D008A;
     color: white;
     border: none;
     border-radius: 50%;
@@ -44,7 +44,7 @@ body {
 }
 
 .mobile-menu-toggle:hover {
-    background: #5a67d8;
+    background: #AC80EE;
     transform: scale(1.1);
 }
 
@@ -62,7 +62,9 @@ body {
 
 /* Card Styles */
 .card {
-    background: linear-gradient(to right, #d8e35b, #f2be3e, #ff9640, #ff6c56, #f94373);
+    background: #ffffff;
+    border: 1px solid #e5e0f2;
+    box-shadow: 0 2px 8px rgba(45, 0, 138, 0.08);
     border-radius: 15px;
     padding: 25px;
     /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);*/
@@ -81,16 +83,16 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 6px;
+    background: linear-gradient(90deg, #2D008A, #AC80EE);
 }
 
 .card.purple::before {
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #2D008A, #AC80EE);
 }
 
 .card.orange::before {
-    background: linear-gradient(90deg, #ff7b7b, #ff416c);
+    background: linear-gradient(90deg, #FFC12E, #04B04B);
 }
 
 .card:hover {
@@ -106,21 +108,21 @@ body {
 }
 
 .card-content h3 {
-    font-size: 30px;
-    font-weight: bold;
-    color: #2d3748;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2D008A;
     margin: 0;
     line-height: 1.3;
 }
 
 .card-icon {
     font-size: 40px;
-    color: white;
+    color: #AC80EE;
 
 }
 
 .card.orange .card-icon {
-    color: white;
+    color: #04B04B;
 }
 
 .card:hover .card-icon {
@@ -139,7 +141,7 @@ body {
 }
 
 .more-info:hover {
-    color: #667eea;
+    color: #AC80EE;
     text-decoration: none;
 }
 
@@ -234,7 +236,7 @@ body {
 }
 
 .birthday-date {
-    background: #667eea;
+    background: #2D008A;
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -643,7 +645,7 @@ body {
 /* Focus and Accessibility */
 .card:focus,
 .mobile-menu-toggle:focus {
-    outline: 3px solid #667eea;
+    outline: 3px solid #AC80EE;
     outline-offset: 2px;
 }
 

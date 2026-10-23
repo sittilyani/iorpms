@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/config.php';
 
 $gdriveLib = null;
 foreach ([
+    __DIR__ . '/gdrive/lib.php',                       // bundled with EasyFlow-L, so every clinic gets it through Update Center
     __DIR__ . '/../../_shared/gdrive_backup/lib.php',
     __DIR__ . '/../../../_shared/gdrive_backup/lib.php',
     ($_SERVER['DOCUMENT_ROOT'] ?? '') . '/../_shared/gdrive_backup/lib.php',
@@ -21,7 +22,11 @@ if (!$gdriveLib) {
 }
 require_once $gdriveLib;
 
+require_once __DIR__ . '/../includes/backup_helpers.php';
+
 gdrive_handle_request([
+    'root_folder_id' => '1HrZQheioIepWdntXbvKIUBlhkANXYLUd',   // EasyFlow-L backups folder (easyflow.lvcthealth@gmail.com)
+    'file_prefix' => backup_facility_prefix($conn),   // <Facility>_methadone_<date>.sql
     'project'    => $GDRIVE_PROJECT,
     'conn'       => $conn,
     'backup_dir' => __DIR__ . '/database',

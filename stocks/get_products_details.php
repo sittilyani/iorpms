@@ -16,12 +16,12 @@ if ($mysqli->connect_error) {
     exit();
 }
 
-if (!isset($_GET['brandname']) || empty(trim($_GET['brandname']))) {
+if (!isset($_GET['brandname']) || empty(trim((string)($_GET['brandname'])))) {
     echo json_encode(['success' => false, 'message' => 'Brand name not provided.']);
     exit();
 }
 
-$brandname = trim($_GET['brandname']);
+$brandname = trim((string)($_GET['brandname']));
 
 // Fetch product name from the products table
 $sql_product_info = "SELECT productname FROM products WHERE brandname = ? LIMIT 1";

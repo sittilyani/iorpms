@@ -75,7 +75,7 @@ if (!function_exists('trySendViaPHPMailer')) {
             $mail->CharSet = 'UTF-8';
             $mail->Subject = $subject;
             $mail->Body    = $body;
-            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $body));
+            $mail->AltBody = strip_tags((string)(str_replace(['<br>', '<br/>', '<br />'], "\n", $body)));
 
             $mail->send();
             return ['success' => true, 'method' => 'PHPMailer/SMTP'];

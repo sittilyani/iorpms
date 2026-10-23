@@ -93,8 +93,8 @@ if (php_sapi_name() !== 'cli' && !defined('TRANSLATE_INCLUDE_MODE')) {
     }
 
     $input  = json_decode(file_get_contents('php://input'), true);
-    $text   = trim($input['text']   ?? '');
-    $target = strtolower($input['target'] ?? 'fr');
+    $text   = trim((string)($input['text']   ?? ''));
+    $target = strtolower((string)($input['target'] ?? 'fr'));
 
     if (!$text) {
         echo json_encode(['translated' => '']);
@@ -118,7 +118,7 @@ if (php_sapi_name() !== 'cli' && !defined('TRANSLATE_INCLUDE_MODE')) {
  * Returns the translated string; falls back to original text on error.
  */
 function translate_text(string $text, string $targetLang): string {
-    if (!$text || strtolower($targetLang) === SOURCE_LANG) return $text;
+    if (!$text || strtolower((string)($targetLang)) === SOURCE_LANG) return $text;
 
     // ── Cache lookup ──────────────────────────────────────────────────────────
     $cacheFile = get_cache_path($text, $targetLang);
@@ -165,7 +165,7 @@ function translate_batch(array $strings, string $targetLang): array {
 
 // ── Cache path ────────────────────────────────────────────────────────────────
 function get_cache_path(string $text, string $lang): string {
-    $hash = md5(strtolower(trim($text)));
+    $hash = md5(strtolower((string)(trim((string)($text)))));
     $dir  = CACHE_DIR . $lang . '/' . substr($hash, 0, 2) . '/';
     if (!is_dir($dir)) mkdir($dir, 0755, true);
     return $dir . $hash . '.txt';
@@ -204,12 +204,12 @@ function call_deepl(string $text, string $target): string {
     // DeepL uses uppercase lang codes and PT-PT / PT-BR distinction
     $targetMap = ['pt' => 'PT-PT', 'fr' => 'FR', 'es' => 'ES', 'de' => 'DE',
                   'zh' => 'ZH',    'ar' => 'AR', 'hi' => 'HI', 'sw' => 'SW'];
-    $deeplTarget = $targetMap[strtolower($target)] ?? strtoupper($target);
+    $deeplTarget = $targetMap[strtolower((string)($target))] ?? strtoupper((string)($target));
 
     $payload = http_build_query([
         'auth_key'    => DEEPL_API_KEY,
         'text'        => $text,
-        'source_lang' => strtoupper(SOURCE_LANG),
+        'source_lang' => strtoupper((string)(SOURCE_LANG)),
         'target_lang' => $deeplTarget,
     ]);
 

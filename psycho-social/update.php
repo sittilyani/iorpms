@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
 
 $comp_date = date('Y-m-d h-m-s');
 
-    $reg_date = date('Y-m-d', strtotime($reg_date));
+    $reg_date = date('Y-m-d', strtotime((string)($reg_date)));
 
     $query = "SELECT *, DATE_FORMAT(comp_date, '%Y-%m-%d') as formatted_comp_date FROM patients WHERE p_id = ?";
     $query = "UPDATE patients SET mat_id = ?, mat_number = ?, clientName = ?,
@@ -438,7 +438,7 @@ if (isset($_SESSION['user_id'])) {
        <!-- Health Care Worker: <input type="text" name="hcw_name" value="<?= $currentSettings['hcw_name'] ?>" required><br> -->
         <!-- Health Care Worker Name field automatically populated -->
                 <label for="hcw_name">HealthCare Worker Name</label> <br>
-                <input type="text" name="hcw_name" value="<?php echo htmlspecialchars($hcwName); ?>" class="readonly-input" readonly> <br>
+                <input type="text" name="hcw_name" value="<?php echo htmlspecialchars((string)($hcwName)); ?>" class="readonly-input" readonly> <br>
 
 
         <!--hidden form input for comp_date -->

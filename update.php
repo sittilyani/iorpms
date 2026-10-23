@@ -53,6 +53,8 @@ function upd_excluded(string $path): bool
     $base = basename($path);
     if (strpos($path, 'includes/config-') === 0 || $base === 'config-easyflow.php') return true;
     if (preg_match('/\.(sql|zip|rar|tar|gz|7z|log)$/i', $base) && strpos($path, 'updates/') !== 0) return true;
+    // Patient lists / spreadsheets are never distributed (blank MOH form templates under forms/ still are)
+    if (preg_match('/\.(xls|xlsx|xlsm|csv)$/i', $base) && strpos($path, 'forms/') !== 0 && strpos($path, 'methadone forms/') !== 0) return true;
     if (substr($base, 0, 1) === '.' && $base !== '.htaccess') return true;
     return false;
 }
@@ -144,7 +146,7 @@ function upd_http(string $url, bool $json = false, int $timeout = 120)
 
 function upd_blob_sha(string $content): string
 {
-    return sha1('blob ' . strlen($content) . "\0" . $content);
+    return sha1('blob ' . strlen((string)($content)) . "\0" . $content);
 }
 
 function upd_local_matches(string $file, string $remoteSha): bool
@@ -514,19 +516,19 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
 <style>
  body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fa;margin:0;padding:30px;color:#2c3e50;}
  .box{max-width:780px;margin:0 auto;background:#fff;border-radius:14px;padding:30px;box-shadow:0 8px 30px rgba(0,0,0,.1);}
- h1{margin:0 0 4px;color:#2C3162;font-size:1.5rem;} .sub{color:#667;margin-bottom:18px;font-size:.9rem;}
+ h1{margin:0 0 4px;color:#2D008A;font-size:1.5rem;} .sub{color:#667;margin-bottom:18px;font-size:.9rem;}
  .bar{height:26px;background:#e6e9f2;border-radius:13px;overflow:hidden;position:relative;}
- .fill{height:100%;width:0;background:linear-gradient(90deg,#2C3162,#82b543);transition:width .4s;}
+ .fill{height:100%;width:0;background:linear-gradient(90deg,#2D008A,#82b543);transition:width .4s;}
  .pct{position:absolute;inset:0;text-align:center;line-height:26px;font-weight:700;color:#fff;mix-blend-mode:difference;}
  .msg{margin:10px 0 2px;font-size:.92rem;min-height:1.3em;word-break:break-all;} .time{color:#889;font-size:.82rem;}
  ol.steps{list-style:none;padding:0;margin:18px 0;} ol.steps li{padding:6px 0 6px 30px;position:relative;color:#99a;}
  ol.steps li:before{content:'\25CB';position:absolute;left:4px;}
- ol.steps li.active{color:#2C3162;font-weight:600;} ol.steps li.active:before{content:'\25B6';}
+ ol.steps li.active{color:#2D008A;font-weight:600;} ol.steps li.active:before{content:'\25B6';}
  ol.steps li.done{color:#1b7f3b;} ol.steps li.done:before{content:'\2713';font-weight:700;}
  .pill{display:inline-block;background:#eef1f8;border-radius:20px;padding:3px 12px;margin:2px;font-size:.85rem;}
  .ok{color:#1b7f3b;} .bad{color:#b00020;}
  details{margin-top:12px;} summary{cursor:pointer;font-weight:600;} li.f{font-family:Consolas,monospace;font-size:.8rem;}
- a.btn{display:inline-block;margin-top:18px;background:#2C3162;color:#fff;padding:10px 22px;border-radius:8px;text-decoration:none;}
+ a.btn{display:inline-block;margin-top:18px;background:#2D008A;color:#fff;padding:10px 22px;border-radius:8px;text-decoration:none;}
  #result{display:none;margin-top:14px;border-top:1px solid #eee;padding-top:14px;}
 </style>
 </head>
@@ -534,7 +536,7 @@ $current = is_file($root . '/updates/last_update.json') ? json_decode(file_get_c
 <div class="box">
   <h1>EasyFlow-L System Update</h1>
   <div class="sub">This computer is on version
-    <strong><?= htmlspecialchars($current ? substr($current['commit'], 0, 8) : 'not recorded yet') ?></strong>.
+    <strong><?= htmlspecialchars((string)($current ? substr($current['commit'], 0, 8) : 'not recorded yet')) ?></strong>.
     Client photos are never touched. Please keep this page open until it finishes.</div>
 
   <small style="display:block;color:#889;margin-bottom:10px;">The database is backed up first and a copy is downloaded to this computer. Existing backups in backup/database are never replaced.</small>

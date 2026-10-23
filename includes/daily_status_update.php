@@ -15,10 +15,10 @@ function runPatientStatusUpdate(mysqli $conn): array
     $conn->query("UPDATE patients SET age = TIMESTAMPDIFF(YEAR, dob, CURDATE()) WHERE dob IS NOT NULL");
 
     $result = $conn->query("
-        SELECT p.mat_id, MAX(DATE(ph.visitDate)) AS latest_visit_date,
+        SELECT p.mat_id, MAX(DATE(ph.visitDate)) AS latest_visit_date, DATE(p.reg_date) AS reg_day,
                p.clientName, p.sex, p.age, LOWER(p.current_status) AS current_status
         FROM patients p
-        JOIN pharmacy ph ON p.mat_id = ph.mat_id
+        LEFT JOIN pharmacy ph ON p.mat_id = ph.mat_id
         GROUP BY p.mat_id");
     if (!$result) {
         throw new Exception('Status query failed: ' . $conn->error);
@@ -37,9 +37,15 @@ function runPatientStatusUpdate(mysqli $conn): array
             continue;
         }
 
-        $date_diff = $today->diff(new DateTime($row['latest_visit_date']))->days;
+        // Status is driven by dispensing (pharmacy) history, NOT by next_appointment.
+        // A client who has never been dispensed to can never be Active: they are
+        // aged from their enrolment date instead (Defaulted <=30 days, LTFU after).
+        $hasHistory = !empty($row['latest_visit_date']);
+        $refDate    = $hasHistory ? $row['latest_visit_date'] : ($row['reg_day'] ?: date('Y-m-d'));
+        $row['latest_visit_date'] = $refDate;
+        $date_diff = $today->diff(new DateTime($refDate))->days;
 
-        if ($date_diff <= 5) {
+        if ($hasHistory && $date_diff <= 5) {
             $new_status = 'active';
         } elseif ($date_diff <= 30) {
             $new_status = 'defaulted';

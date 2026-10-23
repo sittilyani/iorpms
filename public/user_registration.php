@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $file_tmp = $_FILES['photo']['tmp_name'];
         $file_type = $_FILES['photo']['type'];
         $file_size = $_FILES['photo']['size'];
-        $file_ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+        $file_ext = strtolower((string)(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION)));
 
         // Validate file type and size
         if (!in_array($file_type, $allowed_types)) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Generate unique filename: full_name_user_id_current_date
-        $full_name = str_replace(' ', '_', trim($first_name . '_' . $last_name));
+        $full_name = str_replace(' ', '_', trim((string)($first_name . '_' . $last_name)));
         $current_date = date('Ymd');
         $user_id_temp = uniqid(); // Temporary user ID for filename (will update later)
         $photo = "{$full_name}_{$user_id_temp}_{$current_date}.{$file_ext}";
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['webcam_photo']) && !empty($_POST['webcam_photo'])) {
         // Handle webcam photo
         $upload_dir = '../photos/users/';
-        $full_name = str_replace(' ', '_', trim($first_name . '_' . $last_name));
+        $full_name = str_replace(' ', '_', trim((string)($first_name . '_' . $last_name)));
         $current_date = date('Ymd');
         $user_id_temp = uniqid();
         $photo = "{$full_name}_{$user_id_temp}_{$current_date}.jpg";
@@ -161,7 +161,7 @@ ob_end_flush();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/forms.css" type="text/css">
@@ -201,7 +201,7 @@ ob_end_flush();
         }
 
         h2 {
-            color: linear-gradient(135deg, #1a2a6c, #2b5876);
+            color: linear-gradient(135deg, #2D008A, #1d0059);
             text-align: center;
             margin-bottom: 30px;
             font-size: 1.8em;
@@ -273,7 +273,7 @@ ob_end_flush();
         .custom-submit-btn {
             grid-column: 1 / -1;
             padding: 15px 25px;
-            background: linear-gradient(135deg, #1a2a6c, #2b5876);
+            background: linear-gradient(135deg, #2D008A, #1d0059);
             color: white;
             border: none;
             border-radius: 5px;
@@ -336,20 +336,20 @@ ob_end_flush();
         <div>
             <?php if (isset($_SESSION['error_message'])): ?>
                 <div class="alert alert-danger">
-                    <?php echo htmlspecialchars($_SESSION['error_message']); ?>
+                    <?php echo htmlspecialchars((string)($_SESSION['error_message'])); ?>
                     <?php unset($_SESSION['error_message']); ?>
                 </div>
             <?php endif; ?>
             <?php if (isset($_SESSION['success_message'])): ?>
                 <div class="alert alert-success">
-                    <?php echo htmlspecialchars($_SESSION['success_message']); ?>
+                    <?php echo htmlspecialchars((string)($_SESSION['success_message'])); ?>
                     <?php unset($_SESSION['success_message']); ?>
                 </div>
             <?php endif; ?>
         </div>
-        <h2><?php echo htmlspecialchars($page_title); ?></h2>
+        <h2><?php echo htmlspecialchars((string)($page_title)); ?></h2>
         <form method="post" action="user_registration.php" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string)($_SESSION['csrf_token'])); ?>">
             <input type="password" name="password" value="123456" hidden>
             <input type="hidden" name="webcam_photo" id="webcam_photo">
 
@@ -379,7 +379,7 @@ ob_end_flush();
                     <?php
                     $result = $conn->query("SELECT gender_id, gender_name FROM tblgender");
                     while ($row = $result->fetch_assoc()) {
-                        echo "<option value='".htmlspecialchars($row['gender_name'])."'>".htmlspecialchars($row['gender_name'])."</option>";
+                        echo "<option value='".htmlspecialchars((string)($row['gender_name']))."'>".htmlspecialchars((string)($row['gender_name']))."</option>";
                     }
                     ?>
                 </select>
@@ -396,7 +396,7 @@ ob_end_flush();
                     <?php
                     $result = $conn->query("SELECT id, role FROM userroles");
                     while ($row = $result->fetch_assoc()) {
-                        echo "<option value='".htmlspecialchars($row['role'])."'>".htmlspecialchars($row['role'])."</option>";
+                        echo "<option value='".htmlspecialchars((string)($row['role']))."'>".htmlspecialchars((string)($row['role']))."</option>";
                     }
                     ?>
                 </select>

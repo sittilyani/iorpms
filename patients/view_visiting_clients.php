@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Visiting Clients clients');
 // Include the configuration file
 include '../includes/config.php';
 

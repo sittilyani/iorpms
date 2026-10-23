@@ -74,7 +74,7 @@
 
             h3{
                 font-weight:bold;
-                color: #2C3162;
+                color: #2D008A;
             }
 
 
@@ -168,7 +168,7 @@
                     $row = $result->fetch_assoc();
 
                     // Output the total dosage dispensed today
-                    echo '<p>Methadone Disp Today: <span style="font-weight: bold; color: #2C3162;" >' . $row['total_dosage'] . '&nbsp;mg</span></p>';
+                    echo '<p>Methadone Disp Today: <span style="font-weight: bold; color: #2D008A;" >' . $row['total_dosage'] . '&nbsp;mg</span></p>';
 
                     // Close the statement
                     $stmt->close();
@@ -215,7 +215,7 @@
                         $row = $result->fetch_assoc();
 
                         // Output the total dosage dispensed for the month
-                        echo '<p>Methadone Disp in the Month: <span style="font-weight: bold; color: #2C3162;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
+                        echo '<p>Methadone Disp in the Month: <span style="font-weight: bold; color: #2D008A;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
 
                         // Close the statement
                         $stmt->close();
@@ -261,7 +261,7 @@
                         $row = $result->fetch_assoc();
 
                         // Output the total dosage dispensed for the month
-                        echo '<p>Buprenor 2mg Disp in the Month: <span style="font-weight: bold; color: #2C3162;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
+                        echo '<p>Buprenor 2mg Disp in the Month: <span style="font-weight: bold; color: #2D008A;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
 
                         // Close the statement
                         $stmt->close();
@@ -307,7 +307,7 @@
                         $row = $result->fetch_assoc();
 
                         // Output the total dosage dispensed for the month
-                        echo '<p>Buprenor 8mg Disp in the Month: <span style="font-weight: bold; color: #2C3162;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
+                        echo '<p>Buprenor 8mg Disp in the Month: <span style="font-weight: bold; color: #2D008A;" >' . $row['total_dosage'] . '&nbsp;mg</p>';
 
                         // Close the statement
                         $stmt->close();
@@ -349,7 +349,7 @@
                             $row = $result->fetch_assoc();
 
                             // Output the result
-                            echo '<p>Methadone Balance: <span style="font-weight: bold; color: #2C3162;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
+                            echo '<p>Methadone Balance: <span style="font-weight: bold; color: #2D008A;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
                         } else {
                             echo '<p>No Methadone stock records found.</p>';
                         }
@@ -390,7 +390,7 @@
                             $row = $result->fetch_assoc();
 
                             // Output the result
-                            echo '<p>Buprenor 2mg Bal: <span style="font-weight: bold; color: #2C3162;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
+                            echo '<p>Buprenor 2mg Bal: <span style="font-weight: bold; color: #2D008A;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
                         } else {
                             echo '<p>No Buprenor 2mg stock records found.</p>';
                         }
@@ -429,7 +429,7 @@
                             $row = $result->fetch_assoc();
 
                             // Output the result
-                            echo '<p>Buprenor 4mg Bal: <span style="font-weight: bold; color: #2C3162;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
+                            echo '<p>Buprenor 4mg Bal: <span style="font-weight: bold; color: #2D008A;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
                         } else {
                             echo '<p>No Buprenor 4mg stock records found.</p>';
                         }
@@ -468,7 +468,7 @@
                             $row = $result->fetch_assoc();
 
                             // Output the result
-                            echo '<p>Buprenor 8mg Bal: <span style="font-weight: bold; color: #2C3162;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
+                            echo '<p>Buprenor 8mg Bal: <span style="font-weight: bold; color: #2D008A;">' . $row['total_qty'] . '&nbsp;mg</strong></p>';
                         } else {
                             echo '<p>No Buprenor 8mg stock records found.</p>';
                         }
@@ -490,14 +490,14 @@
 
         <div class="grid-item">
             <h3>PATIENTS</h3>
-            <!--Active:&nbsp;&nbsp;<span style="font-weight: bold; color: #2C3162;" ><?php include '../counts/active_patient_count.php'; ?></span><br>-->
+            <!--Active:&nbsp;&nbsp;<span style="font-weight: bold; color: #2D008A;" ><?php include '../counts/active_patient_count.php'; ?></span><br>-->
 
             Active:&nbsp;&nbsp;<a href="../views/view_active_patients.php" style="font-weight: bold; color: #green; text-decoration: none;" target="_blank"><?php include '../counts/active_patient_count.php'; ?></a>  <br>
             Defaulters:&nbsp;&nbsp;<a href="../views/view_defaulted_patients.php" style="font-weight: bold; color: red; text-decoration: none;" target="_blank"><?php include '../counts/defaulted_patient_count.php'; ?></a>  <br>
             Died:&nbsp;&nbsp;<a href="../views/view_dead_patients.php" style="font-weight: bold; color: red; text-decoration: none;" target="_blank"><?php include '../counts/dead_patient_count.php'; ?></a>  <br>
             Weaned Off:&nbsp;&nbsp;<a href="../views/view_weaned_patients.php" style="font-weight: bold; color: green; text-decoration: none;" target="_blank"><?php include '../counts/weaned_patient_count.php'; ?></a>  <br>
             LTFU:&nbsp;&nbsp;<a href="../views/view_ltfu_patients.php" style="font-weight: bold; color: red; text-decoration: none;" target="_blank"><?php include '../counts/lost_patient_count.php'; ?></a>  <br>
-            Discontinued:&nbsp;&nbsp;<a href="../views/view_stopped_patients.php" style="font-weight: red; color: #2C3162; text-decoration: none;" target="_blank"><?php include '../counts/stopped_patient_count.php'; ?></a>  <br>
+            Discontinued:&nbsp;&nbsp;<a href="../views/view_stopped_patients.php" style="font-weight: red; color: #2D008A; text-decoration: none;" target="_blank"><?php include '../counts/stopped_patient_count.php'; ?></a>  <br>
             Transit:&nbsp;&nbsp;<a href="../views/view_transit_patients.php" style="font-weight: bold; color: blue; text-decoration: none;" target="_blank"><?php include '../counts/transit_patient_count.php'; ?></a>  <br>
             Transfer Out:&nbsp;&nbsp;<a href="../views/view_transout_patients.php" style="font-weight: bold; color: blue; text-decoration: none;" target="_blank"><?php include '../counts/transout_patient_count.php'; ?></a>  <br>
             Inmates:&nbsp;&nbsp;<a href="../views/view_inmates_patients.php" style="font-weight: bold; color: green; text-decoration: none;" target="_blank"><?php include '../counts/inmates_patient_count.php'; ?></a>  <br>

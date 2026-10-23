@@ -16,46 +16,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $edited_by = substr($_POST["edited_by"], 0, 255); // Adjust 255 to the desired maximum length
 
     // Validate Mat id
-    $input_mat_id = trim($_POST["mat_id"]);
+    $input_mat_id = trim((string)($_POST["mat_id"]));
     if (empty($input_mat_id)) {
         $mat_id_err = "Please enter MAT ID.";
     } else {
         $mat_id = $input_mat_id;
     }
     //validate full name
-    $input_clientName = trim($_POST['clientName']);
+    $input_clientName = trim((string)($_POST['clientName']));
     if (empty($input_clientName)) {
         $clientName_err = "Please enter Name.";
     } else {
         $clientName = $input_clientName;
     }
     //validate dob
-    $input_dob = trim($_POST['dob']);
+    $input_dob = trim((string)($_POST['dob']));
     if (empty($input_dob)) {
         $dob_err = "Please enter dob.";
     } else {
         $dob = $input_dob;
     }
     //validate CSO
-    $input_cso = trim($_POST['cso']);
+    $input_cso = trim((string)($_POST['cso']));
     $cso = $input_cso;
 
     //validate Drug name
-    $input_drugname = trim($_POST['drugname']);
+    $input_drugname = trim((string)($_POST['drugname']));
     if (empty($input_drugname)) {
         $drugname_err = "Please select drug.";
     } else {
         $drugname = $input_drugname;
     }
     //validate dosage
-    $input_dosage = trim($_POST['dosage_input']);
+    $input_dosage = trim((string)($_POST['dosage_input']));
     if (empty($input_dosage)) {
         $dosage_err = "Please enter dosage in mg.";
     } else {
         $dosage = $input_dosage;
     }
     // Validate date of dispensing
-    $input_date_of_disp = trim($_POST['date_of_disp']);
+    $input_date_of_disp = trim((string)($_POST['date_of_disp']));
     if (empty($input_date_of_disp)) {
         $date_of_disp_err = "Please enter date of dispensing";
     } else {
@@ -139,9 +139,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Display form
 // Check existence of id parameter before processing further
-if (isset($_GET["mat_id"]) && !empty(trim($_GET["mat_id"]))) {
+if (isset($_GET["mat_id"]) && !empty(trim((string)($_GET["mat_id"])))) {
     // Get URL parameter
-    $mat_id =  trim($_GET["mat_id"]);
+    $mat_id =  trim((string)($_GET["mat_id"]));
 
     // Prepare a select statement
     $sql = "SELECT * FROM patients WHERE mat_id= ?";
@@ -185,7 +185,7 @@ $query = "SELECT date_of_disp FROM dispence WHERE mat_id = ? AND date_of_disp >=
 $stmt = $conn->prepare($query);
 
 // Calculate the start and end dates for the last four days of the current month
-$start = date('Y-m-d', strtotime(date('Y-m-01') . ' + ' . (max(date('t') - 3, 1)) . ' days')); // Start from the 1st if there are less than 4 days left in the month
+$start = date('Y-m-d', strtotime((string)(date('Y-m-01') . ' + ' . (max(date('t') - 3, 1)) . ' days'))); // Start from the 1st if there are less than 4 days left in the month
 $end = date('Y-m-d');
 
 $stmt->bind_param('sss', $mat_id, $start, $end);
@@ -345,7 +345,7 @@ $stmt->close();
         <h2>Please dispense drugs to the client.</h2>
 
 
-            <form class="form-inline" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form class="form-inline" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
                 <div class="grid-container">
                     <div class="grid-item">
                     <label>MAT ID</label><br>

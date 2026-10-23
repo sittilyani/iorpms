@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If month and year are selected, filter by them
     if (!empty($month) && !empty($year)) {
         $start_date = $year . '-' . $month . '-01';
-        $end_date = date('Y-m-t', strtotime($start_date));
+        $end_date = date('Y-m-t', strtotime((string)($start_date)));
     }
 
     // Prepare the statement

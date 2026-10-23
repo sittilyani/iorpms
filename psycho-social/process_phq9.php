@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $q_scores[$key] = $score;
         } else {
             $message = "Error: Please answer all PHQ-9 questions.";
-            header("Location: search_phq9_form.php?message=" . urlencode($message));
+            header("Location: search_phq9_form.php?message=" . urlencode((string)($message)));
             exit();
         }
     }
@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: phq9_results.php");
             exit();
         } else {
-            $error_message = urlencode("Error saving assessment: " . $stmt->error);
+            $error_message = urlencode((string)("Error saving assessment: " . $stmt->error));
             $stmt->close();
             header("Location: search_phq9_form.php?message=" . $error_message . "&status=error");
             exit();

@@ -6,9 +6,9 @@ include '../includes/footer.php';
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $countyCode = trim($_POST["county_code"]);
-        $countyName = trim($_POST["county_name"]);
-        $region = trim($_POST["region"]);
+        $countyCode = trim((string)($_POST["county_code"]));
+        $countyName = trim((string)($_POST["county_name"]));
+        $region = trim((string)($_POST["region"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO counties (county_code, county_name, region) VALUES (?, ?, ?)";
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="wrapper">
         <h2>Add New County</h2>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
             <div class="form-group">
                 <label>County Code</label>
                 <input type="text" name="county_code" class="form-control" required>

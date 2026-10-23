@@ -67,10 +67,10 @@ $stocks = $result->fetch_all(MYSQLI_ASSOC);
                 <td><?= $stock['total_stockqty']; ?></td>
                 <td>
                     <!-- Edit Button -->
-                    <a href="edit_stock.php?drugname=<?= urlencode($stock['drugname']); ?>" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="edit_stock.php?drugname=<?= urlencode((string)($stock['drugname'])); ?>" class="btn btn-primary btn-sm">Edit</a>
 
                     <!-- View Transactions Button -->
-                    <a href="view_transactions.php?drugname=<?= urlencode($stock['drugname']); ?>" class="btn btn-info btn-sm">View Transactions</a>
+                    <a href="view_transactions.php?drugname=<?= urlencode((string)($stock['drugname'])); ?>" class="btn btn-info btn-sm">View Transactions</a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -110,22 +110,22 @@ if (isset($_SESSION['dispensing_successes'])) {
                 <span aria-hidden="true">&times;</span>
             </button>
             <?php foreach ($successMessages as $success): ?>
-                <p><?php echo htmlspecialchars($success); ?></p>
+                <p><?php echo htmlspecialchars((string)($success)); ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
-    <h2 style="color: #2C3162;">Dispensing without Pump</h2>
+    <h2 style="color: #2D008A;">Dispensing without Pump</h2>
 
     <!-- Fingerprint Verification Modal -->
     <div id="fingerprintModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h4 style="color: #2C3162;">Fingerprint Verification Required</h4>
+            <h4 style="color: #2D008A;">Fingerprint Verification Required</h4>
             <div id="modal-message"></div>
             <div id="verification-instructions" style="padding: 20px; text-align: center;">
                 <p>Please verify fingerprint before dispensing</p>
-                <button onclick="startFingerprintVerification()" style="padding: 10px 20px; background: #2C3162; color: white; border: none; border-radius: 5px; margin: 10px;">
+                <button onclick="startFingerprintVerification()" style="padding: 10px 20px; background: #2D008A; color: white; border: none; border-radius: 5px; margin: 10px;">
                     Start Fingerprint Scan
                 </button>
                 <button onclick="closeModal()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; margin: 10px;">
@@ -136,7 +136,7 @@ if (isset($_SESSION['dispensing_successes'])) {
         </div>
     </div>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
             <input type="text" id="search" class="search-entry" name="search"
@@ -256,7 +256,7 @@ if (isset($_SESSION['dispensing_successes'])) {
                 </td>
                 <td>
                     <a href='../pharmacy/view-missed.php?mat_id={$row['mat_id']}'>View</a> |
-                    <a href='#' onclick='verifyFingerprintBeforeDispense(\"" . $row['mat_id'] . "\", \"" . addslashes($row['clientName']) . "\", " . ($hasFingerprint ? 'true' : 'false') . ")'>DISPENSE</a> |
+                    <a href='#' onclick='verifyFingerprintBeforeDispense(\"" . $row['mat_id'] . "\", \"" . addslashes((string)($row['clientName'])) . "\", " . ($hasFingerprint ? 'true' : 'false') . ")'>DISPENSE</a> |
                     <a href='multi_dispensing.php?mat_id={$row['mat_id']}'>MDD</a> |
                     <a href='../referrals/referral.php?mat_id={$row['mat_id']}'>Refer</a>
                 </td>

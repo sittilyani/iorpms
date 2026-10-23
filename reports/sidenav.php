@@ -53,8 +53,12 @@ $full_name = getUserFullName();
     <a href="../dashboard/dashboard.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Home
     </a>
-    <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+    <a href="../reports/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
         <i class="fa fa-pump-medical"></i>Dashboard</a>
+    <a href="../reports/clinic_summary.php" target="contentFrame" class="nav-link" style="background:#04B04B;color:#fff;margin-top:10px">
+        <i class="fa fa-file-text"></i>Monthly Clinic Summary</a>
+    <a href="../reports/sha_claims.php" target="contentFrame" class="nav-link" style="background:#2D008A;color:#fff;margin-top:10px">
+        <i class="fa fa-money"></i>SHA Drug Claim (monthly)</a>
 
     <?php if (in_array($userrole, ['Super Admin','Admin', 'HRIO', 'Pharmacist'])) : ?>
 
@@ -84,7 +88,7 @@ $full_name = getUserFullName();
             <i class="fa fa-file"></i>Consents Report</a>
         <a href="../reports/patient_treatment_card_form3c.php" target="contentFrame" class="nav-link">
             <i class="fa fa-file"></i>Form 3C - patient treatment card </a>
-        <a href="../reports/create_ai_generated_report.php" target="contentFrame" style="background: #2C3162; color: #fff; margin-top: 20px;" class="nav-link">
+        <a href="../reports/create_ai_generated_report.php" target="contentFrame" style="background: #2D008A; color: #fff; margin-top: 20px;" class="nav-link">
             <i class="fa fa-chart-line"></i>AI-Assisted Analytics &amp; Risk Report</a>
 
 <?php elseif (in_array($userrole, ['clinician', 'Laboratory Scientist', 'Psychiatrist', 'psychologist'])) : ?>
@@ -94,7 +98,11 @@ $full_name = getUserFullName();
             <i class="fa fa-comment"></i>MOH 731 Plus-6</a>
         <a href="psycho_socio_report.php" target="contentFrame" class="nav-link">
             <i class="fa fa-file"></i>Pyschosocial Report</a>
-        <a href="../reports/create_ai_generated_report.php" target="contentFrame" style="background: #2C3162; color: #fff; margin-top: 20px;" class="nav-link">
+        <a href="../reports/create_ai_generated_report.php" target="contentFrame" style="background: #2D008A; color: #fff; margin-top: 20px;" class="nav-link">
+            <i class="fa fa-chart-line"></i>AI-Assisted Analytics &amp; Risk Report</a>
+
+<?php elseif (in_array(strtolower((string)($userrole)), ['nursing'])) : ?>
+        <a href="../reports/create_ai_generated_report.php" target="contentFrame" style="background: #2D008A; color: #fff; margin-top: 20px;" class="nav-link">
             <i class="fa fa-chart-line"></i>AI-Assisted Analytics &amp; Risk Report</a>
 
 <?php endif; ?>
@@ -118,10 +126,24 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
+            <?php /* landing dashboard: the module opens on its dashboard */ if (in_array(strtolower((string)($userrole ?? ($_SESSION['userrole'] ?? ''))), array (
+  0 => 'admin',
+  1 => 'super admin',
+  2 => 'hrio',
+  3 => 'data manager',
+  4 => 'pharmacist',
+  5 => 'clinician',
+  6 => 'laboratory scientist',
+  7 => 'psychologist',
+  8 => 'demo',
+), true)): ?>
+            <iframe src="dashboard.php" title="Dashboard" style="width:100%;height:calc(100vh - 130px);border:0;display:block;background:transparent"></iframe>
+            <?php else: ?>
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+        <?php endif; ?>
         </div>
     </div>
 </div>

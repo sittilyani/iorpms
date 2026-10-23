@@ -33,7 +33,7 @@ $topics = [
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon_io/favicon-32x32.png">
 <style>
   body{background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;color:#263238;}
-  .hero{background:#2C3162;color:#fff;padding:48px 6% 40px;text-align:center;}
+  .hero{background:#2D008A;color:#fff;padding:48px 6% 40px;text-align:center;}
   .hero h1{font-size:1.9rem;margin:0 0 10px;}
   .hero p{color:rgba(255,255,255,.85);max-width:640px;margin:0 auto 22px;font-size:1rem;}
   .btn-yt{display:inline-block;background:#FF0000;color:#fff;font-weight:bold;font-size:1.05rem;

@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
                 exit();
         } else {
                 $errorMessage = "Error updating record: " . $stmt->error;
-                echo "<div style='background-color: #fce8e8; color: red; font-size: 20px; padding: 8px; width: 100%; height: 40px;'>Error updating patient details: " . htmlspecialchars($stmt->error) . "</div>";
+                echo "<div style='background-color: #fce8e8; color: red; font-size: 20px; padding: 8px; width: 100%; height: 40px;'>Error updating patient details: " . htmlspecialchars((string)($stmt->error)) . "</div>";
         }
 
         $stmt->close();
@@ -138,30 +138,30 @@ if (isset($_SESSION['user_id'])) {
                         <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
                 <?php endif; ?>
                 <form method="post">
-                        <input type="hidden" name="vl_id" value="<?= htmlspecialchars($currentSettings['vl_id'] ?? '') ?>">
+                        <input type="hidden" name="vl_id" value="<?= htmlspecialchars((string)($currentSettings['vl_id'] ?? '')) ?>">
                         <div class="form-group">
                                 <label for="mat_id">MAT ID</label>
-                                <input type="text" name="mat_id" value="<?= htmlspecialchars($currentSettings['mat_id'] ?? '') ?>" class="readonly-input" readonly required>
+                                <input type="text" name="mat_id" value="<?= htmlspecialchars((string)($currentSettings['mat_id'] ?? '')) ?>" class="readonly-input" readonly required>
                         </div>
                         <div class="form-group">
                                 <label for="clientName">Client Name</label>
-                                <input type="text" name="clientName" value="<?= htmlspecialchars($currentSettings['clientName'] ?? '') ?>" class="readonly-input" readonly required>
+                                <input type="text" name="clientName" value="<?= htmlspecialchars((string)($currentSettings['clientName'] ?? '')) ?>" class="readonly-input" readonly required>
                         </div>
                         <div class="form-group">
                                 <label for="dob">Date of Birth</label>
-                                <input type="date" name="dob" value="<?= htmlspecialchars($currentSettings['dob'] ?? '') ?>" class="readonly-input" readonly>
+                                <input type="date" name="dob" value="<?= htmlspecialchars((string)($currentSettings['dob'] ?? '')) ?>" class="readonly-input" readonly>
                         </div>
                         <div class="form-group">
                                 <label for="reg_date">Date of Enrolment</label>
-                                <input type="date" name="reg_date" value="<?= htmlspecialchars($currentSettings['reg_date'] ?? '') ?>" class="readonly-input" readonly required>
+                                <input type="date" name="reg_date" value="<?= htmlspecialchars((string)($currentSettings['reg_date'] ?? '')) ?>" class="readonly-input" readonly required>
                         </div>
                         <div class="form-group">
                                 <label for="sex">Sex</label>
-                                <input type="text" name="sex" value="<?= htmlspecialchars($currentSettings['sex'] ?? '') ?>" class="readonly-input" readonly>
+                                <input type="text" name="sex" value="<?= htmlspecialchars((string)($currentSettings['sex'] ?? '')) ?>" class="readonly-input" readonly>
                         </div>
                         <div class="form-group">
                                 <label for="hiv_status">HIV Status</label>
-                                <input type="text" name="hiv_status" value="<?= htmlspecialchars($currentSettings['hiv_status'] ?? '') ?>" class="readonly-input" readonly>
+                                <input type="text" name="hiv_status" value="<?= htmlspecialchars((string)($currentSettings['hiv_status'] ?? '')) ?>" class="readonly-input" readonly>
                         </div>
                         <div class="form-group">
                             <label for="art_regimen">ART Regimen</label><br>
@@ -174,7 +174,7 @@ if (isset($_SESSION['user_id'])) {
                                     while ($row = $result->fetch_assoc()) {
                                         // Check if this option matches the current setting
                                         $selected = ($row['regimen_name'] == ($currentSettings['art_regimen'] ?? '')) ? 'selected' : '';
-                                        echo "<option value='" . htmlspecialchars($row['regimen_name']) . "' $selected>" . htmlspecialchars($row['regimen_name']) . "</option>";
+                                        echo "<option value='" . htmlspecialchars((string)($row['regimen_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_name'])) . "</option>";
                                     }
                                 } else {
                                     echo "<option value=''>No regimen found</option>";
@@ -194,7 +194,7 @@ if (isset($_SESSION['user_id'])) {
                                     while ($row = $result->fetch_assoc()) {
                                         // Check if this option matches the current setting
                                         $selected = ($row['regimen_type_name'] == ($currentSettings['regimen_type'] ?? '')) ? 'selected' : '';
-                                        echo "<option value='" . htmlspecialchars($row['regimen_type_name']) . "' $selected>" . htmlspecialchars($row['regimen_type_name']) . "</option>";
+                                        echo "<option value='" . htmlspecialchars((string)($row['regimen_type_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_type_name'])) . "</option>";
                                     }
                                 } else {
                                     echo "<option value=''>No type found</option>";
@@ -204,24 +204,24 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                         <div class="form-group">
                                 <label for="last_vlDate">Last Viral Load Date</label>
-                                <input type="date" name="last_vlDate" value="<?= htmlspecialchars($currentSettings['last_vlDate'] ?? '') ?>">
+                                <input type="date" name="last_vlDate" value="<?= htmlspecialchars((string)($currentSettings['last_vlDate'] ?? '')) ?>">
                         </div>
                         <div class="form-group">
                                 <label for="results">Last Viral Load Results</label>
-                                <input type="text" name="results" value="<?= htmlspecialchars($currentSettings['results'] ?? '') ?>">
+                                <input type="text" name="results" value="<?= htmlspecialchars((string)($currentSettings['results'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                                 <label for="next_appointment">Next Appointment</label>
-                                <input type="date" name="next_appointment" value="<?= htmlspecialchars($currentSettings['next_appointment'] ?? '') ?>" required>
+                                <input type="date" name="next_appointment" value="<?= htmlspecialchars((string)($currentSettings['next_appointment'] ?? '')) ?>" required>
                         </div>
                         <div class="form-group">
                                 <label for="clinician_name">Clinician Name</label>
-                                <input type="text" name="clinician_name" value="<?= htmlspecialchars($clinicianName) ?>" class="readonly-input" readonly>
+                                <input type="text" name="clinician_name" value="<?= htmlspecialchars((string)($clinicianName)) ?>" class="readonly-input" readonly>
                         </div>
                         <div class="form-group">
                                 <label for="clinical_notes">Clinical Notes</label>
-                                <textarea name="clinical_notes" cols="33" rows="4"><?= htmlspecialchars($currentSettings['clinical_notes'] ?? '') ?></textarea>
+                                <textarea name="clinical_notes" cols="33" rows="4"><?= htmlspecialchars((string)($currentSettings['clinical_notes'] ?? '')) ?></textarea>
                         </div>
                         <input type="submit" name="update" class="custom-submit-btn" value="Update">
                 </form>

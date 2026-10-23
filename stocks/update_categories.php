@@ -30,8 +30,8 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $id = $_POST['id'];
-    $name = trim($_POST['name']);
-    $description = trim($_POST['description']);
+    $name = trim((string)($_POST['name']));
+    $description = trim((string)($_POST['description']));
 
     // Basic validation
     if (empty($name) || empty($description)) {
@@ -216,21 +216,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             <h2>Edit category</h2>
 
             <?php if (isset($error)): ?>
-                <p class="error"><?php echo htmlspecialchars($error); ?></p>
+                <p class="error"><?php echo htmlspecialchars((string)($error)); ?></p>
             <?php endif; ?>
 
             <?php if (!empty($category)): ?>
                 <form method="POST" action="">
-                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($category['id']); ?>">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars((string)($category['id'])); ?>">
 
                     <div class="form-group">
                         <label for="name" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
+                        <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars((string)($category['name'])); ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" name="description" value="<?php echo htmlspecialchars($category['description']); ?>" required>
+                        <input type="text" class="form-control" name="description" value="<?php echo htmlspecialchars((string)($category['description'])); ?>" required>
                     </div>
 
 

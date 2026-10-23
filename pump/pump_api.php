@@ -117,7 +117,7 @@ $raw_output = implode("\n", $output);
 try {
     // Look for JSON in output
     foreach ($output as $line) {
-        $line = trim($line);
+        $line = trim((string)($line));
         if ($line && ($line[0] === '{' || $line[0] === '[')) {
             $json_result = json_decode($line, true);
             if ($json_result !== null) {

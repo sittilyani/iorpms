@@ -3,6 +3,11 @@ session_start();
 
 // 1. Include the config file ONCE at the top
 include('../includes/config.php');
+require_once('../includes/clinic_helpers.php');
+
+// Facility comes from Facility Setup (never typed in): name, MFL, county, sub county
+$setupFac = $conn->query("SELECT fs.facilityname, COALESCE(NULLIF(fs.mflcode,''), f.mflcode) AS mflcode, fs.countyname, fs.subcountyname FROM facility_settings fs LEFT JOIN facilities f ON f.id = fs.facility_id LIMIT 1")->fetch_assoc() ?: ['facilityname'=>'','mflcode'=>'','countyname'=>'','subcountyname'=>''];
+$nextMatId = $setupFac['mflcode'] !== '' ? next_mat_id($conn, $setupFac['mflcode']) : '';
 
 // Initialize $conn and check if it's available before proceeding to use it in other blocks
 if (!isset($conn) || $conn->connect_error) {
@@ -25,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate and sanitize input
     $formData = [];
     foreach ($fields as $field) {
-        $formData[$field] = trim($_POST[$field] ?? '');
+        $formData[$field] = trim((string)($_POST[$field] ?? ''));
     }
 
     // --- START: SERVER-SIDE VALIDATION ---
@@ -45,6 +50,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $validation_error = "Registration Date cannot be before the Date of Birth.";
     }
 
+    // Check 4: Transfer In / Transit clients arrive with their parent-facility MAT ID, which must not already exist here
+    if (empty($validation_error) && in_array($formData['mat_status'], ['Transfer In', 'Transit'], true)) {
+        if ($formData['mat_id'] === '') {
+            $validation_error = 'Enter the MAT ID the client was issued by the parent facility.';
+        } else {
+            $dup = $conn->prepare('SELECT clientName FROM patients WHERE mat_id = ?'); $dup->bind_param('s', $formData['mat_id']); $dup->execute();
+            if ($d = $dup->get_result()->fetch_assoc()) { $validation_error = 'MAT ID ' . htmlspecialchars((string)($formData['mat_id'])) . ' already exists in this clinic (' . htmlspecialchars((string)($d['clientName'])) . '). Open that client instead of registering again.'; }
+            $dup->close();
+            $formData['transfer_id'] = $formData['mat_id'];
+        }
+    }
+
+    // Check 3: Re-induction is for returning clients (Update Patient), never for a new registration
+    if (empty($validation_error) && strcasecmp($formData['mat_status'], 'Re-induction') === 0) {
+        $validation_error = "Re-induction cannot be used for a new registration. Use Update Patient for a returning client.";
+    }
+
     if (!empty($validation_error)) {
         echo "<div id='errormessage' style='background: #ffcccc; color: red; height: 30px; font-style: italic; padding: 5px;'>Validation Error: $validation_error</div>";
         // Do NOT proceed with insertion
@@ -59,8 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $formData['age']--;
         }
 
+        // Facility details are fixed by setup; MAT ID is always the next free number for this facility
+        $formData['reg_facility'] = $setupFac['facilityname']; $formData['mflcode'] = $setupFac['mflcode'];
+        $formData['county'] = $setupFac['countyname']; $formData['scounty'] = $setupFac['subcountyname'];
+        $chk = $conn->prepare('SELECT 1 FROM patients WHERE mat_id = ?'); $chk->bind_param('s', $formData['mat_id']); $chk->execute();
+        if (!in_array($formData['mat_status'], ['Transfer In', 'Transit'], true) && ($formData['mat_id'] === '' || $chk->get_result()->num_rows > 0 || strcasecmp($formData['mat_status'], 'New') === 0)) { $formData['mat_id'] = next_mat_id($conn, $setupFac['mflcode']); }
+        $chk->close();
+        if (strcasecmp($formData['mat_status'], 'New') === 0) { $formData['referring_facility'] = ''; $formData['reasons'] = 'Initiation Dose'; }
+
         // Set drugname
-        $formData['drugname'] = trim($_POST['drugname'] ?? 'Methadone');
+        $formData['drugname'] = trim((string)($_POST['drugname'] ?? 'Methadone'));
 
         // Prepare and execute SQL query to insert data into the database
         $sql = "INSERT INTO patients (
@@ -114,6 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
 
             if ($stmt->execute()) {
+                if (!empty($_SESSION['user_id'])) { $conn->query('CREATE TABLE IF NOT EXISTS registration_drafts (user_id INT NOT NULL PRIMARY KEY, payload LONGTEXT NOT NULL, step TINYINT NOT NULL DEFAULT 1, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci'); $conn->query('DELETE FROM registration_drafts WHERE user_id = ' . (int)$_SESSION['user_id']); }
                 echo "<div id='successmessage' style='background: #b8fcdf; height: 30px; font-style: italic; padding: 5px;'>New client added successfully</div>";
                 echo "<script>
                     setTimeout(function() {
@@ -215,43 +246,40 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
 
         <div class="form-group">
             <label for="reg_facility">Facility <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <select id="reg_facility" name="reg_facility" required>
-                <option value="">Select Facility</option>
+            <input type="text" id="reg_facility" name="reg_facility" required class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($setupFac['facilityname'])); ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="mflcode">MFL code <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+            <input type="text" id="mflcode" name="mflcode" required class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($setupFac['mflcode'])); ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="county">County <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+            <input type="text" id="county" name="county" required class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($setupFac['countyname'])); ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="scounty">Sub County <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+            <input type="text" id="scounty" name="scounty" required class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($setupFac['subcountyname'])); ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="mat_status">Status at enrolment? <span style='color: red; font-weight: bold;'>&#10033;</span></label>
+            <select id="mat_status" name="mat_status" required>
+                <option value="">Select enrolment status</option>
                 <?php
-                // Fetch facilities and required details for data attributes
-                // Rely on the single connection opened at the top
                 if (isset($conn)) {
-                    $sql = "SELECT facilityname, mflcode, countyname, subcountyname FROM facilities ORDER BY facilityname ASC";
+                    $sql = "SELECT enrolment_status_name FROM enrolment_status WHERE enrolment_status_name <> 'Re-induction'"; // Re-induction is for returning clients (Update Patient), not new registration
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            // Store MFL, County, and SubCounty data in the option's data attributes
-                            echo "<option
-                                        value='" . htmlspecialchars($row['facilityname']) . "'
-                                        data-mfl='" . htmlspecialchars($row['mflcode']) . "'
-                                        data-county='" . htmlspecialchars($row['countyname']) . "'
-                                        data-scounty='" . htmlspecialchars($row['subcountyname']) . "'
-                                    >" . htmlspecialchars($row['facilityname']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['enrolment_status_name'])) . "'>" . htmlspecialchars((string)($row['enrolment_status_name'])) . "</option>";
                         }
                     }
                 }
                 ?>
             </select>
-        </div>
-
-        <div class="form-group">
-            <label for="mflcode">MFL code <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <input type="text" id="mflcode" name="mflcode" required class="readonly-input" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="county">County <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <input type="text" id="county" name="county" required class="readonly-input" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="scounty">Sub County <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <input type="text" id="scounty" name="scounty" required class="readonly-input" readonly>
         </div>
 
         <div class="form-group">
@@ -261,7 +289,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
 
         <div class="form-group">
             <label for="mat_id">Unique (MAT) ID <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <input type="text" id="mat_id" name="mat_id" required>
+            <input type="text" id="mat_id" name="mat_id" required class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($nextMatId)); ?>" title="Next free MAT ID for this facility">
         </div>
         <div class="form-group">
             <label for="mat_number">MAT Number</label>
@@ -298,7 +326,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['gender_name']) . "'>" . htmlspecialchars($row['gender_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['gender_name'])) . "'>" . htmlspecialchars((string)($row['gender_name'])) . "</option>";
                         }
                     }
                 }
@@ -315,7 +343,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['marital_status_name']) . "'>" . htmlspecialchars($row['marital_status_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['marital_status_name'])) . "'>" . htmlspecialchars((string)($row['marital_status_name'])) . "</option>";
                         }
                     }
                 }
@@ -336,23 +364,6 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
         </div>
 
         <div class="form-group">
-            <label for="mat_status">Status at enrolment? <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <select id="mat_status" name="mat_status" required>
-                <option value="">Select enrolment status</option>
-                <?php
-                if (isset($conn)) {
-                    $sql = "SELECT enrolment_status_name FROM enrolment_status";
-                    $result = $conn->query($sql);
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['enrolment_status_name']) . "'>" . htmlspecialchars($row['enrolment_status_name']) . "</option>";
-                        }
-                    }
-                }
-                ?>
-            </select>
-        </div>
-        <div class="form-group">
             <label for="transfer_id">Transfer in MAT ID</label>
             <input type="text" id="transfer_id" name="transfer_id">
         </div>
@@ -366,7 +377,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['referralType']) . "'>" . htmlspecialchars($row['referralType']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['referralType'])) . "'>" . htmlspecialchars((string)($row['referralType'])) . "</option>";
                         }
                     }
                 }
@@ -383,7 +394,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['cso_name']) . "'>" . htmlspecialchars($row['cso_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['cso_name'])) . "'>" . htmlspecialchars((string)($row['cso_name'])) . "</option>";
                         }
                     }
                 }
@@ -400,7 +411,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['facilityname']) . "'>" . htmlspecialchars($row['facilityname']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['facilityname'])) . "'>" . htmlspecialchars((string)($row['facilityname'])) . "</option>";
                         }
                     }
                 }
@@ -422,7 +433,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['accompanmentType']) . "'>" . htmlspecialchars($row['accompanmentType']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['accompanmentType'])) . "'>" . htmlspecialchars((string)($row['accompanmentType'])) . "</option>";
                         }
                     }
                 }
@@ -464,7 +475,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     $result = $conn->query($sql);
                     if ($result && $result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<option value='" . htmlspecialchars($row['status_name']) . "'>" . htmlspecialchars($row['status_name']) . "</option>";
+                            echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "'>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                         }
                     }
                 }
@@ -477,7 +488,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
         </div>
         <div class="form-group">
             <label for="hcw_name">Name of service provider <span style='color: red; font-weight: bold;'>&#10033;</span></label>
-            <input type="text" name="hcw_name" value="<?php echo htmlspecialchars($hcw_name); ?>" class="readonly-input" readonly>
+            <input type="text" name="hcw_name" value="<?php echo htmlspecialchars((string)($hcw_name)); ?>" class="readonly-input" readonly>
         </div>
         <div class="form-group">
             <input type="submit" class="custom-submit-btn" value="Submit">
@@ -552,7 +563,7 @@ if (isset($conn)) {
 
 
         // Listener for facility change
-        facilitySelect.addEventListener('change', function() {
+        if (facilitySelect && facilitySelect.tagName === 'SELECT') facilitySelect.addEventListener('change', function() {
             // Get the selected option element
             const selectedOption = this.options[this.selectedIndex];
 
@@ -574,9 +585,33 @@ if (isset($conn)) {
             }
         });
 
+        // New clients have no referring facility and start on an initiation dose
+        const matStatus = document.getElementById('mat_status'), refFac = document.getElementById('referring_facility'), reasons = document.getElementById('reasons');
+        const matIdInput = document.getElementById('mat_id'), matIdLabel = document.querySelector('label[for="mat_id"]'), transferIdInput = document.getElementById('transfer_id');
+        const autoMatId = matIdInput.value, star = " <span style='color: red; font-weight: bold;'>&#10033;</span>";
+        function applyEnrolment() {
+            const isNew = matStatus.value === 'New';
+            const fromParent = matStatus.value === 'Transfer In' || matStatus.value === 'Transit';
+            if (fromParent) {
+                if (matIdInput.readOnly || matIdInput.value === autoMatId) matIdInput.value = '';
+                matIdInput.readOnly = false; matIdInput.classList.remove('readonly-input'); matIdInput.placeholder = 'MAT ID issued by the parent facility';
+                matIdLabel.innerHTML = 'MAT ID from the parent facility' + star;
+                if (transferIdInput) { transferIdInput.readOnly = true; transferIdInput.classList.add('readonly-input'); transferIdInput.value = matIdInput.value; }
+            } else {
+                matIdInput.readOnly = true; matIdInput.classList.add('readonly-input'); matIdInput.value = autoMatId; matIdInput.placeholder = '';
+                matIdLabel.innerHTML = 'Unique (MAT) ID' + (isNew ? ' (auto-generated)' : '') + star;
+                if (transferIdInput) { transferIdInput.readOnly = false; transferIdInput.classList.remove('readonly-input'); }
+            }
+            matIdInput.addEventListener('input', function () { if (transferIdInput && fromParent) transferIdInput.value = matIdInput.value; });
+            if (refFac) { refFac.disabled = isNew; if (isNew) refFac.value = ''; }
+            if (reasons && isNew) { reasons.value = 'Initiation Dose'; reasons.readOnly = true; } else if (reasons) { reasons.readOnly = false; if (reasons.value === 'Initiation Dose') reasons.value = ''; }
+        }
+        matStatus.addEventListener('change', applyEnrolment); applyEnrolment();
+
         // This is the correct, simple method for auto-populating fields
         // using data already loaded in the HTML.
     });
 </script>
+<script src="../assets/js/registration_steps.js"></script>
 </body>
 </html>

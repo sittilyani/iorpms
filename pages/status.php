@@ -5,8 +5,8 @@ include '../includes/header.php';
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $status_name = trim($_POST["status_name"]);
-        $descr = trim($_POST["descr"]);
+        $status_name = trim((string)($_POST["status_name"]));
+        $descr = trim((string)($_POST["descr"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO status (status_name, descr) VALUES (?, ?)";
@@ -195,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
            <h2>Add Patient Status</h2>
        </div>
         <p>Please fill this form to add a new status.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
             <div class="form-group">
                 <label>Status Name</label> <br>
                 <input type="text" name="status_name" class="form-control" required">

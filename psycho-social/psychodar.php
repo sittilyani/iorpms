@@ -199,7 +199,7 @@ $stmt->close();
                  </div>
                   <div class="form-group">
                       <label for="therapist_initials">Therapist's Name</label>
-                      <input type="text" name="therapist_initials" value="<?php echo htmlspecialchars($therapist_initials); ?>" class="readonly-input readonly">
+                      <input type="text" name="therapist_initials" value="<?php echo htmlspecialchars((string)($therapist_initials)); ?>" class="readonly-input readonly">
                 </div>
                 <div class="form-group">
                       <label for="therapists_notes">Therapist's Notes</label>

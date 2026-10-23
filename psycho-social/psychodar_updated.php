@@ -108,7 +108,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
     <link rel="stylesheet" href="../assests/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root{--primary:#2C3162;--secondary:#99FFBB;--accent:#4CAF50;--text:#333;--border:#ddd;--bg:#f8f9fa}
+        :root{--primary:#2D008A;--secondary:#99FFBB;--accent:#4CAF50;--text:#333;--border:#ddd;--bg:#f8f9fa}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);padding:20px}
         .container{max-width:1400px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden}
@@ -159,22 +159,22 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="visit_name" class="form-control" required>
                             <option value="">-- Select Visit Type --</option>
                             <?php foreach ($clinicVisits as $visit): ?>
-                                <option value="<?= $visit['clinic_id'] ?>"><?= htmlspecialchars($visit['visit_name']) ?></option>
+                                <option value="<?= $visit['clinic_id'] ?>"><?= htmlspecialchars((string)($visit['visit_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-id-card"></i> MAT ID</label>
-                        <input type="text" name="mat_id" class="readonly-input" readonly value="<?= htmlspecialchars($currentSettings['mat_id'] ?? '') ?>">
+                        <input type="text" name="mat_id" class="readonly-input" readonly value="<?= htmlspecialchars((string)($currentSettings['mat_id'] ?? '')) ?>">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-user"></i> Client Name</label>
-                        <input type="text" name="clientName" class="readonly-input" readonly value="<?= htmlspecialchars($currentSettings['clientName'] ?? '') ?>">
+                        <input type="text" name="clientName" class="readonly-input" readonly value="<?= htmlspecialchars((string)($currentSettings['clientName'] ?? '')) ?>">
                         <input type="hidden" name="dob" value="<?= $currentSettings['dob'] ?? '' ?>">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-venus-mars"></i> Gender</label>
-                        <input type="text" name="sex" class="readonly-input" readonly value="<?= htmlspecialchars($currentSettings['sex'] ?? '') ?>">
+                        <input type="text" name="sex" class="readonly-input" readonly value="<?= htmlspecialchars((string)($currentSettings['sex'] ?? '')) ?>">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-birthday-cake"></i> Age</label>
@@ -182,11 +182,11 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-pills"></i> Drug Name</label>
-                        <input type="text" name="drugname" class="readonly-input" readonly value="<?= htmlspecialchars($currentSettings['drugname'] ?? 'buprenorphine') ?>">
+                        <input type="text" name="drugname" class="readonly-input" readonly value="<?= htmlspecialchars((string)($currentSettings['drugname'] ?? 'buprenorphine')) ?>">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-prescription-bottle"></i> Dosage</label>
-                        <input type="text" name="dosage" class="readonly-input" readonly value="<?= htmlspecialchars($currentSettings['dosage'] ?? '') ?>">
+                        <input type="text" name="dosage" class="readonly-input" readonly value="<?= htmlspecialchars((string)($currentSettings['dosage'] ?? '')) ?>">
                     </div>
                 </div>
 
@@ -202,7 +202,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="marital_status" class="form-control" required>
                             <option value="">-- Select Status --</option>
                             <?php foreach ($maritalStatuses as $status): ?>
-                                <option value="<?= $status['mar_id'] ?>"><?= htmlspecialchars($status['marital_status_name']) ?></option>
+                                <option value="<?= $status['mar_id'] ?>"><?= htmlspecialchars((string)($status['marital_status_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -222,7 +222,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <label><i class="fas fa-check-square"></i> Usual Living Conditions (Select all that apply)</label>
                         <select name="living_conditions[]" class="form-control" multiple>
                             <?php foreach ($livingConditions as $condition): ?>
-                                <option value="<?= $condition['cond_id'] ?>"><?= htmlspecialchars($condition['condition_name']) ?></option>
+                                <option value="<?= $condition['cond_id'] ?>"><?= htmlspecialchars((string)($condition['condition_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <small style="color:#666;margin-top:5px">Hold Ctrl (Windows) or Cmd (Mac) to select multiple</small>
@@ -241,7 +241,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="employment_status" class="form-control" required>
                             <option value="">-- Select Status --</option>
                             <?php foreach ($employmentStatuses as $emp): ?>
-                                <option value="<?= $emp['emp_id'] ?>"><?= htmlspecialchars($emp['emp_status_name']) ?></option>
+                                <option value="<?= $emp['emp_id'] ?>"><?= htmlspecialchars((string)($emp['emp_status_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -250,7 +250,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="treatment_stage" class="form-control" required>
                             <option value="">-- Select Stage --</option>
                             <?php foreach ($treatmentStages as $stage): ?>
-                                <option value="<?= $stage['stage_id'] ?>"><?= htmlspecialchars($stage['stage_of_rx_name']) ?></option>
+                                <option value="<?= $stage['stage_id'] ?>"><?= htmlspecialchars((string)($stage['stage_of_rx_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -268,7 +268,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="psycho_interventions" class="form-control" required>
                             <option value="">-- Select Intervention --</option>
                             <?php foreach ($interventions as $intervention): ?>
-                                <option value="<?= $intervention['intervention_id'] ?>"><?= htmlspecialchars($intervention['intervention_name']) ?></option>
+                                <option value="<?= $intervention['intervention_id'] ?>"><?= htmlspecialchars((string)($intervention['intervention_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -277,7 +277,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="reintegration_status" class="form-control" required>
                             <option value="">-- Select Status --</option>
                             <?php foreach ($reintegrationStatuses as $reint): ?>
-                                <option value="<?= $reint['reint_id'] ?>"><?= htmlspecialchars($reint['reint_name']) ?></option>
+                                <option value="<?= $reint['reint_id'] ?>"><?= htmlspecialchars((string)($reint['reint_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -308,7 +308,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                         <select name="linkage" class="form-control">
                             <option value="">-- Select Service --</option>
                             <?php foreach ($referralServices as $service): ?>
-                                <option value="<?= $service['ref_id'] ?>"><?= htmlspecialchars($service['ref_name']) ?></option>
+                                <option value="<?= $service['ref_id'] ?>"><?= htmlspecialchars((string)($service['ref_name'])) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -319,7 +319,7 @@ if (isset($currentSettings['dob']) && !empty($currentSettings['dob'])) {
                 <div class="form-grid">
                     <div class="form-group">
                         <label><i class="fas fa-user-nurse"></i> Therapist's Name</label>
-                        <input type="text" name="therapists_name" value="<?= htmlspecialchars($therapists_name) ?>" class="readonly-input" readonly>
+                        <input type="text" name="therapists_name" value="<?= htmlspecialchars((string)($therapists_name)) ?>" class="readonly-input" readonly>
                     </div>
                     <div class="form-group">
                         <label class="required"><i class="far fa-calendar-plus"></i> Next Appointment Date</label>

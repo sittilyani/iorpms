@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
         }
 
         .prison-table th {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
         }
 
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
         }
 
         .submit-btn {
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162;">Retrospective - Bulk Dispensing</h2>
+    <h2 style="color: #2D008A;">Retrospective - Bulk Dispensing</h2>
 
     <div class="date-range-form">
         <form method="GET" action="">
@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
         $endDate = $_GET['end_date'];
 
         // Validate dates
-        if (strtotime($startDate) > strtotime($endDate)) {
+        if (strtotime((string)($startDate)) > strtotime((string)($endDate))) {
             echo '<div class="alert alert-danger">End date must be after start date.</div>';
         } else {
             // Get all dates in the range
@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_dispensing']))
 
                 // Add date columns
                 foreach ($dateRange as $date) {
-                    echo '<th>' . date('m/d/Y', strtotime($date)) . '</th>';
+                    echo '<th>' . date('m/d/Y', strtotime((string)($date))) . '</th>';
                 }
 
                 echo '<th>Current Status</th>';

@@ -208,25 +208,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_PO
 <div class="main-content">
     <!--Error and success messages-->
         <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="alert alert-danger"><?php echo htmlspecialchars($_SESSION['error_message']); ?></div>
+            <div class="alert alert-danger"><?php echo htmlspecialchars((string)($_SESSION['error_message'])); ?></div>
         <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
         <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="alert alert-success mt-3"><?php echo htmlspecialchars($_SESSION['success_message']); ?></div>
+            <div class="alert alert-success mt-3"><?php echo htmlspecialchars((string)($_SESSION['success_message'])); ?></div>
             <?php unset($_SESSION['success_message']); ?>
         <?php endif; ?>
-        <h2 class="text-center"><?php echo htmlspecialchars($page_title); ?></h2>
+        <h2 class="text-center"><?php echo htmlspecialchars((string)($page_title)); ?></h2>
 
         <form id="category-form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string)($_SESSION['csrf_token'])); ?>">
                 <label for="name" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="name" name="name"
-                value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>" required>
+                value="<?php echo isset($_POST['name']) ? htmlspecialchars((string)($_POST['name'])) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="2"><?php echo isset($_POST['description']) ? htmlspecialchars($_POST['description']) : ''; ?></textarea>
+                <textarea class="form-control" id="description" name="description" rows="2"><?php echo isset($_POST['description']) ? htmlspecialchars((string)($_POST['description'])) : ''; ?></textarea>
             </div>
             <div class="form-group">
                 <label for="photo" class="form-label">Photo</label>

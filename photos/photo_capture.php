@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             // Redirect after a delay
-            header("refresh:2; url=client_search.php?message=" . urlencode($successMessage));
+            header("refresh:2; url=client_search.php?message=" . urlencode((string)($successMessage)));
             exit();
         } else {
             echo "Error " . ($formAction === 'update' ? "updating" : "inserting") . " photo details: " . $conn->error;
@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Photo <?php echo ucfirst($action); ?></title>
+    <title>Photo <?php echo ucfirst((string)($action)); ?></title>
     <style>
         .content-main{
             display: grid;
@@ -122,14 +122,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-weight: bold;
         }
         h2{
-            color: #2C3162;
+            color: #2D008A;
             margin-top: 20px;
             margin-left: 50px;
         }
         #btn-submit{
             width: 250px;
             color: white;
-            background-color: #2C3162;
+            background-color: #2D008A;
             height: 35px;
             border-radius: 5px;
             border: none;
@@ -146,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             position: relative;
             width: 320px;
             height: 240px;
-            border: 2px solid #2C3162;
+            border: 2px solid #2D008A;
             border-radius: 5px;
             background-color: black;
         }
@@ -165,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             z-index: 10;
             width: 100px;
             height: 30px;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             border: none;
             border-radius: 5px;
@@ -232,14 +232,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .existing-photo img {
             max-width: 150px;
             max-height: 150px;
-            border: 2px solid #2C3162;
+            border: 2px solid #2D008A;
             border-radius: 5px;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<h2>Client Photo <?php echo ucfirst($action); ?> Form</h2>
+<h2>Client Photo <?php echo ucfirst((string)($action)); ?> Form</h2>
 
 <div id="insecure-context-warning" class="action-info" style="display:none; background-color:#f8d7da; border-color:#f5c6cb; color:#721c24;">
     <strong>Camera may be blocked on this device.</strong>
@@ -270,14 +270,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="action-info">
     <?php
     if ($action === 'update') {
-        echo "You are updating the photo for " . htmlspecialchars($currentSettings['clientName']) . ". The existing photo will be replaced.";
+        echo "You are updating the photo for " . htmlspecialchars((string)($currentSettings['clientName'])) . ". The existing photo will be replaced.";
     } else {
-        echo "You are capturing a new photo for " . htmlspecialchars($currentSettings['clientName']) . ".";
+        echo "You are capturing a new photo for " . htmlspecialchars((string)($currentSettings['clientName'])) . ".";
     }
     ?>
 </div>
 
-<form id="photo-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?p_id=" . $userId . "&action=" . $action; ?>" method="post" enctype="multipart/form-data">
+<form id="photo-form" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])) . "?p_id=" . $userId . "&action=" . $action; ?>" method="post" enctype="multipart/form-data">
     <input type="hidden" name="action" value="<?php echo $action; ?>">
 
     <div class="content-main">
@@ -530,7 +530,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     retryButton.textContent = 'Retry Webcam Access';
     retryButton.style.margin = '10px 50px';
     retryButton.style.padding = '10px';
-    retryButton.style.backgroundColor = '#2C3162';
+    retryButton.style.backgroundColor = '#2D008A';
     retryButton.style.color = 'white';
     retryButton.style.border = 'none';
     retryButton.style.borderRadius = '5px';

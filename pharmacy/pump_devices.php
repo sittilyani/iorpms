@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'add' || $action === 'edit') {
         $id          = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-        $label       = trim($_POST['label']       ?? '');
-        $port        = strtoupper(trim($_POST['port'] ?? ''));
-        $pump_host   = trim($_POST['pump_host']   ?? 'localhost') ?: 'localhost';
+        $label       = trim((string)($_POST['label']       ?? ''));
+        $port        = strtoupper((string)(trim((string)($_POST['port'] ?? ''))));
+        $pump_host   = trim((string)($_POST['pump_host']   ?? 'localhost')) ?: 'localhost';
         $is_reversed = isset($_POST['is_reversed']) ? 1 : 0;
-        $api_secret  = trim($_POST['api_secret']  ?? '');
+        $api_secret  = trim((string)($_POST['api_secret']  ?? ''));
 
         if (!$label || !$port) {
             $error = 'Label and Port are required.';
@@ -142,7 +142,7 @@ if ($res) {
 <div class="container-main">
 
     <?php if ($success): ?>
-        <div class="alert-success"><i class="fa fa-check-circle"></i> <?php echo htmlspecialchars($success); ?></div>
+        <div class="alert-success"><i class="fa fa-check-circle"></i> <?php echo htmlspecialchars((string)($success)); ?></div>
     <?php endif; ?>
     <?php if ($error): ?>
         <div class="alert-error"><i class="fa fa-exclamation-circle"></i> <?php echo $error; ?></div>
@@ -184,17 +184,17 @@ if ($res) {
             <?php foreach ($devices as $d): ?>
                 <tr>
                     <td><?php echo (int)$d['id']; ?></td>
-                    <td><strong><?php echo htmlspecialchars($d['label']); ?></strong></td>
-                    <td><code><?php echo htmlspecialchars($d['port']); ?></code></td>
+                    <td><strong><?php echo htmlspecialchars((string)($d['label'])); ?></strong></td>
+                    <td><code><?php echo htmlspecialchars((string)($d['port'])); ?></code></td>
                     <td>
                         <?php
                         $h = $d['pump_host'];
-                        $is_local = in_array(strtolower($h), ['localhost','127.0.0.1','::1']);
+                        $is_local = in_array(strtolower((string)($h)), ['localhost','127.0.0.1','::1']);
                         ?>
                         <?php if ($is_local): ?>
                             <span class="badge-local">Server (local)</span>
                         <?php else: ?>
-                            <span class="badge-remote"><?php echo htmlspecialchars($h); ?></span>
+                            <span class="badge-remote"><?php echo htmlspecialchars((string)($h)); ?></span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -207,11 +207,11 @@ if ($res) {
                     <td>
                         <?php
                         $s = $d['api_secret'];
-                        echo $s ? '<code style="font-size:11px;">' . htmlspecialchars(substr($s,0,8)) . '…</code>' : '<span style="color:#aaa;">not set</span>';
+                        echo $s ? '<code style="font-size:11px;">' . htmlspecialchars((string)(substr($s,0,8))) . '…</code>' : '<span style="color:#aaa;">not set</span>';
                         ?>
                     </td>
                     <td>
-                        <button class="btn-edit" onclick="openEdit(<?php echo htmlspecialchars(json_encode($d)); ?>)">
+                        <button class="btn-edit" onclick="openEdit(<?php echo htmlspecialchars((string)(json_encode($d))); ?>)">
                             <i class="fa fa-edit"></i> Edit
                         </button>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this pump device?');">

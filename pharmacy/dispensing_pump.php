@@ -38,13 +38,13 @@ if (isset($_SESSION['successMessages'])) {
             </button>
 
             <?php foreach ($successMessages as $success): ?>
-                <p><?php echo htmlspecialchars($success); ?></p>
+                <p><?php echo htmlspecialchars((string)($success)); ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-    <h2 style="color: #2C3162; ">Dispense with Pump</h2>
+    <h2 style="color: #2D008A; ">Dispense with Pump</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry"name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -126,7 +126,8 @@ if ($result->num_rows > 0) {
                 </td>
                 <td>
                     <a href='../pharmacy/view-missed.php?mat_id=" . $row['mat_id'] . "'>View</a> &#124;
-                    <a href='dispensingData_pump.php?mat_id=" . $row['mat_id'] . "'>DISPENSE</a> &#124;
+                    <a href='dispensingData_pump.php?mat_id=" . urlencode((string)($row['mat_id'])) . "' class='js-dispense' data-mat='" . htmlspecialchars((string)($row['mat_id'])) . "' data-dose='" . (float)$row['dosage'] . "' data-appt='" . (strtotime((string)($row['next_appointment'])) < strtotime((string)(date('Y-m-d'))) ? 'overdue' : 'ok') . "'>DISPENSE</a> &#124;
+                    <a href='dose_history.php?mat_id=" . urlencode((string)($row['mat_id'])) . "'>ADHERENCE</a> &#124;
                     <a href='multi_dispensing.php?mat_id=" . $row['mat_id'] . "'>MDD</a>
                     <a href='../referrals/referral.php?mat_id=" . $row['mat_id'] . "'Refer</a>
                 </td>
@@ -163,6 +164,32 @@ if ($current_page < $number_of_pages) {
 echo "</div>";
 ?>
 
+<div id="gate" style="display:none;position:fixed;inset:0;background:rgba(20,0,60,.55);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto">
+  <div id="gateBox" style="background:#fff;border-radius:10px;max-width:520px;width:92%;margin:16px 0;border-top:6px solid #E41E39;padding:22px;font-family:Segoe UI,Arial,sans-serif">
+    <h3 id="gateTitle" style="margin:0 0 8px;color:#2D008A"></h3><p id="gateBody"></p>
+    <div id="gateBtns" style="text-align:right"></div></div></div>
+<script>
+(function(){
+  var gate=document.getElementById('gate'),T=document.getElementById('gateTitle'),B=document.getElementById('gateBody'),BT=document.getElementById('gateBtns');
+  // This page is shown inside an iframe that the menu stretches to the full page height, so a centred, fixed modal ends up
+  // far down. Put it at the top of the part of the frame the user can actually see.
+  function place(){var top=0;try{var fe=window.frameElement;if(fe){top=Math.max(0,-fe.getBoundingClientRect().top)}}catch(e){}document.getElementById('gateBox').style.marginTop=(top+16)+'px'}
+  function btn(label,color,fn){var b=document.createElement('button');b.textContent=label;b.type='button';b.style.cssText='background:'+color+';color:#fff;border:0;border-radius:6px;padding:9px 18px;margin-left:8px;font-weight:600;cursor:pointer';b.onclick=fn;BT.appendChild(b)}
+  function show(t,body,btns){T.textContent=t;B.innerHTML=body;BT.innerHTML='';btns.forEach(function(x){btn(x[0],x[1],x[2])});btn('Cancel','#888',function(){gate.style.display='none'});gate.style.display='flex';place()}
+  document.querySelectorAll('.js-dispense').forEach(function(a){a.addEventListener('click',function(e){
+    e.preventDefault();var href=a.href,mat=a.dataset.mat;
+    fetch('pump_status.php').then(function(r){return r.json()}).then(function(s){
+      if(!s.ready){
+        
+        show('Reverse Prime, then Prime and Calibrate first','The pump has not dispensed for '+(s.hours===null?'a long time':s.hours+' hours')+' (limit 12 hours). <b>Reverse Prime then Prime and calibrate first before you begin dispensing.</b>',
+          [['1. Reverse Prime & Prime','#2D008A',function(){location.href='pump_reservoir.php'}],['2. Calibrate','#04B04B',function(){location.href='calibration.php'}]]);return}
+      if(parseFloat(a.dataset.dose)<=0){show('No dose on record','This client has no dose set. Do you want to update the dose now?',[['Yes, update dose','#04B04B',function(){location.href='../clinician/update_dose.php?mat_id='+encodeURIComponent(mat)}],['No, continue','#2D008A',function(){location.href=href}]]);return}
+      if(a.dataset.appt==='overdue'){show('Appointment overdue','This client has no valid next appointment. Update it now?',[['Yes, update appointment','#04B04B',function(){location.href='../appointments/update_appointments.php?mat_id='+encodeURIComponent(mat)}],['No, continue','#2D008A',function(){location.href=href}]]);return}
+      location.href=href;
+    }).catch(function(){location.href=href});
+  })});
+})();
+</script>
 <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
 

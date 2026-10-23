@@ -27,8 +27,8 @@ if ($result) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
     // Validate and sanitize input
     $category_id = intval($_POST['category_id'] ?? 0);
-    $productname = mysqli_real_escape_string($conn, trim($_POST['productname'] ?? ''));
-    $brandname = mysqli_real_escape_string($conn, trim($_POST['brandname'] ?? ''));
+    $productname = mysqli_real_escape_string($conn, trim((string)($_POST['productname'] ?? '')));
+    $brandname = mysqli_real_escape_string($conn, trim((string)($_POST['brandname'] ?? '')));
     $packsize = floatval($_POST['packsize'] ?? 0);
     $pack_price = floatval($_POST['pack_price'] ?? 0);
     $price = floatval($_POST['price'] ?? 0);
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_PO
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/forms.css" type="text/css">
     <style>
@@ -125,53 +125,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_PO
 <body>
 <div class="main-content">
     <?php if (isset($_SESSION['error_message'])): ?>
-        <div class="alert alert-danger"><?php echo htmlspecialchars($_SESSION['error_message']); unset($_SESSION['error_message']); ?></div>
+        <div class="alert alert-danger"><?php echo htmlspecialchars((string)($_SESSION['error_message'])); unset($_SESSION['error_message']); ?></div>
     <?php endif; ?>
     <?php if (isset($_SESSION['success_message'])): ?>
-        <div class="alert alert-success mt-3"><?php echo htmlspecialchars($_SESSION['success_message']); unset($_SESSION['success_message']); ?></div>
+        <div class="alert alert-success mt-3"><?php echo htmlspecialchars((string)($_SESSION['success_message'])); unset($_SESSION['success_message']); ?></div>
     <?php endif; ?>
-    <h2 class="text-center mb-4"><?php echo htmlspecialchars($page_title); ?></h2>
+    <h2 class="text-center mb-4"><?php echo htmlspecialchars((string)($page_title)); ?></h2>
 
     <form id="product-form" method="POST">
-        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string)($_SESSION['csrf_token'])); ?>">
         <div class="form-group">
             <label for="category_id" class="form-label">Category</label>
             <select class="form-control" id="category_id" name="category_id" required>
                 <option value="">Select Category</option>
                 <?php foreach ($categories as $category): ?>
                     <option value="<?php echo $category['id']; ?>" <?php echo (isset($_POST['category_id']) && $_POST['category_id'] == $category['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($category['name']); ?>
+                        <?php echo htmlspecialchars((string)($category['name'])); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group">
             <label for="productname" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="productname" name="productname" value="<?php echo isset($_POST['productname']) ? htmlspecialchars($_POST['productname']) : ''; ?>" required>
+            <input type="text" class="form-control" id="productname" name="productname" value="<?php echo isset($_POST['productname']) ? htmlspecialchars((string)($_POST['productname'])) : ''; ?>" required>
         </div>
         <div class="form-group">
             <label for="brandname" class="form-label">Brand Name</label>
-            <input type="text" class="form-control" id="brandname" name="brandname" value="<?php echo isset($_POST['brandname']) ? htmlspecialchars($_POST['brandname']) : ''; ?>">
+            <input type="text" class="form-control" id="brandname" name="brandname" value="<?php echo isset($_POST['brandname']) ? htmlspecialchars((string)($_POST['brandname'])) : ''; ?>">
         </div>
         <div class="form-group">
             <label for="packsize" class="form-label">Pack Size</label>
-            <input type="number" class="form-control" id="packsize" name="packsize" step="1" min="1" value="<?php echo isset($_POST['packsize']) ? htmlspecialchars($_POST['packsize']) : ''; ?>" required>
+            <input type="number" class="form-control" id="packsize" name="packsize" step="1" min="1" value="<?php echo isset($_POST['packsize']) ? htmlspecialchars((string)($_POST['packsize'])) : ''; ?>" required>
         </div>
         <div class="form-group">
             <label for="pack_price" class="form-label">Pack Price (KES)</label>
-            <input type="number" class="form-control" id="pack_price" name="pack_price" step="0.01" min="0.01" value="<?php echo isset($_POST['pack_price']) ? htmlspecialchars($_POST['pack_price']) : ''; ?>" required>
+            <input type="number" class="form-control" id="pack_price" name="pack_price" step="0.01" min="0.01" value="<?php echo isset($_POST['pack_price']) ? htmlspecialchars((string)($_POST['pack_price'])) : ''; ?>" required>
         </div>
         <div class="form-group">
             <label for="unit_price" class="form-label">Unit Price (KES)</label>
-            <input type="number" class="form-control" id="unit_price" name="unit_price" step="0.01" min="0" value="<?php echo isset($_POST['unit_price']) ? htmlspecialchars($_POST['unit_price']) : ''; ?>" readonly>
+            <input type="number" class="form-control" id="unit_price" name="unit_price" step="0.01" min="0" value="<?php echo isset($_POST['unit_price']) ? htmlspecialchars((string)($_POST['unit_price'])) : ''; ?>" readonly>
         </div>
         <div class="form-group">
             <label for="price" class="form-label">Selling Price (KES)</label>
-            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" value="<?php echo isset($_POST['price']) ? htmlspecialchars($_POST['price']) : ''; ?>" required>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" value="<?php echo isset($_POST['price']) ? htmlspecialchars((string)($_POST['price'])) : ''; ?>" required>
         </div>
         <div class="form-group">
             <label for="reorder_level" class="form-label">Reorder Level</label>
-            <input type="number" class="form-control" id="reorder_level" name="reorder_level" min="0" value="<?php echo isset($_POST['reorder_level']) ? htmlspecialchars($_POST['reorder_level']) : ''; ?>" required>
+            <input type="number" class="form-control" id="reorder_level" name="reorder_level" min="0" value="<?php echo isset($_POST['reorder_level']) ? htmlspecialchars((string)($_POST['reorder_level'])) : ''; ?>" required>
         </div>
         <div class="form-group">
             <label for="currentstatus" class="form-label">currentstatus</label>

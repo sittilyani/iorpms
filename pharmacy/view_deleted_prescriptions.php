@@ -52,11 +52,11 @@ $result = $conn->query($query);
     <h3 style='color: black; margin-bottom: 10px;'>Deleted prescriptions by date</h3>
     <form method="get">
         <label for="dateFrom">Date From:</label>
-        <input type="date" class="date-input" style="margin-left: 10px; margin-right: 10px;" name="dateFrom" value="<?php echo htmlspecialchars($dateFrom); ?>">
+        <input type="date" class="date-input" style="margin-left: 10px; margin-right: 10px;" name="dateFrom" value="<?php echo htmlspecialchars((string)($dateFrom)); ?>">
         <label for="dateTo">Date To:</label>
-        <input type="date" class="date-input" style="margin-left: 10px; margin-right: 10px;" name="dateTo" value="<?php echo htmlspecialchars($dateTo); ?>">
+        <input type="date" class="date-input" style="margin-left: 10px; margin-right: 10px;" name="dateTo" value="<?php echo htmlspecialchars((string)($dateTo)); ?>">
         <label for="search">Search:</label>
-        <input type="text" style="margin-left: 10px; margin-right: 10px;" class="search-input" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter drug name or client name">
+        <input type="text" style="margin-left: 10px; margin-right: 10px;" class="search-input" name="search" value="<?php echo htmlspecialchars((string)($searchTerm)); ?>" placeholder="Enter drug name or client name">
         <input type="submit" class="custom-search-btn" value="Search" >
         <button type="button" onclick="window.location.href='view_deleted_prescriptions.php';" style='background-color: #F74343; width: 140px; color: white; padding: 10px 20px; color: black; margin-bottom: 20px; margin-left: 10px; border-radius: 5px; border: none; padding: 8px 16px; cursor: pointer;'>Clear</button>
     </form>
@@ -79,17 +79,17 @@ $result = $conn->query($query);
         <?php
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['disp_id']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['clientName']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['mat_id']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['sex']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['drugname']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['dosage']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['pharm_officer_name']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['dispDate']) . "</td>";
-            echo "<td style='color: red';>" . htmlspecialchars($row['deletion_reason']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['date_of_deletion']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['deleted_by']) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['disp_id'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['clientName'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['sex'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['drugname'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['dosage'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['pharm_officer_name'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['dispDate'])) . "</td>";
+            echo "<td style='color: red';>" . htmlspecialchars((string)($row['deletion_reason'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['date_of_deletion'])) . "</td>";
+            echo "<td>" . htmlspecialchars((string)($row['deleted_by'])) . "</td>";
             /*echo "<td>";
 
             echo "<button onclick=\"confirmDelete(" . htmlspecialchars($row['disp_id']) . ", '" . htmlspecialchars($row['drugname']) . "', " . htmlspecialchars($row['dosage']) . ")\" class='btn btn-danger btn-sm'>Delete</button>";

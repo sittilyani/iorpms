@@ -129,7 +129,7 @@ function formatDateForInput($date) {
     }
 
     // If date is in different format, convert it
-    $timestamp = strtotime($date);
+    $timestamp = strtotime((string)($date));
     if ($timestamp === false) {
         return '';
     }
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4>Success:</h4>
             <ul>
                 <?php foreach ($successMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -282,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4>Errors:</h4>
             <ul>
                 <?php foreach ($errorMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -290,52 +290,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if (!empty($medicalHistoryData['mat_id'])): ?>
         <form action="clinicianForm_process-new.php" method="post" class="post">
-            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($p_id); ?>">
-            <input type="hidden" name="id" value="<?php echo htmlspecialchars($medicalHistoryData['id']); ?>">
+            <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($p_id)); ?>">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars((string)($medicalHistoryData['id'])); ?>">
 
             <div class="form-container">
                 <!-- Visit Date -->
                 <div class="form-group">
                     <label for="visitDate">Visit Date</label>
-                    <input type="date" name="visitDate" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['visitDate']); ?>" required>
+                    <input type="date" name="visitDate" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['visitDate'])); ?>" required>
                 </div>
 
                 <!-- Patient Basic Information -->
                 <div class="form-group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" name="mat_id" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['mat_id']); ?>">
+                    <input type="text" name="mat_id" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['mat_id'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="clientName">Client Name</label>
-                    <input type="text" name="clientName" class="form-control" value="<?php echo htmlspecialchars($medicalHistoryData['clientName']); ?>" required>
+                    <input type="text" name="clientName" class="form-control" value="<?php echo htmlspecialchars((string)($medicalHistoryData['clientName'])); ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="nickName">Nick Name</label>
-                    <input type="text" name="nickName" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['nickName']); ?>">
+                    <input type="text" name="nickName" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['nickName'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="sname">Sur Name</label>
-                    <input type="text" name="sname" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['sname']); ?>">
+                    <input type="text" name="sname" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['sname'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" name="dob" class="form-control date-input readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['dob']); ?>">
+                    <input type="date" name="dob" class="form-control date-input readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['dob'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="age">Age</label>
-                    <input type="text" name="age" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['age']); ?>">
+                    <input type="text" name="age" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['age'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="reg_date">Enrolment Date</label>
-                    <input type="date" name="reg_date" class="form-control date-input readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['reg_date']); ?>">
+                    <input type="date" name="reg_date" class="form-control date-input readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['reg_date'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="sex">Gender</label>
-                    <input type="text" name="sex" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['sex']); ?>">
+                    <input type="text" name="sex" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['sex'])); ?>">
                 </div>
                 <div class="form-group">
                     <label for="marital_status">Marital Status</label>
-                    <input type="text" name="marital_status" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['marital_status'] ?? ''); ?>">
+                    <input type="text" name="marital_status" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['marital_status'] ?? '')); ?>">
                 </div>
 
                 <!-- HIV Status with dynamic readonly logic -->
@@ -350,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['hiv_status_name'] == $current_hiv_status) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['hiv_status_name']) . "' $selected>" . htmlspecialchars($row['hiv_status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['hiv_status_name'])) . "' $selected>" . htmlspecialchars((string)($row['hiv_status_name'])) . "</option>";
                             }
                         } else {
                             echo "<option value='Negative' selected>Negative</option>";
@@ -372,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['regimen_name'] == $current_art_regimen) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['regimen_name']) . "' $selected>" . htmlspecialchars($row['regimen_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['regimen_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_name'])) . "</option>";
                             }
                         }
                         ?>
@@ -392,7 +392,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['regimen_type_name'] == $current_regimen_type) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['regimen_type_name']) . "' $selected>" . htmlspecialchars($row['regimen_type_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['regimen_type_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_type_name'])) . "</option>";
                             }
                         }
                         ?>
@@ -412,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == $current_tb_status) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         }
                         ?>
@@ -434,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     $selected = ($row['regimen_name'] == $current_tb_regimen) ? 'selected' : '';
-                                    echo "<option value='" . htmlspecialchars($row['regimen_name']) . "' $selected>" . htmlspecialchars($row['regimen_name']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['regimen_name'])) . "' $selected>" . htmlspecialchars((string)($row['regimen_name'])) . "</option>";
                                 }
                             }
                             ?>
@@ -443,12 +443,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="tb_start_date">TB Start Date</label>
-                        <input type="date" name="tb_start_date" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['tb_start_date']); ?>">
+                        <input type="date" name="tb_start_date" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['tb_start_date'])); ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="tb_end_date">TB End Date</label>
-                        <input type="date" name="tb_end_date" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['tb_end_date']); ?>">
+                        <input type="date" name="tb_end_date" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['tb_end_date'])); ?>">
                     </div>
                 </div>
 
@@ -467,7 +467,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     $selected = ($row['tpt_regimen_name'] == $current_tpt_regimen) ? 'selected' : '';
-                                    echo "<option value='" . htmlspecialchars($row['tpt_regimen_name']) . "' $selected>" . htmlspecialchars($row['tpt_regimen_name']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars((string)($row['tpt_regimen_name'])) . "' $selected>" . htmlspecialchars((string)($row['tpt_regimen_name'])) . "</option>";
                                 }
                             }
                             ?>
@@ -476,12 +476,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="tpt_start_date">TPT Start Date</label>
-                        <input type="date" name="tpt_start_date" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['tpt_start_date']); ?>">
+                        <input type="date" name="tpt_start_date" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['tpt_start_date'])); ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="tpt_end_date">TPT End Date</label>
-                        <input type="date" name="tpt_end_date" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['tpt_end_date']); ?>">
+                        <input type="date" name="tpt_end_date" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['tpt_end_date'])); ?>">
                     </div>
                 </div>
 
@@ -497,7 +497,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == $current_hepc_status) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         }
                         ?>
@@ -515,7 +515,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $selected = ($row['status_name'] == $current_other_status) ? 'selected' : '';
-                                echo "<option value='" . htmlspecialchars($row['status_name']) . "' $selected>" . htmlspecialchars($row['status_name']) . "</option>";
+                                echo "<option value='" . htmlspecialchars((string)($row['status_name'])) . "' $selected>" . htmlspecialchars((string)($row['status_name'])) . "</option>";
                             }
                         }
                         ?>
@@ -525,24 +525,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Current Status -->
                 <div class="form-group">
                     <label for="current_status">Current Status</label>
-                    <input type="text" name="current_status" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['current_status']); ?>">
+                    <input type="text" name="current_status" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['current_status'])); ?>">
                 </div>
 
                 <!-- Viral Load Information -->
                 <div class="form-group">
                     <label for="last_vlDate">Last VL Date</label>
-                    <input type="date" name="last_vlDate" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['last_vlDate']); ?>">
+                    <input type="date" name="last_vlDate" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['last_vlDate'])); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="results">VL Results</label>
-                    <input type="text" name="results" class="form-control" value="<?php echo htmlspecialchars($medicalHistoryData['results'] ?? 'None', ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="text" name="results" class="form-control" value="<?php echo htmlspecialchars((string)($medicalHistoryData['results'] ?? 'None'), ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
 
                 <!-- Next Appointment -->
                 <div class="form-group">
                     <label for="next_appointment">Next Appointment Date</label>
-                    <input type="date" name="next_appointment" class="form-control date-input" value="<?php echo htmlspecialchars($medicalHistoryData['next_appointment']); ?>">
+                    <input type="date" name="next_appointment" class="form-control date-input" value="<?php echo htmlspecialchars((string)($medicalHistoryData['next_appointment'])); ?>">
                 </div>
 
                 <!-- Appointment Status -->
@@ -561,13 +561,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Clinical Notes - Full Width -->
                 <div class="clinical-notes-container">
                     <label for="clinical_notes">Clinical Notes</label>
-                    <textarea name="clinical_notes" id="clinical_notes" class="form-control" cols="30" rows="4"><?php echo htmlspecialchars($medicalHistoryData['clinical_notes']); ?></textarea>
+                    <textarea name="clinical_notes" id="clinical_notes" class="form-control" cols="30" rows="4"><?php echo htmlspecialchars((string)($medicalHistoryData['clinical_notes'])); ?></textarea>
                 </div>
 
                 <!-- Clinician Name -->
                 <div class="form-group">
                     <label for="clinician_name">Clinician Name</label>
-                    <input type="text" name="clinician_name" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars($medicalHistoryData['clinician_name']); ?>">
+                    <input type="text" name="clinician_name" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['clinician_name'])); ?>">
                 </div>
 
                 <!-- Submit Button -->

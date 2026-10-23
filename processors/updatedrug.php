@@ -17,17 +17,17 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     $id = $_POST["id"];
 
   // Validate drug name
-  if(empty(trim($_POST["drugname"]))){
+  if(empty(trim((string)($_POST["drugname"])))){
     $drugname_err = "Please enter a drug name.";
 } else{
-    $drugname = trim($_POST["drugname"]);
+    $drugname = trim((string)($_POST["drugname"]));
 }
 
 // Validate description
-if(empty(trim($_POST["descr"]))){
+if(empty(trim((string)($_POST["descr"])))){
     $descr_err = "Please provide the drug description.";
 } else{
-    $descr = trim($_POST["descr"]);
+    $descr = trim((string)($_POST["descr"]));
 }
 
 // Check input errors before inserting in database
@@ -46,9 +46,9 @@ if(empty($drugname_err) && empty($descr_err)){
 
         // Set parameters
 
-        $param_drugID = trim($_POST["id"]);
+        $param_drugID = trim((string)($_POST["id"]));
         $param_drugName = $drugname;
-        $param_drugCategory = trim($_POST["drugCategory"]);
+        $param_drugCategory = trim((string)($_POST["drugCategory"]));
         $param_description = $descr;
 
         // Attempt to execute the prepared statement
@@ -69,9 +69,9 @@ if(empty($drugname_err) && empty($descr_err)){
 } else{
 
 // Check existence of id parameter before processing further
-if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+if(isset($_GET["id"]) && !empty(trim((string)($_GET["id"])))){
     // Get URL parameter
-    $id =  trim($_GET["id"]);
+    $id =  trim((string)($_GET["id"]));
 
     // Prepare a select statement
     $sql = "SELECT * FROM drug d JOIN category c on d.drugCategory = c.catID WHERE d.drugID = :id";
@@ -139,7 +139,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
         </div>
         <div class="col-md-6">
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)(basename($_SERVER['REQUEST_URI']))); ?>" method="post">
                     <div class="form-group <?php echo (!empty($drugname_err)) ? 'has-error' : ''; ?>">
                             <label>Drug Name</label>
                             <input type="text" name="drugname" class="form-control" value="<?php echo $drugName; ?>">

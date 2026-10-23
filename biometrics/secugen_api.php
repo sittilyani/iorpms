@@ -134,7 +134,7 @@ function secuGenMatchScore($tmpl1B64, $tmpl2B64, $possible_ports) {
  * check the known candidates.
  */
 function ensureSecuGenServiceRunning() {
-    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+    if (strtoupper((string)(substr(PHP_OS, 0, 3))) !== 'WIN') {
         return;
     }
 

@@ -14,9 +14,13 @@
  * SECURITY: direct browser access to /includes is blocked by includes/.htaccess
  */
 
+// PHP 8.1+ 'Passing null to parameter' notices are never shown to clinic staff on screen (a blank database field is normal).
+// Warnings and errors are still reported.
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
 // ── Environment detection ────────────────────────────────────
 if (!defined('APP_ENV')) {
-    $httpHost = strtolower($_SERVER['HTTP_HOST'] ?? 'localhost');
+    $httpHost = strtolower((string)($_SERVER['HTTP_HOST'] ?? 'localhost'));
     $hostOnly = preg_replace('/:\d+$/', '', $httpHost); // strip :port
     // Client machines on the clinic's LAN reach this server by its private
     // IP (e.g. http://10.53.220.14/iorpms), not by "localhost" - without
@@ -41,7 +45,7 @@ if (!defined('APP_ENV')) {
 // - anything it defines wins; the defaults below only fill in what is missing.
 $_easyflow_config = null;
 foreach (array_filter([
-    !empty($_SERVER['DOCUMENT_ROOT']) ? dirname(rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/')) . '/config-easyflow.php' : null,   // parent of public_html
+    !empty($_SERVER['DOCUMENT_ROOT']) ? dirname(rtrim((string)(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'])), '/')) . '/config-easyflow.php' : null,   // parent of public_html
     dirname(__DIR__, 3) . '/config-easyflow.php',                                                                               // public_html/iorpms/includes -> home folder
 ]) as $_cand) {
     if (is_file($_cand)) { $_easyflow_config = $_cand; break; }
@@ -98,7 +102,7 @@ if ($conn->connect_error) {
     error_log('[' . APP_ENV . '] DB connection failed: ' . $conn->connect_error);
     die('<div style="font-family:sans-serif;padding:40px;text-align:center;">
             <h2 style="color:#c53030">Database Connection Error</h2>
-            <p>Could not connect to the database (' . htmlspecialchars(APP_ENV) . ' mode).
+            <p>Could not connect to the database (' . htmlspecialchars((string)(APP_ENV)) . ' mode).
                Please check your configuration in <code>includes/config.php</code>.</p>
          </div>');
 }

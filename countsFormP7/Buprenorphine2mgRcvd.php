@@ -13,8 +13,8 @@ $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : $defaultStartDat
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : $defaultEndDate;
 
 // Validate dates
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 // Query to retrieve sum of qty_in from stock_movements table for the selected period
 $sql = "SELECT SUM(qty_in) AS total_qty_in

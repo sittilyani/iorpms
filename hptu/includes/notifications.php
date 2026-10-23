@@ -31,7 +31,7 @@ function getNotificationCounts($conn, $user_id, $userrole) {
     ];
 
     // Convert current user role to lowercase once for all checks
-    $userrole_lower = strtolower($userrole);
+    $userrole_lower = strtolower((string)($userrole));
 
     // --- 1. Notification for APPROVERS (Pending Requests) ---
     if (in_array($userrole_lower, $allowed_approver_roles)) {

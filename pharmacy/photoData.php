@@ -181,7 +181,7 @@ $photoStmt->close();
         <div class="card">
             <div class="card-header">
                 <h2 class="text-center">Upload Patient Photo</h2>
-                <p class="text-center text-muted">Patient: <?php echo htmlspecialchars($clientName ?? ''); ?> (<?php echo htmlspecialchars($mat_id ?? ''); ?>)</p>
+                <p class="text-center text-muted">Patient: <?php echo htmlspecialchars((string)($clientName ?? '')); ?> (<?php echo htmlspecialchars((string)($mat_id ?? '')); ?>)</p>
             </div>
             <div class="card-body">
                 <?php if (isset($message)): ?>
@@ -264,7 +264,7 @@ $photoStmt->close();
                 </div>
 
                 <div class="mt-3 text-center">
-                    <a href="dispensingData.php?mat_id=<?php echo htmlspecialchars($mat_id ?? ''); ?>"
+                    <a href="dispensingData.php?mat_id=<?php echo htmlspecialchars((string)($mat_id ?? '')); ?>"
                        class="btn btn-secondary">Back to Dispensing</a>
                 </div>
             </div>

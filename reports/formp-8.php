@@ -45,15 +45,15 @@ $resultFacilitySettings = $conn->query($queryFacilitySettings);
 
 if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     $rowFacilitySettings = $resultFacilitySettings->fetch_assoc();
-    $facilityName = htmlspecialchars($rowFacilitySettings['facilityname']);
-    $countyName = htmlspecialchars($rowFacilitySettings['countyname']);
-    $facilityIncharge = htmlspecialchars($rowFacilitySettings['facilityincharge']);
-    $facilityPhone = htmlspecialchars($rowFacilitySettings['facilityphone']);
+    $facilityName = htmlspecialchars((string)($rowFacilitySettings['facilityname']));
+    $countyName = htmlspecialchars((string)($rowFacilitySettings['countyname']));
+    $facilityIncharge = htmlspecialchars((string)($rowFacilitySettings['facilityincharge']));
+    $facilityPhone = htmlspecialchars((string)($rowFacilitySettings['facilityphone']));
 }
 
-$loggedInUserFullName = isset($_SESSION['loggedin_user_fullname']) ? htmlspecialchars($_SESSION['loggedin_user_fullname']) : 'N/A';
-$loggedInUserPhone = isset($_SESSION['loggedin_user_phone']) ? htmlspecialchars($_SESSION['loggedin_user_phone']) : 'N/A';
-$loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspecialchars($_SESSION['loggedin_user_signature']) : '';
+$loggedInUserFullName = isset($_SESSION['loggedin_user_fullname']) ? htmlspecialchars((string)($_SESSION['loggedin_user_fullname'])) : 'N/A';
+$loggedInUserPhone = isset($_SESSION['loggedin_user_phone']) ? htmlspecialchars((string)($_SESSION['loggedin_user_phone'])) : 'N/A';
+$loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspecialchars((string)($_SESSION['loggedin_user_signature'])) : '';
 ?>
 
 <!DOCTYPE html>
@@ -282,11 +282,11 @@ $loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspeci
                     <td class="col0">&nbsp;</td>
                     <td class="info-label" colspan="3">Facility:</td>
                     <td class="info-value" colspan="4">
-                        <?php echo isset($_SESSION['current_facility_name']) ? htmlspecialchars($_SESSION['current_facility_name']) : "No Facility Set"; ?>
+                        <?php echo isset($_SESSION['current_facility_name']) ? htmlspecialchars((string)($_SESSION['current_facility_name'])) : "No Facility Set"; ?>
                     </td>
                     <td class="info-label" colspan="3"><b>County:</b></td>
                     <td class="info-value" colspan="1">
-                        <?php echo isset($_SESSION['current_county']) ? htmlspecialchars($_SESSION['current_county']) : "No County Set"; ?>
+                        <?php echo isset($_SESSION['current_county']) ? htmlspecialchars((string)($_SESSION['current_county'])) : "No County Set"; ?>
                     </td>
                 </tr>
 
@@ -459,16 +459,16 @@ $loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspeci
                     <td class="col0">&nbsp;</td>
                     <td class="signature-label" rowspan="2">Report submitted by:</td>
                     <td class="signature-field" colspan="3">
-                        <input type="text" name="pharmicName" value="<?php echo htmlspecialchars($pharmicName); ?>" readonly>
+                        <input type="text" name="pharmicName" value="<?php echo htmlspecialchars((string)($pharmicName)); ?>" readonly>
                     </td>
                     <td class="signature-field" colspan="2">
-                        <input type="text" name="pharmSign" value="<?php echo htmlspecialchars($pharmicSign); ?>" readonly>
+                        <input type="text" name="pharmSign" value="<?php echo htmlspecialchars((string)($pharmicSign)); ?>" readonly>
                     </td>
                     <td class="signature-field" colspan="3">
-                        <input type="text" name="pharmicMobile" value="<?php echo htmlspecialchars($pharmicMobile); ?>" readonly>
+                        <input type="text" name="pharmicMobile" value="<?php echo htmlspecialchars((string)($pharmicMobile)); ?>" readonly>
                     </td>
                     <td class="signature-field" colspan="2">
-                        <input type="date" name="pharmicDate" value="<?php echo htmlspecialchars($pharmicDate); ?>" readonly>
+                        <input type="date" name="pharmicDate" value="<?php echo htmlspecialchars((string)($pharmicDate)); ?>" readonly>
                     </td>
                 </tr>
                 <tr class="signature-row">

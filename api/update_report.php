@@ -38,7 +38,7 @@ $fa      = (int)($in['files_added'] ?? 0);
 $mg      = (int)($in['migrations'] ?? 0);
 $msg     = substr((string)($in['message'] ?? ''), 0, 500);
 $details = substr(json_encode($in['details'] ?? []), 0, 60000);
-$at      = date('Y-m-d H:i:s', strtotime($in['applied_at'] ?? 'now') ?: time());
+$at      = date('Y-m-d H:i:s', strtotime((string)($in['applied_at'] ?? 'now')) ?: time());
 
 $st = $conn->prepare("INSERT INTO update_reports (mflcode, facility_name, commit_sha, status, files_updated, files_added, migrations_applied, message, details, applied_at)
                       VALUES (?,?,?,?,?,?,?,?,?,?)");

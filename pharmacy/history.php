@@ -32,7 +32,7 @@
             font-size: 28px;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 3px solid #3498db;
+            border-bottom: 3px solid #2D008A;
         }
 
         .patient-details {
@@ -40,7 +40,7 @@
             padding: 20px;
             border-radius: 6px;
             margin-bottom: 30px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2D008A;
         }
 
         .patient-details p {
@@ -158,9 +158,9 @@
                 // Display patient details
                 echo "<h2>Patient Details</h2>";
                 echo "<div class='patient-details'>";
-                echo "<p><strong>Name:</strong> " . htmlspecialchars($patient['clientName']) . "</p>";
-                echo "<p><strong>MAT ID:</strong> " . htmlspecialchars($patient['mat_id']) . "</p>";
-                echo "<p><strong>Gender:</strong> " . htmlspecialchars($patient['sex']) . "</p>";
+                echo "<p><strong>Name:</strong> " . htmlspecialchars((string)($patient['clientName'])) . "</p>";
+                echo "<p><strong>MAT ID:</strong> " . htmlspecialchars((string)($patient['mat_id'])) . "</p>";
+                echo "<p><strong>Gender:</strong> " . htmlspecialchars((string)($patient['sex'])) . "</p>";
                 echo "</div>";
 
                 $mat_id = $patient['mat_id']; // Retrieve mat_id for pharmacy query
@@ -192,11 +192,11 @@
                         // Display grouped records
                         while ($row = $result_pharmacy->fetch_assoc()) {
                             echo "<li>";
-                            echo "<span class='drug-name'>" . htmlspecialchars($row['drugname']) . "</span> ";
-                            echo "<span class='date-range'>from " . htmlspecialchars($row['startDate']) .
-                                " to " . htmlspecialchars($row['endDate']) . "</span>: ";
-                            echo "<span class='dosage'>" . htmlspecialchars($row['dosage']) . " mg</span> ";
-                            echo "(" . htmlspecialchars($row['daysCount']) . " days total)";
+                            echo "<span class='drug-name'>" . htmlspecialchars((string)($row['drugname'])) . "</span> ";
+                            echo "<span class='date-range'>from " . htmlspecialchars((string)($row['startDate'])) .
+                                " to " . htmlspecialchars((string)($row['endDate'])) . "</span>: ";
+                            echo "<span class='dosage'>" . htmlspecialchars((string)($row['dosage'])) . " mg</span> ";
+                            echo "(" . htmlspecialchars((string)($row['daysCount'])) . " days total)";
                             echo "</li>";
                         }
 

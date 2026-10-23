@@ -195,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <div class="main-content">
         <div><h2>Add drug sources</h2></div>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
                 <div class="form-group">
                     <label>Source Name</label>
                     <input type="text" name="source_name" class="form-control" required>

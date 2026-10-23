@@ -19,7 +19,7 @@ if (!isset($_SESSION['username'])) {
     // Enhanced error handling
     $error_message = 'User not logged in. Please log in to access this page.';
     error_log("Stock Summary Error: " . $error_message);
-    header('Location: ../login.php?error=' . urlencode($error_message));
+    header('Location: ../login.php?error=' . urlencode((string)($error_message)));
     exit;
 }
 
@@ -31,7 +31,7 @@ $stocks = [];
 
 // Check if search parameter is provided
 if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search = trim($conn->real_escape_string($_GET['search']));
+    $search = trim((string)($conn->real_escape_string($_GET['search'])));
     $where_clause = "WHERE (s.productname LIKE '%$search%' OR s.brandname LIKE '%$search%')";
 }
 
@@ -67,7 +67,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
     if (empty($stocks)) {
         $error_message = "No stock data available to generate PDF.";
         error_log("PDF Generation Error: " . $error_message);
-        header('Location: viewstocks_sum.php?error=' . urlencode($error_message));
+        header('Location: viewstocks_sum.php?error=' . urlencode((string)($error_message)));
         exit;
     }
 
@@ -88,7 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
                 h1 { text-align: center; color: #333; }
                 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                 th, td { border: 1px solid #333; padding: 6px; text-align: left; }
-                th { background-color: #667eea; color: white; }
+                th { background-color: #AC80EE; color: white; }
                 .header-img { text-align: center; margin-bottom: 20px; }
                 .low-stock { background-color: #ffcccc; }
                 .error { color: red; font-weight: bold; text-align: center; margin: 20px; }
@@ -102,7 +102,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
             <p style="text-align: center;">Generated on: ' . date('Y-m-d H:i:s') . '</p>';
 
         if (!empty($error)) {
-            $html .= '<div class="error">Error: ' . htmlspecialchars($error) . '</div>';
+            $html .= '<div class="error">Error: ' . htmlspecialchars((string)($error)) . '</div>';
         } else {
             $html .= '<table>
                 <tr>
@@ -117,11 +117,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
                 $rowClass = ($stock['stockBalance'] <= $stock['reorderLevel']) ? 'class="low-stock"' : '';
                 $html .= '
                 <tr ' . $rowClass . '>
-                    <td>' . htmlspecialchars($stock['productname']) . '</td>
-                    <td>' . htmlspecialchars($stock['brandname']) . '</td>
-                    <td>' . htmlspecialchars($stock['stockBalance']) . '</td>
-                    <td>' . htmlspecialchars($stock['reorderLevel']) . '</td>
-                    <td>' . htmlspecialchars($stock['status']) . '</td>
+                    <td>' . htmlspecialchars((string)($stock['productname'])) . '</td>
+                    <td>' . htmlspecialchars((string)($stock['brandname'])) . '</td>
+                    <td>' . htmlspecialchars((string)($stock['stockBalance'])) . '</td>
+                    <td>' . htmlspecialchars((string)($stock['reorderLevel'])) . '</td>
+                    <td>' . htmlspecialchars((string)($stock['status'])) . '</td>
                 </tr>';
             }
 
@@ -139,7 +139,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'generate_pdf') {
     } catch (Exception $e) {
         $error_message = "PDF generation failed: " . $e->getMessage();
         error_log("PDF Generation Error: " . $error_message);
-        header('Location: viewstocks_sum.php?error=' . urlencode($error_message));
+        header('Location: viewstocks_sum.php?error=' . urlencode((string)($error_message)));
         exit;
     }
 }
@@ -149,7 +149,7 @@ if (isset($_POST['export_excel'])) {
     if (empty($stocks)) {
         $error_message = "No stock data available to export.";
         error_log("Excel Export Error: " . $error_message);
-        header('Location: viewstocks_sum.php?error=' . urlencode($error_message));
+        header('Location: viewstocks_sum.php?error=' . urlencode((string)($error_message)));
         exit;
     }
 
@@ -160,18 +160,18 @@ if (isset($_POST['export_excel'])) {
 
         echo "Product Name\tBrand Name\tStock Balance\tReorder Level\tStatus\n";
         foreach ($stocks as $stock) {
-            echo htmlspecialchars($stock['productname']) . "\t" .
-                 htmlspecialchars($stock['brandname']) . "\t" .
-                 htmlspecialchars($stock['stockBalance']) . "\t" .
-                 htmlspecialchars($stock['reorderLevel']) . "\t" .
-                 htmlspecialchars($stock['status']) . "\n";
+            echo htmlspecialchars((string)($stock['productname'])) . "\t" .
+                 htmlspecialchars((string)($stock['brandname'])) . "\t" .
+                 htmlspecialchars((string)($stock['stockBalance'])) . "\t" .
+                 htmlspecialchars((string)($stock['reorderLevel'])) . "\t" .
+                 htmlspecialchars((string)($stock['status'])) . "\n";
         }
         exit;
 
     } catch (Exception $e) {
         $error_message = "Excel export failed: " . $e->getMessage();
         error_log("Excel Export Error: " . $error_message);
-        header('Location: viewstocks_sum.php?error=' . urlencode($error_message));
+        header('Location: viewstocks_sum.php?error=' . urlencode((string)($error_message)));
         exit;
     }
 }
@@ -187,15 +187,15 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+    <title><?php echo htmlspecialchars((string)($page_title)); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #2D008A;
+            --secondary-color: #1d0059;
             --danger-color: #e74c3c;
             --success-color: #2ecc71;
             --warning-color: #f39c12;
@@ -504,14 +504,14 @@ if (isset($_GET['error'])) {
                     <?php foreach ($stocks as $stock): ?>
                         <tr class="table-row">
 
-                            <td><?php echo htmlspecialchars($stock['stockID']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['productname']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['brandname']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['stockBalance']); ?></td>
-                            <td><?php echo htmlspecialchars($stock['status']); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['stockID'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['productname'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['brandname'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['stockBalance'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($stock['status'])); ?></td>
                             <td class="action-buttons">
-                                <!--<a href="editstock.php?brandname=<?php echo urlencode($stock['brandname']); ?>" class="btn btn-update"><i class="fas fa-edit"></i> Edit</a>-->
-                                <a href="view_transactions.php?brandname=<?php echo urlencode($stock['brandname']); ?>" class="btn btn-view"><i class="fas fa-eye"></i> Bin Card</a>
+                                <!--<a href="editstock.php?brandname=<?php echo urlencode((string)($stock['brandname'])); ?>" class="btn btn-update"><i class="fas fa-edit"></i> Edit</a>-->
+                                <a href="view_transactions.php?brandname=<?php echo urlencode((string)($stock['brandname'])); ?>" class="btn btn-view"><i class="fas fa-eye"></i> Bin Card</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

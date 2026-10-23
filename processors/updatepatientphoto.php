@@ -15,7 +15,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     $target_file = $target_dir . basename($_FILES["file"]["name"]);
 
     // Select file type
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $imageFileType = strtolower((string)(pathinfo($target_file,PATHINFO_EXTENSION)));
 
     // Valid file extensions
     $extensions_arr = array("jpg","jpeg","png","gif");
@@ -59,7 +59,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     // Check existence of id parameter before processing further
     if(isset($_GET["mat_id"])){
         // Get URL parameter
-        $mat_id =  trim($_GET["mat_id"]);
+        $mat_id =  trim((string)($_GET["mat_id"]));
         // Prepare a select statement
         $sql = "SELECT * FROM patient WHERE mat_id = :mat_id";
         if($stmt = $pdo->prepare($sql)){
@@ -123,7 +123,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             <?php include 'menu.php';?>
         </div>
         <div class="col-md-6">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"  enctype='multipart/form-data'>
+        <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post"  enctype='multipart/form-data'>
             <div class="form-group">
                 <label>Full Name</label></br>
                 <input type="text" name="fname" class="form-control" value="<?php echo $fname; ?>" readonly>

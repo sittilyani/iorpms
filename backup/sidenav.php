@@ -66,7 +66,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -86,10 +86,51 @@ $full_name = getUserFullName();
         <iframe name="contentFrame" src="about:blank" style="width: 100%; height: 90vh; border: none; display: none;" id="contentFrame"></iframe>
 
         <div class="welcome-message" id="welcomeMessage">
-            <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
-            <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, <span style="color: red;">always backup your database on external hard-drive and cloud e.g Google Drive</span></p>
+            <style>
+                .bk-wrap p{background:transparent!important;max-width:none;margin:0}.bk-wrap{max-width:1000px;margin:0 auto;text-align:left;font-family:inherit}
+                .bk-hero{background:linear-gradient(135deg,#2D008A,#4a14b8);color:#fff;border-radius:16px;padding:28px 32px;display:flex;align-items:center;gap:24px;box-shadow:0 8px 24px rgba(45,0,138,.25)}
+                .bk-hero h2{margin:0 0 6px;font-size:1.6rem;color:#fff}
+                .bk-hero p{margin:0;opacity:.92;line-height:1.5}
+                .bk-shield{flex:0 0 96px}
+                .bk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:20px 0}
+                .bk-card{background:#fff;border-radius:14px;padding:20px;border-top:5px solid #2D008A;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+                .bk-card.g{border-top-color:#04B04B}
+                .bk-card svg{width:44px;height:44px;margin-bottom:8px}
+                .bk-card h4{margin:0 0 6px;color:#2D008A;font-size:1.05rem}
+                .bk-card p{margin:0;color:#444;font-size:.9rem;line-height:1.45}
+                .bk-flow{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:16px}
+                .bk-flow h4{margin:0 0 12px;color:#2D008A}
+                .bk-steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+                .bk-step{background:#f3effb;border:1px solid #d9cdf5;color:#2D008A;border-radius:999px;padding:8px 16px;font-weight:600;font-size:.9rem}
+                .bk-step.g{background:#e6f8ee;border-color:#a8e6c3;color:#04703a}
+                .bk-arrow{color:#04B04B;font-weight:bold}
+                .bk-rule{background:#fff8e1;border-left:5px solid #04B04B;border-radius:10px;padding:14px 18px;color:#333}
+            </style>
+            <div class="bk-wrap">
+                <div class="bk-hero">
+                    <svg class="bk-shield" viewBox="0 0 96 96" fill="none"><path d="M48 6 14 20v26c0 21 14 38 34 44 20-6 34-23 34-44V20L48 6Z" fill="#fff" fill-opacity=".15" stroke="#fff" stroke-width="3"/><path d="M32 48l11 11 22-24" stroke="#04B04B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div>
+                        <h2>Why backing up matters</h2>
+                        <p>Every client record, dose and stock movement lives in this database. A backup is the only way to recover from a failed disk, power surge, theft or a mistaken deletion, so clients are never left without care.</p>
+                    </div>
+                </div>
+                <div class="bk-grid">
+                    <div class="bk-card"><svg viewBox="0 0 48 48" fill="none" stroke="#2D008A" stroke-width="3"><ellipse cx="24" cy="12" rx="14" ry="6"/><path d="M10 12v12c0 3 6 6 14 6s14-3 14-6V12M10 24v12c0 3 6 6 14 6s14-3 14-6V24"/></svg><h4>Protect patient data</h4><p>Years of treatment history, status changes and fingerprints stay safe if the clinic computer fails.</p></div>
+                    <div class="bk-card g"><svg viewBox="0 0 48 48" fill="none" stroke="#04B04B" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 5"/></svg><h4>Restore in minutes</h4><p>Recent backups let you get back to work quickly instead of rebuilding records from paper.</p></div>
+                    <div class="bk-card"><svg viewBox="0 0 48 48" fill="none" stroke="#2D008A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 34a9 9 0 0 1 1-18 11 11 0 0 1 21 3 7 7 0 0 1-1 15H14Z"/><path d="M24 40V26m-5 5 5-5 5 5"/></svg><h4>Keep an offsite copy</h4><p>Send a copy to Google Drive so a fire or theft at the clinic cannot take the backup with it.</p></div>
+                    <div class="bk-card g"><svg viewBox="0 0 48 48" fill="none" stroke="#04B04B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="20" width="32" height="20" rx="3"/><path d="M16 20v-6a8 8 0 0 1 16 0v6"/></svg><h4>Meet audit needs</h4><p>Dated, facility-named backups show that records are kept securely and can be produced when asked.</p></div>
+                </div>
+                <div class="bk-flow">
+                    <h4>A safe backup routine</h4>
+                    <div class="bk-steps">
+                        <span class="bk-step">1. Create backup</span><span class="bk-arrow">&rarr;</span>
+                        <span class="bk-step">2. Copy to external drive</span><span class="bk-arrow">&rarr;</span>
+                        <span class="bk-step g">3. Send to Google Drive</span><span class="bk-arrow">&rarr;</span>
+                        <span class="bk-step">4. Check it in View Backups</span>
+                    </div>
+                </div>
+                <div class="bk-rule"><strong>Rule of thumb:</strong> back up at the end of every working day, and always before an update or migration. Pick an option from the side menu to begin.</div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Active clients');
 session_start();
 include('../includes/config.php');
 
@@ -24,10 +24,10 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Active Patients on Methadone / Buprenorphine</h2>
+    <h2 style="color: #2D008A; ">Active Patients on Methadone / Buprenorphine</h2>
     <p><a href="view_active_other_meds.php">View clients active on other medications &rarr;</a></p>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" class="search-entry" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -138,12 +138,12 @@ if (isset($_GET['message'])) {
                     <td>" . $row['drugname'] . "</td>
                     <td>" . $row['dosage'] . "</td>
                     <td>" . $row['current_status'] . "</td>
-                   <td>" . (!empty($row['dispDate']) ? htmlspecialchars($row['dispDate']) :  "No visit Date") . "</td>
+                   <td>" . (!empty($row['dispDate']) ? htmlspecialchars((string)($row['dispDate'])) :  "No visit Date") . "</td>
                     <td>
                         <a href='../patients/view_patient.php?p_id=" . $row['p_id'] . "'>View</a> &#124; |
                         <a href='../patients/update.php?p_id=" . $row['p_id'] . "'>Update</a> &#124;    |
                         <a href='../patients/delete.php?p_id=" . $row['p_id'] . "'>Delete</a> |
-                        <a href='../referrals/referral.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>Refer</a>
+                        <a href='../referrals/referral.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>Refer</a>
                     </td>
                 </tr>";
         }

@@ -70,16 +70,16 @@ $userrole = $_SESSION['userrole'];
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['referral_date']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['mat_id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['clientName']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['refer_to']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['referral_notes']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['referral_date'])) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['clientName'])) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['refer_to'])) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['referral_notes'])) . "</td>";
+                    echo "<td>" . htmlspecialchars((string)($row['status'])) . "</td>";
                     echo "<td>";
-                    echo "<a href='view_referral.php?mat_id=" . urlencode($row['mat_id']) . "' class='btn btn-primary btn-sm'>View</a> ";
-                    echo "<a href='edit_referral_pending.php?referral_id=" . urlencode($row['referral_id']) . "' class='btn btn-warning btn-sm'>Re-assign</a>";
-                    echo "<a href='delete_referral.php?mat_id=" . urlencode($row['mat_id']) . "' class='btn btn-danger btn-sm'>Delete</a>";
+                    echo "<a href='view_referral.php?mat_id=" . urlencode((string)($row['mat_id'])) . "' class='btn btn-primary btn-sm'>View</a> ";
+                    echo "<a href='edit_referral_pending.php?referral_id=" . urlencode((string)($row['referral_id'])) . "' class='btn btn-warning btn-sm'>Re-assign</a>";
+                    echo "<a href='delete_referral.php?mat_id=" . urlencode((string)($row['mat_id'])) . "' class='btn btn-danger btn-sm'>Delete</a>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -98,7 +98,7 @@ $userrole = $_SESSION['userrole'];
         <a href="referral_dashboard.php" class="btn-custom btn-primary-custom">
             ← Back to Dashboard
         </a>
-        <a href="edit_referral_pending.php?referral_id=<?php echo urlencode($referral_id); ?>" class="btn-custom btn-secondary-custom">
+        <a href="edit_referral_pending.php?referral_id=<?php echo urlencode((string)($referral_id)); ?>" class="btn-custom btn-secondary-custom">
             Edit Referral →
         </a>
     </div>

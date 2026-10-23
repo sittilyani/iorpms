@@ -18,6 +18,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['userrole'])) {
     exit;
 }
 
+// 12-hour rule: Reverse and prime prime + calibrate are mandatory before pump dispensing resumes
+require_once '../includes/pump_guard.php';
+$__pumpState = pump_readiness($conn);
+if (!$__pumpState['ready']) { pump_block_page($__pumpState, '../'); }
+
 // Get the user_id from the query parameter (if applicable)
 $userId = isset($_GET['mat_id']) ? $_GET['mat_id'] : null;
 
@@ -379,7 +384,7 @@ if ($mat_id) {
     $mainDrugName = $currentSettings['drugname'] ?? 'MAT drug';
 
     // ARV (HIV positive patients)
-    if (!empty($vlData['hiv_status']) && strtolower($vlData['hiv_status']) === 'positive'
+    if (!empty($vlData['hiv_status']) && strtolower((string)($vlData['hiv_status'])) === 'positive'
         && !empty($vlData['art_regimen'])) {
         $artDrug = $vlData['art_regimen'];
         $chkArv  = $conn->prepare("SELECT COUNT(*) AS cnt FROM pharmacy WHERE mat_id = ? AND drugname = ? AND visitDate = ?");
@@ -483,7 +488,7 @@ if ($statusResult->num_rows > 0) {
     while ($statusRow = $statusResult->fetch_assoc()) {
         $statusName = $statusRow['status_name'];
         $selected = (isset($currentSettings['current_status']) && $statusName == $currentSettings['current_status']) ? 'selected' : '';
-        $statusOptions .= "<option value='" . htmlspecialchars($statusName) . "' $selected>" . htmlspecialchars($statusName) . "</option>";
+        $statusOptions .= "<option value='" . htmlspecialchars((string)($statusName)) . "' $selected>" . htmlspecialchars((string)($statusName)) . "</option>";
     }
 } else {
     $statusOptions = "<option value=''>No status found</option>";
@@ -581,7 +586,7 @@ body{
     padding:20px;
 }
 h2{
-    color:#2C3162;
+    color:#2D008A;
     text-align:center;
     margin:10px 0 20px;
     font-weight:700;
@@ -616,7 +621,7 @@ h2{
 
 .stat-days{background:#deffee;color:green;border:1px solid #a3d9b1;}
 .stat-missed{background:#fff9c4;color:#d32f2f;border:1px solid #ffd54f;}
-.stat-appointment{background:#e3f2fd;color:#1976d2;border:1px solid #90caf9;}
+.stat-appointment{background:#f3effb;color:#2D008A;border:1px solid #cfc6ea;}
 .stat-prescription{background:#ff7575;color:white;border:1px solid #b00000;}
 .stat-prescription a{color:white;text-decoration:none;}
 .stat-visit{background:#f3e5f5;color:#7b1fa2;border:1px solid #ce93d8;}
@@ -639,7 +644,7 @@ h2{
     min-width:0;
     height:auto;
     padding:20px;
-    background:#66ccff;
+    background:#EFE9FB;
     border-radius:16px;
     box-shadow:0 8px 20px rgba(0,0,0,.1);
     align-items:start;
@@ -655,7 +660,7 @@ h2{
 
 .form-group label{
     display:block;
-    color:#2C3162;
+    color:#2D008A;
     font-weight:700;
     margin-bottom:6px;
 }
@@ -674,7 +679,7 @@ h2{
 
 .form-group input:focus,
 .form-group select:focus{
-    border-color:#2C3162;
+    border-color:#2D008A;
     box-shadow:0 0 0 2px rgba(44,49,98,.15);
 }
 
@@ -688,7 +693,7 @@ h2{
     grid-row:1 / span 100;
     width:100%;
     background:white;
-    border:2px dashed #2C3162;
+    border:2px dashed #2D008A;
     border-radius:14px;
     padding:15px;
     text-align:center;
@@ -725,7 +730,7 @@ h2{
 .form-group2 input{
     width:100%;
     height:90px;
-    background:#007bff!important;
+    background:#2D008A!important;
     color:white;
     border-radius:12px;
     border:0;
@@ -761,10 +766,10 @@ h2{
 .prescriptions-table input[type="checkbox"]{transform:scale(1.2);}
 
 /* Co-medications panel */
-.co-meds-section{background:#fff;border:2px solid #2C3162;border-radius:8px;padding:14px 18px;margin-bottom:14px;}
-.co-meds-section h4{color:#2C3162;margin:0 0 10px;font-size:1rem;}
+.co-meds-section{background:#fff;border:2px solid #2D008A;border-radius:8px;padding:14px 18px;margin-bottom:14px;}
+.co-meds-section h4{color:#2D008A;margin:0 0 10px;font-size:1rem;}
 .co-meds-table{width:100%;border-collapse:collapse;}
-.co-meds-table th{background:#2C3162;color:#fff;padding:8px 10px;font-size:.85rem;text-align:left;}
+.co-meds-table th{background:#2D008A;color:#fff;padding:8px 10px;font-size:.85rem;text-align:left;}
 .co-meds-table td{padding:8px 10px;border-bottom:1px solid #e0e0e0;font-size:.88rem;vertical-align:middle;}
 .co-meds-table tr:last-child td{border-bottom:none;}
 .co-meds-table input[type=checkbox]{transform:scale(1.3);cursor:pointer;}
@@ -772,7 +777,7 @@ h2{
 .co-badge-danger{background:#ffe0e0;color:#c00;}
 .co-badge-warning{background:#fff3cd;color:#7a5c00;}
 .co-badge-success{background:#e8f5e9;color:#2e7d32;}
-.co-badge-info{background:#e3f2fd;color:#1565c0;}
+.co-badge-info{background:#f3effb;color:#2D008A;}
 .co-done{color:#388e3c;font-weight:bold;font-size:.82rem;}
 
 /* Button full width below everything */
@@ -780,7 +785,7 @@ h2{
     grid-column:1 / -1;
     width:100%;
     height:48px;
-    background:#2C3162;
+    background:#2D008A;
     color:white;
     border:none;
     border-radius:10px;
@@ -832,12 +837,12 @@ h2{
             </div>
             <div class="stat-item stat-missed">
 
-                <a href='../pharmacy/view-missed.php?mat_id=<?php echo htmlspecialchars($currentSettings['mat_id'] ?? $userId); ?>'><span class="stat-value"><?php echo $new_num_rows; ?></span></a>
+                <a href='../pharmacy/view-missed.php?mat_id=<?php echo htmlspecialchars((string)($currentSettings['mat_id'] ?? $userId)); ?>'><span class="stat-value"><?php echo $new_num_rows; ?></span></a>
                 <span class="stat-label">Days Missed</span>
             </div>
 
             <div class="stat-item stat-appointment" hidden>
-                <span class="stat-value"><?php echo htmlspecialchars($appointmentDate); ?></span>
+                <span class="stat-value"><?php echo htmlspecialchars((string)($appointmentDate)); ?></span>
                 <span class="stat-label">Clinical Appointment</span>
             </div>
 
@@ -855,7 +860,7 @@ h2{
                         // Get the ID of the first unique prescription for the 'View details' link
                         $firstPrescriptionId = array_key_first($groupedPrescriptions);
                     ?>
-                    <a href="view_prescription_details.php?id=<?php echo htmlspecialchars($firstPrescriptionId); ?>" class="btn btn-info btn-sm">found view details</a>
+                    <a href="view_prescription_details.php?id=<?php echo htmlspecialchars((string)($firstPrescriptionId)); ?>" class="btn btn-info btn-sm">found view details</a>
                 <?php else: ?>
                     <span class="stat-label">0 Prescription found</span>
                 <?php endif; ?>
@@ -865,21 +870,17 @@ h2{
             End of diplay of other prescriptions here
             *******************************************-->
 
-            <div class="stat-item stat-visit">
-                <span class="stat-value"><?php echo htmlspecialchars($lastvisitDate); ?></span>
-                <span class="stat-label">Last disp Date</span>
-            </div>
             <div class="stat-item stat-days-next">
                 <span class="stat-value"><?php echo $daysToAppointmentDisplay; ?></span>
                 <span class="stat-label">Days To Next Appointment</span>
             </div>
             <div class="stat-item stat-photo">
                 <span class="stat-value"><i class="fas fa-camera"></i></span>
-                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars($currentSettings['p_id']); ?>">Capture Photo</a>
+                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars((string)($currentSettings['p_id'])); ?>">Capture Photo</a>
             </div>
             <div class="stat-item stat-photo">
                 <span class="stat-value"><i class="fas fa-camera"></i></span>
-                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars($currentSettings['p_id']); ?>&action=update" class="update-link">Update Photo</a>
+                <a href="../photos/photo_capture.php?p_id=<?php echo htmlspecialchars((string)($currentSettings['p_id'])); ?>&action=update" class="update-link">Update Photo</a>
             </div>
         </div>
 
@@ -890,7 +891,7 @@ h2{
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php foreach ($successMessages as $msg): ?>
-                    <p><strong>✓</strong> <?php echo htmlspecialchars($msg); ?></p>
+                    <p><strong>✓</strong> <?php echo htmlspecialchars((string)($msg)); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0 text-muted" style="font-size:.85rem;">
                     <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpCountdown">3</strong>s…
@@ -915,7 +916,7 @@ h2{
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php foreach ($errorMessages as $error): ?>
-                    <p><?php echo htmlspecialchars($error); ?></p>
+                    <p><?php echo htmlspecialchars((string)($error)); ?></p>
                 <?php endforeach; ?>
                 <p class="mb-0" style="font-size:.85rem;">
                     <i class="fa fa-clock-o"></i> Returning to dispensing list in <strong id="pumpErrCountdown">3</strong>s…
@@ -937,8 +938,8 @@ h2{
         <?php if ($doseBlocked): ?>
             <div class="alert alert-danger" style="font-size:1.05rem;">
                 <i class="fa fa-ban"></i>
-                <strong>Dispensing Blocked:</strong> <?= htmlspecialchars($doseBlockMsg) ?>
-                <br><a href="../clinician/update_dose.php?mat_id=<?= urlencode($userId) ?>" target="_blank" class="btn btn-sm btn-warning mt-2">
+                <strong>Dispensing Blocked:</strong> <?= htmlspecialchars((string)($doseBlockMsg)) ?>
+                <br><a href="../clinician/update_dose.php?mat_id=<?= urlencode((string)($userId)) ?>" target="_blank" class="btn btn-sm btn-warning mt-2">
                     <i class="fa fa-clone"></i> Update Dose Schedule
                 </a>
             </div>
@@ -947,11 +948,17 @@ h2{
         <?php if ($doseExpiring): ?>
             <div class="alert alert-warning" style="font-size:1rem;">
                 <i class="fa fa-exclamation-triangle"></i>
-                <?= htmlspecialchars($doseExpireMsg) ?>
+                <?= htmlspecialchars((string)($doseExpireMsg)) ?>
             </div>
         <?php endif; ?>
 
+        <?php include __DIR__ . '/_dispensing_status_grid.php'; ?>
         <!--dispensingData_process_with_pump.php to replace dispensing.php below-->
+        <style>
+.form-container{grid-template-columns:repeat(4,minmax(0,1fr)) 260px!important;min-width:0!important;width:100%!important;height:auto!important;background:linear-gradient(135deg,#EFE9FB,#F8F5FF)!important;border:1px solid #d9cdf5;border-left:6px solid #2D008A;box-sizing:border-box;align-items:start}
+.form-container .photo-container{grid-column:5!important;grid-row:1 / span 2!important;align-self:start}
+.form-container .full-width-section{grid-column:1 / 5!important}
+</style>
         <form id="dispenseForm" action="../dispensing-pump.php" method="post" onsubmit="return validateForm()"
               <?php if ($doseBlocked): ?>style="pointer-events:none;opacity:.5;"<?php endif; ?>>
         <div class="form-container">
@@ -963,53 +970,53 @@ h2{
                 </div>
                 <div class="form-group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>">
+                    <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="mat_number">MAT Number</label>
-                    <input type="text" name="mat_number" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_number']) ? htmlspecialchars($currentSettings['mat_number']) : ''; ?>">
+                    <input type="text" name="mat_number" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_number']) ? htmlspecialchars((string)($currentSettings['mat_number'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="clientName">Client Name</label>
-                    <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>">
+                    <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>">
                 </div>
             </div>
 
             <div class="form-group-column">
                 <div class="form-group">
                     <label for="nickName">Nick Name</label>
-                    <input type="text" name="nickName" class="readonly-input" value="<?php echo isset($currentSettings['nickName']) ? htmlspecialchars($currentSettings['nickName']) : ''; ?>">
+                    <input type="text" name="nickName" class="readonly-input" value="<?php echo isset($currentSettings['nickName']) ? htmlspecialchars((string)($currentSettings['nickName'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="age">Age</label>
-                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars($currentSettings['age']) : ''; ?>">
+                    <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars((string)($currentSettings['age'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="sex">Gender</label>
-                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>">
+                    <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars((string)($currentSettings['sex'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="p_address">Residence</label>
-                    <input type="text" name="p_address" class="readonly-input" value="<?php echo isset($currentSettings['p_address']) ? htmlspecialchars($currentSettings['p_address']) : ''; ?>">
+                    <input type="text" name="p_address" class="readonly-input" value="<?php echo isset($currentSettings['p_address']) ? htmlspecialchars((string)($currentSettings['p_address'])) : ''; ?>">
                 </div>
             </div>
 
             <div class="form-group-column">
                 <div class="form-group">
                     <label for="cso">CSO</label>
-                    <input type="text" name="cso" class="readonly-input" readonly value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars($currentSettings['cso']) : ''; ?>">
+                    <input type="text" name="cso" class="readonly-input" readonly value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars((string)($currentSettings['cso'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="drugname">Drug</label>
-                    <input type="text" name="drugname" class="readonly-input" readonly value="<?php echo isset($currentSettings['drugname']) ? htmlspecialchars($currentSettings['drugname']) : ''; ?>">
+                    <input type="text" name="drugname" class="readonly-input" readonly value="<?php echo isset($currentSettings['drugname']) ? htmlspecialchars((string)($currentSettings['drugname'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="dosage">Dosage</label>
-                    <input type="text" name="dosage" class="readonly-input" readonly value="<?php echo isset($currentSettings['dosage']) ? htmlspecialchars($currentSettings['dosage']) : ''; ?>">
+                    <input type="text" name="dosage" class="readonly-input" readonly value="<?php echo isset($currentSettings['dosage']) ? htmlspecialchars((string)($currentSettings['dosage'])) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="reasons">Dose Adjustments Reasons</label>
-                    <input type="text" name="reasons" class="readonly-input" readonly value="<?php echo isset($currentSettings['reasons']) ? htmlspecialchars($currentSettings['reasons']) : ''; ?>">
+                    <input type="text" name="reasons" class="readonly-input" readonly value="<?php echo isset($currentSettings['reasons']) ? htmlspecialchars((string)($currentSettings['reasons'])) : ''; ?>">
                 </div>
             </div>
 
@@ -1022,7 +1029,7 @@ h2{
                 </div>
                 <div class="form-group">
                     <label for="pharm_officer_name">Dispensing Officer Name</label>
-                    <input type="text" name="pharm_officer_name" class="readonly-input" value="<?php echo htmlspecialchars($pharm_office_name); ?>">
+                    <input type="text" name="pharm_officer_name" class="readonly-input" value="<?php echo htmlspecialchars((string)($pharm_office_name)); ?>">
                 </div>
                 <?php
                 // Calculate mls value once
@@ -1033,7 +1040,7 @@ h2{
                 ?>
 
                 <div class="form-group2">
-                    <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars($mlsValue); ?>">
+                    <input type="text" name="mls" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($mlsValue)); ?>">
                 </div>
                 <div class="form-group">
                     <label for="pump_device">Pump Device</label>
@@ -1082,7 +1089,7 @@ h2{
                             <?php
                                 $prev_prescription_id = '';
                                 foreach ($otherPrescriptions as $index => $drug):
-                                    $current_prescription_id = htmlspecialchars($drug['prescription_id']);
+                                    $current_prescription_id = htmlspecialchars((string)($drug['prescription_id']));
                                     $is_new_prescription = ($current_prescription_id !== $prev_prescription_id);
                                     $prev_prescription_id = $current_prescription_id;
                             ?>
@@ -1092,12 +1099,12 @@ h2{
                                         <a href="view_prescription_details.php?id=<?php echo $current_prescription_id; ?>" class="btn btn-sm btn-info" style="font-size: 10px;"><?php echo $current_prescription_id; ?></a>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($drug['drugName']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['dosage']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['routetype']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['duration']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['totalDose']); ?></td>
-                                <td><?php echo htmlspecialchars($drug['prescr_status']); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['drugName'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['dosage'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['routetype'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['duration'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['totalDose'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($drug['prescr_status'])); ?></td>
                                 <td><input type="number" name="quantity[<?php echo $drug['id']; ?>]" min="0" value="0"></td>
                                 <td>
                                     <input type="checkbox" name="dispense[<?php echo $drug['id']; ?>]" value="<?php echo $current_prescription_id; ?>">
@@ -1133,10 +1140,10 @@ h2{
                                     <?php else: ?>
                                         <input type="checkbox" name="co_meds[<?= $ci ?>][dispense]" value="1" checked>
                                     <?php endif; ?>
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars($cm['drugname']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][drugname]" value="<?= htmlspecialchars((string)($cm['drugname'])) ?>">
                                     <input type="hidden" name="co_meds[<?= $ci ?>][dosage]"   value="<?= (int)$cm['dosage'] ?>">
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars($cm['reasons']) ?>">
-                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars($cm['type']) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][reasons]"  value="<?= htmlspecialchars((string)($cm['reasons'])) ?>">
+                                    <input type="hidden" name="co_meds[<?= $ci ?>][type]"     value="<?= htmlspecialchars((string)($cm['type'])) ?>">
                                     <?php if (!empty($cm['prescription_drug_id'])): ?>
                                     <input type="hidden" name="co_meds[<?= $ci ?>][prescription_drug_id]" value="<?= (int)$cm['prescription_drug_id'] ?>">
                                     <?php endif; ?>
@@ -1146,14 +1153,14 @@ h2{
                                         <?= $cm['icon'] ?> <?= $cm['label'] ?>
                                     </span>
                                 </td>
-                                <td><strong><?= htmlspecialchars($cm['drugname']) ?></strong></td>
+                                <td><strong><?= htmlspecialchars((string)($cm['drugname'])) ?></strong></td>
                                 <td>1 daily dose</td>
-                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars($cm['note'] ?? '') ?></td>
+                                <td style="color:#888;font-size:.82rem"><?= htmlspecialchars((string)($cm['note'] ?? '')) ?></td>
                                 <td>
                                     <?php if ($cm['done']): ?>
                                         <span class="co-done">✓ Already dispensed today</span>
                                     <?php else: ?>
-                                        <span style="color:#2C3162;font-size:.82rem">Will be dispensed</span>
+                                        <span style="color:#2D008A;font-size:.82rem">Will be dispensed</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -1176,13 +1183,13 @@ h2{
                     <?php
                     // ── HIV / ART (from viral_load table) ─────────────────
                     $hivPositive = !empty($vlData['hiv_status']) &&
-                                   strtolower($vlData['hiv_status']) === 'positive';
+                                   strtolower((string)($vlData['hiv_status'])) === 'positive';
                     ?>
                     <?php if ($hivPositive): ?>
                         <div class="regimen-line" style="background:#ffe0e0;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
                             <strong style='color:#cc0000;'><i class="fa fa-medkit"></i> HIV+</strong>
                             <?php if (!empty($vlData['art_regimen'])): ?>
-                                &nbsp;| ART: <strong><?php echo htmlspecialchars($vlData['art_regimen']); ?></strong>
+                                &nbsp;| ART: <strong><?php echo htmlspecialchars((string)($vlData['art_regimen'])); ?></strong>
                             <?php else: ?>
                                 &nbsp;<em style="color:#888;">(No ART regimen recorded)</em>
                             <?php endif; ?>
@@ -1192,15 +1199,15 @@ h2{
                     <?php
                     // ── TB (from medical_history_new) ──────────────────────
                     $tbPositive = !empty($regimenData['tb_status']) &&
-                                  strtolower($regimenData['tb_status']) === 'positive';
+                                  strtolower((string)($regimenData['tb_status'])) === 'positive';
                     ?>
                     <?php if ($tbPositive || ($showTB && !empty($regimenData['tb_regimen']))): ?>
                         <div class="regimen-line" style="background:#fff3cd;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
                             <strong style='color:#856404;'><i class="fa fa-lungs"></i> TB+</strong>
                             <?php if (!empty($regimenData['tb_regimen'])): ?>
-                                &nbsp;| <?php echo htmlspecialchars($regimenData['tb_regimen']); ?>
-                                (<?php echo htmlspecialchars($regimenData['tb_start_date']); ?> –
-                                <?php echo htmlspecialchars($regimenData['tb_end_date']); ?>)
+                                &nbsp;| <?php echo htmlspecialchars((string)($regimenData['tb_regimen'])); ?>
+                                (<?php echo htmlspecialchars((string)($regimenData['tb_start_date'])); ?> –
+                                <?php echo htmlspecialchars((string)($regimenData['tb_end_date'])); ?>)
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
@@ -1208,7 +1215,7 @@ h2{
                     <?php
                     // ── Hep C status only (from medical_history_new) ───────
                     $hepcPositive = !empty($regimenData['hepc_status']) &&
-                                    strtolower($regimenData['hepc_status']) === 'positive';
+                                    strtolower((string)($regimenData['hepc_status'])) === 'positive';
                     ?>
                     <?php if ($hepcPositive): ?>
                         <div class="regimen-line" style="background:#f3e0ff;border-radius:4px;padding:3px 6px;margin-bottom:4px;">
@@ -1245,5 +1252,6 @@ function validateForm() {
     return true;
 }
 </script>
+<?php include __DIR__ . '/_dose_modal.php'; ?>
 </body>
 </html>

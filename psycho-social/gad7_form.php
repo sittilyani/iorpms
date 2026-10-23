@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include '../includes/config.php';
 
@@ -272,13 +272,13 @@ if (!empty($mat_id)) {
 
         <?php if (!empty($mat_id) && empty($patientData)): ?>
             <div style="color: red; padding: 10px; border: 1px solid red; background-color: #ffe6e6; margin-bottom: 20px;">
-                Error: Patient with MAT ID <?php echo htmlspecialchars($mat_id); ?> not found.
+                Error: Patient with MAT ID <?php echo htmlspecialchars((string)($mat_id)); ?> not found.
             </div>
         <?php endif; ?>
 
         <form id="gad7Form" action="process_gad7.php" method="POST" onsubmit="return validateForm()">
             <!-- Hidden field to pass mat_id -->
-            <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($mat_id); ?>">
+            <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($mat_id)); ?>">
 
             <div class="social-demographic-grid">
                 <div style="grid-column: 1 / span 4;">
@@ -291,33 +291,33 @@ if (!empty($mat_id)) {
                         <div class="form-group">
                             <label for="clientName">Client Name</label>
                             <input type="text" id="clientName" name="clientName" class="readonly-input" readonly
-                                   value="<?php echo isset($patientData['clientName']) ? htmlspecialchars($patientData['clientName']) : ''; ?>">
+                                   value="<?php echo isset($patientData['clientName']) ? htmlspecialchars((string)($patientData['clientName'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="mat_id_display">MAT ID</label>
                             <input type="text" id="mat_id_display" name="mat_id_display" class="readonly-input" readonly
-                                   value="<?php echo isset($patientData['mat_id']) ? htmlspecialchars($patientData['mat_id']) : htmlspecialchars($mat_id); ?>">
+                                   value="<?php echo isset($patientData['mat_id']) ? htmlspecialchars((string)($patientData['mat_id'])) : htmlspecialchars((string)($mat_id)); ?>">
                         </div>
                         <div class="form-group">
                             <label for="dob">Date of Birth</label>
                             <input type="date" id="dob" name="dob" class="readonly-input"
-                                   value="<?php echo isset($patientData['dob']) ? htmlspecialchars($patientData['dob']) : ''; ?>"
+                                   value="<?php echo isset($patientData['dob']) ? htmlspecialchars((string)($patientData['dob'])) : ''; ?>"
                                    onchange="calculateAge()">
                         </div>
                         <div class="form-group">
                             <label for="age">Age</label>
                             <input type="number" id="age" name="age" class="readonly-input" readonly
-                                   value="<?php echo isset($patientData['age']) ? htmlspecialchars($patientData['age']) : ''; ?>">
+                                   value="<?php echo isset($patientData['age']) ? htmlspecialchars((string)($patientData['age'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="occupation">Occupation</label>
                             <input type="text" id="occupation" name="occupation"
-                                   value="<?php echo isset($patientData['occupation']) ? htmlspecialchars($patientData['occupation']) : ''; ?>">
+                                   value="<?php echo isset($patientData['occupation']) ? htmlspecialchars((string)($patientData['occupation'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="sex">Gender</label>
                             <input type="text" id="sex" name="sex" class="readonly-input" readonly
-                                   value="<?php echo isset($patientData['sex']) ? htmlspecialchars($patientData['sex']) : ''; ?>">
+                                   value="<?php echo isset($patientData['sex']) ? htmlspecialchars((string)($patientData['sex'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="kp_type">KP Type</label>
@@ -344,12 +344,12 @@ if (!empty($mat_id)) {
                         <div class="form-group">
                             <label for="kp_hotspot">KP Hotspot</label>
                             <input type="text" id="kp_hotspot" name="kp_hotspot"
-                                   value="<?php echo isset($patientData['kp_hotspot']) ? htmlspecialchars($patientData['kp_hotspot']) : ''; ?>">
+                                   value="<?php echo isset($patientData['kp_hotspot']) ? htmlspecialchars((string)($patientData['kp_hotspot'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="contact_phone">Contact</label>
                             <input type="text" id="contact_phone" name="contact_phone"
-                                   value="<?php echo isset($patientData['contact_phone']) ? htmlspecialchars($patientData['contact_phone']) : ''; ?>">
+                                   value="<?php echo isset($patientData['contact_phone']) ? htmlspecialchars((string)($patientData['contact_phone'])) : ''; ?>">
                         </div>
                     </div>
                 </div>

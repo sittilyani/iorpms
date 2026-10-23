@@ -57,11 +57,11 @@ $rowCount = $result->num_rows;
 // Display a message above the table with the date range
 if ($rowCount > 0) {
         echo "<div style='text-align: left; margin-bottom: 20px;'>
-                        Total status updates between " . date('d-m-Y', strtotime($dateFrom)) . " and " . date('d-m-Y', strtotime($dateTo)) . " is: <span style='color:red; font-weight: bold;'> $rowCount  </span>
+                        Total status updates between " . date('d-m-Y', strtotime((string)($dateFrom))) . " and " . date('d-m-Y', strtotime((string)($dateTo))) . " is: <span style='color:red; font-weight: bold;'> $rowCount  </span>
                     </div>";
 } else {
         echo "<div style='text-align: left; font-weight: bold; color: red; margin-bottom: 20px;'>
-                        No status updates happened on " . date('d-m-Y', strtotime($dateFrom)) . " and " . date('d-m-Y', strtotime($dateTo)) . ".
+                        No status updates happened on " . date('d-m-Y', strtotime((string)($dateFrom))) . " and " . date('d-m-Y', strtotime((string)($dateTo))) . ".
                     </div>";
 }
 

@@ -3,7 +3,7 @@ session_start();
 include '../includes/config.php';
 
 // Get search parameter
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search = isset($_GET['search']) ? trim((string)($_GET['search'])) : '';
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
@@ -85,7 +85,7 @@ $stmt->close();
                         id="searchInput"
                         class="search-input"
                         placeholder="Search drug by name, category, or ID..."
-                        value="<?php echo htmlspecialchars($search); ?>"
+                        value="<?php echo htmlspecialchars((string)($search)); ?>"
                         autocomplete="off"
                     >
                     <!--<div>
@@ -128,17 +128,17 @@ $stmt->close();
                         <?php else: ?>
                             <?php foreach ($drugs as $index => $drug): ?>
                                 <tr class="table-row">
-                                    <td><strong>#<?php echo htmlspecialchars($drug['drugID']); ?></strong></td>
-                                    <td><strong><?php echo htmlspecialchars($drug['drugCategory'] ?? 'N/A'); ?></strong></td>
-                                    <td><strong><?php echo htmlspecialchars($drug['drugName']); ?></strong></td>
-                                    <td><strong><?php echo htmlspecialchars($drug['price']); ?></strong></td>
-                                    <td><?php echo date('M d, Y', strtotime($drug['date_created'])); ?></td>
+                                    <td><strong>#<?php echo htmlspecialchars((string)($drug['drugID'])); ?></strong></td>
+                                    <td><strong><?php echo htmlspecialchars((string)($drug['drugCategory'] ?? 'N/A')); ?></strong></td>
+                                    <td><strong><?php echo htmlspecialchars((string)($drug['drugName'])); ?></strong></td>
+                                    <td><strong><?php echo htmlspecialchars((string)($drug['price'])); ?></strong></td>
+                                    <td><?php echo date('M d, Y', strtotime((string)($drug['date_created']))); ?></td>
                                     <td>
                                         <div class="action-buttons">
                                             <button class="btn btn-update" onclick="location.href='../pharmacy/update_drug.php?drugID=<?php echo $drug['drugID']; ?>'" title="Edit drug">
                                                 <i class="fas fa-edit"></i>&nbsp;&nbsp; Edit
                                             </button>
-                                            <button class="btn btn-delete" onclick="confirmDelete(<?php echo htmlspecialchars(json_encode($drug['drugID'])); ?>, '<?php echo htmlspecialchars(addslashes($drug['drugName'])); ?>')" title="Delete drug">
+                                            <button class="btn btn-delete" onclick="confirmDelete(<?php echo htmlspecialchars((string)(json_encode($drug['drugID']))); ?>, '<?php echo htmlspecialchars((string)(addslashes((string)($drug['drugName'])))); ?>')" title="Delete drug">
                                                 Delete&nbsp;&nbsp;<i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -155,13 +155,13 @@ $stmt->close();
                     <div class="pagination-info">
                         Showing <?php echo ($offset + 1); ?>-<?php echo min($offset + $limit, $totalRows); ?> of <?php echo $totalRows; ?> drugs
                         <?php if (!empty($search)): ?>
-                            for "<?php echo htmlspecialchars($search); ?>"
+                            for "<?php echo htmlspecialchars((string)($search)); ?>"
                         <?php endif; ?>
                     </div>
 
                     <div class="pagination-controls">
                         <?php if ($page > 1): ?>
-                            <a href="?page=<?php echo ($page - 1); ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="pagination-btn">
+                            <a href="?page=<?php echo ($page - 1); ?><?php echo !empty($search) ? '&search=' . urlencode((string)($search)) : ''; ?>" class="pagination-btn">
                                 <i class="fas fa-chevron-left"></i> Previous
                             </a>
                         <?php else: ?>
@@ -175,14 +175,14 @@ $stmt->close();
                         $endPage = min($totalPages, $page + 2);
 
                         for ($i = $startPage; $i <= $endPage; $i++): ?>
-                            <a href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
+                            <a href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode((string)($search)) : ''; ?>"
                                class="pagination-btn <?php echo ($i == $page) ? 'active' : ''; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
 
                         <?php if ($page < $totalPages): ?>
-                            <a href="?page=<?php echo ($page + 1); ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="pagination-btn">
+                            <a href="?page=<?php echo ($page + 1); ?><?php echo !empty($search) ? '&search=' . urlencode((string)($search)) : ''; ?>" class="pagination-btn">
                                 Next <i class="fas fa-chevron-right"></i>
                             </a>
                         <?php else: ?>

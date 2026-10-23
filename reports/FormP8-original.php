@@ -79,7 +79,7 @@ body { margin-left: 0.7in; margin-right: 0.7in; margin-top: 0.3in; margin-bottom
                         <input type="text" name="entryfacility">
                         <?php
                             if (isset($_SESSION['current_facility_name'])) {
-                                echo htmlspecialchars($_SESSION['current_facility_name']);
+                                echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                             } else {
                                 echo "No Facility Set";
                             }
@@ -88,7 +88,7 @@ body { margin-left: 0.7in; margin-right: 0.7in; margin-top: 0.3in; margin-bottom
                         <td class="column6 style1 s style2" colspan="4">
                         <?php
                             if (isset($_SESSION['current_county'])) {
-                                echo htmlspecialchars($_SESSION['current_county']);
+                                echo htmlspecialchars((string)($_SESSION['current_county']));
                             } else {
                                 echo "No County Set";
                             }
@@ -346,10 +346,10 @@ body { margin-left: 0.7in; margin-right: 0.7in; margin-top: 0.3in; margin-bottom
                     <tr class="row21">
                         <td class="column0">&nbsp;</td>
                         <td class="column1 style26 s style31" rowspan="2">Report submitted by:</td>
-                        <td class="column2 style27 s style29" colspan="3"><center><input type="text" name="pharmicName" style="width: 200px; background-color: #d6eaf8;"value="<?php echo htmlspecialchars($pharmicName); ?>" readonly></center></td>
-                        <td class="column5 style27 s style28" colspan="2"><center><input type="text" name="pharmSign" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars($pharmicSign); ?>" readonly></center></td>
-                        <td class="column7 style27 s style29" colspan="3"><center><input type="text" name="pharmicMobile" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars($pharmicMobile); ?>" readonly></center></td>
-                        <td class="column10 style30 s style30" colspan="2"><center><input type="date" name="pharmicDate" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars($pharmicDate); ?>" readonly></center></td>
+                        <td class="column2 style27 s style29" colspan="3"><center><input type="text" name="pharmicName" style="width: 200px; background-color: #d6eaf8;"value="<?php echo htmlspecialchars((string)($pharmicName)); ?>" readonly></center></td>
+                        <td class="column5 style27 s style28" colspan="2"><center><input type="text" name="pharmSign" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars((string)($pharmicSign)); ?>" readonly></center></td>
+                        <td class="column7 style27 s style29" colspan="3"><center><input type="text" name="pharmicMobile" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars((string)($pharmicMobile)); ?>" readonly></center></td>
+                        <td class="column10 style30 s style30" colspan="2"><center><input type="date" name="pharmicDate" style="width: 200px; background-color: #d6eaf8;" value="<?php echo htmlspecialchars((string)($pharmicDate)); ?>" readonly></center></td>
                     </tr>
                     <tr class="row22">
                         <td class="column0">&nbsp;</td>

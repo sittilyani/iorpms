@@ -240,7 +240,7 @@ function saveFingerprint($conn, $data, $action, $performedBy) {
                 'success' => true,
                 'message' => $message,
                 'fingerprint_id' => $fingerprintId,
-                'redirect' => 'fingerprint_search.php?message=' . urlencode($message)
+                'redirect' => 'fingerprint_search.php?message=' . urlencode((string)($message))
             ];
         } else {
             throw new Exception('Execute failed: ' . $stmt->error);
@@ -315,7 +315,7 @@ function formatFileSize($bytes) {
         }
 
         .header {
-            background: linear-gradient(135deg, #2C3162 0%, #1a1f4b 100%);
+            background: linear-gradient(135deg, #2D008A 0%, #1a1f4b 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -371,10 +371,10 @@ function formatFileSize($bytes) {
         }
 
         .patient-info h3, .scanner-section h3 {
-            color: #2C3162;
+            color: #2D008A;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #AC80EE;
         }
 
         .existing-info {
@@ -420,7 +420,7 @@ function formatFileSize($bytes) {
         }
 
         .form-control:focus {
-            border-color: #667eea;
+            border-color: #AC80EE;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             outline: none;
         }
@@ -462,7 +462,7 @@ function formatFileSize($bytes) {
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
         }
 
@@ -608,10 +608,10 @@ function formatFileSize($bytes) {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Fingerprint <?php echo ucfirst($action); ?></h1>
-            <h2><?php echo htmlspecialchars($currentSettings['clientName'] ?? ''); ?>
+            <h1>Fingerprint <?php echo ucfirst((string)($action)); ?></h1>
+            <h2><?php echo htmlspecialchars((string)($currentSettings['clientName'] ?? '')); ?>
                 <?php if(isset($currentSettings['mat_id'])): ?>
-                    (MAT ID: <?php echo htmlspecialchars($currentSettings['mat_id']); ?>)
+                    (MAT ID: <?php echo htmlspecialchars((string)($currentSettings['mat_id'])); ?>)
                 <?php endif; ?>
             </h2>
 
@@ -627,20 +627,20 @@ function formatFileSize($bytes) {
         <?php if ($existingPrint): ?>
         <div class="existing-info">
             <h4>? Existing Fingerprint Details</h4>
-            <p><strong>Capture Date:</strong> <?php echo date('Y-m-d H:i', strtotime($existingPrint['capture_date'])); ?></p>
-            <p><strong>Finger Type:</strong> <?php echo htmlspecialchars($existingPrint['fingerprint_type']); ?></p>
-            <p><strong>Scanner:</strong> <?php echo htmlspecialchars($existingPrint['scanner_type']); ?></p>
+            <p><strong>Capture Date:</strong> <?php echo date('Y-m-d H:i', strtotime((string)($existingPrint['capture_date']))); ?></p>
+            <p><strong>Finger Type:</strong> <?php echo htmlspecialchars((string)($existingPrint['fingerprint_type'])); ?></p>
+            <p><strong>Scanner:</strong> <?php echo htmlspecialchars((string)($existingPrint['scanner_type'])); ?></p>
             <p><strong>Quality Score:</strong> <?php echo $existingPrint['quality_score']; ?>/100</p>
             <?php if ($existingPrint['fingerprint_data']): ?>
             <div class="file-info">
                 <strong>Fingerprint Data Size:</strong>
-                <?php echo formatFileSize(strlen($existingPrint['fingerprint_data'])); ?>
+                <?php echo formatFileSize(strlen((string)($existingPrint['fingerprint_data']))); ?>
             </div>
             <?php endif; ?>
             <?php if ($existingPrint['template_data']): ?>
             <div class="file-info">
                 <strong>Template Data Size:</strong>
-                <?php echo formatFileSize(strlen($existingPrint['template_data'])); ?>
+                <?php echo formatFileSize(strlen((string)($existingPrint['template_data']))); ?>
             </div>
             <?php endif; ?>
         </div>
@@ -659,37 +659,37 @@ function formatFileSize($bytes) {
                 <div class="form-group">
                     <label>MAT ID:</label>
                     <input type="text" name="mat_id" class="form-control readonly-input"
-                           value="<?php echo htmlspecialchars($currentSettings['mat_id'] ?? ''); ?>" readonly>
+                           value="<?php echo htmlspecialchars((string)($currentSettings['mat_id'] ?? '')); ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label>MAT Number:</label>
                     <input type="text" name="mat_number" class="form-control readonly-input"
-                           value="<?php echo htmlspecialchars($currentSettings['mat_number'] ?? ''); ?>" <?php echo $action === 'update' ? '' : 'readonly'; ?>>
+                           value="<?php echo htmlspecialchars((string)($currentSettings['mat_number'] ?? '')); ?>" <?php echo $action === 'update' ? '' : 'readonly'; ?>>
                 </div>
 
                 <div class="form-group">
                     <label>Client Name:</label>
                     <input type="text" name="clientName" class="form-control readonly-input"
-                           value="<?php echo htmlspecialchars($currentSettings['clientName'] ?? ''); ?>" readonly>
+                           value="<?php echo htmlspecialchars((string)($currentSettings['clientName'] ?? '')); ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Nick Name:</label>
                     <input type="text" name="nickName" class="form-control"
-                           value="<?php echo htmlspecialchars($currentSettings['nickName'] ?? ''); ?>">
+                           value="<?php echo htmlspecialchars((string)($currentSettings['nickName'] ?? '')); ?>">
                 </div>
 
                 <div class="form-group">
                     <label>Date of Birth:</label>
                     <input type="date" name="dob" class="form-control"
-                           value="<?php echo htmlspecialchars($currentSettings['dob'] ?? ''); ?>">
+                           value="<?php echo htmlspecialchars((string)($currentSettings['dob'] ?? '')); ?>">
                 </div>
 
                 <div class="form-group">
                     <label>Sex:</label>
                     <input type="text" name="sex" class="form-control readonly-input"
-                           value="<?php echo htmlspecialchars($currentSettings['sex'] ?? ''); ?>" readonly>
+                           value="<?php echo htmlspecialchars((string)($currentSettings['sex'] ?? '')); ?>" readonly>
                 </div>
 
                 <div class="form-group">
@@ -720,9 +720,9 @@ function formatFileSize($bytes) {
                 <div class="scanner-selector">
                     <label>Select Scanner Type:</label>
                     <select id="scanner-type" class="form-control">
-                        <option value="zkteco" <?php echo strtolower($defaultScanner) === 'zkteco' ? 'selected' : ''; ?>>ZKTeco Scanner</option>
-                        <option value="secugen" <?php echo strtolower($defaultScanner) === 'secugen' ? 'selected' : ''; ?>>SecuGen Scanner</option>
-                        <option value="digitalpersona" <?php echo strtolower($defaultScanner) === 'digitalpersona' ? 'selected' : ''; ?>>Digital Persona Scanner</option>
+                        <option value="zkteco" <?php echo strtolower((string)($defaultScanner)) === 'zkteco' ? 'selected' : ''; ?>>ZKTeco Scanner</option>
+                        <option value="secugen" <?php echo strtolower((string)($defaultScanner)) === 'secugen' ? 'selected' : ''; ?>>SecuGen Scanner</option>
+                        <option value="digitalpersona" <?php echo strtolower((string)($defaultScanner)) === 'digitalpersona' ? 'selected' : ''; ?>>Digital Persona Scanner</option>
                     </select>
                 </div>
 
@@ -790,15 +790,15 @@ function formatFileSize($bytes) {
     <form id="fingerprint-form" style="display: none;">
         <input type="hidden" name="action" value="<?php echo $action; ?>">
         <input type="hidden" name="visitDate" value="<?php echo date('Y-m-d H:i'); ?>">
-        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars($currentSettings['mat_id'] ?? ''); ?>">
-        <input type="hidden" name="mat_number" id="form-mat-number" value="<?php echo htmlspecialchars($currentSettings['mat_number'] ?? ''); ?>">
-        <input type="hidden" name="clientName" value="<?php echo htmlspecialchars($currentSettings['clientName'] ?? ''); ?>">
-        <input type="hidden" name="nickName" id="form-nickname" value="<?php echo htmlspecialchars($currentSettings['nickName'] ?? ''); ?>">
-        <input type="hidden" name="dob" id="form-dob" value="<?php echo htmlspecialchars($currentSettings['dob'] ?? ''); ?>">
-        <input type="hidden" name="sex" value="<?php echo htmlspecialchars($currentSettings['sex'] ?? ''); ?>">
-        <input type="hidden" name="current_status" id="form-current-status" value="<?php echo htmlspecialchars($currentSettings['current_status'] ?? 'Active'); ?>">
+        <input type="hidden" name="mat_id" value="<?php echo htmlspecialchars((string)($currentSettings['mat_id'] ?? '')); ?>">
+        <input type="hidden" name="mat_number" id="form-mat-number" value="<?php echo htmlspecialchars((string)($currentSettings['mat_number'] ?? '')); ?>">
+        <input type="hidden" name="clientName" value="<?php echo htmlspecialchars((string)($currentSettings['clientName'] ?? '')); ?>">
+        <input type="hidden" name="nickName" id="form-nickname" value="<?php echo htmlspecialchars((string)($currentSettings['nickName'] ?? '')); ?>">
+        <input type="hidden" name="dob" id="form-dob" value="<?php echo htmlspecialchars((string)($currentSettings['dob'] ?? '')); ?>">
+        <input type="hidden" name="sex" value="<?php echo htmlspecialchars((string)($currentSettings['sex'] ?? '')); ?>">
+        <input type="hidden" name="current_status" id="form-current-status" value="<?php echo htmlspecialchars((string)($currentSettings['current_status'] ?? 'Active')); ?>">
         <input type="hidden" name="fingerprint_type" id="form-fingerprint-type" value="<?php echo $existingPrint['fingerprint_type'] ?? 'Index'; ?>">
-        <input type="hidden" name="scanner_type" id="form-scanner-type" value="<?php echo htmlspecialchars($defaultScanner); ?>">
+        <input type="hidden" name="scanner_type" id="form-scanner-type" value="<?php echo htmlspecialchars((string)($defaultScanner)); ?>">
         <?php if ($existingPrint && $action === 'update'): ?>
         <input type="hidden" name="fingerprint_id" value="<?php echo $existingPrint['id']; ?>">
         <?php endif; ?>

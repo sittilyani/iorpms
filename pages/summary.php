@@ -25,7 +25,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <div class="page-header centered clearfix">
  <h2 class="pull-left">Summary Report</h2>
 
-        <form class="form-inline" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" style="text-align:center" style="float: center;">
+        <form class="form-inline" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post" style="text-align:center" style="float: center;">
             <button type="submit" class="btn btn-primary" name="search"style="margin:10px;">Download</button>
         </form>
 

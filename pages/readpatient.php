@@ -17,7 +17,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 // Check existence of id parameter before processing further
-if(isset($_GET["mat_id"]) && !empty(trim($_GET["mat_id"]))){
+if(isset($_GET["mat_id"]) && !empty(trim((string)($_GET["mat_id"])))){
 
     // Prepare a select statement
     $sql = "SELECT * FROM patient  where mat_id = :mat_id";
@@ -27,7 +27,7 @@ if(isset($_GET["mat_id"]) && !empty(trim($_GET["mat_id"]))){
         $stmt->bindParam(":mat_id", $param_mat_id);
 
         // Set parameters
-        $param_mat_id = trim($_GET["mat_id"]);
+        $param_mat_id = trim((string)($_GET["mat_id"]));
 
         // Attempt to execute the prepared statement
         if($stmt->execute()){
@@ -409,11 +409,11 @@ if (isset($_SESSION['message'])) {
                     $end = date('Y-m-d'); // current date
                     while($start <= $end) {
                         // If the current date is not in the dates array and is within the range of the current month and year
-                        if(!in_array($start, $dates) && date('Y', strtotime($start)) == date('Y')) {
+                        if(!in_array($start, $dates) && date('Y', strtotime((string)($start))) == date('Y')) {
                             $missing[] = $start;
                         }
                         // Move to the next date
-                        $start = date('Y-m-d', strtotime($start . ' +1 day'));
+                        $start = date('Y-m-d', strtotime((string)($start . ' +1 day')));
                     }
 
 

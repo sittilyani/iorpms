@@ -196,12 +196,12 @@ $result = $conn->query($sql);
                             }
                         ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($row['id']); ?></td>
-                                <td><?php echo htmlspecialchars($row['productname']); ?></td>
-                                <td><?php echo htmlspecialchars($row['brandname']); ?></td>
-                                <td><?php echo htmlspecialchars($row['batch']); ?></td>
-                                <td><?php echo htmlspecialchars($row['expiryDate']); ?></td>
-                                <td><?php echo htmlspecialchars($row['stockBalance']); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['id'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['productname'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['brandname'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['batch'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['expiryDate'])); ?></td>
+                                <td><?php echo htmlspecialchars((string)($row['stockBalance'])); ?></td>
                                 <td><span class="badge <?php echo $expiryStatus; ?>"><?php echo $statusText; ?></span></td>
                             </tr>
                         <?php endwhile; ?>

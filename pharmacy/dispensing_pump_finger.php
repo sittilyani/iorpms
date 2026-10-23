@@ -116,18 +116,18 @@ if (isset($_SESSION['successMessages'])) {
                 <span aria-hidden="true">&times;</span>
             </button>
             <?php foreach ($successMessages as $success): ?>
-                <p><?php echo htmlspecialchars($success); ?></p>
+                <p><?php echo htmlspecialchars((string)($success)); ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
-    <h2 style="color: #2C3162;">Dispense with Pump (Fingerprint Verification)</h2>
+    <h2 style="color: #2D008A;">Dispense with Pump (Fingerprint Verification)</h2>
 
     <!-- Fingerprint Scanner Modal -->
     <div id="fingerprintModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h4 style="color: #2C3162;">Fingerprint Verification</h4>
+            <h4 style="color: #2D008A;">Fingerprint Verification</h4>
             <div id="modal-message"></div>
             <div class="scanner-container">
                 <p id="verification-instructions">Place your finger on the scanner for verification</p>
@@ -140,7 +140,7 @@ if (isset($_SESSION['successMessages'])) {
                         <div id="quality-bar" style="background: #28a745; height: 100%; width: 0%;"></div>
                     </div>
                 </div>
-                <button onclick="startFingerprintVerification()" style="padding: 10px 20px; background: #2C3162; color: white; border: none; border-radius: 5px; margin: 10px;">
+                <button onclick="startFingerprintVerification()" style="padding: 10px 20px; background: #2D008A; color: white; border: none; border-radius: 5px; margin: 10px;">
                     Start Verification
                 </button>
                 <button onclick="closeModal()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; margin: 10px;">
@@ -150,7 +150,7 @@ if (isset($_SESSION['successMessages'])) {
         </div>
     </div>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
             <input type="text" id="search" class="search-entry" name="search"
@@ -243,7 +243,7 @@ if (isset($_SESSION['successMessages'])) {
                     <td>
                         <a href='../pharmacy/view-missed.php?mat_id=" . $row['mat_id'] . "'>View</a> |
                         <a href='dispensingData_pump.php?mat_id=" . $row['mat_id'] . "'>DISPENSE</a> &#124; |
-                        <a href='#' onclick='verifyBeforeDispense(\"" . $row['mat_id'] . "\", \"" . addslashes($row['clientName']) . "\")'>DISPENSE</a> |
+                        <a href='#' onclick='verifyBeforeDispense(\"" . $row['mat_id'] . "\", \"" . addslashes((string)($row['clientName'])) . "\")'>DISPENSE</a> |
                         <a href='multi_dispensing.php?mat_id=" . $row['mat_id'] . "'>MDD</a> |
                         <a href='../referrals/referral.php?mat_id=" . $row['mat_id'] . "'>Refer</a>
                     </td>

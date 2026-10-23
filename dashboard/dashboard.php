@@ -21,6 +21,7 @@ $rolePermissions = [
             'Patient Management'        => '../patients/sidenav.php',
             'Dispensing Pharmacy'       => '../pharmacy/sidenav.php',
             'Nursing/Clinician'                 => '../clinician/sidenav.php',
+            'Nursing Management'        => '../nursing/sidenav.php',
             'Psychosocial support'      => '../psycho-social/sidenav.php',
             'Laboratory and Diagnostics'=> '../laboratory/sidenav.php',
             'View Referrals'            => '../referrals/sidenav.php',
@@ -44,6 +45,7 @@ $rolePermissions = [
             'Patient Management'        => '../patients/sidenav.php',
             'Dispensing Pharmacy'       => '../pharmacy/sidenav.php',
             'Nursing/Clinician'                 => '../clinician/sidenav.php',
+            'Nursing Management'        => '../nursing/sidenav.php',
             'Psychosocial support'      => '../psycho-social/sidenav.php',
             'Laboratory and Diagnostics'=> '../laboratory/sidenav.php',
             'View Referrals'            => '../referrals/sidenav.php',
@@ -201,22 +203,19 @@ $rolePermissions = [
     ],
     'nursing' => [
         'cards' => [
-            'BackUp and Refresh' => '../backup/sidenav.php',
-            'Patient Management' => '../patients/sidenav.php',
+            'Nursing Management' => '../nursing/sidenav.php',
             'View Referrals' => '../referrals/sidenav.php',
-            'Reports Management' => '../reports/sidenav.php',
             'Biometrics' => '../biometrics/sidenav.php',
             'Profile' => '../profile/sidenav.php',
-            'Appointments' => '../appointments/sidenav.php',
             'Pharmacovigilance' => '../pharmacovigilance/sidenav.php',
+            'Reports Management' => '../reports/sidenav.php',
         ],
-        'sidebars' => [],
+        'sidebars' => ['Patients Summary'],
     ],
-
 ];
 
 // Get the user's role from session, default to 'receptionist' if not set
-$userRole = isset($_SESSION['userrole']) ? strtolower($_SESSION['userrole']) : 'receptionist';
+$userRole = isset($_SESSION['userrole']) ? strtolower((string)($_SESSION['userrole'])) : 'receptionist';
 $permissions = isset($rolePermissions[$userRole]) ? $rolePermissions[$userRole] : $rolePermissions['receptionist'];
 $allowedCards = $permissions['cards'];
 $allowedSidebars = $permissions['sidebars'];
@@ -259,6 +258,12 @@ $allCards = [
         'label' => t('clinician'),
         'icon'  => 'fa fa-stethoscope',
         'link'  => '../clinician/sidenav.php',
+        'color' => 'purple',
+    ],
+    'Nursing Management' => [
+        'label' => 'Nursing Management',
+        'icon'  => 'fa fa-heartbeat',
+        'link'  => '../nursing/sidenav.php',
         'color' => 'purple',
     ],
     'Psychosocial support' => [
@@ -341,14 +346,14 @@ $allCards = [
     <div class="cards-grid">
         <?php foreach ($allCards as $title => $card): ?>
             <?php if (isset($allowedCards[$title])): ?>
-                <div class="card <?php echo htmlspecialchars($card['color']); ?>"
-                     onclick="window.location.href='<?php echo htmlspecialchars($card['link']); ?>'"
+                <div class="card <?php echo htmlspecialchars((string)($card['color'])); ?>"
+                     onclick="window.location.href='<?php echo htmlspecialchars((string)($card['link'])); ?>'"
                      tabindex="0"
                      role="button"
-                     aria-label="<?php echo htmlspecialchars($card['label']); ?>">
+                     aria-label="<?php echo htmlspecialchars((string)($card['label'])); ?>">
                     <div class="card-content">
-                        <h3><?php echo htmlspecialchars($card['label']); ?></h3>
-                        <i class="fas <?php echo htmlspecialchars($card['icon']); ?> card-icon"></i>
+                        <h3><?php echo htmlspecialchars((string)($card['label'])); ?></h3>
+                        <i class="fas <?php echo htmlspecialchars((string)($card['icon'])); ?> card-icon"></i>
                     </div>
                 </div>
             <?php endif; ?>
@@ -360,7 +365,19 @@ $allCards = [
         <?php if (in_array('Patients Summary', $allowedSidebars)): ?>
         <div class="sidebar-card">
             <h4 style="color: #0033CC;"><i class="fa fa-users"></i> <?php echo t('patients_summary'); ?></h4>
-            <table class="balances-table">
+            <?php
+if (!function_exists('cnt_pct')) {
+    // Runs a counts/*.php file and appends the share of cumulative-ever clients in brackets
+    function cnt_pct(string $file, int $denom = 0): string {
+        global $conn;
+        ob_start(); include $file; $out = ob_get_clean();
+        preg_match('/^\s*(\d+)/', $out, $m); $n = (int)($m[1] ?? 0);
+        return $n . ($denom > 0 ? ' (' . round($n / $denom * 100, 1) . '%)' : '');
+    }
+}
+ob_start(); include '../counts/cumulative_ever_count.php'; $__cum = ob_get_clean(); preg_match('/^\s*(\d+)/', $__cum, $__m); $cumTotal = (int)($__m[1] ?? 0);
+?>
+<table class="balances-table">
                 <thead>
                     <tr>
                         <th><?php echo t('patient_status'); ?></th>
@@ -401,7 +418,7 @@ $allCards = [
                         <td>
                         <span class="count-retro">
                                 <a href="../patients/ever_enrolled_patients.php" target="contentFrame" class="nav-link">
-                                    <?php include ('../counts/ever_patient_count.php'); ?>
+                                    <?php echo cnt_pct('../counts/ever_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -410,7 +427,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_active_patients.php" target="contentFrame" class="nav-link" style="background: #66ff66; color: #000000;">
-                                <?php include ('../counts/active_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/active_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -419,7 +436,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_weaned_patients.php" target="contentFrame" class="nav-link"  style="background: #66ff66; color: #000000;">
-                                <?php include ('../counts/weaned_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/weaned_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -428,7 +445,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_transin_patients.php" target="contentFrame" class="nav-link">
-                                <?php include ('../counts/transin_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/transin_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -437,7 +454,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_transout_patients.php" target="contentFrame" class="nav-link">
-                                <?php include ('../counts/transout_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/transout_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -446,7 +463,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_defaulted_patients.php" target="contentFrame" class="nav-link">
-                                <?php include ('../counts/defaulted_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/defaulted_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -455,7 +472,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_ltfu_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
-                                <?php include ('../counts/lost_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/lost_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -464,7 +481,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_stopped_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
-                                <?php include ('../counts/stopped_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/stopped_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -473,7 +490,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_inmates_patients.php" target="contentFrame" class="nav-link">
-                                <?php include ('../counts/inmates_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/inmates_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -482,7 +499,7 @@ $allCards = [
                         <td>
                             <span class="count-retro">
                                 <a href="../patients/view_voluntary_patients.php" target="contentFrame" class="nav-link">
-                                <?php include ('../counts/voluntary_patient_count.php'); ?>
+                                <?php echo cnt_pct('../counts/voluntary_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>
@@ -490,8 +507,8 @@ $allCards = [
                         <td style="color: red;"><?php echo t('died'); ?></td>
                         <td>
                             <span class="count-retro">
-                                <a href="../patients/view_dead_patients.php" target="contentFrame" class="nav-link" style="background: #ff9494;">
-                                <?php include ('../counts/dead_patient_count.php'); ?>
+                                <a href="../patients/mortality_chart.php" target="contentFrame" class="nav-link" style="background: #ff9494;" title="Click for the mortality causes chart">
+                                <?php echo cnt_pct('../counts/dead_patient_count.php', $cumTotal); ?>
                                 </a></span> <!-- This would be your PHP count -->
                         </td>
                     </tr>

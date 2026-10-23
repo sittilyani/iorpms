@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Ever Enrolled clients');
 session_start();
 include('../includes/config.php');
 ?>
@@ -6,7 +6,7 @@ include('../includes/config.php');
 <?php
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
-    echo "<div>" . htmlspecialchars($message) . "</div>";
+    echo "<div>" . htmlspecialchars((string)($message)) . "</div>";
 }
 ?>
 
@@ -22,12 +22,12 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">Ever enrolled in the clinic</h2>
+    <h2 style="color: #2D008A; ">Ever enrolled in the clinic</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
-            <input type="text" class="search-entry" id="search" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <input type="text" class="search-entry" id="search" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>">
             <input type="submit" value="Search" class="search-input">
             <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
 
@@ -86,21 +86,21 @@ if (isset($_GET['message'])) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
 
-                    <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                    <td>" . htmlspecialchars($row['mat_number']) . "</td>
-                    <td>" . htmlspecialchars($row['clientName']) . "</td>
-                    <td>" . htmlspecialchars($row['nickName']) . "</td>
-                    <td>" . htmlspecialchars($row['age']) . "</td>
-                    <td>" . htmlspecialchars($row['sex']) . "</td>
-                    <td>" . htmlspecialchars($row['p_address']) . "</td>
+                    <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['mat_number'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['nickName'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['age'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['p_address'])) . "</td>
                     <td>" . $row['cso'] . "</td>
-                    <td>" . htmlspecialchars($row['drugname']) . "</td>
-                    <td>" . htmlspecialchars($row['dosage']) . "</td>
-                    <td>" . htmlspecialchars($row['current_status']) . "</td>
+                    <td>" . htmlspecialchars((string)($row['drugname'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['dosage'])) . "</td>
+                    <td>" . htmlspecialchars((string)($row['current_status'])) . "</td>
                     <td>
-                        <a href='../patients/view_patient.php?p_id=" . htmlspecialchars($row['p_id']) . "'>View</a> |
-                        <a href='../patients/update.php?p_id=" . htmlspecialchars($row['p_id']) . "'>Update</a> |
-                        <a href='../patients/delete.php?p_id=" . htmlspecialchars($row['p_id']) . "'>Delete</a>
+                        <a href='../patients/view_patient.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>View</a> |
+                        <a href='../patients/update.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>Update</a> |
+                        <a href='../patients/delete.php?p_id=" . htmlspecialchars((string)($row['p_id'])) . "'>Delete</a>
                     </td>
                 </tr>";
         }
@@ -125,12 +125,12 @@ if (isset($_GET['message'])) {
 
     // Previous Button
     if ($current_page > 1) {
-        echo "<a href='?page=" . ($current_page - 1) . "&search=" . urlencode($search) . "'>Previous</a>";
+        echo "<a href='?page=" . ($current_page - 1) . "&search=" . urlencode((string)($search)) . "'>Previous</a>";
     }
 
     // Always show the first page if it's not in the visible range
     if ($start_page > 1) {
-        echo "<a href='?page=1&search=" . urlencode($search) . "'>1</a>";
+        echo "<a href='?page=1&search=" . urlencode((string)($search)) . "'>1</a>";
         if ($start_page > 2) {
             echo "<span>...</span>"; // Ellipsis
         }
@@ -141,7 +141,7 @@ if (isset($_GET['message'])) {
         if ($i == $current_page) {
             echo "<span class='active'>$i</span>";
         } else {
-            echo "<a href='?page=$i&search=" . urlencode($search) . "'>$i</a>";
+            echo "<a href='?page=$i&search=" . urlencode((string)($search)) . "'>$i</a>";
         }
     }
 
@@ -150,12 +150,12 @@ if (isset($_GET['message'])) {
         if ($end_page < $total_pages - 1) {
             echo "<span>...</span>"; // Ellipsis
         }
-        echo "<a href='?page=$total_pages&search=" . urlencode($search) . "'>$total_pages</a>";
+        echo "<a href='?page=$total_pages&search=" . urlencode((string)($search)) . "'>$total_pages</a>";
     }
 
     // Next Button
     if ($current_page < $total_pages) {
-        echo "<a href='?page=" . ($current_page + 1) . "&search=" . urlencode($search) . "'>Next</a>";
+        echo "<a href='?page=" . ($current_page + 1) . "&search=" . urlencode((string)($search)) . "'>Next</a>";
     }
 
     echo "</div>";

@@ -30,13 +30,13 @@
               font-weight: bold;
           }
           h2{
-              color: #2C3162;margin-top: 80px;
+              color: #2D008A;margin-top: 80px;
               margin-left: 50px;
           }
           #btn-submit{
               width: 250px;
               color: white;
-              background-color: #2C3162;
+              background-color: #2D008A;
               height: 35px;
               border-radius: 5px;
               border: none;

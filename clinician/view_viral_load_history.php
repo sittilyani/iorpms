@@ -96,7 +96,7 @@ $conn->close();
 <body>
     <div class="container">
         <?php if ($patientDetails): ?>
-        <h3><?php echo htmlspecialchars($patientDetails['mat_id']); ?> viral suppression history: Enrolment Date: <?php echo htmlspecialchars($patientDetails['reg_date']); ?></h3>
+        <h3><?php echo htmlspecialchars((string)($patientDetails['mat_id'])); ?> viral suppression history: Enrolment Date: <?php echo htmlspecialchars((string)($patientDetails['reg_date'])); ?></h3>
 
         <button class="excel-btn" onclick="exportToExcel()">Export to Excel</button>
         <div style="clear: both;"></div>
@@ -118,16 +118,16 @@ $conn->close();
             <tbody>
                 <?php foreach ($viralLoadHistory as $record): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($record['vl_id']); ?></td>
-                    <!--<td><?php echo htmlspecialchars($record['last_vlDate']); ?></td>-->
-                    <td><?php echo empty($record['last_vlDate']) ? "NA" : htmlspecialchars($record['last_vlDate']); ?></td>
-                    <!--<td><?php echo htmlspecialchars($record['results']); ?></td>-->
-                    <td><?php echo empty($record['results']) ? "NA" : htmlspecialchars($record['results']); ?></td>
-                    <td><?php echo htmlspecialchars(getSuppressionStatus($record['results'])); ?></td>
-                    <td><?php echo htmlspecialchars($record['art_regimen']); ?></td>
-                    <td><?php echo htmlspecialchars($record['regimen_type']); ?></td>
-                    <td><?php echo htmlspecialchars($record['clinician_name']); ?></td>
-                    <td><?php echo htmlspecialchars($record['clinical_notes']); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['vl_id'])); ?></td>
+                    <!--<td><?php echo htmlspecialchars((string)($record['last_vlDate'])); ?></td>-->
+                    <td><?php echo empty($record['last_vlDate']) ? "NA" : htmlspecialchars((string)($record['last_vlDate'])); ?></td>
+                    <!--<td><?php echo htmlspecialchars((string)($record['results'])); ?></td>-->
+                    <td><?php echo empty($record['results']) ? "NA" : htmlspecialchars((string)($record['results'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)(getSuppressionStatus($record['results']))); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['art_regimen'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['regimen_type'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['clinician_name'])); ?></td>
+                    <td><?php echo htmlspecialchars((string)($record['clinical_notes'])); ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -147,7 +147,7 @@ $conn->close();
             var link = document.createElement("a");
             link.href = uri;
             link.style = "visibility:hidden";
-            link.download = "viral_load_history_<?php echo htmlspecialchars($mat_id); ?>.xls";
+            link.download = "viral_load_history_<?php echo htmlspecialchars((string)($mat_id)); ?>.xls";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

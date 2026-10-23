@@ -251,7 +251,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { background-color: #f5f7fa; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; }
-        h2 { color: #2C3162; margin: 20px 0; text-align: center; }
+        h2 { color: #2D008A; margin: 20px 0; text-align: center; }
         .stats-container { display: flex; justify-content: space-between; background-color: #deffee; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .stat-item { text-align: center; padding: 10px; border-radius: 6px; flex: 1; margin: 0 10px; }
         .stat-remaining { background-color: #fff9c4; color: #d32f2f; border: 1px solid #ffd54f; }
@@ -313,7 +313,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
                         <option value="<?php echo strval($row['id']); ?>"
                                 data-factor="<?php echo $calibration['calibration_factor']; ?>"
                                 data-concentration="<?php echo $calibration['concentration_mg_per_ml']; ?>">
-                            <?php echo htmlspecialchars($row['label']); ?> (<?php echo htmlspecialchars($row['port']); ?>)
+                            <?php echo htmlspecialchars((string)($row['label'])); ?> (<?php echo htmlspecialchars((string)($row['port'])); ?>)
                             <?php if ($row['calibration_factor']): ?>
                                 <span class="calibration-badge">Cal: <?php echo $row['calibration_factor']; ?></span>
                             <?php endif; ?>
@@ -352,7 +352,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
 
         <?php if (!empty($success_message)): ?>
             <div class="alert alert-success" role="alert">
-                <?php echo htmlspecialchars($success_message); ?>
+                <?php echo htmlspecialchars((string)($success_message)); ?>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -395,12 +395,12 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
             <tbody>
                 <?php foreach ($pump_history as $row): ?>
                     <tr>
-                        <td scope="row"><?php echo htmlspecialchars($row['device_label']); ?> (<?php echo htmlspecialchars($row['device_port']); ?>)</td>
-                        <td><?php echo htmlspecialchars($row['milligrams']); ?></td>
-                        <td><?php echo htmlspecialchars($row['new_milligrams']); ?></td>
-                        <td><?php echo htmlspecialchars($row['topup_from']); ?></td>
-                        <td><?php echo htmlspecialchars($row['topup_to'] ?? ''); ?></td>
-                        <td><?php echo htmlspecialchars($row['dispenses'] ?? 0); ?></td>
+                        <td scope="row"><?php echo htmlspecialchars((string)($row['device_label'])); ?> (<?php echo htmlspecialchars((string)($row['device_port'])); ?>)</td>
+                        <td><?php echo htmlspecialchars((string)($row['milligrams'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['new_milligrams'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['topup_from'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['topup_to'] ?? '')); ?></td>
+                        <td><?php echo htmlspecialchars((string)($row['dispenses'] ?? 0)); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($pump_history)): ?>
@@ -425,7 +425,7 @@ $calibration_history = $calHistoryResult->fetch_all(MYSQLI_ASSOC);
                 <div class="modal-body">
                     <?php if (!empty($error_message)): ?>
                         <div class="alert alert-warning" role="alert">
-                            <?php echo htmlspecialchars($error_message); ?>
+                            <?php echo htmlspecialchars((string)($error_message)); ?>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

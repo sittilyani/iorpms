@@ -93,7 +93,7 @@ try {
 
 function formatDate($dateString) {
     if (empty($dateString)) return 'N/A';
-    return date('M d, Y', strtotime($dateString));
+    return date('M d, Y', strtotime((string)($dateString)));
 }
 ?>
 
@@ -130,7 +130,7 @@ function formatDate($dateString) {
                            class="form-control"
                            name="searchTerm"
                            placeholder="Client Name, Sex or MAT ID"
-                           value="<?= htmlspecialchars($searchTerm) ?>">
+                           value="<?= htmlspecialchars((string)($searchTerm)) ?>">
                 </div>
                 <div class="col-md-3">
                     <button type="submit"
@@ -148,7 +148,7 @@ function formatDate($dateString) {
             <div class="col-md-6 text-end">
                 <?php if ($error): ?>
                     <div class="alert alert-danger">
-                        <?= htmlspecialchars($error) ?>
+                        <?= htmlspecialchars((string)($error)) ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -181,17 +181,17 @@ function formatDate($dateString) {
             <?php else: ?>
                 <?php foreach ($appointments as $app): ?>
                     <tr>
-                        <td><?= htmlspecialchars($app['p_id']) ?></td>
+                        <td><?= htmlspecialchars((string)($app['p_id'])) ?></td>
                         <td><?= formatDate($app['comp_date']) ?></td>
-                        <td><?= htmlspecialchars($app['mat_id']) ?></td>
-                        <td><?= htmlspecialchars($app['clientName']) ?></td>
-                        <td><?= htmlspecialchars($app['hcw_name']) ?></td>
+                        <td><?= htmlspecialchars((string)($app['mat_id'])) ?></td>
+                        <td><?= htmlspecialchars((string)($app['clientName'])) ?></td>
+                        <td><?= htmlspecialchars((string)($app['hcw_name'])) ?></td>
                         <td><?= formatDate($app['next_appointment']) ?></td>
                         <td>
                             <span class="<?= $app['appointment_status'] === 'scheduled'
                                 ? 'status-scheduled'
                                 : 'status-unscheduled' ?>">
-                                <?= ucfirst($app['appointment_status']) ?>
+                                <?= ucfirst((string)($app['appointment_status'])) ?>
                             </span>
                         </td>
                         <td>

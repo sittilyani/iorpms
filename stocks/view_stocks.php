@@ -175,15 +175,15 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
             <tbody>
                 <?php foreach ($users as $user) : ?>
                     <tr>
-                        <td data-label="User ID"><?= htmlspecialchars($user['user_id']) ?></td>
-                        <td data-label="User Name"><?= htmlspecialchars($user['username']) ?></td>
-                        <td data-label="First Name"><?= htmlspecialchars($user['first_name']) ?></td>
-                        <td data-label="Last Name"><?= htmlspecialchars($user['last_name']) ?></td>
-                        <td data-label="Email"><?= htmlspecialchars($user['email']) ?></td>
-                        <td data-label="Sex"><?= htmlspecialchars($user['sex']) ?></td>
-                        <td data-label="Mobile"><?= htmlspecialchars($user['mobile']) ?></td>
-                        <td data-label="User Role"><?= htmlspecialchars($user['userrole']) ?></td>
-                        <td data-label="Date Created"><?= date('M d, Y', strtotime($user['date_created'])) ?></td>
+                        <td data-label="User ID"><?= htmlspecialchars((string)($user['user_id'])) ?></td>
+                        <td data-label="User Name"><?= htmlspecialchars((string)($user['username'])) ?></td>
+                        <td data-label="First Name"><?= htmlspecialchars((string)($user['first_name'])) ?></td>
+                        <td data-label="Last Name"><?= htmlspecialchars((string)($user['last_name'])) ?></td>
+                        <td data-label="Email"><?= htmlspecialchars((string)($user['email'])) ?></td>
+                        <td data-label="Sex"><?= htmlspecialchars((string)($user['sex'])) ?></td>
+                        <td data-label="Mobile"><?= htmlspecialchars((string)($user['mobile'])) ?></td>
+                        <td data-label="User Role"><?= htmlspecialchars((string)($user['userrole'])) ?></td>
+                        <td data-label="Date Created"><?= date('M d, Y', strtotime((string)($user['date_created']))) ?></td>
                         <td data-label="Actions">
                             <div class="action-buttons">
                                 <button class="btn-update" onclick="location.href='update_user.php?user_id=<?= $user['user_id'] ?>'">

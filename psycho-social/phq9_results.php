@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include "../includes/config.php";
 
@@ -108,7 +108,7 @@ $results = $_SESSION['phq9_results'];
         .score-display {
             text-align: center;
             padding: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             color: white;
             border-radius: 12px;
             margin: 25px 0;
@@ -241,23 +241,23 @@ $results = $_SESSION['phq9_results'];
             <div class="info-grid">
                 <div class="info-item">
                     <strong>Patient Name:</strong>
-                    <span><?php echo htmlspecialchars($results['clientName']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($results['clientName'])); ?></span>
                 </div>
                 <div class="info-item">
                     <strong>MAT ID:</strong>
-                    <span><?php echo htmlspecialchars($results['mat_id']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($results['mat_id'])); ?></span>
                 </div>
                 <div class="info-item">
                     <strong>Age:</strong>
-                    <span><?php echo htmlspecialchars($results['age']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($results['age'])); ?></span>
                 </div>
                 <div class="info-item">
                     <strong>Assessment Date:</strong>
-                    <span><?php echo date('F d, Y', strtotime($results['visitDate'])); ?></span>
+                    <span><?php echo date('F d, Y', strtotime((string)($results['visitDate']))); ?></span>
                 </div>
                 <div class="info-item">
                     <strong>Assessed by:</strong>
-                    <span><?php echo htmlspecialchars($results['therapist_name']); ?></span>
+                    <span><?php echo htmlspecialchars((string)($results['therapist_name'])); ?></span>
                 </div>
             </div>
         </div>
@@ -269,14 +269,14 @@ $results = $_SESSION['phq9_results'];
 
         <div class="diagnosis-box">
             <h4>Provisional Diagnosis</h4>
-            <p><?php echo htmlspecialchars($results['diagnosis']); ?></p>
+            <p><?php echo htmlspecialchars((string)($results['diagnosis'])); ?></p>
         </div>
 
         <div class="management-box">
             <h4>Recommended Management Plan</h4>
             <ul>
                 <?php foreach ($results['management'] as $step): ?>
-                    <li><?php echo htmlspecialchars($step); ?></li>
+                    <li><?php echo htmlspecialchars((string)($step)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>

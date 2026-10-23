@@ -137,9 +137,9 @@ $categories = $result->fetch_all(MYSQLI_ASSOC);
             <tbody>
                 <?php foreach ($categories as $user) : ?>
                     <tr>
-                        <td data-label="ID"><?= htmlspecialchars($user['id']) ?></td>
-                        <td data-label="Category Name"><?= htmlspecialchars($user['name']) ?></td>
-                        <td data-label="Description"><?= htmlspecialchars($user['description']) ?></td>
+                        <td data-label="ID"><?= htmlspecialchars((string)($user['id'])) ?></td>
+                        <td data-label="Category Name"><?= htmlspecialchars((string)($user['name'])) ?></td>
+                        <td data-label="Description"><?= htmlspecialchars((string)($user['description'])) ?></td>
                         <td data-label="Actions">
                             <div class="action-buttons">
                                 <button class="btn-update" onclick="location.href='../stocks/update_categories.php?id=<?= $user['id'] ?>'">

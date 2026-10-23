@@ -47,7 +47,7 @@ if ($is_partial_save) {
                 $stmt->close();
 
                 // Redirect back to form with success message
-                $redirect_url = "clinician_initial_encounter_form.php?p_id=$patient_id&draft_id=$new_draft_id&save_success=" . urlencode("Section saved successfully! Continuing to " . $current_section . " section.");
+                $redirect_url = "clinician_initial_encounter_form.php?p_id=$patient_id&draft_id=$new_draft_id&save_success=" . urlencode((string)("Section saved successfully! Continuing to " . $current_section . " section."));
                 header("Location: $redirect_url");
                 exit();
             } else {
@@ -67,7 +67,7 @@ if ($is_partial_save) {
                 $stmt->close();
 
                 // Redirect back to form with success message
-                $redirect_url = "clinician_initial_encounter_form.php?p_id=$patient_id&draft_id=$new_draft_id&save_success=" . urlencode("Section saved successfully! Continuing to " . $current_section . " section.");
+                $redirect_url = "clinician_initial_encounter_form.php?p_id=$patient_id&draft_id=$new_draft_id&save_success=" . urlencode((string)("Section saved successfully! Continuing to " . $current_section . " section."));
                 header("Location: $redirect_url");
                 exit();
             } else {
@@ -90,7 +90,7 @@ if ($is_partial_save) {
     $mfl_code = mysqli_real_escape_string($conn, $_POST['mfl_code'] ?? '');
     $county = mysqli_real_escape_string($conn, $_POST['county'] ?? '');
     $sub_county = mysqli_real_escape_string($conn, $_POST['sub_county'] ?? '');
-    $enrolment_date = !empty($_POST['enrolment_date']) ? date('Y-m-d', strtotime(str_replace('/', '-', $_POST['enrolment_date']))) : null;
+    $enrolment_date = !empty($_POST['enrolment_date']) ? date('Y-m-d', strtotime((string)(str_replace('/', '-', $_POST['enrolment_date'])))) : null;
     $enrolment_time = $_POST['enrolment_time'] ?? null;
     $visit_type = isset($_POST['visit_type']) ? implode(',', $_POST['visit_type']) : '';
     $nickname = mysqli_real_escape_string($conn, $_POST['nickname'] ?? '');

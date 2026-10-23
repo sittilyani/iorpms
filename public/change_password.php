@@ -22,15 +22,15 @@ $error   = '';
 $success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $current = trim($_POST['current_password'] ?? '');
-    $new1    = trim($_POST['new_password'] ?? '');
-    $new2    = trim($_POST['confirm_password'] ?? '');
+    $current = trim((string)($_POST['current_password'] ?? ''));
+    $new1    = trim((string)($_POST['new_password'] ?? ''));
+    $new2    = trim((string)($_POST['confirm_password'] ?? ''));
 
     if ($current === '' || $new1 === '' || $new2 === '') {
         $error = 'All fields are required.';
     } elseif ($new1 !== $new2) {
         $error = 'New passwords do not match.';
-    } elseif (strlen($new1) < 8) {
+    } elseif (strlen((string)($new1)) < 8) {
         $error = 'New password must be at least 8 characters.';
     } elseif ($new1 === $current) {
         $error = 'New password must be different from the temporary password.';
@@ -98,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     <?php else: ?>
         <h2>Set Your New Password</h2>
-        <p class="sub">Hi <strong><?php echo htmlspecialchars($username); ?></strong> — for security you must
+        <p class="sub">Hi <strong><?php echo htmlspecialchars((string)($username)); ?></strong> — for security you must
            change your temporary password before exploring the system. This only happens once.</p>
 
-        <?php if ($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
+        <?php if ($error): ?><div class="error"><?php echo htmlspecialchars((string)($error)); ?></div><?php endif; ?>
 
         <form method="post" action="change_password.php" autocomplete="off">
             <label for="current_password">Temporary password (from your email/WhatsApp)</label>

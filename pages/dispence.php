@@ -13,15 +13,15 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     try{
     // Get hidden input value
     $id = $_POST["id"];
-    $patientID = trim($_POST['patientID']);
-    $prescrID = trim($_POST['prescrID']);
+    $patientID = trim((string)($_POST['patientID']));
+    $prescrID = trim((string)($_POST['prescrID']));
     //$drugIDS = array();
     if(!empty($_POST['chk'])) {
         $chk = $_POST['chk'];
         $oldQty = $_POST['oldQty'];
         $currStkQty = $_POST['presQty'];
-        $patientID = trim($_POST['patientID']);
-        $prescrID = trim($_POST['prescrID']);
+        $patientID = trim((string)($_POST['patientID']));
+        $prescrID = trim((string)($_POST['prescrID']));
         $newStkQty = 0;
 
 
@@ -88,9 +88,9 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     unset($pdo);
 } else{
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    if(isset($_GET["id"]) && !empty(trim((string)($_GET["id"])))){
         // Get URL parameter
-        $id =  trim($_GET["id"]);
+        $id =  trim((string)($_GET["id"]));
 
         // Prepare a select statement
 
@@ -164,7 +164,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         <div class="col-md-9">
                         <p>record diferent drugs dispensed to the patient</p>
 
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)(basename($_SERVER['REQUEST_URI']))); ?>" method="post">
                     <div class="row">
          <div class="col-md-4">
         <input type="hidden" name="patientID" class="form-control" value="<?php echo $patientID; ?>">

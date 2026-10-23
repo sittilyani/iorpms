@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Appointment clients');
 session_start();
 include('../includes/config.php');
 
@@ -43,16 +43,16 @@ $percentage = ($total > 0) ? number_format(($missed / $total) * 100, 2) : 0;
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <style>
         .header { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd; }
-        th { background-color: #2C3162; color: white; white-space: nowrap; }
+        th { background-color: #2D008A; color: white; white-space: nowrap; }
         .not-dispensed { color: red; font-weight: bold; }
-        .stat-box { font-size: 16px; color: #2C3162; margin-bottom: 15px; }
+        .stat-box { font-size: 16px; color: #2D008A; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 <div class="container-fluid" style="padding: 0 30px;">
     <h3 class="mt-4">
         Patients Not Dispensed:
-        <span style="color: green;"><?php echo date('l, F j, Y', strtotime($selectedDate)); ?></span>
+        <span style="color: green;"><?php echo date('l, F j, Y', strtotime((string)($selectedDate))); ?></span>
     </h3>
 
     <div class="header d-flex justify-content-between align-items-center">
@@ -102,15 +102,15 @@ $percentage = ($total > 0) ? number_format(($missed / $total) * 100, 2) : 0;
 
             if ($listResult && $listResult->num_rows > 0) {
                 while ($row = $listResult->fetch_assoc()) {
-                    $apptDate = date('Y-m-d', strtotime($row['next_appointment']));
+                    $apptDate = date('Y-m-d', strtotime((string)($row['next_appointment'])));
                     echo "<tr>
-                            <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                            <td>" . htmlspecialchars($row['clientName']) . "</td>
-                            <td>" . htmlspecialchars($row['age']) . "</td>
-                            <td>" . htmlspecialchars($row['sex']) . "</td>
-                            <td>" . htmlspecialchars($row['p_address']) . "</td>
-                            <td>" . htmlspecialchars($row['dosage']) . "</td>
-                            <td>" . htmlspecialchars($row['current_status']) . "</td>
+                            <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['clientName'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['age'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['p_address'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['dosage'])) . "</td>
+                            <td>" . htmlspecialchars((string)($row['current_status'])) . "</td>
                             <td>" . $apptDate . "</td>
                           </tr>";
                 }

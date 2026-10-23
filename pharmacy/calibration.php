@@ -46,7 +46,7 @@ $stmt->close();
 
 $pump_host  = $selected_device['pump_host'] ?? 'localhost';
 $pump_port  = $selected_device['port']      ?? 'COM?';
-$is_local   = in_array(strtolower($pump_host), ['localhost','127.0.0.1','::1'], true);
+$is_local   = in_array(strtolower((string)($pump_host)), ['localhost','127.0.0.1','::1'], true);
 $pump_location_label = $is_local
     ? 'This server machine (' . $pump_port . ')'
     : 'Client machine @ ' . $pump_host . ' (' . $pump_port . ')';
@@ -100,7 +100,7 @@ $tube_sizes = [
     <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css">
     <style>
         :root {
-            --brand-dark: #2C3162;
+            --brand-dark: #2D008A;
             --brand-mid:  #4B0082;
             --brand-blue: #007bff;
             --ok-green:   #28a745;
@@ -264,12 +264,12 @@ $tube_sizes = [
                 <label class="fw-bold text-brand mb-1" style="display:block;">Pump Device</label>
                 <select id="pumpSelect" class="form-control" style="min-width:280px;" onchange="changePump(this.value)">
                     <?php foreach ($devices as $d):
-                        $dIsLocal = in_array(strtolower($d['pump_host']), ['localhost','127.0.0.1','::1'], true);
+                        $dIsLocal = in_array(strtolower((string)($d['pump_host'])), ['localhost','127.0.0.1','::1'], true);
                         $dLoc     = $dIsLocal ? '🖥 server' : '💻 client@' . $d['pump_host'];
                     ?>
                     <option value="<?php echo $d['id']; ?>" <?php echo ($d['id'] == $selected_id) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($d['label']); ?>
-                        (<?php echo htmlspecialchars($d['port']); ?> — <?php echo $dLoc; ?>)
+                        <?php echo htmlspecialchars((string)($d['label'])); ?>
+                        (<?php echo htmlspecialchars((string)($d['port'])); ?> — <?php echo $dLoc; ?>)
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -283,7 +283,7 @@ $tube_sizes = [
                         <?php echo $is_local ? '🖥 Server' : '💻 Client'; ?>
                     </span>
                     &nbsp;<span id="pumpLocationText" style="color:<?php echo $pump_location_color; ?>;font-weight:700;">
-                        <?php echo htmlspecialchars($pump_location_label); ?>
+                        <?php echo htmlspecialchars((string)($pump_location_label)); ?>
                     </span>
                 </div>
                 <div>
@@ -295,12 +295,12 @@ $tube_sizes = [
                     &nbsp;|&nbsp;
                     <strong>Last calibrated:</strong>
                     <span id="lastCalDisplay">
-                        <?php echo $active_cal ? date('d M Y H:i', strtotime($active_cal['calibrated_at'])) : 'Never'; ?>
+                        <?php echo $active_cal ? date('d M Y H:i', strtotime((string)($active_cal['calibrated_at']))) : 'Never'; ?>
                     </span>
                 </div>
                 <?php if (!$is_local): ?>
                 <div style="margin-top:6px;color:#856404;background:#fff3cd;padding:5px 10px;border-radius:6px;font-size:.8rem;">
-                    ⚠️ Commands are forwarded to the client machine at <strong><?php echo htmlspecialchars($pump_host); ?></strong>.
+                    ⚠️ Commands are forwarded to the client machine at <strong><?php echo htmlspecialchars((string)($pump_host)); ?></strong>.
                     Ensure that machine is online and Laragon is running before calibrating.
                 </div>
                 <?php endif; ?>
@@ -388,7 +388,7 @@ $tube_sizes = [
                 <?php if (!$is_local): ?>
                 <div style="margin-top:6px;font-size:.78rem;color:#007bff;">
                     <i class="fa fa-info-circle"></i>
-                    Commands will be sent to client machine at <strong><?php echo htmlspecialchars($pump_host); ?></strong>
+                    Commands will be sent to client machine at <strong><?php echo htmlspecialchars((string)($pump_host)); ?></strong>
                 </div>
                 <?php endif; ?>
             </div>
@@ -493,7 +493,7 @@ $tube_sizes = [
                                 <span style="color:#aaa;font-size:.8rem;">Inactive</span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo date('d M Y H:i', strtotime($h['calibrated_at'])); ?></td>
+                        <td><?php echo date('d M Y H:i', strtotime((string)($h['calibrated_at']))); ?></td>
                         <td class="fw-800"><?php echo number_format($h['calibration_factor'], 4); ?></td>
                         <td><?php echo $h['previous_factor'] ? number_format($h['previous_factor'], 4) : '—'; ?></td>
                         <td><?php echo $targetV ? number_format($targetV, 2) . ' mL' : '—'; ?></td>
@@ -508,11 +508,11 @@ $tube_sizes = [
                         <td><?php echo isset($h['volume_correction']) && $h['volume_correction'] ? number_format($h['volume_correction'], 5) : '—'; ?></td>
                         <td><?php echo isset($h['temperature_celsius']) ? $h['temperature_celsius'] : '—'; ?></td>
                         <td><?php echo isset($h['temp_correction']) && $h['temp_correction'] ? number_format($h['temp_correction'], 5) : '—'; ?></td>
-                        <td><?php echo htmlspecialchars($h['tube_type_code'] ?? $h['tubing_type'] ?? '—'); ?></td>
-                        <td><?php echo htmlspecialchars($h['calibrated_by']); ?></td>
+                        <td><?php echo htmlspecialchars((string)($h['tube_type_code'] ?? $h['tubing_type'] ?? '—')); ?></td>
+                        <td><?php echo htmlspecialchars((string)($h['calibrated_by'])); ?></td>
                         <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
-                            title="<?php echo htmlspecialchars($h['notes']); ?>">
-                            <?php echo htmlspecialchars($h['notes'] ?? ''); ?>
+                            title="<?php echo htmlspecialchars((string)($h['notes'])); ?>">
+                            <?php echo htmlspecialchars((string)($h['notes'] ?? '')); ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

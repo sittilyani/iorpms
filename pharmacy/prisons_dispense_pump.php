@@ -59,24 +59,24 @@ define('PRISON_MAX_DOSAGE_MG',    300);
 define('PRISON_CONCENTRATION',    $concentration);
 
 // ─── POST data ────────────────────────────────────────────────────────────────
-$visitDate          = trim($_POST['visitDate']          ?? '');
-$mat_id             = trim($_POST['mat_id']             ?? '');
-$mat_number         = trim($_POST['mat_number']         ?? '');
-$clientName         = trim($_POST['clientName']         ?? '');
-$nickName           = trim($_POST['nickName']           ?? '');
-$age                = trim($_POST['age']                ?? '');
-$sex                = trim($_POST['sex']                ?? '');
-$p_address          = trim($_POST['p_address']          ?? '');
-$cso                = trim($_POST['cso']                ?? '');
-$drugname           = trim($_POST['drugname']           ?? 'Methadone');
+$visitDate          = trim((string)($_POST['visitDate']          ?? ''));
+$mat_id             = trim((string)($_POST['mat_id']             ?? ''));
+$mat_number         = trim((string)($_POST['mat_number']         ?? ''));
+$clientName         = trim((string)($_POST['clientName']         ?? ''));
+$nickName           = trim((string)($_POST['nickName']           ?? ''));
+$age                = trim((string)($_POST['age']                ?? ''));
+$sex                = trim((string)($_POST['sex']                ?? ''));
+$p_address          = trim((string)($_POST['p_address']          ?? ''));
+$cso                = trim((string)($_POST['cso']                ?? ''));
+$drugname           = trim((string)($_POST['drugname']           ?? 'Methadone'));
 $dosage             = (float)($_POST['dosage']          ?? 0);
-$reasons            = trim($_POST['reasons']            ?? 'Prison bulk dispensing');
-$current_status     = trim($_POST['current_status']     ?? 'Active');
-$pharm_officer_name = trim($_POST['pharm_officer_name'] ?? '');
+$reasons            = trim((string)($_POST['reasons']            ?? 'Prison bulk dispensing'));
+$current_status     = trim((string)($_POST['current_status']     ?? 'Active'));
+$pharm_officer_name = trim((string)($_POST['pharm_officer_name'] ?? ''));
 
 // Sequencing
-$start_date  = trim($_POST['start_date']  ?? '');
-$end_date    = trim($_POST['end_date']    ?? '');
+$start_date  = trim((string)($_POST['start_date']  ?? ''));
+$end_date    = trim((string)($_POST['end_date']    ?? ''));
 $step        = (int)($_POST['step']       ?? 0);
 $total_dates = (int)($_POST['total_dates'] ?? 1);
 $next_step   = $step + 1;
@@ -84,9 +84,9 @@ $next_step   = $step + 1;
 // ─── Return URL builder ────────────────────────────────────────────────────────
 function prisonReturnUrl(string $mat_id, string $start, string $end, int $step): string {
     return 'prisons_dispense_sequential.php'
-         . '?mat_id='     . urlencode($mat_id)
-         . '&start_date=' . urlencode($start)
-         . '&end_date='   . urlencode($end)
+         . '?mat_id='     . urlencode((string)($mat_id))
+         . '&start_date=' . urlencode((string)($start))
+         . '&end_date='   . urlencode((string)($end))
          . '&step='       . $step;
 }
 
@@ -107,7 +107,7 @@ function prisonPumpLocal(string $port, string $cmd): void {
     }
     $parts = explode('|', $cmd);
     foreach ($parts as $c) {
-        $c = trim($c); if ($c === '') continue;
+        $c = trim((string)($c)); if ($c === '') continue;
         $command = escapeshellarg($pumpExe) . " " . escapeshellarg($port) . " 9600 raw " . escapeshellarg($c);
         $out     = []; $ret = 0;
         exec($command, $out, $ret);
@@ -118,12 +118,12 @@ function prisonPumpLocal(string $port, string $cmd): void {
 function prisonPumpRemote(string $host, string $port, string $cmd, string $secret): void {
     $parts = explode('|', $cmd);
     foreach ($parts as $c) {
-        $c = trim($c); if ($c === '') continue;
+        $c = trim((string)($c)); if ($c === '') continue;
         $url     = "http://{$host}/iorpms/pump/local_pump_api.php";
         $payload = json_encode(['secret'=>$secret,'port'=>$port,'baud'=>9600,'pump_cmd'=>$c]);
         $ctx = stream_context_create(['http'=>[
             'method'  => 'POST',
-            'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($payload) . "\r\n",
+            'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen((string)($payload)) . "\r\n",
             'content' => $payload,
             'timeout' => 30,
         ]]);
@@ -221,7 +221,7 @@ try {
     $ml       = ($dosage / PRISON_CONCENTRATION) * $default_factor;
     $pump_cmd = prisonBuildCmd($ml, $is_reversed);
 
-    $is_local = in_array(strtolower($pump_host), ['localhost','127.0.0.1','::1'], true);
+    $is_local = in_array(strtolower((string)($pump_host)), ['localhost','127.0.0.1','::1'], true);
     if ($is_local) {
         prisonPumpLocal($pump_port, $pump_cmd);
     } else {

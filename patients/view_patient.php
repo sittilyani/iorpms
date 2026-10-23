@@ -63,7 +63,7 @@ if ($photo && !empty($photo['image'])) {
         .grid-item-photo img {
             max-width: 200px;
             max-height: 200px;
-            border: 2px solid #2C3162;
+            border: 2px solid #2D008A;
             border-radius: 5px;
         }
         .photo-placeholder {
@@ -83,35 +83,35 @@ if ($photo && !empty($photo['image'])) {
         <h3>Client Details</h3>
         <div class="grid-container">
             <div class="grid-item">
-                <div><label>Enrolment Date:</label><span><?php echo htmlspecialchars($patients['reg_date']); ?></span></div>
-                <div><label>MAT ID:</label><span><?php echo htmlspecialchars($patients['mat_id']); ?></span></div>
-                <div><label>MAT Number:</label><span><?php echo htmlspecialchars($patients['mat_number']); ?></span></div>
-                <div><label>Client Name:</label><span><?php echo htmlspecialchars($patients['clientName']); ?></span></div>
-                <div><label>Surname:</label><span><?php echo htmlspecialchars($patients['sname']); ?></span></div>
-                <div><label>Nickname:</label><span><?php echo htmlspecialchars($patients['nickName']); ?></span></div>
-                <div><label>National ID:</label><span><?php echo htmlspecialchars($patients['nat_id']); ?></span></div>
+                <div><label>Enrolment Date:</label><span><?php echo htmlspecialchars((string)($patients['reg_date'])); ?></span></div>
+                <div><label>MAT ID:</label><span><?php echo htmlspecialchars((string)($patients['mat_id'])); ?></span></div>
+                <div><label>MAT Number:</label><span><?php echo htmlspecialchars((string)($patients['mat_number'])); ?></span></div>
+                <div><label>Client Name:</label><span><?php echo htmlspecialchars((string)($patients['clientName'])); ?></span></div>
+                <div><label>Surname:</label><span><?php echo htmlspecialchars((string)($patients['sname'])); ?></span></div>
+                <div><label>Nickname:</label><span><?php echo htmlspecialchars((string)($patients['nickName'])); ?></span></div>
+                <div><label>National ID:</label><span><?php echo htmlspecialchars((string)($patients['nat_id'])); ?></span></div>
             </div>
 
             <div class="grid-item">
-                <div><label>Date of Birth:</label><span><?php echo htmlspecialchars($patients['dob']); ?></span></div>
-                <div><label>Age:</label><span><?php echo htmlspecialchars($patients['age']); ?></span></div>
-                <div><label>Sex:</label><span><?php echo htmlspecialchars($patients['sex']); ?></span></div>
-                <div><label>Residence Sub County:</label><span><?php echo htmlspecialchars($patients['residence_scounty']); ?></span></div>
-                <div><label>Residence:</label><span><?php echo htmlspecialchars($patients['p_address']); ?></span></div>
-                <div><label>Client Phone:</label><span><?php echo htmlspecialchars($patients['client_phone']); ?></span></div>
-                <div><label>MAT services before?</label><span><?php echo htmlspecialchars($patients['mat_status']); ?></span></div>
-                <div><label>Referring Facility:</label><span><?php echo htmlspecialchars($patients['referring_facility']); ?></span></div>
-                <div><label>Referring Facility Client No:</label><span><?php echo htmlspecialchars($patients['reffering_fac_client_number']); ?></span></div>
+                <div><label>Date of Birth:</label><span><?php echo htmlspecialchars((string)($patients['dob'])); ?></span></div>
+                <div><label>Age:</label><span><?php echo htmlspecialchars((string)($patients['age'])); ?></span></div>
+                <div><label>Sex:</label><span><?php echo htmlspecialchars((string)($patients['sex'])); ?></span></div>
+                <div><label>Residence Sub County:</label><span><?php echo htmlspecialchars((string)($patients['residence_scounty'])); ?></span></div>
+                <div><label>Residence:</label><span><?php echo htmlspecialchars((string)($patients['p_address'])); ?></span></div>
+                <div><label>Client Phone:</label><span><?php echo htmlspecialchars((string)($patients['client_phone'])); ?></span></div>
+                <div><label>MAT services before?</label><span><?php echo htmlspecialchars((string)($patients['mat_status'])); ?></span></div>
+                <div><label>Referring Facility:</label><span><?php echo htmlspecialchars((string)($patients['referring_facility'])); ?></span></div>
+                <div><label>Referring Facility Client No:</label><span><?php echo htmlspecialchars((string)($patients['reffering_fac_client_number'])); ?></span></div>
             </div>
 
             <div class="grid-item">
-                <div><label>Peer Educator Name:</label><span><?php echo htmlspecialchars($patients['peer_edu_name']); ?></span></div>
-                <div><label>Peer Educator Phone:</label><span><?php echo htmlspecialchars($patients['peer_edu_phone']); ?></span></div>
-                <div><label>Treatment Supporter Name:</label><span><?php echo htmlspecialchars($patients['rx_supporter_name']); ?></span></div>
-                <div><label>Drug:</label><span><?php echo htmlspecialchars($patients['drugname']); ?></span></div>
-                <div><label>Start Dosage:</label><span><?php echo htmlspecialchars($patients['dosage']); ?></span></div>
-                <div><label>Current Status:</label><span><?php echo htmlspecialchars($patients['current_status']); ?></span></div>
-                <div><label>Registering HCW Name:</label><span><?php echo htmlspecialchars($patients['hcw_name']); ?></span></div>
+                <div><label>Peer Educator Name:</label><span><?php echo htmlspecialchars((string)($patients['peer_edu_name'])); ?></span></div>
+                <div><label>Peer Educator Phone:</label><span><?php echo htmlspecialchars((string)($patients['peer_edu_phone'])); ?></span></div>
+                <div><label>Treatment Supporter Name:</label><span><?php echo htmlspecialchars((string)($patients['rx_supporter_name'])); ?></span></div>
+                <div><label>Drug:</label><span><?php echo htmlspecialchars((string)($patients['drugname'])); ?></span></div>
+                <div><label>Start Dosage:</label><span><?php echo htmlspecialchars((string)($patients['dosage'])); ?></span></div>
+                <div><label>Current Status:</label><span><?php echo htmlspecialchars((string)($patients['current_status'])); ?></span></div>
+                <div><label>Registering HCW Name:</label><span><?php echo htmlspecialchars((string)($patients['hcw_name'])); ?></span></div>
             </div>
 
             <div class="grid-item">

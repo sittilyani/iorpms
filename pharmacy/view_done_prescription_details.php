@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include '../includes/config.php';
 include '../admin/init_facility_session.php';
@@ -41,7 +41,7 @@ $date_of_printing = date('Y-m-d H:i:s');
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View Prescription: <?php echo htmlspecialchars($prescription['prescription_id']); ?></title>
+    <title>View Prescription: <?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap-4.5.2.min.css" onerror="this.onerror=null;this.href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'" media="screen,print">
     <style>
         .container { margin-top: 50px; }
@@ -70,7 +70,7 @@ $date_of_printing = date('Y-m-d H:i:s');
                 <strong>Facility Name:</strong> <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -80,16 +80,16 @@ $date_of_printing = date('Y-m-d H:i:s');
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6"><strong>Prescription ID:</strong> <?php echo htmlspecialchars($prescription['prescription_id']); ?></div>
-                    <div class="col-md-6"><strong>Client Name:</strong> <?php echo htmlspecialchars($prescription['clientName']); ?></div>
+                    <div class="col-md-6"><strong>Prescription ID:</strong> <?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?></div>
+                    <div class="col-md-6"><strong>Client Name:</strong> <?php echo htmlspecialchars((string)($prescription['clientName'])); ?></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"><strong>MAT ID:</strong> <?php echo htmlspecialchars($prescription['mat_id']); ?></div>
-                    <div class="col-md-6"><strong>Date:</strong> <?php echo htmlspecialchars($prescription['prescription_date']); ?></div>
+                    <div class="col-md-6"><strong>MAT ID:</strong> <?php echo htmlspecialchars((string)($prescription['mat_id'])); ?></div>
+                    <div class="col-md-6"><strong>Date:</strong> <?php echo htmlspecialchars((string)($prescription['prescription_date'])); ?></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"><strong>Prescriber:</strong> <?php echo htmlspecialchars($prescription['prescriber_name']); ?></div>
-                    <div class="col-md-6"><strong>Status:</strong> <?php echo htmlspecialchars($prescription['prescr_status']); ?></div>
+                    <div class="col-md-6"><strong>Prescriber:</strong> <?php echo htmlspecialchars((string)($prescription['prescriber_name'])); ?></div>
+                    <div class="col-md-6"><strong>Status:</strong> <?php echo htmlspecialchars((string)($prescription['prescr_status'])); ?></div>
                 </div>
             </div>
         </div>
@@ -108,19 +108,19 @@ $date_of_printing = date('Y-m-d H:i:s');
             <tbody>
                 <?php foreach ($drugs as $drug): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($drug['drug_name']); ?></td>
-                        <td><?php echo htmlspecialchars($drug['dosing']); ?></td>
-                        <td><?php echo htmlspecialchars($drug['frequency']); ?></td>
-                        <td><?php echo htmlspecialchars($drug['days']); ?></td>
-                        <td><?php echo htmlspecialchars($drug['total_dosage']); ?></td>
+                        <td><?php echo htmlspecialchars((string)($drug['drug_name'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($drug['dosing'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($drug['frequency'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($drug['days'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($drug['total_dosage'])); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
         <div class="print-footer">
-            <p>Printed By: <?php echo htmlspecialchars($printed_by); ?></p>
-            <p>Date of Printing: <?php echo htmlspecialchars($date_of_printing); ?></p>
+            <p>Printed By: <?php echo htmlspecialchars((string)($printed_by)); ?></p>
+            <p>Date of Printing: <?php echo htmlspecialchars((string)($date_of_printing)); ?></p>
         </div>
 
         <div class="no-print mt-4">

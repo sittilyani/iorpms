@@ -23,7 +23,7 @@ $page_title = 'Search Clients';
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #50b89a;
-            --dark-color: #2C3162;
+            --dark-color: #2D008A;
             --light-bg: #f8f9fa;
             --white: #ffffff;
             --border-color: #dcdcdc;
@@ -240,7 +240,7 @@ $page_title = 'Search Clients';
                         name="search"
                         class="search-input"
                         placeholder="Enter MAT ID, MAT Number, Client Name, or Nickname..."
-                        value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                        value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>"
                         autofocus
                     >
                     <button type="submit" class="search-btn">
@@ -296,20 +296,20 @@ $page_title = 'Search Clients';
 
                     while ($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>' . htmlspecialchars($row['mat_id']) . '</td>
-                                <td>' . htmlspecialchars($row['mat_number']) . '</td>
-                                <td>' . htmlspecialchars($row['clientName']) . '</td>
-                                <td>' . htmlspecialchars($row['nickName']) . '</td>
-                                <td>' . htmlspecialchars($row['age']) . '</td>
-                                <td>' . htmlspecialchars($row['sex']) . '</td>
-                                <td>' . htmlspecialchars($row['drugname']) . '</td>
-                                <td>' . htmlspecialchars($row['dosage']) . '</td>
-                                <td>' . htmlspecialchars($row['current_status']) . '</td>
+                                <td>' . htmlspecialchars((string)($row['mat_id'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['mat_number'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['clientName'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['nickName'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['age'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['sex'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['drugname'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['dosage'])) . '</td>
+                                <td>' . htmlspecialchars((string)($row['current_status'])) . '</td>
                                 <td>
-                                    <a href="health_records_checkin.php?mat_id=' . urlencode($row['mat_id']) . '" class="action-btn">
+                                    <a href="health_records_checkin.php?mat_id=' . urlencode((string)($row['mat_id'])) . '" class="action-btn">
                                         <i class="fas fa-plus"></i> New Visit
                                     </a>
-                                    <a href="../patients/update.php?mat_id=' . urlencode($row['mat_id']) . '" class="action-btn view">
+                                    <a href="../patients/update.php?mat_id=' . urlencode((string)($row['mat_id'])) . '" class="action-btn view">
                                         <i class="fas fa-eye"></i> View Records
                                     </a>
                                 </td>

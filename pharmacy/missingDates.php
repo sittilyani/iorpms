@@ -29,7 +29,7 @@ function displayMissingDates($conn, $p_id) {
                 if (!in_array($currentDate, $visit_dates)) {
                         $missing_dates[] = $currentDate;
                 }
-                $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+                $currentDate = date('Y-m-d', strtotime((string)($currentDate . ' +1 day')));
         }
 
         // Output missing dates

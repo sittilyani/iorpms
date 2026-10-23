@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('internal', 'Hiv Positive clients');
 session_start();
 include('../includes/config.php');
 
@@ -7,7 +7,7 @@ include('../includes/config.php');
 <?php
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
-    echo "<div>" . htmlspecialchars($message) . "</div>";
+    echo "<div>" . htmlspecialchars((string)($message)) . "</div>";
 }
 ?>
 
@@ -20,12 +20,12 @@ if (isset($_GET['message'])) {
     <script src="../assets/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h2 style="color: #2C3162;">HIV Positive and Viral Load</h2>
+    <h2 style="color: #2D008A;">HIV Positive and Viral Load</h2>
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
         <div class="header">
             <label for="search">Search:</label>
-            <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars(isset($_GET['search']) ? $_GET['search'] : ''); ?>">
+            <input type="text" id="search" class="search-entry" name="search" value="<?php echo htmlspecialchars((string)(isset($_GET['search']) ? $_GET['search'] : '')); ?>">
             <input type="submit" value="Search" class="search-input">
             <button type="button" onclick="cancelSearch()" class="cancel-input">Cancel</button>
 
@@ -122,21 +122,21 @@ if (isset($_GET['message'])) {
 
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                        <td>" . htmlspecialchars($row['vl_id']) . "</td>
-                        <td>" . htmlspecialchars($row['mat_id']) . "</td>
-                        <td>" . htmlspecialchars($row['reg_date']) . "</td>
-                        <td>" . htmlspecialchars($row['sex']) . "</td>
-                        <td>" . htmlspecialchars($row['hiv_status']) . "</td>
-                        <td>" . htmlspecialchars($row['art_regimen']) . "</td>
-                        <td>" . htmlspecialchars($row['regimen_type']) . "</td>
-                        <td>" . (empty($row['last_vlDate']) ? "NA" : htmlspecialchars($row['last_vlDate'])) . "</td>
-                        <td>" . (empty($row['results']) ? "NA" : htmlspecialchars($row['results'])) . "</td>
-                        <td>" . htmlspecialchars($row['next_appointment']) . "</td>
+                        <td>" . htmlspecialchars((string)($row['vl_id'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['mat_id'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['reg_date'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['hiv_status'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['art_regimen'])) . "</td>
+                        <td>" . htmlspecialchars((string)($row['regimen_type'])) . "</td>
+                        <td>" . (empty($row['last_vlDate']) ? "NA" : htmlspecialchars((string)($row['last_vlDate']))) . "</td>
+                        <td>" . (empty($row['results']) ? "NA" : htmlspecialchars((string)($row['results']))) . "</td>
+                        <td>" . htmlspecialchars((string)($row['next_appointment'])) . "</td>
                         <td>" . $row['comp_date'] . "</td>
                         <td>
-                            <a href='../clinician/view_viral_load_history.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>View</a> |
-                            <a href='../clinician/update.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>Update</a>
-                             | <a href='../referrals/referral.php?mat_id=" . htmlspecialchars($row['mat_id']) . "'>Refer</a>
+                            <a href='../clinician/view_viral_load_history.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>View</a> |
+                            <a href='../clinician/update.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>Update</a>
+                             | <a href='../referrals/referral.php?mat_id=" . htmlspecialchars((string)($row['mat_id'])) . "'>Refer</a>
                         </td>
                     </tr>";
         }

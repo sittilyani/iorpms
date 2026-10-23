@@ -23,7 +23,7 @@ function getPumpDevice(int $pump_id, mysqli $conn): ?array {
 }
 
 function isLocalPump(string $pump_host): bool {
-    return in_array(strtolower($pump_host), ['localhost', '127.0.0.1', '::1'], true);
+    return in_array(strtolower((string)($pump_host)), ['localhost', '127.0.0.1', '::1'], true);
 }
 
 function execLocal(string $port, string $baud, string $pump_cmd): array {
@@ -46,7 +46,7 @@ function execRemote(string $pump_host, string $port, string $baud, string $pump_
     $ctx = stream_context_create([
         'http' => [
             'method'  => 'POST',
-            'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($payload) . "\r\n",
+            'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen((string)($payload)) . "\r\n",
             'content' => $payload,
             'timeout' => 30,
         ],
@@ -84,7 +84,7 @@ function parsePumpStatus(string $raw): string {
     if (strpos($raw, '/0B') !== false || strpos($raw, '/0`') !== false)    return 'running';
     if (strpos($raw, '/0C') !== false || strpos($raw, '/0A') !== false
         || strpos($raw, '/0H') !== false)                                  return 'fault';
-    if (strlen($raw) > 0)                                                  return 'responded';
+    if (strlen((string)($raw)) > 0)                                                  return 'responded';
     return 'unknown';
 }
 
@@ -92,7 +92,7 @@ function routePumpCommand(array $device, string $baud, string $pump_cmd_str): ar
     $commands  = explode('|', $pump_cmd_str);
     $allOutput = [];
     foreach ($commands as $cmd) {
-        $cmd = trim($cmd);
+        $cmd = trim((string)($cmd));
         if ($cmd === '') continue;
         $result = isLocalPump($device['pump_host'])
             ? execLocal($device['port'], $baud, $cmd)
@@ -120,7 +120,7 @@ if (empty($input)) { echo 'No parameters supplied.'; exit; }
 if ($action === 'prime') {
     header('Content-Type: application/json');
     $pump_id   = intval($input['pump_id'] ?? 0);
-    $direction = strtoupper(trim($input['cmd'] ?? 'D'));
+    $direction = strtoupper((string)(trim((string)($input['cmd'] ?? 'D'))));
     if ($pump_id <= 0) { echo json_encode(['success'=>false,'error'=>'Missing pump_id.']); exit; }
     if (!in_array($direction, ['P','D','R'], true)) $direction = 'D';
 
@@ -142,6 +142,7 @@ if ($action === 'prime') {
         : 'client @ ' . $device['pump_host'] . ' (' . $device['port'] . ')';
 
     $safeOutput = sanitizePumpOutput($result['output']);
+    if ($result['ok']) { require_once __DIR__ . '/includes/pump_guard.php'; pump_log_prime($conn, $pump_id, $direction); }
     echo json_encode([
         'success' => $result['ok'],
         'action'  => $label,
@@ -339,9 +340,9 @@ if ($action === 'recalibrate') {
     $measured_ml   = floatval($input['measured_ml']   ?? 0);
     $temperature   = floatval($input['temperature']   ?? 20.0);
     $density       = floatval($input['density']       ?? 1.02);
-    $tube_code     = trim($input['tube_type_code']    ?? '');
+    $tube_code     = trim((string)($input['tube_type_code']    ?? ''));
     $concentration = floatval($input['concentration'] ?? 5.00);
-    $notes         = trim($input['notes'] ?? 'Auto-recalibration after measurement');
+    $notes         = trim((string)($input['notes'] ?? 'Auto-recalibration after measurement'));
     $calibrated_by = $_SESSION['username'] ?? ($_SESSION['user_name'] ?? 'System');
     $target_ml     = 10.0;
 

@@ -27,7 +27,7 @@ if ($statusResult->num_rows > 0) {
     while ($statusRow = $statusResult->fetch_assoc()) {
         $statusName = $statusRow['status_name'];
         $selected = (isset($currentSettings['current_status']) && $statusName == $currentSettings['current_status']) ? 'selected' : '';
-        $statusOptions .= "<option value='" . htmlspecialchars($statusName) . "' $selected>" . htmlspecialchars($statusName) . "</option>";
+        $statusOptions .= "<option value='" . htmlspecialchars((string)($statusName)) . "' $selected>" . htmlspecialchars((string)($statusName)) . "</option>";
     }
 } else {
     $statusOptions = "<option value=''>No status found</option>";

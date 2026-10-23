@@ -3,7 +3,7 @@ header('Content-Type: text/html; charset=UTF-8');
 include "../includes/config.php";
 
 $category_id = isset($_GET['category_id']) ? intval($_GET['category_id']) : 0;
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search = isset($_GET['search']) ? trim((string)($_GET['search'])) : '';
 
 try {
     $sql = "
@@ -48,9 +48,9 @@ try {
             <div class="col-2">
                 <div class="product-item ' . $stockStatus . '"
                      data-product-id="' . $row['id'] . '"
-                     data-product-name="' . htmlspecialchars($row['name']) . '"
+                     data-product-name="' . htmlspecialchars((string)($row['name'])) . '"
                      data-product-price="' . $row['price'] . '">
-                    <h6>' . htmlspecialchars($row['name']) . '</h6>
+                    <h6>' . htmlspecialchars((string)($row['name'])) . '</h6>
                     <p>Price: KES ' . number_format($row['price'], 2) . '</p>
                     <p>' . $stockMessage . '</p>
                 </div>

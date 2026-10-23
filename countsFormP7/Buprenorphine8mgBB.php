@@ -13,8 +13,8 @@ $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : $defaultStartDat
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : $defaultEndDate;
 
 // Validate dates
-$startDate = date('Y-m-d', strtotime($startDate));
-$endDate = date('Y-m-d', strtotime($endDate));
+$startDate = date('Y-m-d', strtotime((string)($startDate)));
+$endDate = date('Y-m-d', strtotime((string)($endDate)));
 
 // First, try to get opening_bal from the first day of the selected month
 $sql1 = "SELECT opening_bal
@@ -32,7 +32,7 @@ if ($result1 && $result1->num_rows > 0) {
     $opening_bal = $row1['opening_bal'];
 } else {
     // If no opening_bal found on the first day, get total_qty from the last transaction of the previous month
-    $previousMonthEnd = date('Y-m-t', strtotime($startDate . ' -1 month'));
+    $previousMonthEnd = date('Y-m-t', strtotime((string)($startDate . ' -1 month')));
 
     $sql2 = "SELECT total_qty
         FROM stock_movements

@@ -19,7 +19,7 @@ if (!$conn) {
 }
 
 // Return empty array for short queries
-if (strlen($searchQuery) < 3) {
+if (strlen((string)($searchQuery)) < 3) {
     echo json_encode([]);
     ob_end_flush();
     exit;

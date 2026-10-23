@@ -6,7 +6,7 @@ include('../includes/header.php');
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $referralType = trim($_POST["referralType"]);
+        $referralType = trim((string)($_POST["referralType"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO tblreferral (referralType) VALUES (?)";

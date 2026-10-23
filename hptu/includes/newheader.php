@@ -94,7 +94,7 @@ $page_title = $page_title ?? 'HPTU LMIS';
     <link rel="icon" type="image/ico" sizes="32x32" href="../assets/favicons/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
     <link rel="manifest" href="../assets/favicons/site.webmanifest">
-    <title><?= htmlspecialchars($page_title) ?></title>
+    <title><?= htmlspecialchars((string)($page_title)) ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/fontawesome/css/font-awesome.min.css">
     <style>
@@ -686,13 +686,13 @@ $page_title = $page_title ?? 'HPTU LMIS';
                                 <div class="notification-item <?php echo !$notification['is_read'] ? 'unread' : ''; ?>"
                                      onclick="openNotification('<?php echo $notification['link']; ?>', <?php echo $notification['id']; ?>)">
                                     <div class="notification-title">
-                                        <span><?php echo htmlspecialchars($notification['title']); ?></span>
+                                        <span><?php echo htmlspecialchars((string)($notification['title'])); ?></span>
                                         <span class="notification-type type-<?php echo $notification['notification_type']; ?>">
                                             <?php echo $notification['notification_type']; ?>
                                         </span>
                                     </div>
                                     <div class="notification-message">
-                                        <?php echo htmlspecialchars($notification['message']); ?>
+                                        <?php echo htmlspecialchars((string)($notification['message'])); ?>
                                     </div>
                                     <div class="notification-time">
                                         <?php echo time_ago($notification['created_at']); ?>
@@ -712,8 +712,8 @@ $page_title = $page_title ?? 'HPTU LMIS';
 
                 <div class="user-section">
                     <div class="user-info">
-                        <div class="user-name"><?php echo htmlspecialchars($full_name); ?></div>
-                        <div class="user-role"><?php echo htmlspecialchars($userrole); ?></div>
+                        <div class="user-name"><?php echo htmlspecialchars((string)($full_name)); ?></div>
+                        <div class="user-role"><?php echo htmlspecialchars((string)($userrole)); ?></div>
                     </div>
                     <?php if(!empty($_SESSION['photo'])): ?>
                         <img src="data:image/jpeg;base64,<?php echo $_SESSION['photo']; ?>" class="user-photo" alt="User Photo">
@@ -729,7 +729,7 @@ $page_title = $page_title ?? 'HPTU LMIS';
     <nav class="main-navigation">
         <div class="nav-container">
             <div class="location-badge" id="currentLocation">
-                <i class="fa fa-map-marker"></i> <?php echo htmlspecialchars($location); ?>
+                <i class="fa fa-map-marker"></i> <?php echo htmlspecialchars((string)($location)); ?>
             </div>
 
             <button class="hamburger-menu" id="hamburgerMenu">

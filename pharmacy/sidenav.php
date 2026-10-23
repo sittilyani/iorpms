@@ -52,7 +52,7 @@ $full_name = getUserFullName();
         z-index: 1;
         top: 0;
         left: 0;
-        background: linear-gradient(135deg, #1a2a6c, #2b5876);
+        background: linear-gradient(135deg, #2D008A, #1d0059);
         overflow-x: hidden;
         padding-top: 70px;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -87,13 +87,13 @@ $full_name = getUserFullName();
     .sidenav a:hover {
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
-        border-left: 4px solid #4facfe;
+        border-left: 4px solid #FFC12E;
     }
 
     .sidenav a.active {
         background-color: rgba(255, 255, 255, 0.15);
         color: white;
-        border-left: 4px solid #4facfe;
+        border-left: 4px solid #FFC12E;
     }
 
     .main {
@@ -159,7 +159,7 @@ $full_name = getUserFullName();
     }
 
     .text-primary {
-        color: #1a2a6c;
+        color: #2D008A;
     }
 
     .welcome-message .sops{
@@ -263,7 +263,7 @@ $full_name = getUserFullName();
 
 <div class="sidenav">
     <div>
-        <img src="../assets/images/pharmacy.png" alt="" style="height: 150px; width: 150px; margin-left:40px; margin-right: auto;">
+        <img src="../assets/images/easyflow_pump.jpg" alt="" style="height: 150px; width: 150px; margin-left:40px; margin-right: auto;">
     </div>
     <h2>
         <br>
@@ -279,10 +279,10 @@ $full_name = getUserFullName();
         <?php foreach ($lang_opts as $lc => $lbl):
             $lurl   = '?' . http_build_query(['lang' => $lc]);
             $active = ($current_lang === $lc)
-                ? 'background:white;color:#1a2a6c;font-weight:700;'
+                ? 'background:white;color:#2D008A;font-weight:700;'
                 : 'background:rgba(255,255,255,0.15);color:white;';
         ?>
-        <a href="<?php echo htmlspecialchars($lurl); ?>"
+        <a href="<?php echo htmlspecialchars((string)($lurl)); ?>"
            style="<?php echo $active ?>border:1px solid rgba(255,255,255,0.4);padding:3px 9px;border-radius:12px;font-size:12px;font-weight:600;text-decoration:none;">
             <?php echo $lbl; ?>
         </a>
@@ -292,56 +292,70 @@ $full_name = getUserFullName();
     <!-- Home link - will navigate away from this page -->
     <a href="../dashboard/dashboard.php" class="home-link">
         <i class="fa fa-home"></i><span data-i18n="nav_home">Home</span></a>
-    <a href="../records/dashboard.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+    <a href="../pharmacy/role_dashboard.php" target="contentFrame" class="nav-link" style="background:#FFC12E;color:#000;margin-top:10px;">
         <i class="fa fa-tachometer"></i><span data-i18n="dashboard">Dashboard</span></a>
-    <a href="../clinician/update_dose.php" target="contentFrame" class="nav-link" style="background: #ffd700; color: #000000; margin-top: 10px;">
-        <i class="fa fa-edit"></i><span data-i18n="update_dosage">Update Dosage</span></a>
-    <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background: yellow; color: #000000; margin-top: 10px;">
+
+    <div class="nav-group-title">Dispensing</div>
+    <a href="../pharmacy/dispensing_pump.php" target="contentFrame" class="nav-link" style="background:#04B04B;color:#fff;">
         <i class="fa fa-tint"></i><span data-i18n="dispense_with_pump">Dispense with Pump</span></a>
-    <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-flask"></i><span data-i18n="pump_reservoir">Pump Priming</span></a>
-    <a href="../pharmacy/calibration.php" target="contentFrame" class="nav-link" style="background: #2C3162; color: #ffffff; margin-top: 10px;">
-        <i class="fa fa-cog"></i><span data-i18n="calibrate_pump">Calibrate Pump</span></a>
-    <a href="../pharmacy/calibration_table.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-history"></i><span data-i18n="calibration_history">Calibration History</span></a>
-    <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-pencil-square-o"></i><span data-i18n="prescribe_other_drugs">Prescribe Other Drugs</span></a>
+    <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-medkit"></i><span data-i18n="dispense_without_pump">Dispense without Pump</span></a>
     <a href="../pharmacy/prisons_module.php" target="contentFrame" class="nav-link">
         <i class="fa fa-lock"></i><span data-i18n="prisons_dispensing">Bulk Dispensing</span></a>
     <a href="../pharmacy/retro_dispensing_module.php" target="contentFrame" class="nav-link">
         <i class="fa fa-undo"></i><span data-i18n="retro_dispensing">Retro Dispensing</span></a>
-    <a href="../pharmacy/dispensing.php" target="contentFrame" class="nav-link" style="background: #66ccff; color: #000000; margin-top: 10px;">
-        <i class="fa fa-medkit"></i><span data-i18n="dispense_without_pump">Dispense without Pump</span></a>
-    <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link" style="background: #ccccff; color: #000000; margin-top: 10px;">
+    <a href="../pharmacy/edit_dispensed_dose.php" target="contentFrame" class="nav-link">
         <i class="fa fa-trash"></i><span data-i18n="delete_dispensed_doses">Delete Dispensed Doses</span></a>
-    <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link" style="background: #b1f0c2; color: #000000; margin-top: 10px;">
-        <i class="fa fa-exchange"></i><span data-i18n="daily_stores_movements">Daily Stores Movements</span></a>
-    <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-plus-circle"></i><span data-i18n="stock_in">Add Stocks</span></a>
-    <a href="../pharmacy/add_other_drugs.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-plus-square"></i><span data-i18n="add_drug">Add New Drug or Item</span></a>
-    <a href="../pharmacy/view_other_drugs.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-list-alt"></i><span data-i18n="drug_list">View Items / Drugs List</span></a>
     <a href="../pharmacy/dispensed_drugs.php" target="contentFrame" class="nav-link">
         <i class="fa fa-eye"></i><span data-i18n="view_drugs_dispensed">View Drugs Dispensed</span></a>
-    <a href="../pharmacy/stock_taking.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-calculator"></i><span data-i18n="stock_taking">Stock Taking</span></a>
-    <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-clipboard"></i><span data-i18n="stock_cards">Stock Cards</span></a>
-    <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
+    <a href="../pharmacy/dose_history.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-line-chart"></i><span>Dose &amp; Adherence History</span></a>
+
+    <div class="nav-group-title">Pump</div>
+    <a href="../pharmacy/pump_reservoir.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-flask"></i><span data-i18n="pump_reservoir">Pump Priming &amp; Calibration</span></a>
+    <a href="../pharmacy/calibration_table.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-history"></i><span data-i18n="calibration_history">Calibration History</span></a>
+
+    <details class="nav-group" open>
+        <summary><i class="fa fa-file-text-o"></i> Prescription Management</summary>
+        <a href="../clinician/other_prescriptions.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-pencil-square-o"></i><span data-i18n="prescribe_other_drugs">Prescribe Other Drugs</span></a>
+        <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-file-text-o"></i><span data-i18n="view_prescriptions">View Prescriptions</span></a>
+        <?php if (in_array($userrole, ['Admin', 'Super Admin'])) : ?>
+        <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-check-square-o"></i><span>Closed Prescriptions</span></a>
+        <a href="../pharmacy/view_deleted_prescriptions.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-trash-o"></i><span>Deleted Prescriptions</span></a>
+        <?php endif; ?>
+    </details>
+
+    <details class="nav-group" open>
+        <summary><i class="fa fa-cubes"></i> Stocks Management</summary>
+        <a href="../pharmacy/add_stocks.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-plus-circle"></i><span data-i18n="stock_in">Add Stocks</span></a>
+        <a href="../pharmacy/view_transactions.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-clipboard"></i><span data-i18n="stock_cards">Stock Cards</span></a>
+        <a href="../pharmacy/stock_taking.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-calculator"></i><span data-i18n="stock_taking">Stock Taking</span></a>
+        <a href="../pharmacy/inventory_form.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-exchange"></i><span data-i18n="daily_stores_movements">Stores Movements</span></a>
+        <a href="../pharmacy/bup_bin_card.php" target="contentFrame" class="nav-link">
+            <i class="fa fa-th-list"></i><span>Buprenorphine Bin Card</span></a>
+    </details>
+
+    <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link" style="margin-top:10px">
         <i class="fa fa-share-square-o"></i><span data-i18n="view_referrals">View Referrals</span></a>
-    <a href="../pharmacy/view_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-file-text-o"></i><span data-i18n="view_prescriptions">View Prescriptions</span></a>
-    <a href="../pharmacy/bup_bin_card.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-th-list"></i><span>Buprenorphine Bin Card</span></a>
-    <?php if (in_array($userrole, ['Admin', 'Super Admin'])) : ?>
-    <a href="../pharmacy/view_deleted_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-trash-o"></i><span>View Deleted Prescriptions</span></a>
-    <a href="../pharmacy/view_completed_prescriptions.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-check-square-o"></i><span>View Closed Prescriptions</span></a>
-    <?php endif; ?>
-    <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background: #9EFF9E; color: #000000; margin-top: 10px;">
+    <a href="../appointments/update_appointments.php" target="contentFrame" class="nav-link" style="background:#AC80EE;color:#000;">
         <i class="fa fa-calendar-check-o"></i><span data-i18n="update_appointments">Update Appointments</span></a>
+    <style>
+        .nav-group-title{color:#AC80EE;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:14px 16px 2px}
+        details.nav-group{margin:8px 0;border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18)}
+        details.nav-group>summary{cursor:pointer;color:#FFC12E;font-weight:700;padding:9px 16px;list-style:none}
+        details.nav-group>summary::-webkit-details-marker{display:none}
+        details.nav-group .nav-link{padding-left:30px}
+    </style>
 </div>
 
 <div class="main">
@@ -351,7 +365,7 @@ $full_name = getUserFullName();
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -378,7 +392,7 @@ $full_name = getUserFullName();
             <div class='sops'>
 
                 <!-- ── SECTION A: Priming ── -->
-                <p style="margin-top:18px; font-size:17px; color:#2C3162; border-bottom:2px solid #2C3162; padding-bottom:4px;">
+                <p style="margin-top:18px; font-size:17px; color:#2D008A; border-bottom:2px solid #2D008A; padding-bottom:4px;">
                     <strong>A. PRIME THE PUMP</strong>
                 </p>
                 <p>1. Fill the reservoir jug with Methadone (5 mg/mL). Place the waste/collection container under the nozzle.</p>
@@ -391,12 +405,12 @@ $full_name = getUserFullName();
                 <p style="color:#555;">⚠️ Always prime before calibration. Never calibrate on an empty tube — air in the line will give a false low reading.</p>
 
                 <!-- ── SECTION B: Calibration ── -->
-                <p style="margin-top:22px; font-size:17px; color:#2C3162; border-bottom:2px solid #2C3162; padding-bottom:4px;">
+                <p style="margin-top:22px; font-size:17px; color:#2D008A; border-bottom:2px solid #2D008A; padding-bottom:4px;">
                     <strong>B. CALIBRATE THE PUMP (5 steps)</strong>
                 </p>
 
                 <p><strong>Step 1 — Select pump &amp; set parameters</strong><br>
-                Click <span style='color:#FFF; background:#2C3162; padding:5px 12px; border-radius:8px;'>Calibrate Pump</span> in the left menu.
+                Click <span style='color:#FFF; background:#2D008A; padding:5px 12px; border-radius:8px;'>Calibrate Pump</span> in the left menu.
                 Select your pump device. Confirm or adjust:
                 <em>Concentration</em> (default 5 mg/mL),
                 <em>Temperature</em> (room/solution temperature in °C),
@@ -432,7 +446,7 @@ $full_name = getUserFullName();
                 </p>
 
                 <!-- ── SECTION C: After calibration ── -->
-                <p style="margin-top:22px; font-size:17px; color:#2C3162; border-bottom:2px solid #2C3162; padding-bottom:4px;">
+                <p style="margin-top:22px; font-size:17px; color:#2D008A; border-bottom:2px solid #2D008A; padding-bottom:4px;">
                     <strong>C. VERIFY &amp; PROCEED</strong>
                 </p>
                 <p>6. Click <strong>Calibration History</strong> in the left menu. Confirm the new record shows <span style='color:#FFF; background:#28a745; padding:3px 10px; border-radius:12px; font-size:13px;'>Active</span>

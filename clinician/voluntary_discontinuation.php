@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 require_once '../includes/config.php';
 
@@ -22,13 +22,13 @@ $stmt->close();
 $clinician_name = $loggedInUser['full_name'];
 $first_name = $loggedInUser['first_name'];
 $last_name = $loggedInUser['last_name'];
-$clinician_signature = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
+$clinician_signature = strtoupper((string)(substr($first_name, 0, 1) . substr($last_name, 0, 1)));
 
 // Fetch facility name from facility settings table
 $facility_query = "SELECT facility_id, facilityname FROM facility_settings LIMIT 1";
 $facility_result = mysqli_query($conn, $facility_query);
 $facility = mysqli_fetch_assoc($facility_result);
-$facilityName = $facility ? htmlspecialchars($facility['facilityname']) : '';
+$facilityName = $facility ? htmlspecialchars((string)($facility['facilityname'])) : '';
 
 // Fetch clinicians and counselors from tblusers
 $clinician_query = "SELECT full_name FROM tblusers WHERE userrole IN ('clinician', 'counselor')";
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group {display: flex; align-items: center; margin-bottom: 20px;}
         .form-group label {width: 250px; font-weight: bold; color: #2c3e50;}
         .form-group input, .form-group select, .form-group textarea {width: 350px; padding: 10px; border: 1px solid #dcdcdc; border-radius: 5px; font-size: 14px; transition: border-color 0.3s;}
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {border-color: #3498db; outline: none;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {border-color: #2D008A; outline: none;}
         .checkbox-group {margin: 20px 0;}
         .checkbox-group label {display: block; margin-bottom: 12px; color: #34495e;}
         .checkbox-group input[type="checkbox"] {margin-right: 10px;}
@@ -158,10 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .radio-group input[type="radio"] {margin-right: 10px;}
         .signature-table {width: 100%; border-collapse: collapse; margin-top: 20px;}
         .signature-table th, .signature-table td {border: 1px solid #dcdcdc; padding: 12px; text-align: left; font-size: 14px;}
-        .signature-table th {background-color: #3498db; color: #fff;}
+        .signature-table th {background-color: #2D008A; color: #fff;}
         .signature-table td {background-color: #f9f9f9;}
-        .submit-button {display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;}
-        .submit-button:hover {background-color: #2980b9;}
+        .submit-button {display: block; margin: 30px auto 0; padding: 12px 30px; background-color: #2D008A; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;}
+        .submit-button:hover {background-color: #1d0059;}
         .readonly-input {cursor: not-allowed; background: #FFF0FF;}
         .alert {padding: 15px; margin-bottom: 20px; border-radius: 5px;}
         .alert-success {background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724;}
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 I &nbsp;&nbsp;
-                <input type="text" id="client_name" name="client_name" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars($client['clientName']) : ''; ?>" required> Voluntarily request to have my MAT treatment discontinued from
+                <input type="text" id="client_name" name="client_name" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars((string)($client['clientName'])) : ''; ?>" required> Voluntarily request to have my MAT treatment discontinued from
                 <input type="text" name="facilityname" class='readonly-input' readonly value="<?php echo $facilityName; ?>">
             </div>
             <div class="form-group">
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label for="mat_id">MAT ID No.:</label>
-                <input type="text" id="mat_id" name="mat_id" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars($client['mat_id']) : ''; ?>" required>
+                <input type="text" id="mat_id" name="mat_id" class='readonly-input' readonly value="<?php echo $client ? htmlspecialchars((string)($client['mat_id'])) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <p>I have reached this decision on my own volition and I have discussed the reasons as well as possible complications of this decision with my primary counsellor and the MAT clinician.</p>
@@ -242,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <tr>
                     <td>MAT Clinician</td>
                     <td>
-                        <input type="text" name="clinician_name" class="readonly-input" readonly value="<?php echo htmlspecialchars($clinician_name); ?>" required>
+                        <input type="text" name="clinician_name" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($clinician_name)); ?>" required>
                     </td>
                     <td>
                         <input type="text" name="clinician_org" class='readonly-input' readonly value="<?php echo $facilityName; ?>" required>
@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <select name="counselor_name" required>
                             <option value="">Select Counselor</option>
                             <?php foreach ($clinicians as $clinician): ?>
-                                <option value="<?php echo htmlspecialchars($clinician); ?>"><?php echo htmlspecialchars($clinician); ?></option>
+                                <option value="<?php echo htmlspecialchars((string)($clinician)); ?>"><?php echo htmlspecialchars((string)($clinician)); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>

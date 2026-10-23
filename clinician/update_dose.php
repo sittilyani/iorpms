@@ -5,7 +5,7 @@ include '../includes/config.php';
 // AJAX Live Search for Active Patients
 if (isset($_GET['ajax_search'])) {
     header('Content-Type: application/json');
-    $q = trim($_GET['q'] ?? '');
+    $q = trim((string)($_GET['q'] ?? ''));
     if ($q === '') {
         echo json_encode([]);
         exit;
@@ -90,12 +90,12 @@ if ($res) {
 <style>
 body { background:#f5f7fa; font-family:'Segoe UI',sans-serif; }
 .card { background:#fff; border-radius:8px; padding:24px; box-shadow:0 2px 8px rgba(0,0,0,.08); margin-bottom:20px; }
-h2 { color:#2C3162; }
+h2 { color:#2D008A; }
 .badge-active   { background:#28a745; color:#fff; padding:3px 8px; border-radius:12px; font-size:.8rem; }
 .badge-super    { background:#6c757d; color:#fff; padding:3px 8px; border-radius:12px; font-size:.8rem; }
 .badge-cancel   { background:#dc3545; color:#fff; padding:3px 8px; border-radius:12px; font-size:.8rem; }
 .dose-row       { border:1px solid #dee2e6; border-radius:6px; padding:14px; margin-bottom:12px; background:#fafafa; }
-.dose-row .row-num { font-weight:700; color:#2C3162; font-size:1.1rem; }
+.dose-row .row-num { font-weight:700; color:#2D008A; font-size:1.1rem; }
 #doseList .dose-row:last-child { border:2px solid #007bff; background:#f0f8ff; }
 label.required::after { content:' *'; color:red; }
 .alert-overlap  { display:none; color:#dc3545; font-weight:600; margin-top:4px; font-size:.85rem; }
@@ -103,7 +103,7 @@ label.required::after { content:' *'; color:red; }
 .btn-add:hover { background:#0056b3; }
 .btn-remove { background:#dc3545; color:#fff; border:none; padding:5px 12px; border-radius:5px; cursor:pointer; font-size:.8rem; }
 table.schedule-table { width:100%; border-collapse:collapse; font-size:.9rem; }
-table.schedule-table th { background:#2C3162; color:#fff; padding:8px 10px; }
+table.schedule-table th { background:#2D008A; color:#fff; padding:8px 10px; }
 table.schedule-table td { padding:8px 10px; border-bottom:1px solid #eee; }
 table.schedule-table tr:hover td { background:#f0f4ff; }
 .search-box { max-width:480px; }
@@ -138,12 +138,12 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
 <div class="container-fluid py-3 px-4">
 
 <?php if ($flashSuccess): ?>
-  <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?= htmlspecialchars($flashSuccess) ?></div>
+  <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?= htmlspecialchars((string)($flashSuccess)) ?></div>
 <?php endif; ?>
 <?php if ($flashErrors): ?>
   <div class="alert alert-danger">
     <strong><i class="fa fa-exclamation-circle"></i> Errors:</strong>
-    <ul class="mb-0"><?php foreach ($flashErrors as $e): ?><li><?= htmlspecialchars($e) ?></li><?php endforeach; ?></ul>
+    <ul class="mb-0"><?php foreach ($flashErrors as $e): ?><li><?= htmlspecialchars((string)($e)) ?></li><?php endforeach; ?></ul>
   </div>
 <?php endif; ?>
 
@@ -164,7 +164,7 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
   <?php if ($mat_id && !$patient): ?>
     <div class="alert alert-warning mt-3">
       <i class="fa fa-exclamation-triangle"></i>
-      No <strong>Active</strong> patient found for MAT ID <strong><?= htmlspecialchars($mat_id) ?></strong>.
+      No <strong>Active</strong> patient found for MAT ID <strong><?= htmlspecialchars((string)($mat_id)) ?></strong>.
       Only active patients can have their dose updated.
     </div>
   <?php endif; ?>
@@ -175,10 +175,10 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
 <div class="card">
   <div class="d-flex justify-content-between align-items-start">
     <div>
-      <h2><i class="fa fa-pills"></i> Dose Schedule — <?= htmlspecialchars($patient['clientName']) ?></h2>
-      <p class="mb-1"><strong>MAT ID:</strong> <?= htmlspecialchars($patient['mat_id']) ?> &nbsp;|&nbsp;
-         <strong>Drug:</strong> <?= htmlspecialchars($patient['drugname']) ?> &nbsp;|&nbsp;
-         <strong>Current Dose:</strong> <?= htmlspecialchars($patient['dosage']) ?> mg &nbsp;|&nbsp;
+      <h2><i class="fa fa-pills"></i> Dose Schedule — <?= htmlspecialchars((string)($patient['clientName'])) ?></h2>
+      <p class="mb-1"><strong>MAT ID:</strong> <?= htmlspecialchars((string)($patient['mat_id'])) ?> &nbsp;|&nbsp;
+         <strong>Drug:</strong> <?= htmlspecialchars((string)($patient['drugname'])) ?> &nbsp;|&nbsp;
+         <strong>Current Dose:</strong> <?= htmlspecialchars((string)($patient['dosage'])) ?> mg &nbsp;|&nbsp;
          <span class="badge-active">Active</span>
       </p>
     </div>
@@ -201,8 +201,8 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
     <?php foreach ($schedules as $i => $sc): ?>
       <tr>
         <td><?= $i+1 ?></td>
-        <td><?= htmlspecialchars($sc['drugname']) ?></td>
-        <td><?= htmlspecialchars($sc['dose_mg']) ?></td>
+        <td><?= htmlspecialchars((string)($sc['drugname'])) ?></td>
+        <td><?= htmlspecialchars((string)($sc['dose_mg'])) ?></td>
         <td>
           <?php
             $interval = isset($sc['dosing_interval_days']) ? (int)$sc['dosing_interval_days'] : 1;
@@ -216,10 +216,10 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
             }
           ?>
         </td>
-        <td><?= htmlspecialchars($sc['start_date']) ?></td>
-        <td><?= $sc['end_date'] ? htmlspecialchars($sc['end_date']) : '<em style="color:#888">Open-ended</em>' ?></td>
-        <td><?= htmlspecialchars($sc['comments']) ?></td>
-        <td><?= htmlspecialchars($sc['created_by']) ?></td>
+        <td><?= htmlspecialchars((string)($sc['start_date'])) ?></td>
+        <td><?= $sc['end_date'] ? htmlspecialchars((string)($sc['end_date'])) : '<em style="color:#888">Open-ended</em>' ?></td>
+        <td><?= htmlspecialchars((string)($sc['comments'])) ?></td>
+        <td><?= htmlspecialchars((string)($sc['created_by'])) ?></td>
         <td>
           <?php if ($sc['status'] === 'active'): ?>
             <span class="badge-active">Active</span>
@@ -232,7 +232,7 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
         <td>
           <?php if ($sc['status'] === 'active'): ?>
             <button type="button" class="btn-edit-dose"
-              onclick="openEditModal(<?= htmlspecialchars(json_encode([
+              onclick="openEditModal(<?= htmlspecialchars((string)(json_encode([
                 'id'                   => $sc['id'],
                 'drugname'             => $sc['drugname'],
                 'dose_mg'              => $sc['dose_mg'],
@@ -241,7 +241,7 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
                 'comments'             => $sc['comments'],
                 'dosing_interval_days' => $sc['dosing_interval_days'] ?? 1,
                 'skip_dates'           => $sc['skip_dates'] ?? '',
-              ]), ENT_QUOTES) ?>)">
+              ])), ENT_QUOTES) ?>)">
               <i class="fa fa-pencil"></i> Edit
             </button>
           <?php endif; ?>
@@ -267,8 +267,8 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
   </p>
 
   <form id="doseForm" action="process_dose_update.php" method="POST">
-    <input type="hidden" name="mat_id"    value="<?= htmlspecialchars($patient['mat_id']) ?>">
-    <input type="hidden" name="prescriber" value="<?= htmlspecialchars($prescriber) ?>">
+    <input type="hidden" name="mat_id"    value="<?= htmlspecialchars((string)($patient['mat_id'])) ?>">
+    <input type="hidden" name="prescriber" value="<?= htmlspecialchars((string)($prescriber)) ?>">
 
     <div id="doseList"></div>
 
@@ -296,8 +296,8 @@ table.schedule-table tr:hover td { background:#f0f4ff; }
       </div>
       <form id="editDoseForm" action="process_dose_update.php" method="POST">
         <input type="hidden" name="action"    value="edit_active">
-        <input type="hidden" name="mat_id"    value="<?= htmlspecialchars($patient['mat_id'] ?? '') ?>">
-        <input type="hidden" name="prescriber" value="<?= htmlspecialchars($prescriber) ?>">
+        <input type="hidden" name="mat_id"    value="<?= htmlspecialchars((string)($patient['mat_id'] ?? '')) ?>">
+        <input type="hidden" name="prescriber" value="<?= htmlspecialchars((string)($prescriber)) ?>">
         <input type="hidden" name="edit_id"   id="editId">
         <div class="modal-body">
           <div class="alert alert-info" style="font-size:.85rem;">

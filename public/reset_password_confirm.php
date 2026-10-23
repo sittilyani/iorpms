@@ -41,7 +41,7 @@ if (empty($token)) {
         $error = 'This password reset link is invalid.';
     } elseif ($tokenRow['used_at'] !== null) {
         $error = 'This password reset link has already been used.';
-    } elseif (strtotime($tokenRow['expires_at']) < time()) {
+    } elseif (strtotime((string)($tokenRow['expires_at'])) < time()) {
         $error = 'This password reset link has expired. Please request a new one.';
     }
 }
@@ -50,7 +50,7 @@ if (!$error && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_passwo
     $newPassword     = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    if (strlen($newPassword) < 6) {
+    if (strlen((string)($newPassword)) < 6) {
         $error = 'Password must be at least 6 characters.';
     } elseif ($newPassword !== $confirmPassword) {
         $error = 'Passwords do not match.';
@@ -104,15 +104,15 @@ if (!$error && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_passwo
             <a href="login.php" class="back-link">&larr; Go to Login</a>
 
         <?php elseif ($error): ?>
-            <div class="msg msg-err"><?= htmlspecialchars($error) ?></div>
+            <div class="msg msg-err"><?= htmlspecialchars((string)($error)) ?></div>
             <a href="forgot_password.php" class="back-link">Request a new reset link &rarr;</a>
 
         <?php else: ?>
             <p style="text-align:center;color:#555;">
-                Hi <?= htmlspecialchars($tokenRow['first_name'] ?: '') ?>, enter your new password below.
+                Hi <?= htmlspecialchars((string)($tokenRow['first_name'] ?: '')) ?>, enter your new password below.
             </p>
             <form method="post" action="reset_password_confirm.php">
-                <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+                <input type="hidden" name="token" value="<?= htmlspecialchars((string)($token)) ?>">
                 <label for="new_password">New Password</label>
                 <input type="password" id="new_password" name="new_password" required minlength="6">
                 <label for="confirm_password">Confirm New Password</label>

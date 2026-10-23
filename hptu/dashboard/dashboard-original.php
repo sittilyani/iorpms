@@ -30,7 +30,7 @@ $filter_facility = $_GET['facility'] ?? '';
 
 // Calculate previous month for comparison
 $prev_date_str = "$filter_year-$filter_month-01";
-$prev_month_ts = strtotime('first day of previous month', strtotime($prev_date_str));
+$prev_month_ts = strtotime('first day of previous month', strtotime((string)($prev_date_str)));
 $previous_month = intval(date('m', $prev_month_ts));
 $previous_year = intval(date('Y', $prev_month_ts));
 
@@ -521,15 +521,15 @@ $display_month = getMonthName($filter_month) . " $filter_year";
                 elseif ($hour >= 17 && $hour < 21) { $greeting = "Good evening"; }
                 else { $greeting = "Good night"; }
                 ?>
-                <h1><?php echo $greeting; ?>, <?php echo htmlspecialchars($_SESSION['full_name']); ?>! 👋</h1>
+                <h1><?php echo $greeting; ?>, <?php echo htmlspecialchars((string)($_SESSION['full_name'])); ?>! 👋</h1>
                 <p class="mb-2">Data for the selected period: <strong><?php echo $display_month; ?></strong></p>
                 <span class="access-badge">
                     <i class="fa fa-key"></i>&nbsp;&nbsp;
-                    Access Level: <?php echo ucfirst($access_level); ?>
+                    Access Level: <?php echo ucfirst((string)($access_level)); ?>
                     <?php if ($access_level === 'facility'): ?>
-                        (<?php echo htmlspecialchars($user_facility); ?>)
+                        (<?php echo htmlspecialchars((string)($user_facility)); ?>)
                     <?php elseif ($access_level === 'subcounty'): ?>
-                        (<?php echo htmlspecialchars($user_subcounty); ?>)
+                        (<?php echo htmlspecialchars((string)($user_subcounty)); ?>)
                     <?php endif; ?>
                 </span>
             </div>
@@ -580,7 +580,7 @@ $display_month = getMonthName($filter_month) . " $filter_year";
                         <?php
                         while ($row = $subcounties_result->fetch_assoc()) {
                             $selected = ($row['subcountyname'] == $filter_subcounty) ? 'selected' : '';
-                            echo "<option value=\"" . htmlspecialchars($row['subcountyname']) . "\" $selected>" . htmlspecialchars($row['subcountyname']) . "</option>";
+                            echo "<option value=\"" . htmlspecialchars((string)($row['subcountyname'])) . "\" $selected>" . htmlspecialchars((string)($row['subcountyname'])) . "</option>";
                         }
                         ?>
                     </select>
@@ -595,7 +595,7 @@ $display_month = getMonthName($filter_month) . " $filter_year";
                         <?php
                         while ($row = $facilities_result->fetch_assoc()) {
                             $selected = ($row['facilityname'] == $filter_facility) ? 'selected' : '';
-                            echo "<option value=\"" . htmlspecialchars($row['facilityname']) . "\" $selected>" . htmlspecialchars($row['facilityname']) . "</option>";
+                            echo "<option value=\"" . htmlspecialchars((string)($row['facilityname'])) . "\" $selected>" . htmlspecialchars((string)($row['facilityname'])) . "</option>";
                         }
                         ?>
                     </select>
@@ -793,15 +793,15 @@ $display_month = getMonthName($filter_month) . " $filter_year";
                             while ($row = $recent_result->fetch_assoc()) {
                                 echo "<tr>
                                         <td>
-                                            <a href=\"../stocks/stock_taking_list.php?facility=" . urlencode($row['facilityname']) . "&classification=" . urlencode($row['classification']) . "\" class=\"classification-link\">
-                                                " . htmlspecialchars($row['classification']) . "
+                                            <a href=\"../stocks/stock_taking_list.php?facility=" . urlencode((string)($row['facilityname'])) . "&classification=" . urlencode((string)($row['classification'])) . "\" class=\"classification-link\">
+                                                " . htmlspecialchars((string)($row['classification'])) . "
                                             </a>
                                         </td>
-                                        <td>" . htmlspecialchars($row['facilityname']) . "</td>
+                                        <td>" . htmlspecialchars((string)($row['facilityname'])) . "</td>
                                         <td>" . number_format($row['product_count']) . "</td>
-                                        <td>" . htmlspecialchars($row['subcountyname']) . "</td>
-                                        <td>" . date('M j, Y', strtotime($row['stock_take_date'])) . "</td>
-                                        <td>" . htmlspecialchars($row['created_by']) . "</td>
+                                        <td>" . htmlspecialchars((string)($row['subcountyname'])) . "</td>
+                                        <td>" . date('M j, Y', strtotime((string)($row['stock_take_date']))) . "</td>
+                                        <td>" . htmlspecialchars((string)($row['created_by'])) . "</td>
                                 </tr>";
                             }
                         } else {

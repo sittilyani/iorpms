@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$mat_id     = trim($_POST['mat_id']    ?? '');
-$prescriber = trim($_POST['prescriber'] ?? $_SESSION['full_name'] ?? 'Clinician');
-$action     = trim($_POST['action']    ?? 'add');
+$mat_id     = trim((string)($_POST['mat_id']    ?? ''));
+$prescriber = trim((string)($_POST['prescriber'] ?? $_SESSION['full_name'] ?? 'Clinician'));
+$action     = trim((string)($_POST['action']    ?? 'add'));
 
 // ════════════════════════════════════════════════════════════════════
 // BRANCH: Edit an existing active dose schedule
@@ -23,15 +23,15 @@ if ($action === 'edit_active') {
     $edit_id   = intval($_POST['edit_id']      ?? 0);
     $new_dose  = (float)($_POST['edit_dose_mg']  ?? 0);
     $new_end   = !empty($_POST['edit_end_date'])  ? $_POST['edit_end_date'] : null;
-    $new_drug  = trim($_POST['edit_drugname']   ?? '');
-    $comment   = trim($_POST['edit_comments']   ?? '');
+    $new_drug  = trim((string)($_POST['edit_drugname']   ?? ''));
+    $comment   = trim((string)($_POST['edit_comments']   ?? ''));
 
     // Alternate dosing pattern (only meaningful for Buprenorphine, but harmless
     // to store for any drug — 1 = daily, N = every N days).
     $new_interval = intval($_POST['edit_dosing_interval'] ?? 1);
     if ($new_interval < 1)  $new_interval = 1;
     if ($new_interval > 14) $new_interval = 14;
-    $new_skip_dates = trim($_POST['edit_skip_dates'] ?? '');
+    $new_skip_dates = trim((string)($_POST['edit_skip_dates'] ?? ''));
     $new_skip_dates = $new_skip_dates !== '' ? $new_skip_dates : null;
 
     $errors = [];
@@ -83,7 +83,7 @@ if ($action === 'edit_active') {
 
     if (!empty($errors)) {
         $_SESSION['dose_errors'] = $errors;
-        header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+        header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
         exit;
     }
 
@@ -123,13 +123,13 @@ if ($action === 'edit_active') {
 
         $conn->commit();
         $_SESSION['dose_success'] = "Active dose updated successfully for $mat_id. Previous dispenses are not affected.";
-        header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+        header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
         exit;
 
     } catch (Exception $e) {
         $conn->rollback();
         $_SESSION['dose_errors'] = ["Database error: " . $e->getMessage()];
-        header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+        header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
         exit;
     }
 }
@@ -162,7 +162,7 @@ for ($i = 0; $i < $count; $i++) {
     $dose    = (float)($doses[$i] ?? 0);
     $start   = $starts[$i] ?? '';
     $end     = !empty($ends[$i]) ? $ends[$i] : null;
-    $comment = trim($comments[$i] ?? '');
+    $comment = trim((string)($comments[$i] ?? ''));
 
     if ($dose <= 0)   $errors[] = "Period " . ($i+1) . ": Dose must be > 0.";
     if (!$start)      $errors[] = "Period " . ($i+1) . ": Start date required.";
@@ -216,7 +216,7 @@ for ($i = 0; $i < $count; $i++) {
 
 if (!empty($errors)) {
     $_SESSION['dose_errors'] = $errors;
-    header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+    header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
     exit;
 }
 
@@ -230,14 +230,14 @@ try {
     );
 
     for ($i = 0; $i < $count; $i++) {
-        $drug     = trim($drugs[$i] ?? $patient['drugname']);
+        $drug     = trim((string)($drugs[$i] ?? $patient['drugname']));
         $dose     = (float)$doses[$i];
         $start    = $starts[$i];
         $end      = !empty($ends[$i]) ? $ends[$i] : null;
         $skip     = !empty($skips[$i]) ? $skips[$i] : null;
         $interval = isset($intervals[$i]) ? (int)$intervals[$i] : 1;
         if ($interval < 1) $interval = 1;
-        $comment  = trim($comments[$i]);
+        $comment  = trim((string)($comments[$i]));
 
         $ins->bind_param('ssdsssiss', $mat_id, $drug, $dose, $start, $end, $skip, $interval, $comment, $prescriber);
         $ins->execute();
@@ -250,7 +250,7 @@ try {
         $start = $starts[$i];
         $end   = !empty($ends[$i]) ? $ends[$i] : '9999-12-31';
         $dose  = (float)$doses[$i];
-        $drug  = trim($drugs[$i] ?? $patient['drugname']);
+        $drug  = trim((string)($drugs[$i] ?? $patient['drugname']));
 
         if ($today >= $start && $today <= $end) {
             $upd = $conn->prepare("UPDATE patients SET dosage = ?, drugname = ? WHERE mat_id = ?");
@@ -263,12 +263,12 @@ try {
 
     $conn->commit();
     $_SESSION['dose_success'] = "Dose periods saved successfully for $mat_id.";
-    header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+    header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
     exit;
 
 } catch (Exception $e) {
     $conn->rollback();
     $_SESSION['dose_errors'] = ["Database error: " . $e->getMessage()];
-    header("Location: update_dose.php?mat_id=" . urlencode($mat_id));
+    header("Location: update_dose.php?mat_id=" . urlencode((string)($mat_id)));
     exit;
 }

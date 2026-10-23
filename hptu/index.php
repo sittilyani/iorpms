@@ -422,21 +422,21 @@ if ($result && $result->num_rows > 0) {
                         // Try file path first, fallback to database
                         if (!empty($item['image_path']) && file_exists($item['image_path'])):
                         ?>
-                            <img src="<?= htmlspecialchars($item['image_path']) ?>"
-                                 alt="<?= htmlspecialchars($item['title']) ?>"
+                            <img src="<?= htmlspecialchars((string)($item['image_path'])) ?>"
+                                 alt="<?= htmlspecialchars((string)($item['title'])) ?>"
                                  class="image-loading"
                                  onload="this.classList.remove('image-loading')"
                                  onerror="this.onerror=null; this.src='public/display_image.php?id=<?= $item['id'] ?>';">
                         <?php else: ?>
                             <img src="public/display_image.php?id=<?= $item['id'] ?>"
-                                 alt="<?= htmlspecialchars($item['title']) ?>"
+                                 alt="<?= htmlspecialchars((string)($item['title'])) ?>"
                                  class="image-loading"
                                  onload="this.classList.remove('image-loading')">
                         <?php endif; ?>
 
                         <div class="card-body">
-                            <h4 class="card-title"><?= htmlspecialchars($item['title']) ?></h4>
-                            <p class="card-text"><?= htmlspecialchars($item['description']) ?></p>
+                            <h4 class="card-title"><?= htmlspecialchars((string)($item['title'])) ?></h4>
+                            <p class="card-text"><?= htmlspecialchars((string)($item['description'])) ?></p>
                             <a href="#" class="btn btn-primary" id="btn-see-profile">
                                 <i class="fas fa-eye"></i> See Details
                             </a>

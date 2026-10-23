@@ -33,7 +33,7 @@ $stmt->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dispense Prescription: <?php echo htmlspecialchars($prescription['prescription_id']); ?></title>
+    <title>Dispense Prescription: <?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap-4.5.2.min.css" onerror="this.onerror=null;this.href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'">
     <style>
         .container { margin-top: 50px; }
@@ -43,7 +43,7 @@ $stmt->close();
     <div class="container">
         <h2>Dispense Prescription</h2>
         <form action="process_dispense.php" method="POST">
-            <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars($prescription['prescription_id']); ?>">
+            <input type="hidden" name="prescription_id" value="<?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?>">
 
             <div class="card mb-4">
                 <div class="card-header">
@@ -51,16 +51,16 @@ $stmt->close();
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6"><strong>Prescription ID:</strong> <?php echo htmlspecialchars($prescription['prescription_id']); ?></div>
-                        <div class="col-md-6"><strong>Client Name:</strong> <?php echo htmlspecialchars($prescription['clientName']); ?></div>
+                        <div class="col-md-6"><strong>Prescription ID:</strong> <?php echo htmlspecialchars((string)($prescription['prescription_id'])); ?></div>
+                        <div class="col-md-6"><strong>Client Name:</strong> <?php echo htmlspecialchars((string)($prescription['clientName'])); ?></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6"><strong>MAT ID:</strong> <?php echo htmlspecialchars($prescription['mat_id']); ?></div>
-                        <div class="col-md-6"><strong>Date:</strong> <?php echo htmlspecialchars($prescription['prescription_date']); ?></div>
+                        <div class="col-md-6"><strong>MAT ID:</strong> <?php echo htmlspecialchars((string)($prescription['mat_id'])); ?></div>
+                        <div class="col-md-6"><strong>Date:</strong> <?php echo htmlspecialchars((string)($prescription['prescription_date'])); ?></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6"><strong>Prescriber:</strong> <?php echo htmlspecialchars($prescription['prescriber_name']); ?></div>
-                        <div class="col-md-6"><strong>Status:</strong> <?php echo htmlspecialchars($prescription['prescr_status']); ?></div>
+                        <div class="col-md-6"><strong>Prescriber:</strong> <?php echo htmlspecialchars((string)($prescription['prescriber_name'])); ?></div>
+                        <div class="col-md-6"><strong>Status:</strong> <?php echo htmlspecialchars((string)($prescription['prescr_status'])); ?></div>
                     </div>
                 </div>
             </div>
@@ -81,20 +81,20 @@ $stmt->close();
                 <tbody>
                     <?php foreach ($drugs as $drug): ?>
                         <tr>
-                            <input type="hidden" name="drug_id[]" value="<?php echo htmlspecialchars($drug['id']); ?>">
-                            <td><?php echo htmlspecialchars($drug['drug_name']); ?></td>
-                            <td><?php echo htmlspecialchars($drug['dosing']); ?></td>
-                            <td><?php echo htmlspecialchars($drug['frequency']); ?></td>
-                            <td><?php echo htmlspecialchars($drug['days']); ?></td>
+                            <input type="hidden" name="drug_id[]" value="<?php echo htmlspecialchars((string)($drug['id'])); ?>">
+                            <td><?php echo htmlspecialchars((string)($drug['drug_name'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($drug['dosing'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($drug['frequency'])); ?></td>
+                            <td><?php echo htmlspecialchars((string)($drug['days'])); ?></td>
                             <td>
-                                <input type="number" class="form-control total-dosage-input" value="<?php echo htmlspecialchars($drug['total_dosage']); ?>" readonly>
-                                <input type="hidden" name="total_dosage[]" value="<?php echo htmlspecialchars($drug['total_dosage']); ?>">
+                                <input type="number" class="form-control total-dosage-input" value="<?php echo htmlspecialchars((string)($drug['total_dosage'])); ?>" readonly>
+                                <input type="hidden" name="total_dosage[]" value="<?php echo htmlspecialchars((string)($drug['total_dosage'])); ?>">
                             </td>
                             <td>
-                                <input type="number" class="form-control total-dispensed-input" name="total_dispensed[]" value="0" min="0" max="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" step="any" required>
+                                <input type="number" class="form-control total-dispensed-input" name="total_dispensed[]" value="0" min="0" max="<?php echo htmlspecialchars((string)((float)$drug['total_dosage'] - (float)$drug['total_dispensed'])); ?>" step="any" required>
                             </td>
                             <td>
-                                <input type="number" class="form-control remaining-balance-input" name="remaining_balance[]" data-before="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" value="<?php echo htmlspecialchars((float)$drug['total_dosage'] - (float)$drug['total_dispensed']); ?>" readonly>
+                                <input type="number" class="form-control remaining-balance-input" name="remaining_balance[]" data-before="<?php echo htmlspecialchars((string)((float)$drug['total_dosage'] - (float)$drug['total_dispensed'])); ?>" value="<?php echo htmlspecialchars((string)((float)$drug['total_dosage'] - (float)$drug['total_dispensed'])); ?>" readonly>
                             </td>
                         </tr>
                     <?php endforeach; ?>

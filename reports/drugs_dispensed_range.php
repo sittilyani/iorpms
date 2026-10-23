@@ -105,7 +105,7 @@ include "../includes/footer.php";
 </head>
 <body>
 
-<!--<h2>Data for <?php echo date("F Y", strtotime($_GET['year'] . '-' . $_GET['month'] . '-01')); ?></h2>-->
+<!--<h2>Data for <?php echo date("F Y", strtotime((string)($_GET['year'] . '-' . $_GET['month'] . '-01'))); ?></h2>-->
 <body>
 <div class="navheader">
 
@@ -126,7 +126,7 @@ include('../includes/config.php');
 $year = isset($_GET['year']) ? intval($_GET['year']) : date("Y");
 $month = isset($_GET['month']) ? intval($_GET['month']) : date("n");
 // Display the date
-echo "<h2>Data for " . date("F Y", strtotime($year . '-' . $month . '-01')) . "</h2>";
+echo "<h2>Data for " . date("F Y", strtotime((string)($year . '-' . $month . '-01'))) . "</h2>";
 
 // Generate dates for the selected month and year
 $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);

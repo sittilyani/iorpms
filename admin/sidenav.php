@@ -63,31 +63,13 @@ if (isset($_GET['open']) && preg_match('#^\.\./[A-Za-z0-9_\-/]+\.php(\?[A-Za-z0-
     <a href="../admin/index.php" class="home-link">
         <i class="fa fa-th-large"></i>Admin Home</a>
 
-    <a href="../admin/system_settings.php" target="contentFrame" class="nav-link" style="background: #82b543; color: #000000; margin-top: 10px;">
-        <i class="fa fa-sliders"></i>System Settings</a>
-
     <a href="../backup/backup.php" class="home-link">
         <i class="fa fa-database"></i> Backup System</a>
 
-    <a href="../backup/view_backups.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-eye"></i>View Backups</a>
-
-    <a href="../public/userslist.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-users"></i> View users</a>
-    <a href="../admin/initialsettings.php"  target="contentFrame"  class="nav-link">
-        <i class="fa fa-wrench"></i> Facility Setup</a>
-    <a href="../admin/add_facility.php" target="contentFrame" class="nav-link">
-        <i class="fa fa-plus-circle"></i> Add New Facility</a>
-    <?php /* View referrals removed: every user already has access to their own referrals.
-    <a href="../referrals/referral_dashboard.php" target="contentFrame" class="nav-link">
-            <i class="fa fa-stethoscope"></i>View referrals</a>
-    */ ?>
     <a href="../admin/update_patient_status.php" target="contentFrame" class="nav-link">
             <i class="fa fa-user-circle"></i>Update Patients Status</a>
     <a href="../admin/update_center.php" target="contentFrame" class="nav-link">
             <i class="fa fa-refresh"></i>Update Center</a>
-    <a href="../public/reset_user_password.php" target="contentFrame" class="nav-link">
-            <i class="fa fa-unlock-alt"></i>Default Password Reset</a>
     <a href="../superadmin/demo_analytics.php" target="contentFrame" class="nav-link">
             <i class="fa fa-chart-line"></i>Demo Requests</a>
     <?php /* Deleted / Closed prescriptions now live under Dispensing Pharmacy (Admin only). */ ?>
@@ -101,7 +83,7 @@ if (isset($_GET['open']) && preg_match('#^\.\./[A-Za-z0-9_\-/]+\.php(\?[A-Za-z0-
             <div class="user-details">
                     <?php
                         if (isset($_SESSION['current_facility_name'])) {
-                            echo htmlspecialchars($_SESSION['current_facility_name']);
+                            echo htmlspecialchars((string)($_SESSION['current_facility_name']));
                         } else {
                             echo "No Facility Set";
                         }
@@ -123,8 +105,8 @@ if (isset($_GET['open']) && preg_match('#^\.\./[A-Za-z0-9_\-/]+\.php(\?[A-Za-z0-
         <div class="welcome-message" id="welcomeMessage">
             <img src="../assets/images/pt-doctor-removebg-preview.png" width="172" height="116" alt="">
             <h3>Welcome to the integrated patient management system</h3>
-            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst($userrole); ?></strong></p>
-            <p>As an <strong><?php echo ucfirst($userrole); ?></strong>, you can view and all forms that you can access</p>
+            <p>Select an option from the side navigation to access services. Your access level is: <strong><?php echo ucfirst((string)($userrole)); ?></strong></p>
+            <p>As an <strong><?php echo ucfirst((string)($userrole)); ?></strong>, you can view and all forms that you can access</p>
         </div>
     </div>
 </div>

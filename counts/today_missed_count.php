@@ -35,6 +35,6 @@ $countStmt->close();
 ?>
 
 <!-- Display the count -->
-<span id="missedCount" style="font-size: 18px; color: #2C3162;">
+<span id="missedCount" style="font-size: 18px; color: #2D008A;">
         <strong><?php echo $count; ?></strong>
 </span>

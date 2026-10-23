@@ -48,7 +48,7 @@ $stmt->close();
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #AC80EE 0%, #764ba2 100%);
             margin: 0;
             padding: 20px;
             line-height: 1.6;
@@ -104,7 +104,7 @@ $stmt->close();
             padding: 25px;
             margin: 25px 0;
             border-radius: 12px;
-            border-left: 5px solid #3498db;
+            border-left: 5px solid #2D008A;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -117,7 +117,7 @@ $stmt->close();
             font-size: 22px;
             margin: 0 0 25px 0;
             padding-bottom: 12px;
-            border-bottom: 2px solid #3498db;
+            border-bottom: 2px solid #2D008A;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -152,7 +152,7 @@ $stmt->close();
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #3498db;
+            border-color: #2D008A;
             outline: none;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
             transform: translateY(-1px);
@@ -177,7 +177,7 @@ $stmt->close();
             display: block;
             margin: 40px auto 0;
             padding: 15px 40px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #2D008A, #1d0059);
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -190,7 +190,7 @@ $stmt->close();
             letter-spacing: 0.5px;
         }
         .submit-button:hover {
-            background: linear-gradient(135deg, #2980b9, #1f618d);
+            background: linear-gradient(135deg, #1d0059, #1f618d);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
@@ -315,7 +315,7 @@ $stmt->close();
         <form action="labdar_process.php" method="POST">
             <!-- Hidden field for patient ID -->
             <?php if (isset($_GET['p_id'])): ?>
-                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars($_GET['p_id']); ?>">
+                <input type="hidden" name="p_id" value="<?php echo htmlspecialchars((string)($_GET['p_id'])); ?>">
             <?php endif; ?>
 
             <!-- CLIENT INFORMATION SECTION -->
@@ -330,25 +330,25 @@ $stmt->close();
                 <div class="form-group">
                     <label for="client_name" class="required-field">Name of Client:</label>
                     <input type="text" id="client_name" name="client_name" class="readonly-input" readonly
-                           value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>" required>
+                           value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="mat_id" class="required-field">MAT ID:</label>
                     <input type="text" id="mat_id" name="mat_id" class="readonly-input" readonly
-                           value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>" required>
+                           value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="sex" class="required-field">Sex:</label>
                     <input type="text" id="sex" name="sex" class="readonly-input" readonly
-                           value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>" required>
+                           value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars((string)($currentSettings['sex'])) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="cso">CSO:</label>
                     <input type="text" id="cso" name="cso" class="readonly-input" readonly
-                           value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars($currentSettings['cso']) : ''; ?>">
+                           value="<?php echo isset($currentSettings['cso']) ? htmlspecialchars((string)($currentSettings['cso'])) : ''; ?>">
                 </div>
             </div>
 
@@ -364,13 +364,13 @@ $stmt->close();
                 <div class="form-group">
                     <label for="mat_id_profile">MAT ID:</label>
                     <input type="text" name="mat_id_profile" class="read-only" readonly
-                           value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>">
+                           value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="clientName">Client Name:</label>
                     <input type="text" name="clientName" class="read-only" readonly
-                           value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>">
+                           value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>">
                 </div>
 
                 <div class="form-group">
@@ -704,7 +704,7 @@ $stmt->close();
 
                 <div class="form-group">
                     <label for="lab_officer_name">Dispensing Officer Name:</label>
-                    <input type="text" name="lab_officer_name" value="<?php echo htmlspecialchars($lab_office_name); ?>" class="read-only" readonly>
+                    <input type="text" name="lab_officer_name" value="<?php echo htmlspecialchars((string)($lab_office_name)); ?>" class="read-only" readonly>
                 </div>
 
                 <button type="submit" class="submit-button">

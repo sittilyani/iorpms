@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 // Include database configuration (assuming this file connects to $conn)
 include('../includes/config.php');
@@ -36,16 +36,16 @@ if (isset($_GET['mat_id'])) {
         $row = $result->fetch_assoc();
 
         $patient_data['mat_id'] = $mat_id;
-        $patient_data['name'] = htmlspecialchars($row['clientName']);
-        $patient_data['age'] = htmlspecialchars($row['age']);
-        $patient_data['sex'] = htmlspecialchars($row['sex']);
-        $patient_data['dob'] = htmlspecialchars($row['dob']);
-        $patient_data['enroll_date'] = htmlspecialchars($row['reg_date']);
-        $patient_data['current_dose'] = htmlspecialchars($row['dosage']);
-        $patient_data['drugname'] = htmlspecialchars($row['drugname']);
+        $patient_data['name'] = htmlspecialchars((string)($row['clientName']));
+        $patient_data['age'] = htmlspecialchars((string)($row['age']));
+        $patient_data['sex'] = htmlspecialchars((string)($row['sex']));
+        $patient_data['dob'] = htmlspecialchars((string)($row['dob']));
+        $patient_data['enroll_date'] = htmlspecialchars((string)($row['reg_date']));
+        $patient_data['current_dose'] = htmlspecialchars((string)($row['dosage']));
+        $patient_data['drugname'] = htmlspecialchars((string)($row['drugname']));
         // Use null coalescing operator (??) for optional fields, though the DB query should handle it if columns exist
-        $patient_data['supporter_name'] = htmlspecialchars($row['peer_edu_name'] ?? '');
-        $patient_data['supporter_tel'] = htmlspecialchars($row['peer_edu_phone'] ?? '');
+        $patient_data['supporter_name'] = htmlspecialchars((string)($row['peer_edu_name'] ?? ''));
+        $patient_data['supporter_tel'] = htmlspecialchars((string)($row['peer_edu_phone'] ?? ''));
 
     } else {
         // Handle case where MAT ID is passed but no patient is found
@@ -57,15 +57,15 @@ if (isset($_GET['mat_id'])) {
 // Helper function to handle pre-selected sex
 function is_selected($value, $current_sex) {
     // Standardize 'Male'/'Female' to match stored values
-    $normalized_sex = strtolower(trim($current_sex));
+    $normalized_sex = strtolower((string)(trim((string)($current_sex))));
     // Check for both 'Male'/'Female' strings and potential 1/2 numeric values
-    $target = strtolower(trim($value));
+    $target = strtolower((string)(trim((string)($value))));
 
     // Check for numeric values if the DB uses them (as per original function logic)
     if (is_numeric($value)) {
         $target = ($value == 1) ? 'male' : 'female';
     } else {
-        $target = strtolower(trim($value));
+        $target = strtolower((string)(trim((string)($value))));
     }
 
     return ($normalized_sex == $target) ? 'selected' : '';

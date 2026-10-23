@@ -32,7 +32,7 @@ if (isset($_GET['message'])) {
 
         .register-input{
             display: in-line block;
-            background-color: #2C3162;
+            background-color: #2D008A;
             color: white;
             align-content: center;
             align-items: center;
@@ -111,11 +111,11 @@ if (isset($_GET['message'])) {
     </style>
 </head>
 <body>
-    <h2 style="color: #2C3162; ">HIV positive and Viral Load</h2>
+    <h2 style="color: #2D008A; ">HIV positive and Viral Load</h2>
 
 
 
-    <form id="searchForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="searchForm" action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="GET">
     <div class="header">
         <label for="search">Search:</label>
         <input type="text" id="search" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
@@ -186,7 +186,7 @@ if (isset($_GET['message'])) {
                 </tr>";
 
                while ($row = $result->fetch_assoc()) {
-                $maskedName = str_repeat('*', strlen($row['clientName'])); // Mask the client's name with asterisks
+                $maskedName = str_repeat('*', strlen((string)($row['clientName']))); // Mask the client's name with asterisks
                 echo "<tr>
                         <td>" . $row['vl_id'] . "</td>
                         <td>" . $row['mat_id'] . "</td>

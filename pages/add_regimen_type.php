@@ -6,7 +6,7 @@ include('../includes/header.php');
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $regimen_type_name = trim($_POST["regimen_type_name"]);
+        $regimen_type_name = trim((string)($_POST["regimen_type_name"]));
 
         // Prepare an insert statement
         $sql = "INSERT INTO regimen_type (regimen_type_name) VALUES (?)";

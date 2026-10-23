@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
         $hcw_name = $_POST['hcw_name'];
         $hcw_sign = $_POST['hcw_sign'];
 
-    $reg_date = date('Y-m-d', strtotime($reg_date));
+    $reg_date = date('Y-m-d', strtotime((string)($reg_date)));
 
     $query = "UPDATE patients SET mat_id = ?, mat_number = ?, clientName = ?, motherName = ?, sname = ?, nickName = ?, nat_id = ?, dob = ?, sex = ?, reg_facility = ?, mflcode = ?, county = ?, scounty = ?, reg_date = ?, residence_scounty = ?, p_address = ?,  client_phone = ?, mat_status = ?, transfer_id = ?, referral_type = ?, referring_facility = ?, reffering_fac_client_number = ?, accompanment_type = ?, peer_edu_name = ?, peer_edu_phone = ?, rx_supporter_name = ?, rx_supporter_phone = ?, dosage = ?, current_status = ?, hcw_name = ?, hcw_sign = ? WHERE p_id = ?";
     $stmt = $mysqli->prepare($query);

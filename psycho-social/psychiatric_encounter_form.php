@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../includes/print_header.php'; print_header_start('form');
 session_start();
 include '../includes/config.php';
 
@@ -120,7 +120,7 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #3498db;
+            border-color: #2D008A;
             outline: none;
         }
         .checkbox-group {
@@ -158,7 +158,7 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
             font-size: 14px;
         }
         .signature-table th {
-            background-color: #3498db;
+            background-color: #2D008A;
             color: #fff;
         }
         .signature-table td {
@@ -168,7 +168,7 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
             display: block;
             margin: 30px auto 0;
             padding: 12px 30px;
-            background-color: #3498db;
+            background-color: #2D008A;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -177,14 +177,14 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
             transition: background-color 0.3s;
         }
         .submit-button:hover {
-            background-color: #2980b9;
+            background-color: #1d0059;
         }
 
         /* Color Palette */
         :root {
             --color-primary: #4a90e2; /* Professional Blue */
             --color-secondary: #50b89a; /* Calming Green */
-            --color-dark: #2C3162; /* Navy Text */
+            --color-dark: #2D008A; /* Navy Text */
             --color-light-bg: #f8f9fa; /* Light background */
             --color-card-bg: white;
             --color-readonly: #e3f0ff; /* Very light blue for readonly */
@@ -485,19 +485,19 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
                             </div>
                             <div class="form-group">
                                 <label for="clientName">Client Name</label>
-                                <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars($currentSettings['clientName']) : ''; ?>">
+                                <input type="text" name="clientName" class="readonly-input" readonly value="<?php echo isset($currentSettings['clientName']) ? htmlspecialchars((string)($currentSettings['clientName'])) : ''; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="mat_id">MAT ID</label>
-                                <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars($currentSettings['mat_id']) : ''; ?>">
+                                <input type="text" name="mat_id" class="readonly-input" readonly value="<?php echo isset($currentSettings['mat_id']) ? htmlspecialchars((string)($currentSettings['mat_id'])) : ''; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="dob">Date of Birth</label>
-                                <input type="text" name="dob" class="readonly-input" readonly value="<?php echo isset($currentSettings['dob']) ? htmlspecialchars($currentSettings['dob']) : ''; ?>">
+                                <input type="text" name="dob" class="readonly-input" readonly value="<?php echo isset($currentSettings['dob']) ? htmlspecialchars((string)($currentSettings['dob'])) : ''; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="age">Age</label>
-                                <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars($currentSettings['age']) : ''; ?>">
+                                <input type="text" name="age" class="readonly-input" readonly value="<?php echo isset($currentSettings['age']) ? htmlspecialchars((string)($currentSettings['age'])) : ''; ?>">
                             </div>
 
                             <div class="form-group">
@@ -506,7 +506,7 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
                             </div>
                             <div class="form-group">
                                 <label for="sex">Gender</label>
-                                <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars($currentSettings['sex']) : ''; ?>">
+                                <input type="text" name="sex" class="readonly-input" readonly value="<?php echo isset($currentSettings['sex']) ? htmlspecialchars((string)($currentSettings['sex'])) : ''; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="religion">Religion/spiritual belief</label>
@@ -689,7 +689,7 @@ $referralOptions = '<option value="Self">Self</option><option value="Clinic">Cli
                     </div>
                     <div class="form-group">
                         <label for="service_provider">Reviewed By</label>
-                        <input type ="text" name="service_provider" value="<?php echo htmlspecialchars($reviewed_by); ?>">
+                        <input type ="text" name="service_provider" value="<?php echo htmlspecialchars((string)($reviewed_by)); ?>">
                     </div>
 
                     <button type="submit" class="custom-submit-btn">

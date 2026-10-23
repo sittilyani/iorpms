@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
         h1 { color: #2c3e50; margin-bottom: 30px; }
         .search-form { margin-bottom: 30px; }
         .search-input { padding: 12px; width: 400px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; }
-        .search-button { padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        .search-button:hover { background: #2980b9; }
+        .search-button { padding: 12px 24px; background: #2D008A; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .search-button:hover { background: #1d0059; }
         .results-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .results-table th, .results-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         .results-table th { background: #f8f9fa; font-weight: 600; }
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
         <div class="search-form">
             <form method="POST">
                 <input type="text" name="search_term" class="search-input" placeholder="Search by Client Name, Surname or MAT ID..."
-                       value="<?php echo htmlspecialchars($_POST['search_term'] ?? ''); ?>">
+                       value="<?php echo htmlspecialchars((string)($_POST['search_term'] ?? '')); ?>">
                 <button type="submit" name="search" class="search-button">Search</button>
             </form>
         </div>
@@ -85,10 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
                 <tbody>
                     <?php foreach ($results as $result): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($result['clientName'] . ' ' . $result['sname']); ?></td>
-                        <td><?php echo htmlspecialchars($result['mat_id']); ?></td>
-                        <td><?php echo htmlspecialchars($result['age']); ?></td>
-                        <td><?php echo htmlspecialchars($result['sex']); ?></td>
+                        <td><?php echo htmlspecialchars((string)($result['clientName'] . ' ' . $result['sname'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($result['mat_id'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($result['age'])); ?></td>
+                        <td><?php echo htmlspecialchars((string)($result['sex'])); ?></td>
                         <td>
                             <?php if ($result['triage_status'] == 'incomplete'): ?>
                                 <span class="status-badge status-incomplete">Incomplete</span>

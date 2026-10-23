@@ -16,7 +16,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         $stmt->bindParam(":id", $param_id);
 
         // Set parameters
-        $param_id = trim($_POST["id"]);
+        $param_id = trim((string)($_POST["id"]));
 
         // Attempt to execute the prepared statement
         if($stmt->execute()){
@@ -35,7 +35,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     unset($pdo);
 } else{
     // Check existence of id parameter
-    if(empty(trim($_GET["id"]))){
+    if(empty(trim((string)($_GET["id"])))){
         // URL doesn't contain id parameter. Redirect to error page
         header("location: error.php");
         exit();
@@ -62,9 +62,9 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         <h1>Delete Record</h1>
                     </div>
                     <div class="alert alert-danger fade in">
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars((string)($_SERVER["PHP_SELF"])); ?>" method="post">
                         <div>
-                            <input type="hidden" name="id" value="<?php echo trim($_GET["id"]); ?>"/>
+                            <input type="hidden" name="id" value="<?php echo trim((string)($_GET["id"])); ?>"/>
                             <p>Are you sure you want to delete this record?</p><br>
                             <p>
                                 <button type="submit" name="btnDelete" class="btn btn-block btn-danger">Yes</button>

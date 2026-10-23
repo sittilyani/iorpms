@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             <h4>Success:</h4>
             <ul>
                 <?php foreach ($successMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             <h4>Errors:</h4>
             <ul>
                 <?php foreach ($errorMessages as $msg): ?>
-                    <li><?php echo htmlspecialchars($msg); ?></li>
+                    <li><?php echo htmlspecialchars((string)($msg)); ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -169,35 +169,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
 
                 <div class="form-group">
                     <label for="p_id">Patient Entry ID</label>
-                    <input type="text" name="userId" value="<?php echo htmlspecialchars($userId); ?>" class="readonly-input" readonly>
+                    <input type="text" name="userId" value="<?php echo htmlspecialchars((string)($userId)); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="mat_id">MAT ID</label>
-                    <input type="text" name="mat_id" value="<?php echo htmlspecialchars($currentSettings['mat_id'] ?? ''); ?>" class="readonly-input" readonly>
+                    <input type="text" name="mat_id" value="<?php echo htmlspecialchars((string)($currentSettings['mat_id'] ?? '')); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="mat_number">MAT Number</label>
-                    <input type="text" name="mat_number" value="<?php echo htmlspecialchars($currentSettings['mat_number'] ?? ''); ?>" class="readonly-input" readonly>
+                    <input type="text" name="mat_number" value="<?php echo htmlspecialchars((string)($currentSettings['mat_number'] ?? '')); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="clientName">Client Name</label>
-                    <input type="text" name="clientName" value="<?php echo htmlspecialchars($currentSettings['clientName'] ?? ''); ?>" class="readonly-input" readonly>
+                    <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($currentSettings['clientName'] ?? '')); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="sname">Sur Name</label>
-                    <input type="text" name="sname" value="<?php echo htmlspecialchars($currentSettings['sname'] ?? ''); ?>">
+                    <input type="text" name="sname" value="<?php echo htmlspecialchars((string)($currentSettings['sname'] ?? '')); ?>">
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="text" name="dob" value="<?php echo htmlspecialchars($currentSettings['dob'] ?? ''); ?>" class="readonly-input" readonly>
+                    <input type="text" name="dob" value="<?php echo htmlspecialchars((string)($currentSettings['dob'] ?? '')); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="sex">Sex</label>
-                    <input type="text" name="sex" value="<?php echo htmlspecialchars($currentSettings['sex'] ?? ''); ?>" class="readonly-input" readonly>
+                    <input type="text" name="sex" value="<?php echo htmlspecialchars((string)($currentSettings['sex'] ?? '')); ?>" class="readonly-input" readonly>
                 </div>
                 <div class="form-group">
                     <label for="p_address">Current Residence</label>
-                    <input type="text" name="p_address" value="<?php echo htmlspecialchars($currentSettings['p_address'] ?? ''); ?>">
+                    <input type="text" name="p_address" value="<?php echo htmlspecialchars((string)($currentSettings['p_address'] ?? '')); ?>">
                 </div>
                 <div class="form-group">
                 <label for="drugname">Drug <span style='color: red; font-weight: bold;'>&#10033;</span></label>
@@ -212,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
 
                         if ($result && $result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                $drugName = htmlspecialchars($row['drugName'], ENT_QUOTES, 'UTF-8');
+                                $drugName = htmlspecialchars((string)($row['drugName']), ENT_QUOTES, 'UTF-8');
                                 // Check if this drug matches the current patient's drug
                                 $selected = ($drugName === $currentDrug) ? 'selected' : '';
                                 echo "<option value='" . $drugName . "' " . $selected . ">" . $drugName . "</option>";
@@ -226,22 +226,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
             </div>
                 <div class="form-group">
                     <label for="dosage">New Dosage</label>
-                    <input type="number" name="dosage" step="0.01" value="<?php echo htmlspecialchars($currentSettings['dosage'] ?? ''); ?>" required>
+                    <input type="number" name="dosage" step="0.01" value="<?php echo htmlspecialchars((string)($currentSettings['dosage'] ?? '')); ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="current_status">Current Patient Status</label>
                     <select name="current_status" id="current_status" required>
                         <?php foreach ($statusOptions as $status): ?>
-                            <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $status == ($currentSettings['current_status'] ?? '') ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($status); ?>
+                            <option value="<?php echo htmlspecialchars((string)($status)); ?>" <?php echo $status == ($currentSettings['current_status'] ?? '') ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars((string)($status)); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div>
                     <label for="reasons">Reasons for dose adjustment</label>
-                    <textarea name="reasons" cols="30" rows="6" required><?php echo htmlspecialchars($currentSettings['reasons'] ?? ''); ?></textarea>
+                    <textarea name="reasons" cols="30" rows="6" required><?php echo htmlspecialchars((string)($currentSettings['reasons'] ?? '')); ?></textarea>
                 </div>
 
                 <input type="submit" class='custom-submit-btn' name="update" value="Update Prescription" class="submit-btn">

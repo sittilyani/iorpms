@@ -52,7 +52,7 @@ function generateRandomPassword($length = 10) {
     $password = '';
 
     for ($i = 0; $i < $length; $i++) {
-        $password .= $characters[rand(0, strlen($characters) - 1)];
+        $password .= $characters[rand(0, strlen((string)($characters)) - 1)];
     }
 
     return $password;

@@ -14,8 +14,8 @@
     $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : $defaultEndDate;
 
     // Validate dates
-    $startDate = date('Y-m-d', strtotime($startDate));
-    $endDate = date('Y-m-d', strtotime($endDate));
+    $startDate = date('Y-m-d', strtotime((string)($startDate)));
+    $endDate = date('Y-m-d', strtotime((string)($endDate)));
 
     $total_dispensed_buprenorphine8mg = 0;
 
