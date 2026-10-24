@@ -507,5 +507,6 @@ $loggedInUserSignature = isset($_SESSION['loggedin_user_signature']) ? htmlspeci
     </table>
 
     <button id="print-pdf" onclick="window.print()">Print PDF</button>
+<?php require_once '../includes/khis_submit.php'; khis_submit_ui('p8', substr((string)$prevMonthEnd, 0, 7)); ?>
 </body>
 </html>

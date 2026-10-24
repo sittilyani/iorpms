@@ -262,7 +262,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
 
                 <div class="form-group">
                     <label for="to_site">To (Dispensing Site)</label>
-                    <input type="text" name="to_site" required>
+                    <input type="text" name="to_site" id="to_site" list="toSiteList" autocomplete="off" placeholder="Type 2+ letters, then pick the facility from the list" required><datalist id="toSiteList"></datalist> <small id="toSiteMsg" style="color:#E41E39"></small>
                 </div>
             </div>
 
@@ -338,7 +338,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="text" name="clinician_org" required></td>
+                        <td><input type="text" name="clinician_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                         <td><input type="text" name="clinician_signature" required></td>
                         <td><input type="date" name="clinician_date" required></td>
                     </tr>
@@ -352,7 +352,7 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="text" name="counselor_org" required></td>
+                        <td><input type="text" name="counselor_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                         <td><input type="text" name="counselor_signature" required></td>
                         <td><input type="date" name="counselor_date" required></td>
                     </tr>
@@ -367,6 +367,19 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
     </div>
 
     <script>
+        // Dispensing site: choose from the facilities table
+        (function () {
+            var inp = document.getElementById('to_site'), dl = document.getElementById('toSiteList'), msg = document.getElementById('toSiteMsg'), t = null;
+            if (!inp) return;
+            inp.addEventListener('input', function () {
+                clearTimeout(t); var v = inp.value.trim(); msg.textContent = ''; if (v.length < 2) return;
+                t = setTimeout(function () { fetch('facility_lookup.php?q=' + encodeURIComponent(v)).then(function (r) { return r.json(); }).then(function (a) { dl.innerHTML = ''; a.forEach(function (n) { var o = document.createElement('option'); o.value = n; dl.appendChild(o); }); }); }, 250);
+            });
+            inp.addEventListener('change', function () {
+                var v = inp.value.trim(); if (!v) return;
+                if (!Array.from(dl.options).some(function (o) { return o.value === v; })) { msg.textContent = 'Choose a facility from the list.'; inp.value = ''; }
+            });
+        })();
         // Auto-hide success/error messages after 5 seconds
         setTimeout(function() {
             var successMsg = document.getElementById('success-message');
@@ -375,5 +388,18 @@ if ($resultFacilitySettings && $resultFacilitySettings->num_rows > 0) {
             if (errorMsg) errorMsg.style.display = 'none';
         }, 5000);
     </script>
+<?php
+// After a transfer form is saved, offer to send the acceptance link to the receiving facility straight away
+require_once '../includes/transfer_helpers.php'; require_once '../includes/transfer_send_ui.php';
+transfer_ensure_schema($conn);
+transfer_send_modal('../reports/transfer_send.php');
+if (!empty($_GET['send_form'])) {
+    $sf = (int)$_GET['send_form'];
+    $sr = $conn->query('SELECT id, clientName, to_site FROM transfer_forms WHERE id = ' . $sf); $row = $sr ? $sr->fetch_assoc() : null;
+    if ($row) {
+        echo '<script>window.addEventListener("load", function () { openTransferSend(' . json_encode(['id' => (int)$row['id'], 'client' => $row['clientName'], 'toSite' => $row['to_site'], 'email' => transfer_known_email($conn, (string)$row['to_site'])]) . '); });</script>';
+    }
+}
+?>
 </body>
 </html>

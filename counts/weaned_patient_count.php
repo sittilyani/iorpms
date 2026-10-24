@@ -13,29 +13,3 @@ $weanedCount = $result['weanedCount'];
 // Output the count as plain text
 echo $weanedCount;
 ?>
-
-
-    <script>
-        // Function to update the count of weaned users
-        function updateweanedCount() {
-            $.ajax({
-                url: 'weaned_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#weanedsCount').text('weaneds: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching weaned count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updateweanedCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updateweanedCount, 300000);
-    </script>
-
-
-

@@ -13,29 +13,3 @@ $prescriptionCount = $result['prescriptionCount'];
 // Output the count as plain text
 echo $prescriptionCount;
 ?>
-
-
-    <script>
-        // Function to update the count of prescription users
-        function updateprescriptionCount() {
-            $.ajax({
-                url: '../counts/prescription_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#prescriptionsCount').text('prescriptions: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching prescription count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updateprescriptionCount();
-
-        // Set an interval to update the count every 50 seconds (30,000 milliseconds)
-        setInterval(updateprescriptionCount, 30000);
-    </script>
-
-
-

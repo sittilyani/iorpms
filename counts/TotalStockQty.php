@@ -19,24 +19,3 @@ function getTotalStockQty()
 }
 
 ?>
-<script>
-    // Function to update the total stock quantity for "methadone"
-    function updateTotalStockQty() {
-        $.ajax({
-            url: 'TotalStockQty.php',
-            type: 'GET',
-            success: function (data) {
-                $('#MethadoneCount').text('Total Stock Qty: ' + data);
-            },
-            error: function (error) {
-                console.error('Error fetching Total Stock Qty:', error);
-            }
-        });
-    }
-
-    // Call the function initially
-    updateTotalStockQty();
-
-    // Set an interval to update the total stock quantity every 5 minutes (300,000 milliseconds)
-    setInterval(updateTotalStockQty, 300000);
-</script>

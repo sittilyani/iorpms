@@ -14,27 +14,3 @@ $pepCount = $result['pepCount'];
 // Output the count as plain text
 echo $pepCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of pep users
-        function updatepepCount() {
-            $.ajax({
-                url: 'pep_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#pepsCount').text('peps: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching pep count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updatepepCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updatepepCount, 300000);
-    </script>

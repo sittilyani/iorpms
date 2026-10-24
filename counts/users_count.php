@@ -13,30 +13,3 @@ $usersCount = $result['usersCount'];
 // Output the count as plain text
 echo $usersCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of users users
-        function updateusersCount() {
-            $.ajax({
-                url: 'users_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#userssCount').text('userss: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching users count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updateusersCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updateusersCount, 300000);
-    </script>
-
-
-

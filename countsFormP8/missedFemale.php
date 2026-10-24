@@ -14,27 +14,3 @@ $missed_lineCount = $result['missed_lineCount'];
 // Output the count as plain text
 echo $missed_lineCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of missed_line users
-        function updatemissed_lineCount() {
-            $.ajax({
-                url: 'missed_line_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#missed_linesCount').text('missed_lines: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching missed_line count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updatemissed_lineCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 millimisseds)
-        setInterval(updatemissed_lineCount, 300000);
-    </script>

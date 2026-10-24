@@ -207,7 +207,7 @@ $stmt->close();
                         <?php endforeach; ?>
                     </select>
                 </td>
-                <td><input type="text" style="width: 90%" name="clinician_org" required></td>
+                <td><input type="text" style="width: 90%" name="clinician_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                 <td><input type="text" style="width: 90%" name="clinician_signature" required></td>
                 <td><input type="date" style="width: 90%" name="clinician_date" required></td>
             </tr>
@@ -221,7 +221,7 @@ $stmt->close();
                         <?php endforeach; ?>
                     </select>
                 </td>
-                <td><input type="text" style="width: 90%" name="counselor_org" required></td>
+                <td><input type="text" style="width: 90%" name="counselor_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                 <td><input type="text" style="width: 90%" name="counselor_signature" required></td>
                 <td><input type="date" style="width: 90%" name="counselor_date" required></td>
             </tr>

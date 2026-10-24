@@ -277,6 +277,7 @@ if (isset($_GET['message'])) {
                        c.created_at,
                        c.consent_status,
                        c.clinician_name,
+                       c.pdf_filename,
                        c.visit_date,
                        COALESCE(c.created_at, p.reg_date) as display_date
                 FROM patients p
@@ -298,7 +299,7 @@ if (isset($_GET['message'])) {
 
         // Pagination
         $results_per_page = 5;
-        $count_result = mysqli_query($conn, "SELECT COUNT(DISTINCT p.mat_id) as total FROM patients p LEFT JOIN consents c ON p.mat_id = c.mat_id WHERE p.mat_id LIKE '%$search%' OR p.mat_number LIKE '%$search%' OR p.clientName LIKE '%$search%' OR p.nickName LIKE '%$search%' OR p.dob LIKE '%$search%' OR p.age LIKE '%$search%' OR p.sex LIKE '%$search%' OR p.p_address LIKE '%$search%' OR p.peer_edu_name LIKE '%$search%' OR p.peer_edu_phone LIKE '%$search%' OR p.cso LIKE '%$search%' OR p.dosage LIKE '%$search%' OR p.current_status LIKE '%$search%'");
+        $count_result = mysqli_query($conn, "SELECT COUNT(DISTINCT p.mat_id) as total FROM patients p LEFT JOIN client_consents c ON p.mat_id = c.mat_id WHERE p.mat_id LIKE '%$search%' OR p.mat_number LIKE '%$search%' OR p.clientName LIKE '%$search%' OR p.nickName LIKE '%$search%' OR p.dob LIKE '%$search%' OR p.age LIKE '%$search%' OR p.sex LIKE '%$search%' OR p.p_address LIKE '%$search%' OR p.peer_edu_name LIKE '%$search%' OR p.peer_edu_phone LIKE '%$search%' OR p.cso LIKE '%$search%' OR p.dosage LIKE '%$search%' OR p.current_status LIKE '%$search%'");
         $count_row = mysqli_fetch_assoc($count_result);
         $number_of_results = $count_row['total'];
         $number_of_pages = ceil($number_of_results / $results_per_page);
@@ -356,7 +357,11 @@ if (isset($_GET['message'])) {
                         <td>" . htmlspecialchars((string)($row['sex'])) . "</td>
                         <td>" . htmlspecialchars((string)($row['current_status'])) . "</td>
                         <td class='action-links'>
-                            <a href='../patients/view_patient.php?p_id=" . $row['p_id'] . "'>View</a>";
+                            ";
+                // View only where a consent exists: opens the consent PDF
+                if (!empty($row['id']) && !empty($row['pdf_filename'])) {
+                    echo "<a href='../consentsforms/" . rawurlencode((string)$row['pdf_filename']) . "' target='_blank'>View</a>";
+                }
 
                 // Show update consent link
                 if (!empty($row['id'])) {

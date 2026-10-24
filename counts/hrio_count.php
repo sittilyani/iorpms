@@ -13,30 +13,3 @@ $adminCount = $result['adminCount'];
 // Output the count as plain text
 echo $adminCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of hrio users
-        function updatehrioCount() {
-            $.ajax({
-                url: 'hrio_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#hriosCount').text('hrios: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching hrio count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updatehrioCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updatehrioCount, 300000);
-    </script>
-
-
-

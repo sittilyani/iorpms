@@ -40,6 +40,8 @@ function transfer_ensure_schema(mysqli $conn): void
         accepted_at DATETIME DEFAULT NULL,
         INDEX (mat_id), INDEX (status)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+    $c = $conn->query("SHOW COLUMNS FROM transfer_out_requests LIKE 'transfer_form_id'");
+    if ($c && $c->num_rows === 0) { $conn->query("ALTER TABLE transfer_out_requests ADD COLUMN transfer_form_id INT NULL, ADD INDEX (transfer_form_id)"); }
 }
 
 function b64u_enc(string $s): string { return rtrim((string)(strtr(base64_encode($s), '+/', '-_')), '='); }
@@ -188,4 +190,71 @@ function transfer_mark_out(mysqli $conn, string $mat_id, string $to_site, string
     $age = (int)$p['age'];
     $h->bind_param('sssssi', $p['clientName'], $p['sex'], $mat_id, $p['current_status'], $date, $age);
     $h->execute();
+}
+
+/** The package the receiving clinic imports, built from a saved transfer_forms row (the clinician's Transfer Form). */
+function transfer_pkg_from_form(mysqli $conn, array $tf, string $token): array
+{
+    $pf = transfer_prefill($conn, $tf['mat_id']);
+    $p = $pf['patient'] ?? [];
+    $fac = $conn->query("SELECT fs.facilityname, fs.email, COALESCE(NULLIF(fs.mflcode,''), f.mflcode) AS mfl FROM facility_settings fs LEFT JOIN facilities f ON f.id=fs.facility_id LIMIT 1")->fetch_assoc() ?: [];
+    $toMfl = preg_match('/\((\d+)\)\s*$/', (string)$tf['to_site'], $m) ? $m[1] : '';
+    $isTransit = stripos((string)$tf['type_of_movement'], 'transit') !== false;
+    $form = [
+        'type_of_movement' => $tf['type_of_movement'], 'transit_start' => '', 'transit_end' => '', 'referral_date' => $tf['referral_date'],
+        'from_site' => $fac['facilityname'] ?? $tf['from_site'], 'from_mfl' => $fac['mfl'] ?? '', 'to_site' => $tf['to_site'], 'to_mfl' => $toMfl,
+        'reason_transfer' => $tf['reason_transfer'], 'clinical_history' => $tf['clinical_history'], 'psychosocial' => $tf['psychosocial'],
+        'lab_investigations' => (string)$tf['lab_investigations'], 'vaccinations' => (string)$tf['vaccinations'], 'diagnosis' => $tf['diagnosis'],
+        'drug' => $pf['drug'] ?? '', 'current_dose' => $tf['current_dose'], 'date_last_administered' => $tf['date_last_administered'], 'other_medications' => (string)$tf['other_medications'],
+        'clinician_name' => $tf['clinician_name'], 'clinician_org' => $tf['clinician_org'], 'clinician_signature' => $tf['clinician_signature'], 'clinician_date' => $tf['clinician_date'],
+        'counselor_name' => $tf['counselor_name'], 'counselor_org' => $tf['counselor_org'], 'counselor_signature' => $tf['counselor_signature'], 'counselor_date' => $tf['counselor_date'],
+    ];
+    return ['token' => $token, 'from_mfl' => $fac['mfl'] ?? '', 'from_email' => $fac['email'] ?? '', 'mat_start' => $pf['mat_start'] ?? '', 'form' => $form,
+            'patient' => array_intersect_key($p, array_flip(['mat_id', 'clientName', 'sname', 'nickName', 'nat_id', 'dob', 'sex', 'marital_status', 'residence_scounty', 'p_address', 'client_phone', 'cso', 'peer_edu_name', 'peer_edu_phone', 'rx_supporter_name', 'religion', 'occupation', 'reg_date', 'drugname', 'dosage']))];
+}
+
+/** Last known email of a facility (from Update contacts), by MFL code parsed from "Name (MFL)". */
+function transfer_known_email(mysqli $conn, string $toSite): string
+{
+    if (!preg_match('/\((\d+)\)\s*$/', $toSite, $m)) return '';
+    $st = $conn->prepare("SELECT email FROM update_contacts WHERE mflcode = ? ORDER BY 1 DESC LIMIT 1"); $st->bind_param('s', $m[1]); $st->execute();
+    return (string)($st->get_result()->fetch_row()[0] ?? '');
+}
+
+/** Sent state of a saved transfer form: null (never), or the request row. */
+function transfer_form_state(mysqli $conn, int $formId): ?array
+{
+    $r = $conn->query("SELECT token, to_email, email_sent, created_at, status, accepted_at FROM transfer_out_requests WHERE transfer_form_id = " . (int)$formId . " ORDER BY id DESC LIMIT 1");
+    return $r ? ($r->fetch_assoc() ?: null) : null;
+}
+
+/**
+ * Create (or refresh) the acceptance link for a saved transfer form and, when an email is given, mail it.
+ * The same token is kept on a resend. Returns [ok, link, emailed, message].
+ */
+function transfer_form_send(mysqli $conn, int $formId, string $email, string $by): array
+{
+    transfer_ensure_schema($conn);
+    $q = $conn->query("SELECT * FROM transfer_forms WHERE id = " . (int)$formId); $tf = $q ? $q->fetch_assoc() : null;
+    if (!$tf) return [false, '', false, 'Transfer form not found.'];
+    $email = trim($email);
+    if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) return [false, '', false, 'That email address is not valid.'];
+    $old = $conn->query("SELECT token FROM transfer_out_requests WHERE transfer_form_id = " . (int)$formId . " ORDER BY id DESC LIMIT 1")->fetch_row();
+    $token = $old[0] ?? bin2hex(random_bytes(16));
+    $pkg = transfer_pkg_from_form($conn, $tf, $token);
+    $link = rtrim((string)TRANSFER_RECEIVE_BASE, '/') . '/admin/transfer_in.php#d=' . transfer_pack($pkg);
+    $emailed = false; $err = '';
+    if ($email !== '') { $mail = transfer_send_mail($email, $tf['to_site'], $pkg, $link); $emailed = !empty($mail['success']); $err = (string)($mail['error'] ?? ''); }
+    $json = json_encode($pkg, JSON_UNESCAPED_UNICODE); $f = $pkg['form'];
+    $name = $tf['clientName']; $mat = $tf['mat_id']; $fromF = $f['from_site']; $fromM = $f['from_mfl']; $toS = $f['to_site']; $toM = $f['to_mfl']; $type = $f['type_of_movement']; $em = $emailed ? 1 : 0; $fid = (int)$formId;
+    if ($old) {
+        $u = $conn->prepare("UPDATE transfer_out_requests SET payload = ?, to_email = IF(? <> '', ?, to_email), to_facility = ?, to_mfl = ?, email_sent = IF(?=1, 1, email_sent), created_by = ?, created_at = IF(?=1, NOW(), created_at) WHERE token = ?");
+        $u->bind_param('sssssisis', $json, $email, $email, $toS, $toM, $em, $by, $em, $token); $u->execute();
+    } else {
+        $i = $conn->prepare("INSERT INTO transfer_out_requests (token, direction, mat_id, client_name, from_facility, from_mfl, to_facility, to_mfl, to_email, type_of_movement, status, email_sent, payload, created_by, transfer_form_id) VALUES (?, 'OUT', ?, ?, ?, ?, ?, ?, ?, ?, 'Sent', ?, ?, ?, ?)");
+        $i->bind_param('sssssssssissi', $token, $mat, $name, $fromF, $fromM, $toS, $toM, $email, $type, $em, $json, $by, $fid);
+        $i->execute();
+    }
+    $msg = $email === '' ? 'Link created. Copy it and send it to the receiving facility.' : ($emailed ? 'Email sent to ' . $email . '. You can also copy the link below.' : 'The email could not be sent' . ($err ? " ($err)" : '') . '. Copy the link below and send it yourself.');
+    return [true, $link, $emailed, $msg];
 }

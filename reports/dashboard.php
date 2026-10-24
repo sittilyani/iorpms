@@ -13,20 +13,13 @@ $m = $conn->real_escape_string($fac['mfl']);
 $C = 'COLLATE utf8mb4_general_ci';
 require_once "../includes/moh731_indicators.php";
 $mp = preg_match('/^\d{4}-\d{2}$/', (string)($_GET['mp'] ?? $_POST['mp'] ?? '')) ? ($_GET['mp'] ?? $_POST['mp']) : date('Y-m', strtotime('first day of last month'));
-$khisNote = ''; $khisOk = null;
 if (($_GET['export'] ?? '') === 'moh731') {
     header('Content-Type: text/csv'); header('Content-Disposition: attachment; filename="MOH731_' . preg_replace('/\W+/', '_', $fac['facilityname']) . '_' . $mp . '.csv"');
     $o = fopen('php://output', 'w'); fputcsv($o, ['facility', 'mfl', 'period', 'indicator_key', 'value']);
     foreach (moh731_flat(moh731_indicators($conn, $fac['mfl'], $mp)) as $k => $n) { fputcsv($o, [$fac['facilityname'], $fac['mfl'], $mp, $k, $n]); }
     exit;
 }
-if (isset($_POST['push_khis']) && strtolower((string)($_SESSION['userrole'] ?? '')) !== 'demo') {
-    [$khisOk, $khisNote] = moh731_push_khis(moh731_flat(moh731_indicators($conn, $fac['mfl'], $mp)), $mp);
-    if ($khisOk) {
-        $st = $conn->prepare("UPDATE report_submissions SET submitted_at = NOW(), submitted_by = ?, channel = 'KHIS API' WHERE report_code = 'MOH731' AND period = ? AND submitted_at IS NULL");
-        $by = getUserFullName(); $st->bind_param('ss', $by, $mp); $st->execute();
-    }
-}
+
 $conn->query("CREATE TABLE IF NOT EXISTS report_submissions (id INT AUTO_INCREMENT PRIMARY KEY, report_code VARCHAR(40) NOT NULL, report_name VARCHAR(150) NOT NULL, period VARCHAR(7) NOT NULL, due_date DATE NOT NULL, submitted_at DATETIME DEFAULT NULL, submitted_by VARCHAR(150) DEFAULT NULL, channel VARCHAR(40) DEFAULT NULL, notes VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE KEY uq_report_period (report_code, period)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 // the reports every clinic owes each month (code => [name, due day of the following month])
@@ -113,7 +106,6 @@ $tot = fn($k) => array_sum(array_map('array_sum', $ind[$k][2]));
 $mpLabel = date('F Y', strtotime($mp . '-01')); $mpH = htmlspecialchars($mp);
 echo '<div style="height:20px"></div><div class="card"><h2>MOH 731 Plus - MAT indicators for ' . $mpLabel . '</h2><div class="b">';
 echo '<form method="get" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><label>Month <input type="month" name="mp" value="' . $mpH . '" max="' . date('Y-m') . '" style="padding:6px;border:1px solid #cfc6ea;border-radius:6px"></label><button style="background:#2D008A;color:#fff;border:0;border-radius:6px;padding:7px 18px">Show</button><a href="?export=moh731&mp=' . $mpH . '" style="background:#fff;color:#2D008A;border:1px solid #2D008A;border-radius:6px;padding:6px 16px;text-decoration:none">Download CSV</a></form>';
-if ($khisNote) echo '<div style="background:' . ($khisOk ? '#e6f8ee' : '#fdecee') . ';border-left:5px solid ' . ($khisOk ? '#04B04B' : '#E41E39') . ';border-radius:8px;padding:10px 14px;margin-bottom:12px">' . htmlspecialchars($khisNote) . '</div>';
 echo '<div class="kpis"><div class="kpi" style="--c:#2D008A"><div class="n">' . number_format($tot('newly_inducted')) . '</div><div class="l">Newly inducted</div></div><div class="kpi" style="--c:#04B04B"><div class="n">' . number_format($tot('on_methadone') + $tot('on_bup')) . '</div><div class="l">Dispensed to (age 15+)</div></div><div class="kpi" style="--c:#FFC12E"><div class="n">' . number_format($tot('ltfu')) . '</div><div class="l">LTFU in month</div></div><div class="kpi" style="--c:#E41E39"><div class="n">' . number_format($tot('overdose')) . '</div><div class="l">Overdoses</div></div></div>';
 echo '<div style="overflow-x:auto"><table><tr><th>Indicator</th><th>Age band</th><th>Male</th><th>Female</th><th>Total</th></tr>';
 foreach ($ind as $id => [$label, $bands, $g]) {
@@ -123,8 +115,7 @@ foreach ($ind as $id => [$label, $bands, $g]) {
     }
 }
 echo '</table></div>';
-$khisReady = is_file(__DIR__ . '/../config/khis.php') && count(require __DIR__ . '/../config/khis_mapping.php') > 0;
-echo '<form method="post" style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><input type="hidden" name="mp" value="' . $mpH . '"><button name="push_khis" value="1" ' . ($khisReady ? '' : 'disabled') . ' onclick="return confirm(\'Send these figures for ' . $mpLabel . ' to KHIS now?\')" style="background:' . ($khisReady ? '#04B04B' : '#999') . ';color:#fff;border:0;border-radius:6px;padding:9px 22px;font-weight:600">Submit to KHIS</button><span style="font-size:12px;color:#666">' . ($khisReady ? 'Sends the mapped indicators to KHIS and marks MOH 731 as submitted.' : 'KHIS link not set up yet: add the clinic KHIS login in config/khis.php and the indicator UIDs in config/khis_mapping.php.') . '</span></form>';
+require_once __DIR__ . '/../includes/khis_submit.php'; khis_submit_ui('moh731', $mp);
 echo '</div></div><div style="height:16px"></div>';
 // ---- is the data behind the latest period ready? ----
 $per = $lastPeriod; $ps = $per . '-01'; $pe = date('Y-m-t', strtotime($ps));

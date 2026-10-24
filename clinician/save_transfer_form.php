@@ -37,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $type_of_movement = $_POST['type_of_movement'];
         $other_specify = isset($_POST['other_specify']) ? $_POST['other_specify'] : null;
         $from_site = $_POST['from_site'];
-        $to_site = $_POST['to_site'];
+        require_once '../includes/encounter_partb.php';
+        $to_site = partb_facility_canonical($conn, (string)$_POST['to_site']);   // must be a facility from the facilities table
+        if ($to_site === null) { throw new Exception('The dispensing site must be chosen from the facilities list.'); }
         $reason_transfer = $_POST['reason_transfer'];
         $clinical_history = $_POST['clinical_history'];
         $psychosocial = $_POST['psychosocial'];
@@ -140,6 +142,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $stmt->close();
 
+        $newFormId = $conn->insert_id ?: 0;
+        if (!$newFormId) { $r = $conn->query('SELECT MAX(id) FROM transfer_forms WHERE mat_id = \'' . $conn->real_escape_string((string)$mat_id) . '\''); $newFormId = (int)($r ? $r->fetch_row()[0] : 0); }
         // Commit transaction before generating PDF
         $conn->commit();
 
@@ -148,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($pdfGenerated) {
             $successMessage = "Transfer form submitted successfully, patient status updated to 'Transout', and PDF saved.";
-            header("Location: patient_transfer_form.php?p_id=" . $p_id . "&success=" . urlencode((string)($successMessage)));
+            header("Location: patient_transfer_form.php?p_id=" . $p_id . "&success=" . urlencode((string)($successMessage)) . "&send_form=" . (int)$newFormId);
             exit();
         } else {
             throw new Exception("PDF generation failed");

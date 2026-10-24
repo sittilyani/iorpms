@@ -295,5 +295,6 @@ $stmt->close();
                 });
             });
         </script>
+<?php require_once '../includes/khis_submit.php'; khis_submit_ui('p7', substr((string)$endDate, 0, 7)); ?>
 </body>
 </html>

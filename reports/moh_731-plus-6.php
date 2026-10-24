@@ -334,7 +334,7 @@ $stmt->close();
                         <?php endforeach; ?>
                     </select>
                 </td>
-                <td><input type="text" style="width: 90%" name="clinician_org" required></td>
+                <td><input type="text" style="width: 90%" name="clinician_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                 <td><input type="text" style="width: 90%" name="clinician_signature" required></td>
                 <td><input type="date" style="width: 90%" name="clinician_date" required></td>
             </tr>
@@ -348,7 +348,7 @@ $stmt->close();
                         <?php endforeach; ?>
                     </select>
                 </td>
-                <td><input type="text" style="width: 90%" name="counselor_org" required></td>
+                <td><input type="text" style="width: 90%" name="counselor_org" class="readonly-input" readonly value="<?php echo $facilityName; ?>" required></td>
                 <td><input type="text" style="width: 90%" name="counselor_signature" required></td>
                 <td><input type="date" style="width: 90%" name="counselor_date" required></td>
             </tr>
@@ -358,5 +358,6 @@ $stmt->close();
         <label for="print-pdf"></label>
         <button style="margin-top: 20px; background: green; color: white; width: 100px; height: 40px; border: none; border-radius: 5px;" id="print-pdf" onclick="window.print()">Print PDF</button>
     </div>
+<?php require_once '../includes/khis_submit.php'; khis_submit_ui('moh731', substr((string)$endDate, 0, 7)); ?>
 </body>
 </html>

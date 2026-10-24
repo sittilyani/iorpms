@@ -72,30 +72,3 @@ function moh731_flat(array $ind): array
     }
     return $o;
 }
-
-/** Push the mapped values for one period to KHIS (DHIS2). Returns [ok, message]. Needs config/khis.php (not committed). */
-function moh731_push_khis(array $flat, string $period): array
-{
-    $cfgFile = __DIR__ . '/../config/khis.php';
-    if (!is_file($cfgFile)) { return [false, 'KHIS is not configured: create config/khis.php (see config/khis.sample.php).']; }
-    $cfg = require $cfgFile; $map = require __DIR__ . '/../config/khis_mapping.php';
-    foreach (['url', 'username', 'password', 'orgUnit', 'dataSet'] as $k) { if (empty($cfg[$k])) { return [false, "config/khis.php is missing '$k'."]; } }
-    $values = [];
-    foreach ($flat as $key => $n) {
-        if (!empty($map[$key]['de'])) { $values[] = ['dataElement' => $map[$key]['de'], 'categoryOptionCombo' => $map[$key]['coc'] ?? '', 'value' => (string)$n]; }
-    }
-    if (!$values) { return [false, 'No indicators are mapped yet: fill config/khis_mapping.php with the data element and category option combo UIDs from KHIS.']; }
-    $body = json_encode(['dataSet' => $cfg['dataSet'], 'period' => str_replace('-', '', $period), 'orgUnit' => $cfg['orgUnit'], 'completeDate' => date('Y-m-d'), 'dataValues' => $values]);
-    $ch = curl_init(rtrim($cfg['url'], '/') . '/api/dataValueSets?importStrategy=CREATE_AND_UPDATE');
-    curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $body, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 60,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Accept: application/json'], CURLOPT_USERPWD => $cfg['username'] . ':' . $cfg['password']]);
-    $resp = curl_exec($ch); $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch); curl_close($ch);
-    if ($resp === false) { return [false, 'Could not reach KHIS: ' . $err]; }
-    $j = json_decode((string)$resp, true);
-    $st = $j['response']['status'] ?? $j['status'] ?? '';
-    if ($code >= 200 && $code < 300 && in_array($st, ['SUCCESS', 'OK', 'WARNING'], true)) {
-        $c = $j['response']['importCount'] ?? [];
-        return [true, "KHIS accepted the report ($st): imported " . (int)($c['imported'] ?? 0) . ', updated ' . (int)($c['updated'] ?? 0) . ', ignored ' . (int)($c['ignored'] ?? 0) . '.'];
-    }
-    return [false, "KHIS rejected the report (HTTP $code): " . substr((string)($j['message'] ?? $resp), 0, 300)];
-}

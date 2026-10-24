@@ -16,30 +16,3 @@ $ActiveCount = $result['ActiveCount'];
 // Output the count as plain text
 echo $ActiveCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of Active users
-        function updateActiveCount() {
-            $.ajax({
-                url: 'Active_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#ActivesCount').text('Actives: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching Active count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updateActiveCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updateActiveCount, 300000);
-    </script>
-
-
-

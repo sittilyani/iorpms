@@ -13,29 +13,3 @@ $transoutCount = $result['transoutCount'];
 // Output the count as plain text
 echo $transoutCount;
 ?>
-
-
-    <script>
-        // Function to update the count of transout users
-        function updatetransoutCount() {
-            $.ajax({
-                url: 'transout_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#transoutsCount').text('transouts: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching transout count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updatetransoutCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updatetransoutCount, 300000);
-    </script>
-
-
-

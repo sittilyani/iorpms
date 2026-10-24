@@ -16,30 +16,3 @@ $InmatesCount = $result['InmatesCount'];
 // Output the count as plain text
 echo $InmatesCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of Inmates users
-        function updateInmatesCount() {
-            $.ajax({
-                url: 'Inmates_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#InmatessCount').text('Inmatess: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching Inmates count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updateInmatesCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updateInmatesCount, 300000);
-    </script>
-
-
-

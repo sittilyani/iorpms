@@ -14,27 +14,3 @@ $deadCount = $result['deadCount'];
 // Output the count as plain text
 echo $deadCount;
 ?>
-
-
-
-    <script>
-        // Function to update the count of dead users
-        function updatedeadCount() {
-            $.ajax({
-                url: 'dead_count.php',
-                type: 'GET',
-                success: function (data) {
-                    $('#deadsCount').text('deads: ' + data);
-                },
-                error: function (error) {
-                    console.error('Error fetching dead count:', error);
-                }
-            });
-        }
-
-        // Call the function initially
-        updatedeadCount();
-
-        // Set an interval to update the count every 5 minutes (300,000 milliseconds)
-        setInterval(updatedeadCount, 300000);
-    </script>

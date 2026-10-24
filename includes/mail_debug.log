@@ -1,1 +1,5 @@
 [2026-10-23 17:25:55] OK  to=sittilyani@gmail.com subject="MAT Transfer Out: Dummy Transferin from Amurt Health Centre (Likoni)" method=PHPMailer/SMTP host=smtp.gmail.com:465
+[2026-10-24 15:57:48] FAIL to=receiver@example.org subject="MAT Transfer Out: Otieno Wekesa from LVCT DICE Clinic Karungu" method=PHPMailer/SMTP host=smtp.gmail.com:465 error="SMTP Error: Could not authenticate."
+[2026-10-24 15:57:49] OK  to=receiver@example.org subject="MAT Transfer Out: Otieno Wekesa from LVCT DICE Clinic Karungu" method=mail() (fallback after SMTP failure)
+[2026-10-24 16:40:21] FAIL to=sittilyani@yahoo.com subject="MAT Transfer Out: Juma Ouma from LVCT DICE Clinic Karungu" method=PHPMailer/SMTP host=smtp.gmail.com:465 error="SMTP Error: Could not authenticate."
+[2026-10-24 16:40:21] OK  to=sittilyani@yahoo.com subject="MAT Transfer Out: Juma Ouma from LVCT DICE Clinic Karungu" method=mail() (fallback after SMTP failure)
