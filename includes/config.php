@@ -4,9 +4,7 @@
  * ===================================================
  * ONLINE / OFFLINE dual-mode configuration.
  *
- * The environment is auto-detected from the host name:
- *   - localhost / 127.0.0.1 / *.test  →  OFFLINE (Laragon dev)
- *   - anything else (e.g. sitti.site) →  ONLINE  (Namecheap shared hosting)
+ * The clinic computer's own (local) database is tried first; the online database is only a fallback (see below).
  *
  * You can force a mode by defining APP_ENV before including this file:
  *   define('APP_ENV', 'online');   // or 'offline'
@@ -18,65 +16,66 @@
 // Warnings and errors are still reported.
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
-// ── Environment detection ────────────────────────────────────
-if (!defined('APP_ENV')) {
-    $httpHost = strtolower((string)($_SERVER['HTTP_HOST'] ?? 'localhost'));
-    $hostOnly = preg_replace('/:\d+$/', '', $httpHost); // strip :port
-    // Client machines on the clinic's LAN reach this server by its private
-    // IP (e.g. http://10.53.220.14/iorpms), not by "localhost" - without
-    // this check that IP falls through to ONLINE mode and tries production
-    // (remote hosting) DB credentials against the local MySQL, which fails.
-    $isPrivateIp = filter_var($hostOnly, FILTER_VALIDATE_IP) !== false
-                && !filter_var($hostOnly, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
-    $isLocal  = ($hostOnly === 'localhost'
-              || $hostOnly === '127.0.0.1'
-              || $hostOnly === '::1'
-              || substr($hostOnly, -5) === '.test'
-              || substr($hostOnly, -6) === '.local' // PHP 7.x compatible
-              || $isPrivateIp);
-    define('APP_ENV', $isLocal ? 'offline' : 'online');
-}
+// ── Database: LOCAL first (this file only), ONLINE as the fallback ───────────
+// Localhost uses the settings right here - nothing else is read. Edit them if a clinic's MySQL differs.
+// Only when the local database cannot be reached are the online credentials looked up, in this order:
+//   1. config-easyflow.php, kept OUTSIDE public_html (e.g. /home/<cpanel-user>/config-easyflow.php), never in this repository
+//   2. includes/config-iorpms.php (git-ignored, blocked from the browser by includes/.htaccess)
+// Either file only needs define('DB_HOST'|'DB_USER'|'DB_PASS'|'DB_NAME', '...'); SMTP_* settings in it are used too.
+// To force a mode, define('APP_ENV', 'offline') or define('APP_ENV', 'online') before including this file.
+defined('LOCAL_DB_HOST') || define('LOCAL_DB_HOST', 'localhost');
+defined('LOCAL_DB_USER') || define('LOCAL_DB_USER', 'root');
+defined('LOCAL_DB_PASS') || define('LOCAL_DB_PASS', '');
+defined('LOCAL_DB_NAME') || define('LOCAL_DB_NAME', 'methadone');
 
-// ── Load production secrets (never stored in this repository) ────────────────
-// ONLINE: credentials live in config-easyflow.php, kept OUTSIDE public_html
-// (e.g. /home/<cpanel-user>/config-easyflow.php) so it cannot be served by the
-// web server and is never pushed to GitHub. Copy includes/config-easyflow.example.php
-// there and fill in the real values. It may define DB_*, SMTP_*, MAIL_FROM, etc.
-// - anything it defines wins; the defaults below only fill in what is missing.
-$_easyflow_config = null;
-foreach (array_filter([
-    !empty($_SERVER['DOCUMENT_ROOT']) ? dirname(rtrim((string)(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'])), '/')) . '/config-easyflow.php' : null,   // parent of public_html
-    dirname(__DIR__, 3) . '/config-easyflow.php',                                                                               // public_html/iorpms/includes -> home folder
-]) as $_cand) {
-    if (is_file($_cand)) { $_easyflow_config = $_cand; break; }
+mysqli_report(MYSQLI_REPORT_OFF); // handle errors manually
+$conn = null; $_db_errors = [];
+$_try_db = function (string $host, string $user, string $pass, string $name) {
+    $c = @new mysqli($host, $user, $pass, $name);
+    return $c->connect_error ? [null, $c->connect_error] : [$c, ''];
+};
+if (!defined('APP_ENV') || APP_ENV !== 'online') {
+    [$conn, $err] = $_try_db(LOCAL_DB_HOST, LOCAL_DB_USER, LOCAL_DB_PASS, LOCAL_DB_NAME);
+    if ($conn) {
+        defined('APP_ENV') || define('APP_ENV', 'offline');
+        defined('DB_HOST') || define('DB_HOST', LOCAL_DB_HOST);
+        defined('DB_USER') || define('DB_USER', LOCAL_DB_USER);
+        defined('DB_PASS') || define('DB_PASS', LOCAL_DB_PASS);
+        defined('DB_NAME') || define('DB_NAME', LOCAL_DB_NAME);
+    } else { $_db_errors[] = 'local: ' . $err; }
 }
-if ($_easyflow_config) {
-    require_once $_easyflow_config;
+if (!$conn) {
+    $_online = array_values(array_filter([
+        !empty($_SERVER['DOCUMENT_ROOT']) ? dirname(rtrim((string)(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'])), '/')) . '/config-easyflow.php' : null,   // parent of public_html
+        dirname(__DIR__, 3) . '/config-easyflow.php',                                                                               // public_html/iorpms/includes -> home folder
+        __DIR__ . '/config-iorpms.php',
+    ], 'is_file'));
+    foreach ($_online as $_file) {
+        // read the credentials without defining anything first, so nothing clashes
+        $_txt = (string)file_get_contents($_file); $_o = [];
+        foreach (['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME'] as $_k) { $_o[$_k] = preg_match("/define\\(\\s*['\"]{$_k}['\"]\\s*,\\s*['\"]([^'\"]*)['\"]/", $_txt, $_m) ? $_m[1] : null; }
+        if ($_o['DB_NAME'] === null) { continue; }
+        [$conn, $err] = $_try_db($_o['DB_HOST'] ?? 'localhost', (string)$_o['DB_USER'], (string)$_o['DB_PASS'], $_o['DB_NAME']);
+        if ($conn) {
+            defined('APP_ENV') || define('APP_ENV', 'online');
+            foreach ($_o as $_k => $_v) { defined($_k) || define($_k, (string)$_v); }
+            if (stripos($_txt, 'new mysqli') === false && stripos($_txt, 'mysqli_connect') === false) { @require_once $_file; }   // SMTP_* etc. (skip old full configs that open their own connection)
+            break;
+        }
+        $_db_errors[] = 'online (' . basename($_file) . '): ' . $err;
+    }
+    if (!$_online) { $_db_errors[] = 'online: no config-easyflow.php or config-iorpms.php found'; }
 }
-// Legacy / local override (git-ignored, inside includes/, blocked from the browser by includes/.htaccess)
-$_iorpms_config = __DIR__ . '/config-iorpms.php';
-if (file_exists($_iorpms_config)) {
-    require_once $_iorpms_config;
-}
-if (APP_ENV === 'online' && !defined('DB_PASS')) {
-    error_log('[online] config-easyflow.php not found outside public_html');
+if (!$conn) {
+    defined('APP_ENV') || define('APP_ENV', 'offline');
+    error_log('[config] DB connection failed - ' . implode(' | ', $_db_errors));
     die('<div style="font-family:sans-serif;padding:40px;text-align:center;">
-            <h2 style="color:#c53030">Configuration Error</h2>
-            <p>The server configuration file <code>config-easyflow.php</code> was not found.
-               Create it outside <code>public_html</code> (see <code>includes/config-easyflow.example.php</code>).</p>
+            <h2 style="color:#c53030">Database Connection Error</h2>
+            <p>The local database could not be reached, and no working online database was found.<br>
+               Start Laragon (Apache and MySQL) and refresh. If it still fails, check <code>includes/config.php</code>.</p>
          </div>');
 }
-// ── Database credentials per environment ─────────────────────
-if (APP_ENV === 'online') {
-    // ── ONLINE: credentials come from config-easyflow.php (outside public_html) - none are kept in the repository ──
-} else {
-    // ── OFFLINE (local Laragon dev) ──
-    defined('DB_HOST') || define('DB_HOST', 'localhost');
-    defined('DB_USER') || define('DB_USER', 'root');
-    defined('DB_PASS') || define('DB_PASS', '');
-    defined('DB_NAME') || define('DB_NAME', 'methadone');
-}
-
+$conn->set_charset('utf8mb4');
 // ── App constants ────────────────────────────────────────────
 defined('APP_NAME')    || define('APP_NAME',    'EasyFlow-L');
 defined('APP_VERSION') || define('APP_VERSION', '1.0');
@@ -93,20 +92,6 @@ defined('APP_URL') || define('APP_URL', APP_ENV === 'online'
 // ── Admin notification recipients ────────────────────────────
 defined('ADMIN_EMAILS')   || define('ADMIN_EMAILS', ['sittilyani@gmail.com']);
 defined('ADMIN_WHATSAPP') || define('ADMIN_WHATSAPP', ['254722427721', '254743258436']); // demo support WhatsApp numbers
-
-// ── Connect ──────────────────────────────────────────────────
-mysqli_report(MYSQLI_REPORT_OFF); // handle errors manually
-$conn = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-if ($conn->connect_error) {
-    error_log('[' . APP_ENV . '] DB connection failed: ' . $conn->connect_error);
-    die('<div style="font-family:sans-serif;padding:40px;text-align:center;">
-            <h2 style="color:#c53030">Database Connection Error</h2>
-            <p>Could not connect to the database (' . htmlspecialchars((string)(APP_ENV)) . ' mode).
-               Please check your configuration in <code>includes/config.php</code>.</p>
-         </div>');
-}
-$conn->set_charset('utf8mb4');
 
 // ── Timezone ─────────────────────────────────────────────────
 date_default_timezone_set('Africa/Nairobi');

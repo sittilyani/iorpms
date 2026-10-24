@@ -1078,9 +1078,6 @@ if (isset($_SESSION['dispensing_successes'])) {
                 <button type="submit" class="submit-btn">Dispense</button>
             </div>
 
-            <div class="dispensing">
-                <span class="stat-value"><?php include 'view_missed_fivedays.php'; ?></span>
-            </div>
 
             <div class="full-width-section">
                 <?php if (!empty($otherPrescriptions)): ?>

@@ -533,25 +533,24 @@ if (count($devices) === 1) {
 // structure lets the optimizer use a normal index range scan on
 // pharmacy(pump_id, dispDate) if that index exists, without depending on
 // any specific index name being present.
-$sql_str = "SELECT JSON_OBJECTAGG(id, rem) FROM (
-    SELECT ps.id,
-           ps.new_milligrams - (
-               SELECT COALESCE(SUM(dosage), 0) FROM pharmacy
-               WHERE pump_id = ps.id AND dispDate >= ps.topup_from
-           ) AS rem
-    FROM (
-        SELECT pd.id AS id, h.new_milligrams AS new_milligrams, h.topup_from AS topup_from
-        FROM pump_devices pd
-        LEFT JOIN pump_reservoir_history h ON h.pump_id = pd.id AND h.topup_to IS NULL
-    ) ps
-) tbl";
-
-$reservoirRes = $conn->query($sql_str);
-$resultJson = $reservoirRes ? ($reservoirRes->fetch_row()[0] ?? '{}') : '{}';
-if (!$reservoirRes) {
-    error_log('dispensingData_pump.php reservoir query failed: ' . $conn->error);
+// Reservoir left per pump: one small indexed lookup per pump (pump_id + dispDate), and none at all for a pump without an
+// open top-up. The earlier single big query scanned the whole pharmacy table on every page load.
+$rem = [];
+$pumpRows = $conn->query("SELECT pd.id AS id, h.new_milligrams AS new_milligrams, h.topup_from AS topup_from
+                          FROM pump_devices pd
+                          LEFT JOIN pump_reservoir_history h ON h.pump_id = pd.id AND h.topup_to IS NULL");
+if (!$pumpRows) { error_log('dispensingData_pump.php reservoir query failed: ' . $conn->error); }
+else {
+    $usedStmt = $conn->prepare("SELECT COALESCE(SUM(dosage), 0) FROM pharmacy WHERE pump_id = ? AND dispDate >= ?");
+    while ($pr = $pumpRows->fetch_assoc()) {
+        if ($pr['new_milligrams'] === null || $pr['topup_from'] === null) { $rem[$pr['id']] = null; continue; }   // same as before: NULL when no open top-up
+        $pid = (int)$pr['id']; $from = $pr['topup_from'];
+        $usedStmt->bind_param('is', $pid, $from); $usedStmt->execute();
+        $rem[$pr['id']] = (float)$pr['new_milligrams'] - (float)$usedStmt->get_result()->fetch_row()[0];
+    }
+    $usedStmt->close();
 }
-$rem = json_decode($resultJson, true);
+
 
 if (isset($_SESSION['errorMessages'])) {
     $errorMessages = $_SESSION['errorMessages'];
@@ -1063,9 +1062,6 @@ h2{
                 <button type="submit" class="submit-btn">Dispense</button>
             </div>
 
-            <div class="dispensing">
-                <span class="stat-value"><?php include 'view_missed_fivedays.php'; ?></span>
-            </div>
 
             <div class="full-width-section">
                 <?php if (!empty($otherPrescriptions)): ?>
