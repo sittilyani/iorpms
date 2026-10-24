@@ -57,6 +57,8 @@ $full_name = getUserFullName();
         <i class="fa fa-pump-medical"></i>Dashboard</a>
     <a href="../reports/clinic_summary.php" target="contentFrame" class="nav-link" style="background:#04B04B;color:#fff;margin-top:10px">
         <i class="fa fa-file-text"></i>Monthly Clinic Summary</a>
+    <a href="../reports/rota.php" target="contentFrame" class="nav-link" style="background:#FFC12E;color:#000;margin-top:10px">
+        <i class="fa fa-calendar"></i>Duty Rota by Department</a>
     <a href="../reports/sha_claims.php" target="contentFrame" class="nav-link" style="background:#2D008A;color:#fff;margin-top:10px">
         <i class="fa fa-money"></i>SHA Drug Claim (monthly)</a>
 

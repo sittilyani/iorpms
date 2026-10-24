@@ -112,6 +112,7 @@ ob_end_flush(); // End output buffering and send output to the browser
                 <p><strong>Gender:</strong> <?php echo htmlspecialchars((string)($user['gender'])); ?></p>
                 <p><strong>Mobile:</strong> <?php echo htmlspecialchars((string)($user['mobile'])); ?></p>
                 <p><strong>User Role:</strong> <?php echo htmlspecialchars((string)($user['userrole'])); ?></p>
+                <p><strong>Department:</strong> <?php $dn = $conn->query('SELECT department_name FROM departments WHERE id = ' . (int)($user['department_id'] ?? 0)); echo htmlspecialchars((string)(($dn && ($dr = $dn->fetch_row())) ? $dr[0] : '-')); ?></p>
                 <p><strong>Date Created:</strong> <?php echo htmlspecialchars((string)($user['date_created'])); ?></p>
             <?php else: ?>
                 <div class="alert alert-danger text-center" role="alert">

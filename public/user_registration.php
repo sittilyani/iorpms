@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $gender = $_POST['gender'] ?? '';
     $mobile = $_POST['mobile'] ?? '';
     $userrole = $_POST['userrole'] ?? '';
+    $department_id = (int)($_POST['department_id'] ?? 0) ?: null;
     $photo = '';
 
     // Validate required fields
@@ -112,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hashed_password = password_hash($default_password, PASSWORD_BCRYPT);
 
     // Prepare and execute SQL statement
-    $sql = "INSERT INTO tblusers (username, first_name, last_name, email, password, gender, mobile, photo, userrole)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO tblusers (username, first_name, last_name, email, password, gender, mobile, photo, userrole, department_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -122,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->bind_param("sssssssss", $username, $first_name, $last_name, $email, $hashed_password, $gender, $mobile, $photo, $userrole);
+    $stmt->bind_param("sssssssssi", $username, $first_name, $last_name, $email, $hashed_password, $gender, $mobile, $photo, $userrole, $department_id);
 
     if ($stmt->execute()) {
         // Get the inserted user ID
@@ -399,6 +400,14 @@ ob_end_flush();
                         echo "<option value='".htmlspecialchars((string)($row['role']))."'>".htmlspecialchars((string)($row['role']))."</option>";
                     }
                     ?>
+                </select>
+            </div>
+
+<div class="form-group">
+                <label for="department_id">Department</label>
+                <select class="form-control" id="department_id" name="department_id">
+                    <option value="">-- none --</option>
+                    <?php $dq = $conn->query("SELECT id, department_name FROM departments ORDER BY department_name"); while ($dr = $dq->fetch_assoc()) { echo "<option value='" . (int)$dr['id'] . "'" . ((string)($_POST['department_id'] ?? '') === (string)$dr['id'] ? " selected" : "") . ">" . htmlspecialchars($dr['department_name']) . "</option>"; } ?>
                 </select>
             </div>
 

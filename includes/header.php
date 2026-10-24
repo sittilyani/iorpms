@@ -278,6 +278,9 @@ if ($isLoggedIn) {
                 <a href="../trainings/index.php" class="current-time" title="Training video tutorials on YouTube">
                     <i class="fa fa-graduation-cap"></i>&nbsp;<span>Trainings</span>
                 </a>
+                <a href="../reports/rota.php" class="current-time" title="Weekly duty rota by department">
+                    <i class="fa fa-calendar"></i>&nbsp;<span>Rota</span>
+                </a>
 
                 <!-- Language Switcher: EN / FR / PT -->
                 <?php

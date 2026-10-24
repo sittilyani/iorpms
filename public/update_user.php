@@ -23,10 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $gender = $_POST['gender'];
     $mobile = $_POST['mobile'];
     $userrole = $_POST['userrole'];
+    $department_id = (int)($_POST['department_id'] ?? 0) ?: null;
 
-    $sql = "UPDATE tblusers SET username = ?, first_name = ?, last_name = ?, email = ?, gender = ?, mobile = ?, userrole = ? WHERE user_id = ?";
+    $sql = "UPDATE tblusers SET username = ?, first_name = ?, last_name = ?, email = ?, gender = ?, mobile = ?, userrole = ?, department_id = ? WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('sssssssi', $username, $first_name,  $last_name, $email, $gender, $mobile, $userrole, $user_id);
+    $stmt->bind_param('sssssssii', $username, $first_name,  $last_name, $email, $gender, $mobile, $userrole, $department_id, $user_id);
 
     $stmt->execute();
 
@@ -99,7 +100,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     ?>
                 </select>
         </div>
-        <input type="submit" class="custom-submit-btn"name="submit" value="Update">
+<div class="form-group">
+                <label for="department_id">Department</label>
+                <select id="department_id" name="department_id">
+                    <option value="">-- none --</option>
+                    <?php $dq = $conn->query("SELECT id, department_name FROM departments ORDER BY department_name"); while ($dr = $dq->fetch_assoc()) { echo "<option value='" . (int)$dr['id'] . "'" . ((string)($user['department_id'] ?? '') === (string)$dr['id'] ? " selected" : "") . ">" . htmlspecialchars($dr['department_name']) . "</option>"; } ?>
+                </select>
+            </div>
+
+                    <input type="submit" class="custom-submit-btn"name="submit" value="Update">
     </form>
 </div>
 </body>
