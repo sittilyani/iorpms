@@ -142,7 +142,7 @@ if (isset($_GET['message'])) {
                     <th>MAT ID</th>
                     <th>MAT Number</th>
                     <th>Client Name</th>
-                    <th>Nick Name</th>
+                    <th>SHA/NHIF Number</th>
                     <th>Date of Birth</th>
                     <th>Age</th>
                     <th>Sex</th>

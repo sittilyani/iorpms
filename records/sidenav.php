@@ -58,6 +58,16 @@ $full_name = getUserFullName();
     <a href="../records/sidenav.php" class="nav-link home-link">
         <i class="fa fa-home"></i>Dashboard
     </a>
+    <a href="../patients/add_clients.php" target="contentFrame" class="nav-link" style="background:#04B04B;color:#fff">
+        <i class="fa fa-user-plus"></i>New Patient Registration</a>
+    <a href="../patients/view_all_patients.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-users"></i>All Patients</a>
+    <a href="../patients/ever_enrolled_patients.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-address-book"></i>Ever Enrolled Patients</a>
+    <a href="../patients/view_active_patients.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-heartbeat"></i>Active Patients</a>
+    <a href="../patients/view_status_change.php" target="contentFrame" class="nav-link">
+        <i class="fa fa-exchange"></i>Patient Status Changes</a>
     <a href="../records/view_all_patients.php" target="contentFrame" class="nav-link">
         <i class="fa fa-users"></i>Records Help Desk Checkin</a>
     <a href="../clinician/client_search_consent.php" target="contentFrame" class="nav-link">

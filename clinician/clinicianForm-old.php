@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="clientName">Client Name</label><br>
                     <input type="text" name="clientName" value="<?php echo htmlspecialchars((string)($combinedData['clientName'])); ?>" required><br>
 
-                    <label for="nickName">Nick Name</label><br>
+                    <label for="nickName">SHA/NHIF Number</label><br>
                     <input type="text" name="nickName" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($combinedData['nickName'] ?? '')); ?>"><br>
 
                     <label for="sname">Sur Name</label><br>

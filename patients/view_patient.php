@@ -88,7 +88,7 @@ if ($photo && !empty($photo['image'])) {
                 <div><label>MAT Number:</label><span><?php echo htmlspecialchars((string)($patients['mat_number'])); ?></span></div>
                 <div><label>Client Name:</label><span><?php echo htmlspecialchars((string)($patients['clientName'])); ?></span></div>
                 <div><label>Surname:</label><span><?php echo htmlspecialchars((string)($patients['sname'])); ?></span></div>
-                <div><label>Nickname:</label><span><?php echo htmlspecialchars((string)($patients['nickName'])); ?></span></div>
+                <div><label>SHA/NHIF Number:</label><span><?php echo htmlspecialchars((string)($patients['nickName'])); ?></span></div>
                 <div><label>National ID:</label><span><?php echo htmlspecialchars((string)($patients['nat_id'])); ?></span></div>
             </div>
 

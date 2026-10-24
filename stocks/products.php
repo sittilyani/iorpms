@@ -67,10 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_PO
 
     if (empty($errors)) {
         // Insert into database using prepared statement
-        $query = "INSERT INTO products (category, productname, brandname, packsize, pack_price, unit_price, price, reorder_level, currentstatus, date_created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        $query = "INSERT INTO drug (drugName, drugCategory, description, price, date_created) VALUES (?, (SELECT name FROM categories WHERE id = ?), ?, ?, NOW())";
         $stmt = $conn->prepare($query);
         if ($stmt) {
-            $stmt->bind_param("issdddsis", $category_id, $productname, $brandname, $packsize, $pack_price, $unit_price, $price, $reorder_level, $currentstatus);
+            $stmt->bind_param("sisd", $productname, $category_id, $brandname, $price);
             if ($stmt->execute()) {
                 $_SESSION['success_message'] = "Product added successfully!";
                 header("Location: viewstocks_sum.php");

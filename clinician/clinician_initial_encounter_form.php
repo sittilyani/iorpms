@@ -394,7 +394,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" name="client_name" class="readonly-input" readonly value="<?php echo htmlspecialchars((string)($patient['clientName'] . ' ' . $patient['sname'])); ?>">
                     </div>
                     <div class="form-group">
-                        <label for="nickname">Nickname:</label>
+                        <label for="nickname">SHA/NHIF Number:</label>
                         <input type="text" name="nickname" value="<?php echo htmlspecialchars((string)($patient['nickName'] ?? '')); ?>">
                     </div>
                     <div class="form-group">

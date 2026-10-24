@@ -109,7 +109,7 @@ include '../includes/footer.php';
     </div>
 
     <div class="item2">
-        <label for="nname">Nick Name</label> <br>
+        <label for="nname">SHA/NHIF Number</label> <br>
         <input name="nname" id="nname">
         <br>
 

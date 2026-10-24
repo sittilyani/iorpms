@@ -331,7 +331,7 @@ $page_title = 'Yellow Card - Patient Treatment Record';
                     <span><?php echo htmlspecialchars((string)($patient['clientName'])); ?></span>
                 </div>
                 <div class="info-item">
-                    <label>Nickname</label>
+                    <label>SHA/NHIF Number</label>
                     <span><?php echo htmlspecialchars((string)($patient['nickName'])); ?></span>
                 </div>
                 <div class="info-item">

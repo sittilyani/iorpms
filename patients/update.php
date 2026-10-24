@@ -195,8 +195,8 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                     <input type="text" name="sname" value="<?php echo $currentSettings['sname']; ?>">
                 </div>
                 <div class="form_group">
-                    <label for="nickName">Nickname</label>
-                    <input type="text" name="nickName" value="<?php echo $currentSettings['nickName']; ?>">
+                    <label for="nickName">SHA/NHIF Number</label>
+                    <input type="text" name="nickName" maxlength="50" placeholder="SHA or NHIF number" value="<?php echo htmlspecialchars((string)($currentSettings['nickName'] ?? '')); ?>">
                 </div>
                 <div class="form_group">
                     <label for="nat_id">National ID</label>

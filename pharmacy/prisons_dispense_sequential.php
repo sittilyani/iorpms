@@ -429,7 +429,7 @@ $skipped = isset($_GET['skipped']) && $_GET['skipped'] == '1';
             <!-- Column 2 -->
             <div class="form-group-column">
                 <div class="form-group">
-                    <label>Nick Name</label>
+                    <label>SHA/NHIF Number</label>
                     <input type="text" name="nickName" class="readonly-input"
                            value="<?= htmlspecialchars((string)($patient['nickName'] ?? '')) ?>">
                 </div>

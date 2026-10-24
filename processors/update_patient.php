@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="update">
                 <div>
-                    <label for="nname">Nick Name:</label>   <br>
+                    <label for="nname">SHA/NHIF Number:</label>   <br>
                     <input type="text" id="nname" name="nname" value="<?php echo $patient['nname']; ?>">  <br>
                 </div>
 

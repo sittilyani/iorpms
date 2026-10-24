@@ -163,8 +163,8 @@ $bulk('stock_movements', $smCols, $smRows);
 $bulk('stores_inventory', $siCols, $siRows);
 $bulk('bin_card_entries', $binCols, $binRows);
 
-// `stocks`: products prescribed through "other drugs" (drugID column holds the product id)
-$prod = $conn->query("SELECT MIN(id) id, productname, MIN(brandname) brandname, MIN(reorder_level) reorder_level FROM products WHERE CHAR_LENGTH(productname) <= 100 AND productname REGEXP '^(Paracetamol|Amoxicillin|Ibuprofen|Metronidazole|Cotrimoxazole|Ciprofloxacin|Diclofenac|Vitamin|Zinc|Albendazole|Loratadine|Omeprazole)' GROUP BY productname ORDER BY MIN(id) LIMIT 14");
+// `stocks`: products prescribed through "other drugs" (drugID column holds the drug id)
+$prod = $conn->query("SELECT MIN(drugID) id, drugName AS productname, MIN(drugName) brandname, 100 AS reorder_level FROM drug WHERE CHAR_LENGTH(drugName) <= 100 AND drugName REGEXP '^(Paracetamol|Amoxicillin|Ibuprofen|Metronidazole|Cotrimoxazole|Ciprofloxacin|Diclofenac|Vitamin|Zinc|Albendazole|Loratadine|Omeprazole)' GROUP BY productname ORDER BY MIN(id) LIMIT 14");
 $prod = $prod ? $prod->fetch_all(MYSQLI_ASSOC) : [];
 $stRows = []; $stCols = ['drugID', 'transactionType', 'productname', 'brandname', 'reorderLevel', 'openingBalance', 'quantityIn', 'batch', 'expiryDate', 'receivedFrom', 'quantityOut', 'transDate', 'stockBalance', 'status', 'transBy'];
 foreach ($prod as $p) {

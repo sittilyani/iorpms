@@ -65,7 +65,7 @@ if (isset($_GET['message'])) {
                         <th style='width: 140px;'>MAT ID</th>
                         <th style='width: 100px;'>MAT Number</th>
                         <th style='width: 200px;'>Client Name</th>
-                        <th style='width: 100px;'>Nick Name</th>
+                        <th style='width: 100px;'>SHA/NHIF Number</th>
                         <th style='width: 50px;'>Age</th>
                         <th style='width: 50px;'>Sex</th>
                         <th style='width: 100px;'>Enrolment Date</th>

@@ -49,7 +49,7 @@ if (!$result_suppliers) {
 }
 
 // Fetch products with their brand and generic names, ensuring unique brand/generic name combinations
-$sql_products = "SELECT brandname, productname FROM products GROUP BY brandname, productname ORDER BY brandname";
+$sql_products = "SELECT drugName AS brandname, drugName AS productname FROM drug GROUP BY drugName ORDER BY drugName";
 $stmt = $conn->prepare($sql_products);
 
 if (!$stmt) {
@@ -84,12 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = null;
 
         // Fetch the product's ID from the products table using both brandname and productname
-        $sql_product_info = "SELECT id FROM products WHERE brandname = ? AND productname = ?";
+        $sql_product_info = "SELECT drugID AS id FROM drug WHERE drugName = ?";
         $stmt_info = $conn->prepare($sql_product_info);
         if (!$stmt_info) {
             throw new Exception("Error preparing product info query: " . $conn->error);
         }
-        $stmt_info->bind_param('ss', $brandname, $productname);
+        $stmt_info->bind_param('s', $productname);
         $stmt_info->execute();
         $result_info = $stmt_info->get_result();
         if ($result_info->num_rows > 0) {

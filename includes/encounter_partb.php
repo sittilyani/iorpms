@@ -34,14 +34,14 @@ function partb_dose_options(mysqli $conn): array
 }
 function dash_rows_pb(mysqli $conn, string $sql): array { $r = $conn->query($sql); return $r ? $r->fetch_all(MYSQLI_ASSOC) : []; }
 
-/** Products usable as "Other" (single select). */
+/** Drugs usable as "Other" (single select), from the drug table. */
 function partb_products(mysqli $conn): array
 {
-    return array_column(dash_rows_pb($conn, "SELECT DISTINCT TRIM(productname) n FROM products WHERE currentstatus = 'active' AND productname <> '' ORDER BY n"), 'n');
+    return array_column(dash_rows_pb($conn, "SELECT DISTINCT TRIM(drugName) n FROM drug WHERE drugName <> '' ORDER BY n"), 'n');
 }
 function partb_bup_naloxone_products(mysqli $conn): array
 {
-    return array_column(dash_rows_pb($conn, "SELECT TRIM(productname) n FROM products WHERE productname LIKE 'Buprenorphine%/Naloxone%' AND currentstatus='active' ORDER BY n"), 'n');
+    return array_column(dash_rows_pb($conn, "SELECT TRIM(drugName) n FROM drug WHERE drugName LIKE 'Buprenorphine%/Naloxone%' ORDER BY n"), 'n');
 }
 
 /** Facility lookup for "HIV facility of care": returns ["Name (MFL)", ...]. */

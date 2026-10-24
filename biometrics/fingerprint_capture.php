@@ -675,7 +675,7 @@ function formatFileSize($bytes) {
                 </div>
 
                 <div class="form-group">
-                    <label>Nick Name:</label>
+                    <label>SHA/NHIF Number:</label>
                     <input type="text" name="nickName" class="form-control"
                            value="<?php echo htmlspecialchars((string)($currentSettings['nickName'] ?? '')); ?>">
                 </div>

@@ -304,8 +304,8 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             <input type="text" id="sname" name="sname">
         </div>
         <div class="form-group">
-            <label for="nickName">Nick Name</label>
-            <input type="text" id="nickName" name="nickName" >
+            <label for="nickName">SHA/NHIF Number</label>
+            <input type="text" id="nickName" name="nickName" maxlength="50" placeholder="SHA or NHIF number">
         </div>
         <div class="form-group">
             <label for="nat_id">National ID/PPNo.</label>

@@ -230,7 +230,7 @@ $page_title = 'Search Client for Yellow Card Visit';
 
             <div class="alert alert-info">
                 <i class="fas fa-info-circle"></i>
-                <span>Search by MAT ID, MAT Number, Client Name, or Nickname</span>
+                <span>Search by MAT ID, MAT Number, Client Name, or SHA/NHIF Number</span>
             </div>
 
             <form method="GET" action="">
@@ -239,7 +239,7 @@ $page_title = 'Search Client for Yellow Card Visit';
                         type="text"
                         name="search"
                         class="search-input"
-                        placeholder="Enter MAT ID, MAT Number, Client Name, or Nickname..."
+                        placeholder="Enter MAT ID, MAT Number, Client Name, or SHA/NHIF Number..."
                         value="<?php echo isset($_GET['search']) ? htmlspecialchars((string)($_GET['search'])) : ''; ?>"
                         autofocus
                     >
@@ -283,7 +283,7 @@ $page_title = 'Search Client for Yellow Card Visit';
                                     <th>MAT ID</th>
                                     <th>MAT Number</th>
                                     <th>Client Name</th>
-                                    <th>Nickname</th>
+                                    <th>SHA/NHIF Number</th>
                                     <th>Age</th>
                                     <th>Sex</th>
                                     <th>Drug</th>

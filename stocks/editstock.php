@@ -45,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $batch = $current_stock['batch'] ?? '';
                         $expiryDate = $current_stock['expiryDate'] ?? '';
 
-                        // Fetch stockID from products
-                        $sql = "SELECT id FROM products WHERE productname = ?";
+                        // Fetch the drug id
+                        $sql = "SELECT drugID AS id FROM drug WHERE drugName = ?";
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("s", $productname);
                         $stmt->execute();

@@ -984,7 +984,7 @@ h2{
 
             <div class="form-group-column">
                 <div class="form-group">
-                    <label for="nickName">Nick Name</label>
+                    <label for="nickName">SHA/NHIF Number</label>
                     <input type="text" name="nickName" class="readonly-input" value="<?php echo isset($currentSettings['nickName']) ? htmlspecialchars((string)($currentSettings['nickName'])) : ''; ?>">
                 </div>
                 <div class="form-group">

@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="clientName" class="form-control" value="<?php echo htmlspecialchars((string)($medicalHistoryData['clientName'])); ?>" required>
                 </div>
                 <div class="form-group">
-                    <label for="nickName">Nick Name</label>
+                    <label for="nickName">SHA/NHIF Number</label>
                     <input type="text" name="nickName" class="form-control readonly-input" readonly value="<?php echo htmlspecialchars((string)($medicalHistoryData['nickName'])); ?>">
                 </div>
                 <div class="form-group">
